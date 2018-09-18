@@ -2,9 +2,7 @@ package com.peploleum.insight;
 
 import com.peploleum.insight.config.ApplicationProperties;
 import com.peploleum.insight.config.DefaultProfileUtil;
-
 import io.github.jhipster.config.JHipsterConstants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +17,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Collection;
 
-@SpringBootApplication(exclude = DataSourcePoolMetricsAutoConfiguration.class)
+@SpringBootApplication(exclude = {DataSourcePoolMetricsAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 public class InsightApp {
 
