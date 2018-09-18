@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {MapComponent} from './map.component';
+import {AnalyticsComponent} from './analytics.component';
 
 const routes: Routes = [{
-    path: 'map',
-    component: MapComponent,
+    path: 'analytics',
+    component: AnalyticsComponent,
     data: {
-        pageTitle: 'map.title'
+        pageTitle: 'analytics.title'
     }
 }];
 
@@ -14,5 +14,5 @@ const routes: Routes = [{
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class MapRoutingModule {
+export class AnalyticsRoutingModule {
 }
