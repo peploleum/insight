@@ -1,7 +1,9 @@
 /* after changing this file run 'yarn run webpack:build' */
 /* tslint:disable */
 import '../content/scss/vendor.scss';
-import {library} from '@fortawesome/fontawesome-svg-core';
+import 'chart.js/dist/Chart.js';
+import 'ol/index.js';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faUser,
     faSort,
