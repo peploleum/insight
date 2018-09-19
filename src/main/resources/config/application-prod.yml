@@ -53,6 +53,8 @@ spring:
         elasticsearch:
             cluster-name:
             cluster-nodes: localhost:9300
+        jest:
+            uri: localhost:9300
     liquibase:
         contexts: prod
     mail:
