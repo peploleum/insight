@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { OSM, Vector as VectorSource } from 'ol/source';
@@ -12,7 +12,7 @@ import View from 'ol/View';
     templateUrl: './map.component.html',
     styles: []
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
     private circleImage = new CircleStyle({
         radius: 5,
         fill: null,
@@ -85,7 +85,13 @@ export class MapComponent implements OnInit {
 
     constructor() {}
 
-    ngOnInit() {
+    ngOnInit() {}
+
+    ngAfterViewInit(): void {
+        this.initMap();
+    }
+
+    private initMap() {
         const geojsonObject = {
             type: 'FeatureCollection',
             crs: {
