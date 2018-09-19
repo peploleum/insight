@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -6,14 +6,18 @@ import { Chart } from 'chart.js';
     templateUrl: './analytics.component.html',
     styles: []
 })
-export class AnalyticsComponent implements OnInit {
-    constructor(private er: ElementRef) {}
+export class AnalyticsComponent implements OnInit, AfterViewInit {
+    @ViewChild('chart') chart: ElementRef;
+    public context: CanvasRenderingContext2D;
+
+    constructor() {}
 
     ngOnInit() {
-        // const chartElement = this.er.nativeElement.query('#chart');
-        const elementById = document.getElementById('chart');
-        const ctx = elementById.getContext('2d');
-        const chart = new Chart(ctx, {
+        this.context = (<HTMLCanvasElement>this.chart.nativeElement).getContext('2d');
+    }
+
+    ngAfterViewInit(): void {
+        const theChart = new Chart(<HTMLCanvasElement>this.chart.nativeElement, {
             type: 'bar',
             data: {
                 labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -50,7 +54,9 @@ export class AnalyticsComponent implements OnInit {
                             }
                         }
                     ]
-                }
+                },
+                responsive: false,
+                maintainAspectRatio: false
             }
         });
     }
