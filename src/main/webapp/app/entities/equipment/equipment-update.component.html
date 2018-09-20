@@ -1,0 +1,67 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-equipment-heading" jhiTranslate="insightApp.equipment.home.createOrEditLabel">Create or edit a Equipment</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!equipment.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="equipment.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentName" for="field_equipmentName">Equipment Name</label>
+                    <input type="text" class="form-control" name="equipmentName" id="field_equipmentName"
+                        [(ngModel)]="equipment.equipmentName" required/>
+                    <div [hidden]="!(editForm.controls.equipmentName?.dirty && editForm.controls.equipmentName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.equipmentName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentDescription" for="field_equipmentDescription">Equipment Description</label>
+                    <input type="text" class="form-control" name="equipmentDescription" id="field_equipmentDescription"
+                        [(ngModel)]="equipment.equipmentDescription" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentType" for="field_equipmentType">Equipment Type</label>
+                    <select class="form-control" name="equipmentType" [(ngModel)]="equipment.equipmentType" id="field_equipmentType" >
+                        <option value="WEAPON">{{'insightApp.EquipmentType.WEAPON' | translate}}</option>
+                        <option value="TOOL">{{'insightApp.EquipmentType.TOOL' | translate}}</option>
+                        <option value="GARDENING">{{'insightApp.EquipmentType.GARDENING' | translate}}</option>
+                        <option value="RUMOR">{{'insightApp.EquipmentType.RUMOR' | translate}}</option>
+                        <option value="UNKNOWN">{{'insightApp.EquipmentType.UNKNOWN' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentCoordinates" for="field_equipmentCoordinates">Equipment Coordinates</label>
+                    <input type="text" class="form-control" name="equipmentCoordinates" id="field_equipmentCoordinates"
+                        [(ngModel)]="equipment.equipmentCoordinates" />
+                </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="insightApp.equipment.location" for="field_location">Location</label>
+                    <select class="form-control" id="field_location" multiple name="location" [(ngModel)]="equipment.locations">
+                        <option [ngValue]="getSelected(equipment.locations, locationOption)" *ngFor="let locationOption of locations; trackBy: trackLocationById">{{locationOption.locationName}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label jhiTranslate="insightApp.equipment.organisation" for="field_organisation">Organisation</label>
+                    <select class="form-control" id="field_organisation" multiple name="organisation" [(ngModel)]="equipment.organisations">
+                        <option [ngValue]="getSelected(equipment.organisations, organisationOption)" *ngFor="let organisationOption of organisations; trackBy: trackOrganisationById">{{organisationOption.oganisationName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

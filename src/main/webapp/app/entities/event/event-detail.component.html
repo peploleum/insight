@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="event">
+            <h2><span jhiTranslate="insightApp.event.detail.title">Event</span> {{event.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.event.eventName">Event Name</span></dt>
+                <dd>
+                    <span>{{event.eventName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventDescription">Event Description</span></dt>
+                <dd>
+                    <span>{{event.eventDescription}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventType">Event Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'insightApp.EventType.' + event.eventType}}">{{event.eventType}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventCoordinates">Event Coordinates</span></dt>
+                <dd>
+                    <span>{{event.eventCoordinates}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.equipment">Equipment</span></dt>
+                <dd>
+                    <span *ngFor="let equipment of event.equipment; let last = last">
+                        <a [routerLink]="['/equipment', equipment?.id, 'view' ]">{{equipment.equipmentName}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.location">Location</span></dt>
+                <dd>
+                    <span *ngFor="let location of event.locations; let last = last">
+                        <a [routerLink]="['/location', location?.id, 'view' ]">{{location.locationName}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.organisation">Organisation</span></dt>
+                <dd>
+                    <span *ngFor="let organisation of event.organisations; let last = last">
+                        <a [routerLink]="['/organisation', organisation?.id, 'view' ]">{{organisation.oganisationName}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/event', event.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

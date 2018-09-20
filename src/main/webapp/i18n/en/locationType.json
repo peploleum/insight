@@ -1,0 +1,10 @@
+{
+    "insightApp": {
+        "LocationType" : {
+            "null": "",
+            "CITY": "CITY",
+            "COUNTRY": "COUNTRY",
+            "UNKNOWN": "UNKNOWN"
+        }
+    }
+}

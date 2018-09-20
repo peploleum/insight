@@ -54,7 +54,7 @@ spring:
             cluster-name:
             cluster-nodes: localhost:9300
         jest:
-            uri: localhost:9300
+            uri: localhost:9200
     liquibase:
         contexts: prod
     mail:

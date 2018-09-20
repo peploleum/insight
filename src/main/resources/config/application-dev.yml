@@ -50,12 +50,14 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.BeanClassLoaderAwareJCacheRegionFactory
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-name: insight
+            cluster-nodes: localhost:9200
             properties:
                 path:
                     logs: target/elasticsearch/log
                     data: target/elasticsearch/data
+        jest:
+            uri: localhost:9200
     liquibase:
         contexts: dev
     mail:

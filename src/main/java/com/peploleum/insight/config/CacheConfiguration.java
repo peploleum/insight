@@ -38,6 +38,31 @@ public class CacheConfiguration {
             cm.createCache(com.peploleum.insight.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(com.peploleum.insight.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.peploleum.insight.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Biographics.class.getName(), jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Biographics.class.getName() + ".events", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Biographics.class.getName() + ".equipment", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Biographics.class.getName() + ".locations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Biographics.class.getName() + ".organisations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Organisation.class.getName(), jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Organisation.class.getName() + ".locations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Organisation.class.getName() + ".biographics", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Organisation.class.getName() + ".events", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Organisation.class.getName() + ".equipment", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Location.class.getName(), jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Location.class.getName() + ".biographics", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Location.class.getName() + ".events", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Location.class.getName() + ".equipment", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Location.class.getName() + ".organisations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Event.class.getName(), jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Event.class.getName() + ".equipment", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Event.class.getName() + ".locations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Event.class.getName() + ".organisations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Event.class.getName() + ".biographics", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Equipment.class.getName(), jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Equipment.class.getName() + ".locations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Equipment.class.getName() + ".organisations", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Equipment.class.getName() + ".biographics", jcacheConfiguration);
+            cm.createCache(com.peploleum.insight.domain.Equipment.class.getName() + ".events", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
