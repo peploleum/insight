@@ -13,6 +13,7 @@ const ENTITY_STATES = [...visualisationRoute];
     imports: [InsightSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [VisualisationComponent, VisualisationCreateDashboardComponent, VisualisationCreateVisualisationDashboardComponent],
     entryComponents: [VisualisationComponent, VisualisationCreateDashboardComponent, VisualisationCreateVisualisationDashboardComponent],
+
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InsightSharedVisualisationModule {}
