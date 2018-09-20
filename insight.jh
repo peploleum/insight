@@ -1,0 +1,72 @@
+entity Biographics {
+	biographicsFirstname String required,
+    biographicsName String required,
+    biographicsAge Integer,
+    biographicsGender Gender,
+    biographicsPhoto ImageBlob
+}
+
+entity Organisation {
+	organisationName String required,
+    organisationSize Size
+}
+
+entity Location {
+	locationName String required,
+    locationType LocationType
+}
+
+entity Event {
+	eventName String required,
+    eventDescription String
+    eventType EventType
+}
+
+entity Equipment {
+	equipmentName String required,
+    equipmentDescription String
+    equipmentType EquipmentType
+}
+
+enum Gender {
+    MALE, FEMALE, UNKNOWN
+}
+
+enum Size {
+    SMALL, MEDIUM, LARGE
+}
+
+enum LocationType {
+    CITY, COUNTRY, UNKNOWN
+}
+
+enum EventType {
+    POLITICAL, DOMESTIC, ACCIDENT, RUMOR, UNKNOWN
+}
+
+enum EquipmentType {
+    WEAPON, TOOL, GARDENING, RUMOR, UNKNOWN
+}
+relationship ManyToMany {
+	Module{source(sourceName)} to Source{module}
+}
+
+relationship ManyToMany {
+	Application{module(moduleName)} to Module{application}
+}
+
+relationship ManyToOne {
+	Module{template(moduleTemplateName)} to ModuleTemplate{module(moduleName)}
+}
+
+// Set pagination options
+paginate Application with infinite-scroll
+paginate Module, Source with pagination
+
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+filter Application, Module, ModuleTemplate, Source
+// Set an angular suffix
+// angularSuffix * with mySuffix
