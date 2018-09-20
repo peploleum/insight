@@ -51,13 +51,13 @@ spring:
     data:
         elasticsearch:
             cluster-name: insight
-            cluster-nodes: localhost:9300
+            cluster-nodes: http://192.168.99.100:9300
             properties:
                 path:
                     logs: target/elasticsearch/log
                     data: target/elasticsearch/data
         jest:
-            uri: http://localhost:9200
+            uri: http://192.168.99.100:9200
     liquibase:
         contexts: dev
     mail:
@@ -143,4 +143,6 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+    kibana:
+        uri: http://192.168.99.100:5601/

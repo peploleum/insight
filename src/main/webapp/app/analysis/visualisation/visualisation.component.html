@@ -1,0 +1,21 @@
+<div>
+    <h2 id="page-heading">
+        <span>Visualisation</span>
+        <button class="btn btn-primary float-right" (click)="postDashboard()">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down" >
+            Generate Dashboards
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+
+    <div class="row" *ngIf="dashboardSafeUrls">
+        <div class="col-sm-12">
+            <div *ngFor="let db of dashboardSafeUrls;" class="embed-responsive embed-responsive-21by9">
+                <iframe class="embed-responsive-item" [src]="db"></iframe>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="dashboardIds"><span>{{dashboardIds.length}} Dashboards enregistrés</span></div>
+</div>

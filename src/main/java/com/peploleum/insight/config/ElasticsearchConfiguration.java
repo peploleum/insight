@@ -2,6 +2,8 @@ package com.peploleum.insight.config;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.elasticsearch.client.Client;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchProperties;
@@ -22,7 +24,9 @@ public class ElasticsearchConfiguration {
 
     @Bean
     public ElasticsearchTemplate elasticsearchTemplate(Client client, Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
-        return new ElasticsearchTemplate(client, new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));
+        ObjectMapper objectMapper = jackson2ObjectMapperBuilder.createXmlMapper(false).build();
+        objectMapper.registerModule(new JavaTimeModule());
+        return new ElasticsearchTemplate(client, new CustomEntityMapper(objectMapper));
     }
 
     public class CustomEntityMapper implements EntityMapper {
@@ -33,6 +37,10 @@ public class ElasticsearchConfiguration {
             this.objectMapper = objectMapper;
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
+            objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+            objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
         }
 
         @Override
