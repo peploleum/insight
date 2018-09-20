@@ -64,7 +64,7 @@
             "otherEntityRelationshipName": "biographics",
             "relationshipName": "organisation",
             "otherEntityName": "organisation",
-            "otherEntityField": "oganisationName",
+            "otherEntityField": "organisationName",
             "ownerSide": true
         }
     ],

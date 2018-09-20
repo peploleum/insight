@@ -51,13 +51,13 @@ spring:
     data:
         elasticsearch:
             cluster-name: insight
-            cluster-nodes: localhost:9200
+            cluster-nodes: localhost:9300
             properties:
                 path:
                     logs: target/elasticsearch/log
                     data: target/elasticsearch/data
         jest:
-            uri: localhost:9200
+            uri: http://localhost:9200
     liquibase:
         contexts: dev
     mail:

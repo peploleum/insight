@@ -44,7 +44,7 @@
             "otherEntityRelationshipName": "event",
             "relationshipName": "organisation",
             "otherEntityName": "organisation",
-            "otherEntityField": "oganisationName",
+            "otherEntityField": "organisationName",
             "ownerSide": true
         },
         {

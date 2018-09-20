@@ -57,18 +57,18 @@ relationship ManyToMany {
 	Biographics{event(eventName)} to Event{biographics(biographicsName)},
     Biographics{equipment(equipmentName)} to Equipment{biographics(biographicsName)},
     Biographics{location(locationName)} to Location{biographics(biographicsName)},
-    Biographics{organisation(oganisationName)} to Organisation{biographics(biographicsName)}
+    Biographics{organisation(organisationName)} to Organisation{biographics(biographicsName)}
 }
 
 relationship ManyToMany {
     Event{equipment(equipmentName)} to Equipment{event(eventName)},
     Event{location(locationName)} to Location{event(eventName)},
-    Event{organisation(oganisationName)} to Organisation{event(eventName)}
+    Event{organisation(organisationName)} to Organisation{event(eventName)}
 }
 
 relationship ManyToMany {
     Equipment{location(locationName)} to Location{equipment(equipmentName)},
-    Equipment{organisation(oganisationName)} to Organisation{equipment(equipmentName)}
+    Equipment{organisation(organisationName)} to Organisation{equipment(equipmentName)}
 }
 
 relationship ManyToMany {

@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label jhiTranslate="insightApp.equipment.organisation" for="field_organisation">Organisation</label>
                     <select class="form-control" id="field_organisation" multiple name="organisation" [(ngModel)]="equipment.organisations">
-                        <option [ngValue]="getSelected(equipment.organisations, organisationOption)" *ngFor="let organisationOption of organisations; trackBy: trackOrganisationById">{{organisationOption.oganisationName}}</option>
+                        <option [ngValue]="getSelected(equipment.organisations, organisationOption)" *ngFor="let organisationOption of organisations; trackBy: trackOrganisationById">{{organisationOption.organisationName}}</option>
                     </select>
                 </div>
             </div>

@@ -30,7 +30,7 @@
                 <dt><span jhiTranslate="insightApp.equipment.organisation">Organisation</span></dt>
                 <dd>
                     <span *ngFor="let organisation of equipment.organisations; let last = last">
-                        <a [routerLink]="['/organisation', organisation?.id, 'view' ]">{{organisation.oganisationName}}</a>{{last ? '' : ', '}}
+                        <a [routerLink]="['/organisation', organisation?.id, 'view' ]">{{organisation.organisationName}}</a>{{last ? '' : ', '}}
                     </span>
                 </dd>
             </dl>
