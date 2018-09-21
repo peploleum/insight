@@ -13,7 +13,6 @@ import com.peploleum.insight.service.BiographicsService;
 import com.peploleum.insight.service.dto.BiographicsDTO;
 import com.peploleum.insight.service.mapper.BiographicsMapper;
 import com.peploleum.insight.web.rest.errors.ExceptionTranslator;
-import com.peploleum.insight.service.dto.BiographicsCriteria;
 import com.peploleum.insight.service.BiographicsQueryService;
 
 import org.junit.Before;
@@ -122,7 +121,7 @@ public class BiographicsResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final BiographicsResource biographicsResource = new BiographicsResource(biographicsService, biographicsQueryService);
+        final BiographicsResource biographicsResource = new BiographicsResource(biographicsService, biographicsQueryService, null);
         this.restBiographicsMockMvc = MockMvcBuilders.standaloneSetup(biographicsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -263,7 +262,7 @@ public class BiographicsResourceIntTest {
     }
     
     public void getAllBiographicsWithEagerRelationshipsIsEnabled() throws Exception {
-        BiographicsResource biographicsResource = new BiographicsResource(biographicsServiceMock, biographicsQueryService);
+        BiographicsResource biographicsResource = new BiographicsResource(biographicsServiceMock, biographicsQueryService, null);
         when(biographicsServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restBiographicsMockMvc = MockMvcBuilders.standaloneSetup(biographicsResource)
@@ -279,7 +278,7 @@ public class BiographicsResourceIntTest {
     }
 
     public void getAllBiographicsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        BiographicsResource biographicsResource = new BiographicsResource(biographicsServiceMock, biographicsQueryService);
+        BiographicsResource biographicsResource = new BiographicsResource(biographicsServiceMock, biographicsQueryService, null);
             when(biographicsServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restBiographicsMockMvc = MockMvcBuilders.standaloneSetup(biographicsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

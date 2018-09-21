@@ -1,13 +1,14 @@
 package com.peploleum.insight.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.peploleum.insight.service.BiographicsQueryService;
 import com.peploleum.insight.service.BiographicsService;
+import com.peploleum.insight.service.GeneratorService;
+import com.peploleum.insight.service.dto.BiographicsCriteria;
+import com.peploleum.insight.service.dto.BiographicsDTO;
 import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
 import com.peploleum.insight.web.rest.util.PaginationUtil;
-import com.peploleum.insight.service.dto.BiographicsDTO;
-import com.peploleum.insight.service.dto.BiographicsCriteria;
-import com.peploleum.insight.service.BiographicsQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Biographics.
@@ -43,9 +40,12 @@ public class BiographicsResource {
 
     private final BiographicsQueryService biographicsQueryService;
 
-    public BiographicsResource(BiographicsService biographicsService, BiographicsQueryService biographicsQueryService) {
+    private final GeneratorService generatorService;
+
+    public BiographicsResource(BiographicsService biographicsService, BiographicsQueryService biographicsQueryService, GeneratorService generatorService) {
         this.biographicsService = biographicsService;
         this.biographicsQueryService = biographicsQueryService;
+        this.generatorService = generatorService;
     }
 
     /**
@@ -138,7 +138,7 @@ public class BiographicsResource {
      * SEARCH  /_search/biographics?query=:query : search for the biographics corresponding
      * to the query.
      *
-     * @param query the query of the biographics search
+     * @param query    the query of the biographics search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -149,6 +149,19 @@ public class BiographicsResource {
         Page<BiographicsDTO> page = biographicsService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/biographics");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /bulk
+     *
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @GetMapping("/biographics/bulk")
+    @Timed
+    public ResponseEntity<Void> bulk() {
+        log.debug("REST request to bulk : {}");
+        this.generatorService.feed();
+        return ResponseEntity.ok().build();
     }
 
 }

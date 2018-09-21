@@ -5,6 +5,7 @@
             "home": {
                 "title": "Biographics",
                 "createLabel": "Créer un nouveau Biographics",
+                "createBulk": "Create en masse",
                 "createOrEditLabel": "Créer ou éditer un Biographics",
                 "search": "Recherche pour Biographics"
             },

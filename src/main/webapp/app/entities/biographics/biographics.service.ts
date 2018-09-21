@@ -41,4 +41,9 @@ export class BiographicsService {
         const options = createRequestOption(req);
         return this.http.get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
+
+    bulk(req?: any): Observable<HttpResponse<any>> {
+        const options = createRequestOption(req);
+        return this.http.get<any>(this.resourceUrl + '/bulk', { params: options, observe: 'response' });
+    }
 }
