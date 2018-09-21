@@ -49,6 +49,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                 biographicsDTO.setBiographicsName(biographicsLastname);
                 biographicsDTO.setBiographicsAge(12);
                 biographicsDTO.setBiographicsGender(randomGender);
+                biographicsDTO.setBiographicsCoordinates("[" + this.generateLongitude() + "," + this.generateLatitude() + "]");
                 this.biographicsService.save(biographicsDTO);
                 j++;
             }
@@ -59,5 +60,15 @@ public class GeneratorServiceImpl implements GeneratorService {
             }
             i++;
         }
+    }
+
+    private double generateLatitude() {
+        final double v = ThreadLocalRandom.current().nextDouble(41, 51);
+        return v;
+    }
+
+    private double generateLongitude() {
+        final double v = ThreadLocalRandom.current().nextDouble(-6, 8.3);
+        return v;
     }
 }
