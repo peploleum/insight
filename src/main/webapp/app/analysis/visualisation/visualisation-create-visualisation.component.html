@@ -1,0 +1,33 @@
+    <div>
+        <span>Type : {{visualisationParameters.visualizationType}}</span>
+        <div class="form-group">
+            <label class="form-control-label" for="field_visualizationTitle">Titre de la visualisation</label>
+            <input type="text" class="form-control" name="visualizationTitle" id="field_visualizationTitle"
+                   [(ngModel)]="visualisationParameters.visualizationTitle" required/>
+            <!--<div
+                [hidden]="!(createDashboardForm.controls.visualizationTitle?.dirty && createDashboardForm.controls.visualizationTitle?.invalid)">
+                <small class="form-text text-danger"
+                       [hidden]="!createDashboardForm.controls.visualizationTitle?.errors?.required">
+                    This field is required.
+                </small>
+            </div>-->
+        </div>
+        <div class="form-group">
+            <label for="field_indexPatternId">Index Pattern Cible</label>
+            <select class="form-control" id="field_indexPatternId" name="indexPatternId"
+                    [(ngModel)]="visualisationParameters.indexPatternId">
+                <option [ngValue]="entity.indexPatternId" *ngFor="let entity of mappingInfo; trackBy: trackIndexById">
+                    {{entity.indexPatternName}}
+                </option>
+            </select>
+        </div>
+        <div *ngIf="visualisationParameters.indexPatternId != ''" class="form-group">
+            <label for="field_indexPatternFieldTarget">Target field</label>
+            <select class="form-control" id="field_indexPatternFieldTarget" name="indexPatternFieldTarget"
+                    [(ngModel)]="visualisationParameters.indexPatternFieldTarget">
+                <option [ngValue]="field.fieldName" *ngFor="let field of getSelectedIndexPattern().fields;">
+                    {{field.fieldName}}
+                </option>
+            </select>
+        </div>
+    </div>

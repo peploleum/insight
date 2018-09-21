@@ -1,16 +1,21 @@
 <div>
     <h2 id="page-heading">
         <span>Visualisation</span>
-        <button class="btn btn-primary float-right" (click)="postDashboard()">
+        <button class="btn btn-primary float-right" (click)="createDashboard()">
             <fa-icon [icon]="'plus'"></fa-icon>
-            <span class="hidden-sm-down" >
-            Generate Dashboards
+            <span class="hidden-sm-down">
+            Create Dashboard
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-
-    <div class="row" *ngIf="dashboardSafeUrls">
+    <div class="row" *ngIf="isEditing && mappingInfo.length > 0">
+        <div class="col-sm-12">
+            <jhi-visualisation-create-dashboard [mappingInfo]="mappingInfo"
+                                                (dashboardEmitter)="postDashboard($event)"></jhi-visualisation-create-dashboard>
+        </div>
+    </div>
+    <div class="row" *ngIf="dashboardSafeUrls && !isEditing">
         <div class="col-sm-12">
             <div *ngFor="let db of dashboardSafeUrls;" class="embed-responsive embed-responsive-21by9">
                 <iframe class="embed-responsive-item" [src]="db"></iframe>

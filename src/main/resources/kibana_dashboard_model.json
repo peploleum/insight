@@ -1,0 +1,17 @@
+{
+  "id": "dashboard_id",
+  "type": "dashboard",
+  "version": 1,
+  "attributes": {
+	"title": "Dashboard Model",
+	"hits": 0,
+	"description": "",
+	"panelsJSON": "[{\"gridData\":{\"w\":24,\"h\":15,\"x\":0,\"y\":0,\"i\":\"1\"},\"version\":\"7.0.0-alpha1\",\"panelIndex\":\"1\",\"type\":\"visualization\",\"id\":\"visualisation_id\",\"embeddableConfig\":{}}]",
+	"optionsJSON": "{\"darkTheme\":false,\"useMargins\":true,\"hidePanelTitles\":false}",
+	"version": 1,
+	"timeRestore": false,
+	"kibanaSavedObjectMeta": {
+	  "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+	}
+  }
+}

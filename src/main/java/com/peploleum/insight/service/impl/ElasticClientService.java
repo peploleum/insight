@@ -103,9 +103,11 @@ public class ElasticClientService {
                 KibanaObject index = this.kibanaObjects.stream().filter(ko -> ko.getId().equals(param.getIndexPatternId())).findFirst().get();
                 objectBundle.getObjects().add(visualisation);
                 objectBundle.getObjects().add(index);
+                this.kibanaObjects.add(visualisation);
             }
             final KibanaObject dash = dashboardParameters.getDashboardFromParameters();
             objectBundle.getObjects().add(dash);
+            this.kibanaObjects.add(dash);
 
             final String jsonBundle = this.getJsonDashboardBundleObjects(objectBundle);
             if (!jsonBundle.isEmpty())

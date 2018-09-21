@@ -51,7 +51,7 @@ spring:
     data:
         elasticsearch:
             cluster-name: insight
-            cluster-nodes: http://192.168.99.100:9300
+            cluster-nodes: 192.168.99.100:9300
             properties:
                 path:
                     logs: target/elasticsearch/log

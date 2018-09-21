@@ -1,14 +1,19 @@
 package com.peploleum.insight.domain.kibana;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.peploleum.insight.service.impl.ElasticClientService;
+
+import java.io.Serializable;
 
 /**
  * Visualisation parameters de Kibana
  */
-public class KibanaVisualisationGenerationParameters {
+public class KibanaVisualisationGenerationParameters implements Serializable {
 
     private String visualizationTitle;
 
+    @JsonProperty("visualizationType")
     private KibanaVisualisationType visualizationType;
 
     private String indexPatternId;
@@ -18,6 +23,8 @@ public class KibanaVisualisationGenerationParameters {
     private String timeFromFilter;
     private String timeToFilter;
 
+    public KibanaVisualisationGenerationParameters() {
+    }
 
     public KibanaVisualisationGenerationParameters(final KibanaObject indexPattern, final String indexPatternFieldTarget, final KibanaVisualisationType visualizationType, String visualizationTitle, String timeFromFilter, String timeToFilter) {
         this.visualizationTitle = visualizationTitle;
@@ -85,9 +92,10 @@ public class KibanaVisualisationGenerationParameters {
         this.visualizationType = visualizationType;
     }
 
+    @JsonIgnore
     public KibanaObject getVisualisationFromParameters() throws Exception {
         KibanaObject visualisation = null;
-        visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(ElasticClientService.class.getResource(this.visualizationType.getJsonModelFileUrl()));
+        visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResource(this.visualizationType.getJsonModelFileUrl()));
         switch (this.visualizationType) {
             case VISU_TABLE:
             case VISU_PIE:
