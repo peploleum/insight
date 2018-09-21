@@ -20,7 +20,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private BiographicsService biographicsService;
 
-    private static final int GEN_THRESHOLD = 20000;
+    private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 200;
 
     public GeneratorServiceImpl(BiographicsService biographicsService) {
@@ -51,6 +51,11 @@ public class GeneratorServiceImpl implements GeneratorService {
                 biographicsDTO.setBiographicsGender(randomGender);
                 this.biographicsService.save(biographicsDTO);
                 j++;
+            }
+            try {
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                this.log.error(e.getMessage(), e);
             }
             i++;
         }
