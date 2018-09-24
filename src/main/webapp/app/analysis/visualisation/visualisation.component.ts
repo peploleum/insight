@@ -20,6 +20,7 @@ export class VisualisationComponent implements OnInit, OnDestroy {
 
     isEditing = false;
     mappingInfo: EntityMappingInfo[] = [];
+    private KIBANA_HOST = 'localhost';
 
     constructor(private jhiAlertService: JhiAlertService, private visuService: VisualisationService, private ds: DomSanitizer) {}
 
@@ -48,7 +49,7 @@ export class VisualisationComponent implements OnInit, OnDestroy {
                     this.dashboardIds.push(new KibanaDashboardReference(id));
                 });
                 this.dashboardIds.forEach(dbRef => {
-                    this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, 'http://192.168.99.100:5601/'));
+                    this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, 'http://' + this.KIBANA_HOST + ':5601/'));
                 });
                 this.isEditing = false;
             },
