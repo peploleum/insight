@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.EventType;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
 /**
  * A Event.
@@ -43,6 +44,7 @@ public class Event implements Serializable {
     private EventType eventType;
 
     @Column(name = "event_coordinates")
+    @GeoPointField
     private String eventCoordinates;
 
     @ManyToMany

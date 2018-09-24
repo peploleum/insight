@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="createDashboardForm" role="form" novalidate (ngSubmit)="save()" #createDashboardForm="ngForm">
+            <h2>Create a Dashboard Kibana</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dashboardTitle">Titre du dashboard</label>
+                    <input type="text" class="form-control" name="dashboardTitle" id="field_dashboardTitle"
+                           [(ngModel)]="dashboardParameters.dashboardTitle" required/>
+                    <div
+                        [hidden]="!(createDashboardForm.controls.dashboardTitle?.dirty && createDashboardForm.controls.dashboardTitle?.invalid)">
+                        <small class="form-text text-danger"
+                               [hidden]="!createDashboardForm.controls.dashboardTitle?.errors?.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div *ngFor="let visualisation of dashboardParameters.visualisations;">
+                    <jhi-visualisation-create-visualisation [visualisationParameters]="visualisation" [mappingInfo]="mappingInfo"></jhi-visualisation-create-visualisation>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>
+                    &nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="createDashboardForm.form.invalid || isSaving"
+                        class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>
+                    &nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
