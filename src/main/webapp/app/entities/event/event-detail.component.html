@@ -21,6 +21,10 @@
                 <dd>
                     <span>{{event.eventCoordinates}}</span>
                 </dd>
+                <dt><span jhiTranslate="insightApp.event.eventDate">Event Date</span></dt>
+                <dd>
+                    <span>{{event.eventDate}}</span>
+                </dd>
                 <dt><span jhiTranslate="insightApp.event.equipment">Equipment</span></dt>
                 <dd>
                     <span *ngFor="let equipment of event.equipment; let last = last">

@@ -37,8 +37,13 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="event_date" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+        <dropDefaultValue tableName="event" columnName="event_date" columnDataType="datetime"/>
         
         <createTable tableName="event_equipment">
             <column name="equipment_id" type="bigint">

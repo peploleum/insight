@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as ec } from 'protractor';
+import { browser, ExpectedConditions as ec, protractor } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { EventComponentsPage, EventUpdatePage } from './event.page-object';
@@ -39,6 +39,8 @@ describe('Event e2e test', () => {
         await eventUpdatePage.eventTypeSelectLastOption();
         await eventUpdatePage.setEventCoordinatesInput('eventCoordinates');
         expect(await eventUpdatePage.getEventCoordinatesInput()).toMatch('eventCoordinates');
+        await eventUpdatePage.setEventDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM');
+        expect(await eventUpdatePage.getEventDateInput()).toContain('2001-01-01T02:30');
         // eventUpdatePage.equipmentSelectLastOption();
         // eventUpdatePage.locationSelectLastOption();
         // eventUpdatePage.organisationSelectLastOption();

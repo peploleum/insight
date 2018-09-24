@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.Gender;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
 /**
  * A Biographics.
@@ -53,6 +54,7 @@ public class Biographics implements Serializable {
     private String biographicsPhotoContentType;
 
     @Column(name = "biographics_coordinates")
+    @GeoPointField
     private String biographicsCoordinates;
 
     @ManyToMany

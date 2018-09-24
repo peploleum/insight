@@ -2,6 +2,7 @@ package com.peploleum.insight.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peploleum.insight.domain.Biographics;
 import com.peploleum.insight.domain.kibana.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class ElasticClientService {
         final String jsonObjects = this.getJsonObjects();
         if (!jsonObjects.isEmpty())
             this.postMessageToKibana(jsonObjects, KibanaMessageUri.POST_BULK_OBJECT);
+        this.setDefaultKibanaIndexPattern(Biographics.class.getSimpleName().toLowerCase());
     }
 
     /**
@@ -59,7 +61,7 @@ public class ElasticClientService {
         if (this.kibanaObjects.stream().anyMatch(ko -> ko.getType().equals(KibanaObject.DASHBOARD)))
             return;
 
-        KibanaObject defaultIndex = this.setDefaultKibanaIndexPattern();
+        KibanaObject defaultIndex = this.setDefaultKibanaIndexPattern("biographics");
         KibanaObject evenementIndex = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN) && ko.getAttributes().getTitle().equals("evenement")).findFirst().get();
 
         List<KibanaVisualisationGenerationParameters> visuParamList = new ArrayList<>();
@@ -72,7 +74,7 @@ public class ElasticClientService {
         ipTargetField = "coordonnee";
         final KibanaObject visuMap = this.generateVisualization(defaultIndex, ipTargetField, KibanaVisualisationType.VISU_MAP, visuParamList);
 
-        final KibanaObject dash = this.generateDashboard(visuParamList, "Dashboard Test");
+        final KibanaObject dash = this.generateDashboard(visuParamList, new ArrayList<>(), "Dashboard Test");
         if (dash == null) {
             return;
         }
@@ -95,7 +97,6 @@ public class ElasticClientService {
     public void generateAndPostKibanaDashboard(final KibanaDashboardGenerationParameters dashboardParameters) {
         if (this.kibanaObjects.stream().anyMatch(ko -> ko.getType().equals(KibanaObject.DASHBOARD)))
             return;
-
         try {
             KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
             for (KibanaVisualisationGenerationParameters param : dashboardParameters.getVisualisations()) {
@@ -105,7 +106,8 @@ public class ElasticClientService {
                 objectBundle.getObjects().add(index);
                 this.kibanaObjects.add(visualisation);
             }
-            final KibanaObject dash = dashboardParameters.getDashboardFromParameters();
+            List<String> visualisationIds = objectBundle.getObjects().stream().filter(ko -> ko.getType().equals(KibanaObject.VISUALIZATION)).map(ko -> ko.getId()).collect(Collectors.toList());
+            final KibanaObject dash = dashboardParameters.getDashboardFromParameters(visualisationIds);
             objectBundle.getObjects().add(dash);
             this.kibanaObjects.add(dash);
 
@@ -160,10 +162,10 @@ public class ElasticClientService {
     /**
      * Generate un dashboard depuis un model JSON et une visualisation
      */
-    private KibanaObject generateDashboard(final List<KibanaVisualisationGenerationParameters> kibanaVisualisationsParams, final String dashboardTitle) {
+    private KibanaObject generateDashboard(final List<KibanaVisualisationGenerationParameters> kibanaVisualisationsParams, List<String> visualisationIds, final String dashboardTitle) {
         KibanaObject dashboard = null;
         try {
-            dashboard = new KibanaDashboardGenerationParameters(dashboardTitle, kibanaVisualisationsParams).getDashboardFromParameters();
+            dashboard = new KibanaDashboardGenerationParameters(dashboardTitle, kibanaVisualisationsParams).getDashboardFromParameters(visualisationIds);
             this.kibanaObjects.add(dashboard);
         } catch (Exception e) {
             this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
@@ -171,8 +173,8 @@ public class ElasticClientService {
         return dashboard;
     }
 
-    private KibanaObject setDefaultKibanaIndexPattern() {
-        KibanaObject defaultIndex = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN) && ko.getAttributes().getTitle().equals("personne")).findFirst().get();
+    private KibanaObject setDefaultKibanaIndexPattern(String indexName) {
+        KibanaObject defaultIndex = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN) && ko.getAttributes().getTitle().equals(indexName)).findFirst().get();
         String jsonValue = "{\"value\":\"" + defaultIndex.getId() + "\"}";
         this.postMessageToKibana(jsonValue, KibanaMessageUri.SET_DEFAULT_INDEX_PATTERN);
         return defaultIndex;

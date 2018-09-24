@@ -21,6 +21,7 @@
             "eventDescription": "Event Description",
             "eventType": "Event Type",
             "eventCoordinates": "Event Coordinates",
+            "eventDate": "Event Date",
             "equipment": "Equipment",
             "location": "Location",
             "organisation": "Organisation",

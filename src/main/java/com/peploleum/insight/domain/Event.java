@@ -9,11 +9,14 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.EventType;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
 /**
@@ -46,6 +49,10 @@ public class Event implements Serializable {
     @Column(name = "event_coordinates")
     @GeoPointField
     private String eventCoordinates;
+
+    @Column(name = "event_date")
+    @Field(type= FieldType.Date)
+    private Instant eventDate;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -132,6 +139,19 @@ public class Event implements Serializable {
 
     public void setEventCoordinates(String eventCoordinates) {
         this.eventCoordinates = eventCoordinates;
+    }
+
+    public Instant getEventDate() {
+        return eventDate;
+    }
+
+    public Event eventDate(Instant eventDate) {
+        this.eventDate = eventDate;
+        return this;
+    }
+
+    public void setEventDate(Instant eventDate) {
+        this.eventDate = eventDate;
     }
 
     public Set<Equipment> getEquipment() {
@@ -263,6 +283,7 @@ public class Event implements Serializable {
             ", eventDescription='" + getEventDescription() + "'" +
             ", eventType='" + getEventType() + "'" +
             ", eventCoordinates='" + getEventCoordinates() + "'" +
+            ", eventDate='" + getEventDate() + "'" +
             "}";
     }
 }

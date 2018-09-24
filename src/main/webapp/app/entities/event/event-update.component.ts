@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IEvent } from 'app/shared/model/event.model';
@@ -30,6 +32,7 @@ export class EventUpdateComponent implements OnInit {
     organisations: IOrganisation[];
 
     biographics: IBiographics[];
+    eventDate: string;
 
     constructor(
         private jhiAlertService: JhiAlertService,
@@ -78,6 +81,7 @@ export class EventUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.event.eventDate = moment(this.eventDate, DATE_TIME_FORMAT);
         if (this.event.id !== undefined) {
             this.subscribeToSaveResponse(this.eventService.update(this.event));
         } else {
@@ -134,5 +138,6 @@ export class EventUpdateComponent implements OnInit {
 
     set event(event: IEvent) {
         this._event = event;
+        this.eventDate = moment(event.eventDate).format(DATE_TIME_FORMAT);
     }
 }

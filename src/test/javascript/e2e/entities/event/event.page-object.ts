@@ -21,6 +21,7 @@ export class EventUpdatePage {
     eventDescriptionInput = element(by.id('field_eventDescription'));
     eventTypeSelect = element(by.id('field_eventType'));
     eventCoordinatesInput = element(by.id('field_eventCoordinates'));
+    eventDateInput = element(by.id('field_eventDate'));
     equipmentSelect = element(by.id('field_equipment'));
     locationSelect = element(by.id('field_location'));
     organisationSelect = element(by.id('field_organisation'));
@@ -66,6 +67,14 @@ export class EventUpdatePage {
 
     async getEventCoordinatesInput() {
         return this.eventCoordinatesInput.getAttribute('value');
+    }
+
+    async setEventDateInput(eventDate) {
+        await this.eventDateInput.sendKeys(eventDate);
+    }
+
+    async getEventDateInput() {
+        return this.eventDateInput.getAttribute('value');
     }
 
     async equipmentSelectLastOption() {

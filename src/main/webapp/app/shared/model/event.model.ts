@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { IEquipment } from 'app/shared/model//equipment.model';
 import { ILocation } from 'app/shared/model//location.model';
 import { IOrganisation } from 'app/shared/model//organisation.model';
@@ -17,6 +18,7 @@ export interface IEvent {
     eventDescription?: string;
     eventType?: EventType;
     eventCoordinates?: string;
+    eventDate?: Moment;
     equipment?: IEquipment[];
     locations?: ILocation[];
     organisations?: IOrganisation[];
@@ -30,6 +32,7 @@ export class Event implements IEvent {
         public eventDescription?: string,
         public eventType?: EventType,
         public eventCoordinates?: string,
+        public eventDate?: Moment,
         public equipment?: IEquipment[],
         public locations?: ILocation[],
         public organisations?: IOrganisation[],

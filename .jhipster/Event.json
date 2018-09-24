@@ -20,6 +20,10 @@
         {
             "fieldName": "eventCoordinates",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "eventDate",
+            "fieldType": "Instant"
         }
     ],
     "relationships": [

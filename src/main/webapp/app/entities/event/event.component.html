@@ -34,6 +34,7 @@
             <th jhiSortBy="eventDescription"><span jhiTranslate="insightApp.event.eventDescription">Event Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="eventType"><span jhiTranslate="insightApp.event.eventType">Event Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="eventCoordinates"><span jhiTranslate="insightApp.event.eventCoordinates">Event Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="eventDate"><span jhiTranslate="insightApp.event.eventDate">Event Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -44,6 +45,7 @@
                 <td>{{event.eventDescription}}</td>
                 <td jhiTranslate="{{'insightApp.EventType.' + event.eventType}}">{{event.eventType}}</td>
                 <td>{{event.eventCoordinates}}</td>
+                <td>{{event.eventDate | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

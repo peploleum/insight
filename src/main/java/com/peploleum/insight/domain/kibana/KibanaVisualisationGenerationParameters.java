@@ -94,19 +94,18 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
 
     @JsonIgnore
     public KibanaObject getVisualisationFromParameters() throws Exception {
-        KibanaObject visualisation = null;
-        visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResource(this.visualizationType.getJsonModelFileUrl()));
+        KibanaObject visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResource(this.visualizationType.getJsonModelFileUrl()));
         switch (this.visualizationType) {
             case VISU_TABLE:
             case VISU_PIE:
             case VISU_VERT_BAR:
-                visualisation = KibanaObjectUtils.updateDefaultVisualisation(visualisation, this.visualizationType.toString(), this.indexPatternFieldTarget, this.indexPatternId);
+                visualisation = KibanaObjectUtils.updateDefaultVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternId);
                 break;
             case VISU_TIMELINE:
-                visualisation = KibanaObjectUtils.updateTimelineVisualisation(visualisation, this.visualizationType.toString(), this.indexPatternFieldTarget, this.indexPatternName, this.indexPatternId);
+                visualisation = KibanaObjectUtils.updateTimelineVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternName, this.indexPatternId);
                 break;
             case VISU_MAP:
-                visualisation = KibanaObjectUtils.updateMapVisualisation(visualisation, this.visualizationType.toString(), this.indexPatternFieldTarget, this.indexPatternId);
+                visualisation = KibanaObjectUtils.updateMapVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternId);
                 break;
             default:
                 break;

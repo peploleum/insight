@@ -25,13 +25,13 @@ public enum KibanaDashboardType {
             case 1:
                 return KibanaDashboardType.DASH_SINGLE;
             case 2:
-                return KibanaDashboardType.DASH_SINGLE;
+                return KibanaDashboardType.DASH_DOUBLE;
             case 3:
-                return KibanaDashboardType.DASH_SINGLE;
+                return KibanaDashboardType.DASH_TRIPLE;
             case 4:
-                return KibanaDashboardType.DASH_SINGLE;
+                return KibanaDashboardType.DASH_QUADRUPLE;
             case 5:
-                return KibanaDashboardType.DASH_SINGLE;
+                return KibanaDashboardType.DASH_QUINTUPLE;
             default:
                 return KibanaDashboardType.DASH_SINGLE;
         }

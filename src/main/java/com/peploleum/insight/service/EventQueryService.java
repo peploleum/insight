@@ -92,6 +92,9 @@ public class EventQueryService extends QueryService<Event> {
             if (criteria.getEventCoordinates() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getEventCoordinates(), Event_.eventCoordinates));
             }
+            if (criteria.getEventDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getEventDate(), Event_.eventDate));
+            }
             if (criteria.getEquipmentId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getEquipmentId(), Event_.equipment, Equipment_.id));
             }

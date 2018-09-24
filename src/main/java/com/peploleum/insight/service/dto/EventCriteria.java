@@ -10,7 +10,7 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
-
+import io.github.jhipster.service.filter.InstantFilter;
 
 
 
@@ -42,6 +42,8 @@ public class EventCriteria implements Serializable {
     private EventTypeFilter eventType;
 
     private StringFilter eventCoordinates;
+
+    private InstantFilter eventDate;
 
     private LongFilter equipmentId;
 
@@ -94,6 +96,14 @@ public class EventCriteria implements Serializable {
         this.eventCoordinates = eventCoordinates;
     }
 
+    public InstantFilter getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(InstantFilter eventDate) {
+        this.eventDate = eventDate;
+    }
+
     public LongFilter getEquipmentId() {
         return equipmentId;
     }
@@ -134,6 +144,7 @@ public class EventCriteria implements Serializable {
                 (eventDescription != null ? "eventDescription=" + eventDescription + ", " : "") +
                 (eventType != null ? "eventType=" + eventType + ", " : "") +
                 (eventCoordinates != null ? "eventCoordinates=" + eventCoordinates + ", " : "") +
+                (eventDate != null ? "eventDate=" + eventDate + ", " : "") +
                 (equipmentId != null ? "equipmentId=" + equipmentId + ", " : "") +
                 (locationId != null ? "locationId=" + locationId + ", " : "") +
                 (organisationId != null ? "organisationId=" + organisationId + ", " : "") +

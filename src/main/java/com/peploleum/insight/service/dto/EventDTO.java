@@ -1,5 +1,6 @@
 package com.peploleum.insight.service.dto;
 
+import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -22,6 +23,8 @@ public class EventDTO implements Serializable {
     private EventType eventType;
 
     private String eventCoordinates;
+
+    private Instant eventDate;
 
     private Set<EquipmentDTO> equipment = new HashSet<>();
 
@@ -67,6 +70,14 @@ public class EventDTO implements Serializable {
 
     public void setEventCoordinates(String eventCoordinates) {
         this.eventCoordinates = eventCoordinates;
+    }
+
+    public Instant getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Instant eventDate) {
+        this.eventDate = eventDate;
     }
 
     public Set<EquipmentDTO> getEquipment() {
@@ -122,6 +133,7 @@ public class EventDTO implements Serializable {
             ", eventDescription='" + getEventDescription() + "'" +
             ", eventType='" + getEventType() + "'" +
             ", eventCoordinates='" + getEventCoordinates() + "'" +
+            ", eventDate='" + getEventDate() + "'" +
             "}";
     }
 }

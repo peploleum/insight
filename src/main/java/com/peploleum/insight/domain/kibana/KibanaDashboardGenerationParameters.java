@@ -6,7 +6,9 @@ import com.peploleum.insight.service.impl.ElasticClientService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -43,15 +45,15 @@ public class KibanaDashboardGenerationParameters implements Serializable {
     }
 
     @JsonIgnore
-    public KibanaObject getDashboardFromParameters() throws Exception {
+    public KibanaObject getDashboardFromParameters(List<String> visualisationIds) throws Exception {
         KibanaDashboardType dashboardType = KibanaDashboardType.getTypeFromNumber(this.visualisations.size());
         KibanaObject dashboard = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaDashboardGenerationParameters.class.getResource(dashboardType.getJsonModelFileUrl()));
 
         KibanaVisualisationGenerationParameters timelineVisualisationParams = this.visualisations.stream().filter(visu -> visu.getVisualizationType().equals(KibanaVisualisationType.VISU_TIMELINE)).findAny().get();
-        final String timeFrom = timelineVisualisationParams != null ? timelineVisualisationParams.getTimeFromFilter() : "";
-        final String timeTo = timelineVisualisationParams != null ? timelineVisualisationParams.getTimeToFilter() : "";
+        final String timeFrom = timelineVisualisationParams.getTimeFromFilter() != null ? timelineVisualisationParams.getTimeFromFilter() : "2018-09-01T00:00:00.00Z";
+        final String timeTo = timelineVisualisationParams.getTimeToFilter() != null ? timelineVisualisationParams.getTimeToFilter() : "2018-10-01T00:00:00.00Z";
 
-        dashboard = KibanaObjectUtils.updateDashboardWith5VisualisationsAndTime(dashboard, this.dashboardTitle, this.visualisations.stream().map(visu -> visu.getIndexPatternId()).collect(Collectors.toList()), timeFrom, timeTo);
+        dashboard = KibanaObjectUtils.updateDashboardWith5VisualisationsAndTime(dashboard, this.dashboardTitle, visualisationIds, timeFrom, timeTo);
         return dashboard;
     }
 }

@@ -34,6 +34,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +70,9 @@ public class EventResourceIntTest {
 
     private static final String DEFAULT_EVENT_COORDINATES = "AAAAAAAAAA";
     private static final String UPDATED_EVENT_COORDINATES = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_EVENT_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_EVENT_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private EventRepository eventRepository;
@@ -132,7 +137,8 @@ public class EventResourceIntTest {
             .eventName(DEFAULT_EVENT_NAME)
             .eventDescription(DEFAULT_EVENT_DESCRIPTION)
             .eventType(DEFAULT_EVENT_TYPE)
-            .eventCoordinates(DEFAULT_EVENT_COORDINATES);
+            .eventCoordinates(DEFAULT_EVENT_COORDINATES)
+            .eventDate(DEFAULT_EVENT_DATE);
         return event;
     }
 
@@ -161,6 +167,7 @@ public class EventResourceIntTest {
         assertThat(testEvent.getEventDescription()).isEqualTo(DEFAULT_EVENT_DESCRIPTION);
         assertThat(testEvent.getEventType()).isEqualTo(DEFAULT_EVENT_TYPE);
         assertThat(testEvent.getEventCoordinates()).isEqualTo(DEFAULT_EVENT_COORDINATES);
+        assertThat(testEvent.getEventDate()).isEqualTo(DEFAULT_EVENT_DATE);
 
         // Validate the Event in Elasticsearch
         verify(mockEventSearchRepository, times(1)).save(testEvent);
@@ -222,7 +229,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.[*].eventName").value(hasItem(DEFAULT_EVENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].eventDescription").value(hasItem(DEFAULT_EVENT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].eventType").value(hasItem(DEFAULT_EVENT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())));
+            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())))
+            .andExpect(jsonPath("$.[*].eventDate").value(hasItem(DEFAULT_EVENT_DATE.toString())));
     }
     
     public void getAllEventsWithEagerRelationshipsIsEnabled() throws Exception {
@@ -270,7 +278,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.eventName").value(DEFAULT_EVENT_NAME.toString()))
             .andExpect(jsonPath("$.eventDescription").value(DEFAULT_EVENT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.eventType").value(DEFAULT_EVENT_TYPE.toString()))
-            .andExpect(jsonPath("$.eventCoordinates").value(DEFAULT_EVENT_COORDINATES.toString()));
+            .andExpect(jsonPath("$.eventCoordinates").value(DEFAULT_EVENT_COORDINATES.toString()))
+            .andExpect(jsonPath("$.eventDate").value(DEFAULT_EVENT_DATE.toString()));
     }
 
     @Test
@@ -431,6 +440,45 @@ public class EventResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllEventsByEventDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        eventRepository.saveAndFlush(event);
+
+        // Get all the eventList where eventDate equals to DEFAULT_EVENT_DATE
+        defaultEventShouldBeFound("eventDate.equals=" + DEFAULT_EVENT_DATE);
+
+        // Get all the eventList where eventDate equals to UPDATED_EVENT_DATE
+        defaultEventShouldNotBeFound("eventDate.equals=" + UPDATED_EVENT_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllEventsByEventDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        eventRepository.saveAndFlush(event);
+
+        // Get all the eventList where eventDate in DEFAULT_EVENT_DATE or UPDATED_EVENT_DATE
+        defaultEventShouldBeFound("eventDate.in=" + DEFAULT_EVENT_DATE + "," + UPDATED_EVENT_DATE);
+
+        // Get all the eventList where eventDate equals to UPDATED_EVENT_DATE
+        defaultEventShouldNotBeFound("eventDate.in=" + UPDATED_EVENT_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllEventsByEventDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        eventRepository.saveAndFlush(event);
+
+        // Get all the eventList where eventDate is not null
+        defaultEventShouldBeFound("eventDate.specified=true");
+
+        // Get all the eventList where eventDate is null
+        defaultEventShouldNotBeFound("eventDate.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllEventsByEquipmentIsEqualToSomething() throws Exception {
         // Initialize the database
         Equipment equipment = EquipmentResourceIntTest.createEntity(em);
@@ -515,7 +563,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.[*].eventName").value(hasItem(DEFAULT_EVENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].eventDescription").value(hasItem(DEFAULT_EVENT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].eventType").value(hasItem(DEFAULT_EVENT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())));
+            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())))
+            .andExpect(jsonPath("$.[*].eventDate").value(hasItem(DEFAULT_EVENT_DATE.toString())));
     }
 
     /**
@@ -553,7 +602,8 @@ public class EventResourceIntTest {
             .eventName(UPDATED_EVENT_NAME)
             .eventDescription(UPDATED_EVENT_DESCRIPTION)
             .eventType(UPDATED_EVENT_TYPE)
-            .eventCoordinates(UPDATED_EVENT_COORDINATES);
+            .eventCoordinates(UPDATED_EVENT_COORDINATES)
+            .eventDate(UPDATED_EVENT_DATE);
         EventDTO eventDTO = eventMapper.toDto(updatedEvent);
 
         restEventMockMvc.perform(put("/api/events")
@@ -569,6 +619,7 @@ public class EventResourceIntTest {
         assertThat(testEvent.getEventDescription()).isEqualTo(UPDATED_EVENT_DESCRIPTION);
         assertThat(testEvent.getEventType()).isEqualTo(UPDATED_EVENT_TYPE);
         assertThat(testEvent.getEventCoordinates()).isEqualTo(UPDATED_EVENT_COORDINATES);
+        assertThat(testEvent.getEventDate()).isEqualTo(UPDATED_EVENT_DATE);
 
         // Validate the Event in Elasticsearch
         verify(mockEventSearchRepository, times(1)).save(testEvent);
@@ -632,7 +683,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.[*].eventName").value(hasItem(DEFAULT_EVENT_NAME.toString())))
             .andExpect(jsonPath("$.[*].eventDescription").value(hasItem(DEFAULT_EVENT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].eventType").value(hasItem(DEFAULT_EVENT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())));
+            .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())))
+            .andExpect(jsonPath("$.[*].eventDate").value(hasItem(DEFAULT_EVENT_DATE.toString())));
     }
 
     @Test

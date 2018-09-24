@@ -23,7 +23,8 @@ entity Event {
 	eventName String required,
     eventDescription String
     eventType EventType,
-    eventCoordinates String
+    eventCoordinates String,
+    eventDate Instant
 }
 
 entity Equipment {

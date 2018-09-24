@@ -15,7 +15,7 @@ public class KibanaObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String DASHBOARD = "dashboard";
-    public static final String VISUALIZATION = "visualisation";
+    public static final String VISUALIZATION = "visualization";
     public static final String INDEX_PATTERN = "index-pattern";
 
     protected final String id = UUID.randomUUID().toString();
