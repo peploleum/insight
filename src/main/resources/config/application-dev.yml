@@ -145,8 +145,4 @@ jhipster:
 
 application:
     kibana:
-<<<<<<< HEAD
-        uri: http://localhost:5601/
-=======
         uri: http://192.168.99.100:5601/
->>>>>>> Import des classes du projet Kibana GFS
