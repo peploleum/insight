@@ -1,5 +1,7 @@
-    <div>
-        <span>Type : {{visualisationParameters.visualizationType}}</span>
+<!--<div class="mt-lg-2 mb-lg-2 border border-1 border-primary rounded">-->
+<div class="mt-lg-2 mb-lg-3 shadow p-3 mb-5 bg-wight rounded">
+    <div class="p-lg-3">
+        <h5>Type : {{visualisationParameters.visualizationType}}</h5>
         <div class="form-group">
             <label class="form-control-label" for="field_visualizationTitle">Titre de la visualisation</label>
             <input type="text" class="form-control" name="visualizationTitle" id="field_visualizationTitle"
@@ -12,22 +14,37 @@
                 </small>
             </div>-->
         </div>
-        <div class="form-group">
-            <label for="field_indexPatternId">Index Pattern Cible</label>
-            <select class="form-control" id="field_indexPatternId" name="indexPatternId"
-                    [(ngModel)]="visualisationParameters.indexPatternId">
-                <option [ngValue]="entity.indexPatternId" *ngFor="let entity of mappingInfo; trackBy: trackIndexById">
-                    {{entity.indexPatternName}}
-                </option>
-            </select>
-        </div>
-        <div *ngIf="visualisationParameters.indexPatternId != ''" class="form-group">
-            <label for="field_indexPatternFieldTarget">Target field</label>
-            <select class="form-control" id="field_indexPatternFieldTarget" name="indexPatternFieldTarget"
-                    [(ngModel)]="visualisationParameters.indexPatternFieldTarget">
-                <option [ngValue]="field.fieldName" *ngFor="let field of getSelectedIndexPattern().fields;">
-                    {{field.fieldName}}
-                </option>
-            </select>
+        <div class="form-row">
+            <div class="col">
+                <label class="col-form-label-sm" for="field_indexPatternId">Index Pattern Cible</label>
+                <select class="form-control" id="field_indexPatternId" name="indexPatternId"
+                        [(ngModel)]="visualisationParameters.indexPatternId">
+                    <option [ngValue]="entity.indexPatternId"
+                            *ngFor="let entity of mappingInfo; trackBy: trackIndexById">
+                        {{entity.indexPatternName}}
+                    </option>
+                </select>
+            </div>
+            <div *ngIf="visualisationParameters.indexPatternId != ''"
+                 [ngClass]="visualisationParameters.visualizationType === 'VISU_TIMELINE' ? 'col-4' : 'col'">
+                <label class="col-form-label-sm" for="field_indexPatternFieldTarget">Target field</label>
+                <select class="form-control" id="field_indexPatternFieldTarget" name="indexPatternFieldTarget"
+                        [(ngModel)]="visualisationParameters.indexPatternFieldTarget">
+                    <option [ngValue]="field.fieldName" *ngFor="let field of getSelectedIndexPattern().fields;">
+                        {{field.fieldName}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-2" *ngIf="visualisationParameters.visualizationType === 'VISU_TIMELINE'">
+                <label class="col-form-label-sm" for="field_dateFromFilter">Date de début</label>
+                <input type="date" class="form-control" name="timeFromFilter" id="field_dateFromFilter"
+                       [(ngModel)]="visualisationParameters.timeFromFilter" required/>
+            </div>
+            <div class="col-2" *ngIf="visualisationParameters.visualizationType === 'VISU_TIMELINE'">
+                <label class="col-form-label-sm" for="field_dateToFilter">Date de Fin</label>
+                <input type="date" class="form-control" name="timeToFilter" id="field_dateToFilter"
+                       [(ngModel)]="visualisationParameters.timeToFilter" required/>
+            </div>
         </div>
     </div>
+</div>

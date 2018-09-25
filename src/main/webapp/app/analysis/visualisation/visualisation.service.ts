@@ -9,10 +9,12 @@ type EntityResponseType = HttpResponse<string[]>;
 @Injectable({ providedIn: 'root' })
 export class VisualisationService {
     private resourceUrl = SERVER_API_URL + '/api/elastic-client-resource';
-    private getDashboardId = '/get-dashboard';
+    private _getDashboardId = '/get-dashboard-ids';
     private _regenerateDashboard = '/regenerate-dashboard';
+    private _deleteAllDashboard = '/delete-all-dashboard';
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
+    kibanaUrl = 'http://192.168.99.100:5601/';
 
     constructor(private http: HttpClient) {}
 
@@ -20,12 +22,16 @@ export class VisualisationService {
         return this.http.get<IEntityMappingInfo[]>(`${this.resourceUrl + this._getEntitiesSchema}`, { observe: 'response' });
     }
 
-    getDefaultDashboardId(): Observable<EntityResponseType> {
-        return this.http.get<string[]>(`${this.resourceUrl + this.getDashboardId}`, { observe: 'response' });
+    getDashboardIds(): Observable<EntityResponseType> {
+        return this.http.get<string[]>(`${this.resourceUrl + this._getDashboardId}`, { observe: 'response' });
     }
 
     regenerateDashboard(): Observable<HttpResponse<any>> {
         return this.http.get<any>(`${this.resourceUrl + this._regenerateDashboard}`, { observe: 'response' });
+    }
+
+    deleteAllDashboard(): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl + this._deleteAllDashboard}`, { observe: 'response' });
     }
 
     /**

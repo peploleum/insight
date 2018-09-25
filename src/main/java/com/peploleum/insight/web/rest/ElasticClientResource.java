@@ -64,9 +64,12 @@ public class ElasticClientResource {
     /**
      * GET getDashboardId
      */
-    @GetMapping("/get-dashboard")
-    public List<String> getDashboardId() {
-        return this.esClientService.getDashboardId();
+    @GetMapping("/get-dashboard-ids")
+    public ResponseEntity<List<String>> getDashboardId() {
+        log.debug("REST getDashboardId request");
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(this.esClientService.getDashboardId());
     }
 
     /**
@@ -78,6 +81,15 @@ public class ElasticClientResource {
         return ResponseEntity.ok()
             .headers(new HttpHeaders())
             .body(this.esClientService.getEntitiesMappingInfo());
+    }
+
+    /**
+     * DELETE getEntitiesSchema
+     */
+    @DeleteMapping("/delete-all-dashboard")
+    public ResponseEntity<Void> deleteAllDashboard() {
+        this.esClientService.deleteAllDashboard();
+        return ResponseEntity.ok().headers(new HttpHeaders()).build();
     }
 
 }

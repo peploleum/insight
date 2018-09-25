@@ -1,26 +1,46 @@
 <div>
-    <h2 id="page-heading">
-        <span>Visualisation</span>
-        <button class="btn btn-primary float-right" (click)="createDashboard()">
-            <fa-icon [icon]="'plus'"></fa-icon>
-            <span class="hidden-sm-down">
+    <div class="jumbotron bg-light">
+        <h2 id="page-heading">
+            <span>Data Analysis</span>
+            <div class="float-right">
+                <button class="btn btn-primary mr-lg-2" (click)="createDashboard()">
+                    <fa-icon [icon]="'plus'"></fa-icon>
+                    <span class="hidden-sm-down">
             Create Dashboard
             </span>
-        </button>
-    </h2>
+                </button>
+                <button class="btn btn-secondary ml-lg-2" (click)="deleteAllDashboard()">
+                    <fa-icon [icon]="'plus'"></fa-icon>
+                    <span class="hidden-sm-down">
+            Delete All Dashboards
+            </span>
+                </button>
+            </div>
+        </h2>
+        <div *ngIf="dashboardIds">
+            <span>{{dashboardIds.length}} Dashboards enregistrés</span>
+            <div class="float-right">
+                <button class="btn btn-secondary mr-lg-2" (click)="goToPreviousDashboard()">
+                    <fa-icon [classes]="'fa angle-left'"></fa-icon>
+                </button>
+                <button class="btn btn-secondary ml-lg-2" (click)="goToNextDashboard()">
+                    <fa-icon [classes]="'fa angle-right'"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
     <jhi-alert></jhi-alert>
-    <div class="row" *ngIf="isEditing && mappingInfo.length > 0">
+    <div class="row bg-light m-lg-1" *ngIf="isEditing && mappingInfo.length > 0">
         <div class="col-sm-12">
             <jhi-visualisation-create-dashboard [mappingInfo]="mappingInfo"
                                                 (dashboardEmitter)="postDashboard($event)"></jhi-visualisation-create-dashboard>
         </div>
     </div>
-    <div class="row" *ngIf="dashboardSafeUrls && !isEditing">
+    <div class="row bg-light m-lg-1" *ngIf="dashboardSafeUrls && !isEditing">
         <div class="col-sm-12">
             <div *ngFor="let db of dashboardSafeUrls;" class="embed-responsive embed-responsive-21by9">
                 <iframe class="embed-responsive-item" [src]="db"></iframe>
             </div>
         </div>
     </div>
-    <div *ngIf="dashboardIds"><span>{{dashboardIds.length}} Dashboards enregistrés</span></div>
 </div>

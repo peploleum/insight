@@ -119,6 +119,22 @@ public class ElasticClientService {
         }
     }
 
+    /**
+     * Supprime de Kibana, tous les dashboards et visualisations créés
+     */
+    public void deleteAllDashboard() {
+        final List<KibanaObject> visualisationToDelete = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.VISUALIZATION)).collect(Collectors.toList());
+        final List<KibanaObject> dashboardToDelete = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.DASHBOARD)).collect(Collectors.toList());
+        if (!visualisationToDelete.isEmpty())
+            visualisationToDelete.stream().forEach(ko -> {
+                this.sendDeleteMessageToKibana(ko.getId(), KibanaMessageUri.DELETE_VISUALISATION);
+            });
+        if (!dashboardToDelete.isEmpty())
+            dashboardToDelete.stream().forEach(ko -> {
+                this.sendDeleteMessageToKibana(ko.getId(), KibanaMessageUri.DELETE_DASHBOARD);
+            });
+    }
+
 
     /**
      * Generate les index pattern depuis les classes annotées @Document
@@ -226,6 +242,18 @@ public class ElasticClientService {
         }
     }
 
+    private void sendDeleteMessageToKibana(final String id, final KibanaMessageUri uriPattern) {
+        try {
+            final RestTemplate rt = new RestTemplate();
+            final StringBuilder sb = new StringBuilder(this.KIBANA_ENTRY_URI);
+            sb.append(uriPattern.getUri());
+            sb.append(id);
+            rt.delete(sb.toString());
+        } catch (Exception e) {
+            this.log.info("Erreur posting kibana json", e);
+        }
+    }
+
     enum KibanaMessageUri {
 
         POST_INDEX_PATTERN("api/saved_objects/index-pattern/"),
@@ -233,7 +261,10 @@ public class ElasticClientService {
         /* POST_DASHBOARD comprend le dashboard et tous les éléments (index pattern + visu) dont il dépend*/
         POST_DASHBOARD("api/kibana/dashboards/import?exclude=index-pattern"),
         POST_BULK_OBJECT("api/saved_objects/_bulk_create"),
-        SET_DEFAULT_INDEX_PATTERN("api/kibana/settings/defaultIndex");
+        SET_DEFAULT_INDEX_PATTERN("api/kibana/settings/defaultIndex"),
+        DELETE_VISUALISATION("api/saved_objects/visualization/"),
+        DELETE_INDEX_PATTERN("api/saved_objects/index-pattern/"),
+        DELETE_DASHBOARD("api/saved_objects/dashboard/");
 
         final String uri;
 

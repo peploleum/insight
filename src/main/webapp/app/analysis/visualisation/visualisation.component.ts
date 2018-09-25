@@ -36,6 +36,7 @@ export class VisualisationComponent implements OnInit, OnDestroy {
                 this.onError('PostDefaultDashboard Failed');
             }
         );
+        this.getDashboardIds();
     }
 
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters) {
@@ -61,25 +62,44 @@ export class VisualisationComponent implements OnInit, OnDestroy {
 
     createDashboard() {
         this.isEditing = true;
-        console.log(this.mappingInfo);
     }
 
     getDashboardIds() {
-        this.visuService.getDefaultDashboardId().subscribe(
+        this.visuService.getDashboardIds().subscribe(
             (res: HttpResponse<string[]>) => {
-                console.log('RESPONSE ID DASHBOARD RECEIVED NBRE : ' + res.body.length);
+                if (!res.body || res.body.length === 0) {
+                    return;
+                }
                 res.body.forEach((id: string) => {
                     this.dashboardIds.push(new KibanaDashboardReference(id));
                 });
                 this.dashboardIds.forEach(dbRef => {
-                    this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, 'http://192.168.99.100:5601/'));
+                    this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, this.visuService.kibanaUrl));
                 });
+                this.isEditing = false;
             },
-            (res: HttpErrorResponse) => {
-                this.onError('Erreur parsing de getDashboardId');
+            error => {
+                this.onError('Erreurs lors de la récupération des dashboardIds');
             }
         );
     }
+
+    deleteAllDashboard() {
+        this.visuService.deleteAllDashboard().subscribe(
+            res => {
+                console.log('Suppression des dashboards succeed');
+                this.dashboardIds = [];
+                this.dashboardSafeUrls = [];
+            },
+            error => {
+                this.onError('Erreur lors de la suppression des dashboards');
+            }
+        );
+    }
+
+    goToNextDashboard() {}
+
+    goToPreviousDashboard() {}
 
     ngOnDestroy() {}
 
