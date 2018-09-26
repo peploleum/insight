@@ -43,6 +43,7 @@ import {
     faChartPie,
     faSitemap
 } from '@fortawesome/free-solid-svg-icons';
+import { faCogs } from '@fortawesome/free-solid-svg-icons/faCogs';
 
 // Imports all fontawesome core and solid icons
 
@@ -84,5 +85,6 @@ library.add(faAsterisk);
 library.add(faGlobe);
 library.add(faChartPie);
 library.add(faSitemap);
+library.add(faCogs);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
