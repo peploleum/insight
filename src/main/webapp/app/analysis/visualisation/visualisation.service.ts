@@ -14,7 +14,7 @@ export class VisualisationService {
     private _deleteAllDashboard = '/delete-all-dashboard';
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
-    kibanaUrl = 'http://192.168.99.100:5601/';
+    kibanaUrl = 'http://localhost:5601/';
 
     constructor(private http: HttpClient) {}
 

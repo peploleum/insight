@@ -21,7 +21,7 @@ public class ApplicationProperties {
     }
 
     public static class Kibana {
-        private String uri = "http://192.168.99.100:5601/";
+        private String uri = "http://localhost:5601/";
 
         public Kibana() {
         }
