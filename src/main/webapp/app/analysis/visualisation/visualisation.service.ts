@@ -14,9 +14,13 @@ export class VisualisationService {
     private _deleteAllDashboard = '/delete-all-dashboard';
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
-    kibanaUrl = 'http://localhost:5601/';
 
-    constructor(private http: HttpClient) {}
+    private KIBANA_HOST = '192.168.99.100';
+    kibanaUrl: string;
+
+    constructor(private http: HttpClient) {
+        this.kibanaUrl = 'http://' + this.KIBANA_HOST + ':5601/';
+    }
 
     getEntitiesSchema(): Observable<HttpResponse<IEntityMappingInfo[]>> {
         return this.http.get<IEntityMappingInfo[]>(`${this.resourceUrl + this._getEntitiesSchema}`, { observe: 'response' });

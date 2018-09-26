@@ -2,14 +2,10 @@ package com.peploleum.insight.domain.kibana;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.peploleum.insight.service.impl.ElasticClientService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Dashboard parameters de Kibana
@@ -49,11 +45,14 @@ public class KibanaDashboardGenerationParameters implements Serializable {
         KibanaDashboardType dashboardType = KibanaDashboardType.getTypeFromNumber(this.visualisations.size());
         KibanaObject dashboard = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaDashboardGenerationParameters.class.getResource(dashboardType.getJsonModelFileUrl()));
 
-        KibanaVisualisationGenerationParameters timelineVisualisationParams = this.visualisations.stream().filter(visu -> visu.getVisualizationType().equals(KibanaVisualisationType.VISU_TIMELINE)).findAny().get();
-        final String timeFrom = timelineVisualisationParams.getTimeFromFilter() != null ? timelineVisualisationParams.getTimeFromFilter() : "2018-09-01T00:00:00.00Z";
-        final String timeTo = timelineVisualisationParams.getTimeToFilter() != null ? timelineVisualisationParams.getTimeToFilter() : "2018-10-01T00:00:00.00Z";
-
-        dashboard = KibanaObjectUtils.updateDashboardWith5VisualisationsAndTime(dashboard, this.dashboardTitle, visualisationIds, timeFrom, timeTo);
+        KibanaVisualisationGenerationParameters timelineVisualisationParams = this.visualisations.stream().filter(visu -> visu.getVisualizationType().equals(KibanaVisualisationType.VISU_TIMELINE)).findAny().orElse(null);
+        if (timelineVisualisationParams != null) {
+            final String timeFrom = timelineVisualisationParams.getTimeFromFilter() != null ? timelineVisualisationParams.getTimeFromFilter() : "2000-01-01T00:00:00.00Z";
+            final String timeTo = timelineVisualisationParams.getTimeToFilter() != null ? timelineVisualisationParams.getTimeToFilter() : "2020-01-01T00:00:00.00Z";
+            dashboard = KibanaObjectUtils.updateDashboard(dashboard, this.dashboardTitle, visualisationIds, timeFrom, timeTo);
+        } else {
+            dashboard = KibanaObjectUtils.updateDashboard(dashboard, this.dashboardTitle, visualisationIds);
+        }
         return dashboard;
     }
 }

@@ -41,7 +41,8 @@ import {
     faHome,
     faGlobe,
     faChartPie,
-    faSitemap
+    faSitemap,
+    faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
 import { faCogs } from '@fortawesome/free-solid-svg-icons/faCogs';
 
@@ -85,6 +86,6 @@ library.add(faAsterisk);
 library.add(faGlobe);
 library.add(faChartPie);
 library.add(faSitemap);
-library.add(faCogs);
+library.add(faArrowRight);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

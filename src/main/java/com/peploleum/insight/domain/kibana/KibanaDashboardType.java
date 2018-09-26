@@ -5,7 +5,7 @@ package com.peploleum.insight.domain.kibana;
  */
 public enum KibanaDashboardType {
     DASH_SINGLE("/kibana_dashboard_model.json"),
-    DASH_DOUBLE("/kibana_dashboard_model_3Visu.json"),
+    DASH_DOUBLE("/kibana_dashboard_model_2Visu.json"),
     DASH_TRIPLE("/kibana_dashboard_model_3Visu.json"),
     DASH_QUADRUPLE("/kibana_dashboard_model_4Visu.json"),
     DASH_QUINTUPLE("/kibana_dashboard_model_5Visu.json");

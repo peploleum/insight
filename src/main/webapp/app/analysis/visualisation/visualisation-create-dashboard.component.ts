@@ -25,12 +25,6 @@ export class VisualisationCreateDashboardComponent implements OnInit, OnDestroy 
     constructor(private jhiAlertService: JhiAlertService, private formBuilder: FormBuilder) {}
 
     ngOnInit() {
-        /*        const visualisations: KibanaVisualisationGenerationParameters[] = [];
-                visualisations.push(new KibanaVisualisationGenerationParameters('Default Title', 'VISU_TABLE', '', '', ''));
-                visualisations.push(new KibanaVisualisationGenerationParameters('Default Title', 'VISU_PIE', '', '', ''));
-                visualisations.push(new KibanaVisualisationGenerationParameters('Default Title', 'VISU_VERT_BAR', '', '', ''));
-                visualisations.push(new KibanaVisualisationGenerationParameters('Default Title', 'VISU_TIMELINE', '', '', ''));
-                visualisations.push(new KibanaVisualisationGenerationParameters('Default Title', 'VISU_MAP', '', '', ''));*/
         this.dashboardParameters = new KibanaDashboardGenerationParameters('', []);
 
         this.createDashboardForm = this.formBuilder.group({
@@ -63,6 +57,10 @@ export class VisualisationCreateDashboardComponent implements OnInit, OnDestroy 
             visu.indexPatternName = this.getSelectedIndexPattern(visu.indexPatternId).indexPatternName;
         });
         this.dashboardEmitter.emit(this.dashboardParameters);
+    }
+
+    cancel() {
+        this.dashboardEmitter.emit(null);
     }
 
     private onError(errorMessage: string) {

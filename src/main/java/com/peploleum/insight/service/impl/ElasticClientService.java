@@ -95,8 +95,6 @@ public class ElasticClientService {
     }
 
     public void generateAndPostKibanaDashboard(final KibanaDashboardGenerationParameters dashboardParameters) {
-        if (this.kibanaObjects.stream().anyMatch(ko -> ko.getType().equals(KibanaObject.DASHBOARD)))
-            return;
         try {
             KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
             for (KibanaVisualisationGenerationParameters param : dashboardParameters.getVisualisations()) {

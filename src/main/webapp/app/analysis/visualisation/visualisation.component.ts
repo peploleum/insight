@@ -16,11 +16,11 @@ import { VisualisationService } from './visualisation.service';
 })
 export class VisualisationComponent implements OnInit, OnDestroy {
     dashboardIds: KibanaDashboardReference[] = [];
-    dashboardSafeUrls: SafeResourceUrl[] = [];
+    // dashboardSafeUrls: SafeResourceUrl[] = [];
+    selectedDashboardIndex = 0;
 
     isEditing = false;
     mappingInfo: EntityMappingInfo[] = [];
-    private KIBANA_HOST = 'localhost';
 
     constructor(private jhiAlertService: JhiAlertService, private visuService: VisualisationService, private ds: DomSanitizer) {}
 
@@ -41,17 +41,16 @@ export class VisualisationComponent implements OnInit, OnDestroy {
 
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters) {
         if (dashboardParam == null) {
+            this.isEditing = false;
             return;
         }
         this.visuService.postDashboard(dashboardParam).subscribe(
             (res: HttpResponse<string[]>) => {
                 console.log('PostDefaultDashboard Succeed');
-                res.body.forEach((id: string) => {
-                    this.dashboardIds.push(new KibanaDashboardReference(id));
-                });
-                this.dashboardIds.forEach(dbRef => {
-                    this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, 'http://' + this.KIBANA_HOST + ':5601/'));
-                });
+                if (!res.body || res.body.length === 0) {
+                    return;
+                }
+                this.onNewDashboardIdReceived(res.body);
                 this.isEditing = false;
             },
             error => {
@@ -70,12 +69,13 @@ export class VisualisationComponent implements OnInit, OnDestroy {
                 if (!res.body || res.body.length === 0) {
                     return;
                 }
-                res.body.forEach((id: string) => {
+                this.onNewDashboardIdReceived(res.body);
+                /*res.body.forEach((id: string) => {
                     this.dashboardIds.push(new KibanaDashboardReference(id));
                 });
                 this.dashboardIds.forEach(dbRef => {
                     this.dashboardSafeUrls.push(dbRef.getSafeResourceUrl(this.ds, this.visuService.kibanaUrl));
-                });
+                });*/
                 this.isEditing = false;
             },
             error => {
@@ -84,12 +84,20 @@ export class VisualisationComponent implements OnInit, OnDestroy {
         );
     }
 
+    onNewDashboardIdReceived(idList: string[]) {
+        this.dashboardIds = [];
+        idList.forEach(id => {
+            const dbRef = new KibanaDashboardReference(id);
+            dbRef.dashboardSafeUrl = dbRef.getSafeResourceUrl(this.ds, this.visuService.kibanaUrl);
+            this.dashboardIds.push(dbRef);
+        });
+    }
+
     deleteAllDashboard() {
         this.visuService.deleteAllDashboard().subscribe(
             res => {
                 console.log('Suppression des dashboards succeed');
                 this.dashboardIds = [];
-                this.dashboardSafeUrls = [];
             },
             error => {
                 this.onError('Erreur lors de la suppression des dashboards');
@@ -97,9 +105,17 @@ export class VisualisationComponent implements OnInit, OnDestroy {
         );
     }
 
-    goToNextDashboard() {}
+    goToNextDashboard() {
+        if (this.selectedDashboardIndex + 1 < this.dashboardIds.length) {
+            this.selectedDashboardIndex++;
+        }
+    }
 
-    goToPreviousDashboard() {}
+    goToPreviousDashboard() {
+        if (this.selectedDashboardIndex - 1 > -1) {
+            this.selectedDashboardIndex--;
+        }
+    }
 
     ngOnDestroy() {}
 

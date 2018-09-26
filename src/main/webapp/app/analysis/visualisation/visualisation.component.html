@@ -20,11 +20,11 @@
         <div *ngIf="dashboardIds">
             <span>{{dashboardIds.length}} Dashboards enregistrés</span>
             <div class="float-right">
-                <button class="btn btn-secondary mr-lg-2" (click)="goToPreviousDashboard()">
-                    <fa-icon [classes]="'fa angle-left'"></fa-icon>
+                <button class="btn btn-secondary mr-lg-2" [disabled]="isEditing" (click)="goToPreviousDashboard()">
+                    <fa-icon [icon]="'arrow-left'"></fa-icon>
                 </button>
-                <button class="btn btn-secondary ml-lg-2" (click)="goToNextDashboard()">
-                    <fa-icon [classes]="'fa angle-right'"></fa-icon>
+                <button class="btn btn-secondary ml-lg-2" [disabled]="isEditing" (click)="goToNextDashboard()">
+                    <fa-icon [icon]="'arrow-right'"></fa-icon>
                 </button>
             </div>
         </div>
@@ -36,10 +36,11 @@
                                                 (dashboardEmitter)="postDashboard($event)"></jhi-visualisation-create-dashboard>
         </div>
     </div>
-    <div class="row bg-light m-lg-1" *ngIf="dashboardSafeUrls && !isEditing">
+    <div class="row bg-light m-lg-1" *ngIf="dashboardIds && !isEditing">
         <div class="col-sm-12">
-            <div *ngFor="let db of dashboardSafeUrls;" class="embed-responsive embed-responsive-21by9">
-                <iframe class="embed-responsive-item" [src]="db"></iframe>
+            <div *ngFor="let db of dashboardIds | slice:selectedDashboardIndex:selectedDashboardIndex+1; let idx = index" class="embed-responsive embed-responsive-21by9">
+                <iframe class="embed-responsive-item"
+                        [src]="db.dashboardSafeUrl"></iframe>
             </div>
         </div>
     </div>

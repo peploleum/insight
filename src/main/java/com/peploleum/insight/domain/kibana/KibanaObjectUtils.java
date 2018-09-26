@@ -93,16 +93,31 @@ public class KibanaObjectUtils {
         return visualisation;
     }
 
-    public static KibanaObject updateDashboardWith5VisualisationsAndTime(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds, final String timeFrom, final String timeTo) {
+    public static KibanaObject updateDashboard(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds) {
 
-        dashboard = updateDashboardWith5Visualisations(dashboard, dashboardTitle, visualisationIds);
+        //Modification du title
+        dashboard.getAttributes().setTitle(dashboardTitle);
+
+        //Modification des visualisations ids
+        String matchingString = "";
+        for (int i = 0; i < visualisationIds.size(); i++) {
+            matchingString = dashboard.getAttributes().getPanelsJSON().replace("visualization_id_" + (i + 1), visualisationIds.get(i));
+        }
+        dashboard.getAttributes().setPanelsJSON(matchingString);
+
+        return dashboard;
+    }
+
+    public static KibanaObject updateDashboard(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds, final String timeFrom, final String timeTo) {
+
+        dashboard = updateDashboard(dashboard, dashboardTitle, visualisationIds);
         //Formattage des dates
         dashboard.getAttributes().setTimeFrom(timeFrom);
         dashboard.getAttributes().setTimeTo(timeTo);
         return dashboard;
     }
 
-    public static KibanaObject updateDashboardWith5Visualisations(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds) {
+    /*public static KibanaObject updateDashboardWith5Visualisations(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds) {
 
         //Modification du title
         dashboard.getAttributes().setTitle(dashboardTitle);
@@ -112,7 +127,7 @@ public class KibanaObjectUtils {
         dashboard.getAttributes().setPanelsJSON(matchingString);
 
         return dashboard;
-    }
+    }*/
 
     public static EntityMappingInfo getEntityMappingInfo(Class<?> cl, KibanaObject indexPattern) {
         Set<EntityFieldMappingInfo> fieldMappingInfos = new HashSet<>();
