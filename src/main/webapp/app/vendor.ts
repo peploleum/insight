@@ -87,5 +87,6 @@ library.add(faGlobe);
 library.add(faChartPie);
 library.add(faSitemap);
 library.add(faArrowRight);
+library.add(faCogs);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
