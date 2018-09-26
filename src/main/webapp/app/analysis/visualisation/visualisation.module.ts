@@ -6,11 +6,12 @@ import { visualisationRoute } from './visualisation.route';
 import { VisualisationComponent } from './visualisation.component';
 import { VisualisationCreateDashboardComponent } from 'app/analysis/visualisation/visualisation-create-dashboard.component';
 import { VisualisationCreateVisualisationDashboardComponent } from 'app/analysis/visualisation/visualisation-create-visualisation.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const ENTITY_STATES = [...visualisationRoute];
 
 @NgModule({
-    imports: [InsightSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [InsightSharedModule, RouterModule.forChild(ENTITY_STATES), ReactiveFormsModule],
     declarations: [VisualisationComponent, VisualisationCreateDashboardComponent, VisualisationCreateVisualisationDashboardComponent],
     entryComponents: [VisualisationComponent, VisualisationCreateDashboardComponent, VisualisationCreateVisualisationDashboardComponent],
 
