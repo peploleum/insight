@@ -99,9 +99,9 @@ public class KibanaObjectUtils {
         dashboard.getAttributes().setTitle(dashboardTitle);
 
         //Modification des visualisations ids
-        String matchingString = "";
+        String matchingString = dashboard.getAttributes().getPanelsJSON();
         for (int i = 0; i < visualisationIds.size(); i++) {
-            matchingString = dashboard.getAttributes().getPanelsJSON().replace("visualization_id_" + (i + 1), visualisationIds.get(i));
+            matchingString = matchingString.replace("visualization_id_" + (i + 1), visualisationIds.get(i));
         }
         dashboard.getAttributes().setPanelsJSON(matchingString);
 

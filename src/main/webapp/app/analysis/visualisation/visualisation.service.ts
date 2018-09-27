@@ -15,7 +15,7 @@ export class VisualisationService {
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
 
-    private KIBANA_HOST = '192.168.99.100';
+    private KIBANA_HOST = 'localhost';
     kibanaUrl: string;
 
     constructor(private http: HttpClient) {
