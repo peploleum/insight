@@ -28,6 +28,15 @@ spring:
             enabled: true
         livereload:
             enabled: false # we use Webpack dev server + BrowserSync for livereload
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: localhost:8092
+                    zk-nodes: localhost
+            bindings:
+                output:
+                    destination: topic-insight
     jackson:
         serialization.indent_output: true
     datasource:
