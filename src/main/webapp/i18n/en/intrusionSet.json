@@ -1,0 +1,30 @@
+
+{
+    "insightApp": {
+        "intrusionSet" : {
+            "home": {
+                "title": "Intrusion Sets",
+                "createLabel": "Create a new Intrusion Set",
+                "createOrEditLabel": "Create or edit a Intrusion Set",
+                "search": "Search for Intrusion Set"
+            },
+            "created": "A new Intrusion Set is created with identifier {{ param }}",
+            "updated": "A Intrusion Set is updated with identifier {{ param }}",
+            "deleted": "A Intrusion Set is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Intrusion Set {{ id }}?"
+            },
+            "detail": {
+                "title": "Intrusion Set"
+            },
+            "description": "Description",
+            "nom": "Nom",
+            "type": "Type",
+            "objectif": "Objectif",
+            "niveauRessource": "Niveau Ressource",
+            "isUsesIntrusionSetToTool": "Is Uses Intrusion Set To Tool",
+            "isTargetsIntrusionSetToActor": "Is Targets Intrusion Set To Actor",
+            "linkOf": "Link Of"
+        }
+    }
+}

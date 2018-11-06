@@ -2,7 +2,7 @@ package com.peploleum.insight.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peploleum.insight.domain.Biographics;
+import com.peploleum.insight.domain.Actor;
 import com.peploleum.insight.domain.kibana.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,8 @@ public class ElasticClientService {
         final String jsonObjects = this.getJsonObjects();
         if (!jsonObjects.isEmpty())
             this.postMessageToKibana(jsonObjects, KibanaMessageUri.POST_BULK_OBJECT);
-        this.setDefaultKibanaIndexPattern(Biographics.class.getSimpleName().toLowerCase());
+
+        this.setDefaultKibanaIndexPattern(Actor.class.getSimpleName().toLowerCase());
     }
 
     /**

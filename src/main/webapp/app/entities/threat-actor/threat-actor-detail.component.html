@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="threatActor">
+            <h2><span jhiTranslate="insightApp.threatActor.detail.title">Threat Actor</span> {{threatActor.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.threatActor.nom">Nom</span></dt>
+                <dd>
+                    <span>{{threatActor.nom}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.type">Type</span></dt>
+                <dd>
+                    <span>{{threatActor.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.libelle">Libelle</span></dt>
+                <dd>
+                    <span>{{threatActor.libelle}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.specification">Specification</span></dt>
+                <dd>
+                    <span>{{threatActor.specification}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.role">Role</span></dt>
+                <dd>
+                    <span>{{threatActor.role}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.isUsesThreatActorToMalware">Is Uses Threat Actor To Malware</span></dt>
+                <dd>
+                    <div *ngIf="threatActor.isUsesThreatActorToMalwareId">
+                        <a [routerLink]="['/malware', threatActor.isUsesThreatActorToMalwareId, 'view']">{{threatActor.isUsesThreatActorToMalwareNom}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.threatActor.linkOf">Link Of</span></dt>
+                <dd>
+                    <div *ngIf="threatActor.linkOfId">
+                        <a [routerLink]="['/net-link', threatActor.linkOfId, 'view']">{{threatActor.linkOfNom}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/threat-actor', threatActor.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+
+{
+    "insightApp": {
+        "threatActor" : {
+            "home": {
+                "title": "Threat Actors",
+                "createLabel": "Create a new Threat Actor",
+                "createOrEditLabel": "Create or edit a Threat Actor",
+                "search": "Search for Threat Actor"
+            },
+            "created": "A new Threat Actor is created with identifier {{ param }}",
+            "updated": "A Threat Actor is updated with identifier {{ param }}",
+            "deleted": "A Threat Actor is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Threat Actor {{ id }}?"
+            },
+            "detail": {
+                "title": "Threat Actor"
+            },
+            "nom": "Nom",
+            "type": "Type",
+            "libelle": "Libelle",
+            "specification": "Specification",
+            "role": "Role",
+            "isTargetsThreatActorToVulnerability": "Is Targets Threat Actor To Vulnerability",
+            "isUsesThreatActorToTool": "Is Uses Threat Actor To Tool",
+            "isUsesThreatActorToMalware": "Is Uses Threat Actor To Malware",
+            "linkOf": "Link Of"
+        }
+    }
+}

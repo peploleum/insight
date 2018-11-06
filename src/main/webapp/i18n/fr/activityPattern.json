@@ -1,0 +1,27 @@
+
+{
+    "insightApp": {
+        "activityPattern" : {
+            "home": {
+                "title": "ActivityPatterns",
+                "createLabel": "Créer un nouveau Activity Pattern",
+                "createOrEditLabel": "Créer ou éditer un Activity Pattern",
+                "search": "Recherche pour Activity Pattern"
+            },
+            "created": "Un nouveau Activity Pattern a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Activity Pattern avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Activity Pattern avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Activity Pattern {{ id }} ?"
+            },
+            "detail": {
+                "title": "Activity Pattern"
+            },
+            "modele": "Modele",
+            "nom": "Nom",
+            "type": "Type",
+            "valideAPartirDe": "Valide A Partir De",
+            "linkOf": "Link Of"
+        }
+    }
+}

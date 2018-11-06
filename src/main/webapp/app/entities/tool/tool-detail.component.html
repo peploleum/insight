@@ -1,0 +1,67 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="tool">
+            <h2><span jhiTranslate="insightApp.tool.detail.title">Tool</span> {{tool.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.tool.nom">Nom</span></dt>
+                <dd>
+                    <span>{{tool.nom}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.type">Type</span></dt>
+                <dd>
+                    <span>{{tool.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.libelle">Libelle</span></dt>
+                <dd>
+                    <span>{{tool.libelle}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.description">Description</span></dt>
+                <dd>
+                    <span>{{tool.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.version">Version</span></dt>
+                <dd>
+                    <span>{{tool.version}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.usesToolToIntrusionSet">Uses Tool To Intrusion Set</span></dt>
+                <dd>
+                    <div *ngIf="tool.usesToolToIntrusionSetId">
+                        <a [routerLink]="['/intrusion-set', tool.usesToolToIntrusionSetId, 'view']">{{tool.usesToolToIntrusionSetNom}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.isUsesToolToMalware">Is Uses Tool To Malware</span></dt>
+                <dd>
+                    <div *ngIf="tool.isUsesToolToMalwareId">
+                        <a [routerLink]="['/malware', tool.isUsesToolToMalwareId, 'view']">{{tool.isUsesToolToMalwareNom}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.linkOf">Link Of</span></dt>
+                <dd>
+                    <div *ngIf="tool.linkOfId">
+                        <a [routerLink]="['/net-link', tool.linkOfId, 'view']">{{tool.linkOfNom}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.tool.usesToolToThreatActor">Uses Tool To Threat Actor</span></dt>
+                <dd>
+                    <div *ngIf="tool.usesToolToThreatActorId">
+                        <a [routerLink]="['/threat-actor', tool.usesToolToThreatActorId, 'view']">{{tool.usesToolToThreatActorNom}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/tool', tool.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

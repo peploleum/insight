@@ -1,92 +1,154 @@
-entity Biographics {
-	biographicsFirstname String required,
-    biographicsName String required,
-    biographicsAge Integer,
-    biographicsGender Gender,
-    biographicsPhoto ImageBlob,
-    biographicsCoordinates String
+
+entity AttackPattern {
+	Description String,
+	Nom String,
+	ReferenceExterne String,
+	TueurProcessus String,
+	Type String
 }
 
-entity Organisation {
-	organisationName String required,
-    organisationSize Size,
-    organisationCoordinates String
+entity Campaign {
+	Description String,
+	Nom String,
+	Objectif String,
+	Alias String,
+	Type String
 }
 
-entity Location {
-	locationName String required,
-    locationType LocationType,
-    locationCoordinates String
+entity CourseOfAction {
+	Description String,
+	Nom String,
+	Type String
 }
 
-entity Event {
-	eventName String required,
-    eventDescription String
-    eventType EventType,
-    eventCoordinates String,
-    eventDate Instant
+/**
+* Equivalent a la classe Identity (mot cle interdit dans le jdl) de STIX
+**/
+entity Actor {
+	Description String,
+	Nom String,
+	Type String,
+	Libelle String,
+	ClasseIdentite String
 }
 
-entity Equipment {
-	equipmentName String required,
-    equipmentDescription String
-    equipmentType EquipmentType,
-    equipmentCoordinates String
+/**
+* Equivalent a la classe Indicator (mot cle interdit dans le jdl) de STIX
+**/
+entity ActivityPattern {
+	Modele String,
+	Nom String,
+	Type String,
+	ValideAPartirDe ZonedDateTime
 }
 
-enum Gender {
-    MALE, FEMALE, UNKNOWN
+entity IntrusionSet {
+	Description String,
+	Nom String,
+	Type String,
+	Objectif String,
+	NiveauRessource String
 }
 
-enum Size {
-    SMALL, MEDIUM, LARGE
+entity Malware {
+	Description String,
+	Nom String,
+	Type String,
+	Libelle String
 }
 
-enum LocationType {
-    CITY, COUNTRY, UNKNOWN
+entity NetLink {
+	Description String,
+	Nom String,
+	Type String,
+	Level String
 }
 
-enum EventType {
-    POLITICAL, DOMESTIC, ACCIDENT, RUMOR, UNKNOWN
+entity ObservedData {
+	Type String,
+	ObjetsObserves String,
+	DateDebut ZonedDateTime,
+	DateFin ZonedDateTime,
+	NombreJours Integer
 }
 
-enum EquipmentType {
-    WEAPON, TOOL, GARDENING, RUMOR, UNKNOWN
+entity Report {
+	Nom String,
+	Type String,
+	Libelle String,
+	ObjetsReferences String,
+	DatePublication ZonedDateTime
 }
 
-relationship ManyToMany {
-	Biographics{event(eventName)} to Event{biographics(biographicsName)},
-    Biographics{equipment(equipmentName)} to Equipment{biographics(biographicsName)},
-    Biographics{location(locationName)} to Location{biographics(biographicsName)},
-    Biographics{organisation(organisationName)} to Organisation{biographics(biographicsName)}
+entity ThreatActor {
+	Nom String,
+	Type String,
+	Libelle String,
+	Specification String,
+	Role String
 }
 
-relationship ManyToMany {
-    Event{equipment(equipmentName)} to Equipment{event(eventName)},
-    Event{location(locationName)} to Location{event(eventName)},
-    Event{organisation(organisationName)} to Organisation{event(eventName)}
+entity Tool {
+	Nom String,
+	Type String,
+	Libelle String,
+	Description String,
+	Version String
 }
 
-relationship ManyToMany {
-    Equipment{location(locationName)} to Location{equipment(equipmentName)},
-    Equipment{organisation(organisationName)} to Organisation{equipment(equipmentName)}
+entity Vulnerability {
+	Nom String,
+	Type String,
+	Description String,
+	ReferenceExterne String
 }
 
-relationship ManyToMany {
-    Organisation{location(locationName)} to Location{organisation(oganisationName)}
-
+relationship OneToMany {
+	AttackPattern{UsesAttackPatternToMalware(Nom)} to Malware{IsUsesMalwareToAttackPattern(Nom)}
 }
 
+relationship OneToMany {
+	Actor{TargetsActorToIntrusionSet(Nom)} to IntrusionSet{IsTargetsIntrusionSetToActor(Nom)},
+	Actor{TargetsActorToMalware(Nom)} to Malware{IsTargetsMalwareToActor(Nom)}
+}
 
+relationship OneToMany {
+	IntrusionSet{IsUsesIntrusionSetToTool(Nom)} to Tool{UsesToolToIntrusionSet(Nom)}
+}
 
-// Set pagination options
+relationship OneToMany {
+	Malware{IsVariantOf(Nom)} to Malware{VariantOf(Nom)},
+	Malware{UsesMalwareToThreatActor(Nom)} to ThreatActor{IsUsesThreatActorToMalware(Nom)},
+	Malware{UsesMalwareToTool(Nom)} to Tool{IsUsesToolToMalware(Nom)}
+}
 
-paginate Biographics, Event, Equipment, Location, Organisation  with pagination
+relationship OneToMany {
+	NetLink{IsLinkOfAttackPattern(Nom)} to AttackPattern{LinkOf(Nom)},
+	NetLink{IsLinkOfCampaign(Nom)} to Campaign{LinkOf(Nom)},
+	NetLink{IsLinkOfCourseOfAction(Nom)} to CourseOfAction{LinkOf(Nom)},
+	NetLink{IsLinkOfActor(Nom)} to Actor{LinkOf(Nom)},
+	NetLink{IsLinkOfActivityPattern(Nom)} to ActivityPattern{LinkOf(Nom)},
+	NetLink{IsLinkOfIntrusionSet(Nom)} to IntrusionSet{LinkOf(Nom)},
+	NetLink{IsLinkOfMalware(Nom)} to Malware{LinkOf(Nom)},
+	NetLink{IsLinkOfObservedData(ObjetsObserves)} to ObservedData{LinkOf(Nom)},
+	NetLink{IsLinkOfReport(Nom)} to Report{LinkOf(Nom)},
+	NetLink{IsLinkOfThreatActor(Nom)} to ThreatActor{LinkOf(Nom)},
+	NetLink{IsLinkOfTool(Nom)} to Tool{LinkOf(Nom)},
+	NetLink{IsLinkOfVulnerability(Nom)} to Vulnerability{LinkOf(Nom)}
+}
 
-dto * with mapstruct
+relationship OneToMany {
+	ThreatActor{IsTargetsThreatActorToVulnerability(Nom)} to Vulnerability{TargetsVulnerabilityToThreatActor(Nom)},
+	ThreatActor{IsUsesThreatActorToTool(Nom)} to Tool{UsesToolToThreatActor(Nom)}
+}
 
-// Set service options to all except few
+relationship OneToMany {
+	Tool{IsTargetsToolToVulnerability(Nom)} to Vulnerability{TargetsVulnerabilityToTool(Nom)}
+}
+
 service all with serviceImpl
-filter Biographics, Event, Equipment, Location, Organisation
-// Set an angular suffix
-// angularSuffix * with mySuffix
+paginate AttackPattern, Campaign, CourseOfAction, Actor, ActivityPattern, IntrusionSet, Malware, ObservedData, Report, ThreatActor, Tool, Vulnerability, NetLink with pagination
+dto * with mapstruct
+filter AttackPattern, Campaign, CourseOfAction, Actor, ActivityPattern, IntrusionSet, Malware, ObservedData, Report, ThreatActor, Tool, Vulnerability, NetLink
+search * with elasticsearch
+

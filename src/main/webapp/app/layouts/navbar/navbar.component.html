@@ -58,33 +58,81 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li>
-                        <a class="dropdown-item" routerLink="biographics" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="attack-pattern" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.biographics">Biographics</span>
+                            <span jhiTranslate="global.menu.entities.attackPattern">Attack Pattern</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="organisation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="campaign" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.organisation">Organisation</span>
+                            <span jhiTranslate="global.menu.entities.campaign">Campaign</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="location" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="course-of-action" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.location">Location</span>
+                            <span jhiTranslate="global.menu.entities.courseOfAction">Course Of Action</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="event" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="actor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.event">Event</span>
+                            <span jhiTranslate="global.menu.entities.actor">Actor</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="equipment" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="activity-pattern" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.equipment">Equipment</span>
+                            <span jhiTranslate="global.menu.entities.activityPattern">Activity Pattern</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="intrusion-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.intrusionSet">Intrusion Set</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="malware" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.malware">Malware</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="net-link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.netLink">Net Link</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="observed-data" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.observedData">Observed Data</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.report">Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="threat-actor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.threatActor">Threat Actor</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="tool" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.tool">Tool</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="vulnerability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.vulnerability">Vulnerability</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

@@ -1,0 +1,97 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="insightApp.threatActor.home.title">Threat Actors</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-threat-actor" [routerLink]="['/threat-actor/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="insightApp.threatActor.home.createLabel">
+            Create new Threat Actor
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'insightApp.threatActor.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="threatActors">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nom"><span jhiTranslate="insightApp.threatActor.nom">Nom</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="type"><span jhiTranslate="insightApp.threatActor.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="libelle"><span jhiTranslate="insightApp.threatActor.libelle">Libelle</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="specification"><span jhiTranslate="insightApp.threatActor.specification">Specification</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="role"><span jhiTranslate="insightApp.threatActor.role">Role</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="isUsesThreatActorToMalwareNom"><span jhiTranslate="insightApp.threatActor.isUsesThreatActorToMalware">Is Uses Threat Actor To Malware</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="linkOfNom"><span jhiTranslate="insightApp.threatActor.linkOf">Link Of</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let threatActor of threatActors ;trackBy: trackId">
+                <td><a [routerLink]="['/threat-actor', threatActor.id, 'view' ]">{{threatActor.id}}</a></td>
+                <td>{{threatActor.nom}}</td>
+                <td>{{threatActor.type}}</td>
+                <td>{{threatActor.libelle}}</td>
+                <td>{{threatActor.specification}}</td>
+                <td>{{threatActor.role}}</td>
+                <td>
+                    <div *ngIf="threatActor.isUsesThreatActorToMalwareId">
+                        <a [routerLink]="['../malware', threatActor.isUsesThreatActorToMalwareId , 'view' ]" >{{threatActor.isUsesThreatActorToMalwareNom}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="threatActor.linkOfId">
+                        <a [routerLink]="['../net-link', threatActor.linkOfId , 'view' ]" >{{threatActor.linkOfNom}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/threat-actor', threatActor.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/threat-actor', threatActor.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'threat-actor/'+ threatActor.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="threatActors && threatActors.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

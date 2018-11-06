@@ -1,0 +1,28 @@
+
+{
+    "insightApp": {
+        "report" : {
+            "home": {
+                "title": "Reports",
+                "createLabel": "Create a new Report",
+                "createOrEditLabel": "Create or edit a Report",
+                "search": "Search for Report"
+            },
+            "created": "A new Report is created with identifier {{ param }}",
+            "updated": "A Report is updated with identifier {{ param }}",
+            "deleted": "A Report is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Report {{ id }}?"
+            },
+            "detail": {
+                "title": "Report"
+            },
+            "nom": "Nom",
+            "type": "Type",
+            "libelle": "Libelle",
+            "objetsReferences": "Objets References",
+            "datePublication": "Date Publication",
+            "linkOf": "Link Of"
+        }
+    }
+}

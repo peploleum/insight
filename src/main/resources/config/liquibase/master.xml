@@ -5,15 +5,31 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084557_added_entity_Biographics.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084558_added_entity_Organisation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084559_added_entity_Location.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084600_added_entity_Event.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084601_added_entity_Equipment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155738_added_entity_AttackPattern.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155739_added_entity_Campaign.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155740_added_entity_CourseOfAction.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155741_added_entity_Actor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155742_added_entity_ActivityPattern.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155743_added_entity_IntrusionSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155744_added_entity_Malware.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155745_added_entity_NetLink.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155746_added_entity_ObservedData.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155747_added_entity_Report.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155748_added_entity_ThreatActor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155749_added_entity_Tool.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155750_added_entity_Vulnerability.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20180920084557_added_entity_constraints_Biographics.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084558_added_entity_constraints_Organisation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084600_added_entity_constraints_Event.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180920084601_added_entity_constraints_Equipment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155738_added_entity_constraints_AttackPattern.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155739_added_entity_constraints_Campaign.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155740_added_entity_constraints_CourseOfAction.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155741_added_entity_constraints_Actor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155742_added_entity_constraints_ActivityPattern.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155743_added_entity_constraints_IntrusionSet.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155744_added_entity_constraints_Malware.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155746_added_entity_constraints_ObservedData.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155747_added_entity_constraints_Report.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155748_added_entity_constraints_ThreatActor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155749_added_entity_constraints_Tool.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181106155750_added_entity_constraints_Vulnerability.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="attackPattern">
+            <h2><span jhiTranslate="insightApp.attackPattern.detail.title">Attack Pattern</span> {{attackPattern.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.attackPattern.description">Description</span></dt>
+                <dd>
+                    <span>{{attackPattern.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.attackPattern.nom">Nom</span></dt>
+                <dd>
+                    <span>{{attackPattern.nom}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.attackPattern.referenceExterne">Reference Externe</span></dt>
+                <dd>
+                    <span>{{attackPattern.referenceExterne}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.attackPattern.tueurProcessus">Tueur Processus</span></dt>
+                <dd>
+                    <span>{{attackPattern.tueurProcessus}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.attackPattern.type">Type</span></dt>
+                <dd>
+                    <span>{{attackPattern.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.attackPattern.linkOf">Link Of</span></dt>
+                <dd>
+                    <div *ngIf="attackPattern.linkOfId">
+                        <a [routerLink]="['/net-link', attackPattern.linkOfId, 'view']">{{attackPattern.linkOfNom}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/attack-pattern', attackPattern.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

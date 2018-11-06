@@ -1,0 +1,32 @@
+
+{
+    "insightApp": {
+        "tool" : {
+            "home": {
+                "title": "Tools",
+                "createLabel": "Créer un nouveau Tool",
+                "createOrEditLabel": "Créer ou éditer un Tool",
+                "search": "Recherche pour Tool"
+            },
+            "created": "Un nouveau Tool a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Tool avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Tool avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Tool {{ id }} ?"
+            },
+            "detail": {
+                "title": "Tool"
+            },
+            "nom": "Nom",
+            "type": "Type",
+            "libelle": "Libelle",
+            "description": "Description",
+            "version": "Version",
+            "isTargetsToolToVulnerability": "Is Targets Tool To Vulnerability",
+            "usesToolToIntrusionSet": "Uses Tool To Intrusion Set",
+            "isUsesToolToMalware": "Is Uses Tool To Malware",
+            "linkOf": "Link Of",
+            "usesToolToThreatActor": "Uses Tool To Threat Actor"
+        }
+    }
+}

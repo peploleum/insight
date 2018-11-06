@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-attack-pattern-heading" jhiTranslate="insightApp.attackPattern.home.createOrEditLabel">Create or edit a Attack Pattern</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!attackPattern.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="attackPattern.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="attackPattern.description" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.nom" for="field_nom">Nom</label>
+                    <input type="text" class="form-control" name="nom" id="field_nom"
+                        [(ngModel)]="attackPattern.nom" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.referenceExterne" for="field_referenceExterne">Reference Externe</label>
+                    <input type="text" class="form-control" name="referenceExterne" id="field_referenceExterne"
+                        [(ngModel)]="attackPattern.referenceExterne" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.tueurProcessus" for="field_tueurProcessus">Tueur Processus</label>
+                    <input type="text" class="form-control" name="tueurProcessus" id="field_tueurProcessus"
+                        [(ngModel)]="attackPattern.tueurProcessus" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                        [(ngModel)]="attackPattern.type" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.attackPattern.linkOf" for="field_linkOf">Link Of</label>
+                    <select class="form-control" id="field_linkOf" name="linkOf" [(ngModel)]="attackPattern.linkOfId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="netLinkOption.id" *ngFor="let netLinkOption of netlinks; trackBy: trackNetLinkById">{{netLinkOption.nom}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

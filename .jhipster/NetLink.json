@@ -1,0 +1,105 @@
+{
+    "name": "NetLink",
+    "fields": [
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nom",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "level",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfAttackPattern",
+            "otherEntityName": "attackPattern",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfCampaign",
+            "otherEntityName": "campaign",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfCourseOfAction",
+            "otherEntityName": "courseOfAction",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfActor",
+            "otherEntityName": "actor",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfActivityPattern",
+            "otherEntityName": "activityPattern",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfIntrusionSet",
+            "otherEntityName": "intrusionSet",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfMalware",
+            "otherEntityName": "malware",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfObservedData",
+            "otherEntityName": "observedData",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfReport",
+            "otherEntityName": "report",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfThreatActor",
+            "otherEntityName": "threatActor",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfTool",
+            "otherEntityName": "tool",
+            "otherEntityRelationshipName": "linkOf"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isLinkOfVulnerability",
+            "otherEntityName": "vulnerability",
+            "otherEntityRelationshipName": "linkOf"
+        }
+    ],
+    "changelogDate": "20181106155745",
+    "entityTableName": "net_link",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": "elasticsearch"
+}

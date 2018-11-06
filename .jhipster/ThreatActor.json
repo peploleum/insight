@@ -1,0 +1,61 @@
+{
+    "name": "ThreatActor",
+    "fields": [
+        {
+            "fieldName": "nom",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "libelle",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "specification",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "role",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isTargetsThreatActorToVulnerability",
+            "otherEntityName": "vulnerability",
+            "otherEntityRelationshipName": "targetsVulnerabilityToThreatActor"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "isUsesThreatActorToTool",
+            "otherEntityName": "tool",
+            "otherEntityRelationshipName": "usesToolToThreatActor"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "isUsesThreatActorToMalware",
+            "otherEntityName": "malware",
+            "otherEntityField": "nom"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "linkOf",
+            "otherEntityName": "netLink",
+            "otherEntityField": "nom"
+        }
+    ],
+    "changelogDate": "20181106155748",
+    "entityTableName": "threat_actor",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": "elasticsearch"
+}

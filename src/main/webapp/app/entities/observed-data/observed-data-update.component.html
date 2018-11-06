@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-observed-data-heading" jhiTranslate="insightApp.observedData.home.createOrEditLabel">Create or edit a Observed Data</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!observedData.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="observedData.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                        [(ngModel)]="observedData.type" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.objetsObserves" for="field_objetsObserves">Objets Observes</label>
+                    <input type="text" class="form-control" name="objetsObserves" id="field_objetsObserves"
+                        [(ngModel)]="observedData.objetsObserves" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.dateDebut" for="field_dateDebut">Date Debut</label>
+                    <div class="d-flex">
+                        <input id="field_dateDebut" type="datetime-local" class="form-control" name="dateDebut" [(ngModel)]="dateDebut"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.dateFin" for="field_dateFin">Date Fin</label>
+                    <div class="d-flex">
+                        <input id="field_dateFin" type="datetime-local" class="form-control" name="dateFin" [(ngModel)]="dateFin"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.nombreJours" for="field_nombreJours">Nombre Jours</label>
+                    <input type="number" class="form-control" name="nombreJours" id="field_nombreJours"
+                        [(ngModel)]="observedData.nombreJours" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.observedData.linkOf" for="field_linkOf">Link Of</label>
+                    <select class="form-control" id="field_linkOf" name="linkOf" [(ngModel)]="observedData.linkOfId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="netLinkOption.id" *ngFor="let netLinkOption of netlinks; trackBy: trackNetLinkById">{{netLinkOption.nom}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

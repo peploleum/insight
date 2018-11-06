@@ -1,0 +1,63 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-threat-actor-heading" jhiTranslate="insightApp.threatActor.home.createOrEditLabel">Create or edit a Threat Actor</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!threatActor.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="threatActor.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.nom" for="field_nom">Nom</label>
+                    <input type="text" class="form-control" name="nom" id="field_nom"
+                        [(ngModel)]="threatActor.nom" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                        [(ngModel)]="threatActor.type" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.libelle" for="field_libelle">Libelle</label>
+                    <input type="text" class="form-control" name="libelle" id="field_libelle"
+                        [(ngModel)]="threatActor.libelle" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.specification" for="field_specification">Specification</label>
+                    <input type="text" class="form-control" name="specification" id="field_specification"
+                        [(ngModel)]="threatActor.specification" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.role" for="field_role">Role</label>
+                    <input type="text" class="form-control" name="role" id="field_role"
+                        [(ngModel)]="threatActor.role" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.isUsesThreatActorToMalware" for="field_isUsesThreatActorToMalware">Is Uses Threat Actor To Malware</label>
+                    <select class="form-control" id="field_isUsesThreatActorToMalware" name="isUsesThreatActorToMalware" [(ngModel)]="threatActor.isUsesThreatActorToMalwareId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="malwareOption.id" *ngFor="let malwareOption of malwares; trackBy: trackMalwareById">{{malwareOption.nom}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.threatActor.linkOf" for="field_linkOf">Link Of</label>
+                    <select class="form-control" id="field_linkOf" name="linkOf" [(ngModel)]="threatActor.linkOfId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="netLinkOption.id" *ngFor="let netLinkOption of netlinks; trackBy: trackNetLinkById">{{netLinkOption.nom}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

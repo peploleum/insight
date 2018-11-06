@@ -1,0 +1,38 @@
+
+{
+    "insightApp": {
+        "netLink" : {
+            "home": {
+                "title": "NetLinks",
+                "createLabel": "Créer un nouveau Net Link",
+                "createOrEditLabel": "Créer ou éditer un Net Link",
+                "search": "Recherche pour Net Link"
+            },
+            "created": "Un nouveau Net Link a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Net Link avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Net Link avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Net Link {{ id }} ?"
+            },
+            "detail": {
+                "title": "Net Link"
+            },
+            "description": "Description",
+            "nom": "Nom",
+            "type": "Type",
+            "level": "Level",
+            "isLinkOfAttackPattern": "Is Link Of Attack Pattern",
+            "isLinkOfCampaign": "Is Link Of Campaign",
+            "isLinkOfCourseOfAction": "Is Link Of Course Of Action",
+            "isLinkOfActor": "Is Link Of Actor",
+            "isLinkOfActivityPattern": "Is Link Of Activity Pattern",
+            "isLinkOfIntrusionSet": "Is Link Of Intrusion Set",
+            "isLinkOfMalware": "Is Link Of Malware",
+            "isLinkOfObservedData": "Is Link Of Observed Data",
+            "isLinkOfReport": "Is Link Of Report",
+            "isLinkOfThreatActor": "Is Link Of Threat Actor",
+            "isLinkOfTool": "Is Link Of Tool",
+            "isLinkOfVulnerability": "Is Link Of Vulnerability"
+        }
+    }
+}

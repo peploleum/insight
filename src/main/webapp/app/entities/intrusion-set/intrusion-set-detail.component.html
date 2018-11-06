@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="intrusionSet">
+            <h2><span jhiTranslate="insightApp.intrusionSet.detail.title">Intrusion Set</span> {{intrusionSet.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.intrusionSet.description">Description</span></dt>
+                <dd>
+                    <span>{{intrusionSet.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.nom">Nom</span></dt>
+                <dd>
+                    <span>{{intrusionSet.nom}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.type">Type</span></dt>
+                <dd>
+                    <span>{{intrusionSet.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.objectif">Objectif</span></dt>
+                <dd>
+                    <span>{{intrusionSet.objectif}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.niveauRessource">Niveau Ressource</span></dt>
+                <dd>
+                    <span>{{intrusionSet.niveauRessource}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.isTargetsIntrusionSetToActor">Is Targets Intrusion Set To Actor</span></dt>
+                <dd>
+                    <div *ngIf="intrusionSet.isTargetsIntrusionSetToActorId">
+                        <a [routerLink]="['/actor', intrusionSet.isTargetsIntrusionSetToActorId, 'view']">{{intrusionSet.isTargetsIntrusionSetToActorNom}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.intrusionSet.linkOf">Link Of</span></dt>
+                <dd>
+                    <div *ngIf="intrusionSet.linkOfId">
+                        <a [routerLink]="['/net-link', intrusionSet.linkOfId, 'view']">{{intrusionSet.linkOfNom}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/intrusion-set', intrusionSet.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

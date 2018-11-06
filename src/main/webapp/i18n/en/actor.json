@@ -1,0 +1,30 @@
+
+{
+    "insightApp": {
+        "actor" : {
+            "home": {
+                "title": "Actors",
+                "createLabel": "Create a new Actor",
+                "createOrEditLabel": "Create or edit a Actor",
+                "search": "Search for Actor"
+            },
+            "created": "A new Actor is created with identifier {{ param }}",
+            "updated": "A Actor is updated with identifier {{ param }}",
+            "deleted": "A Actor is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Actor {{ id }}?"
+            },
+            "detail": {
+                "title": "Actor"
+            },
+            "description": "Description",
+            "nom": "Nom",
+            "type": "Type",
+            "libelle": "Libelle",
+            "classeIdentite": "Classe Identite",
+            "targetsActorToIntrusionSet": "Targets Actor To Intrusion Set",
+            "targetsActorToMalware": "Targets Actor To Malware",
+            "linkOf": "Link Of"
+        }
+    }
+}

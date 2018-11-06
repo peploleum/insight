@@ -1,0 +1,28 @@
+
+{
+    "insightApp": {
+        "observedData" : {
+            "home": {
+                "title": "ObservedData",
+                "createLabel": "Créer un nouveau Observed Data",
+                "createOrEditLabel": "Créer ou éditer un Observed Data",
+                "search": "Recherche pour Observed Data"
+            },
+            "created": "Un nouveau Observed Data a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Observed Data avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Observed Data avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Observed Data {{ id }} ?"
+            },
+            "detail": {
+                "title": "Observed Data"
+            },
+            "type": "Type",
+            "objetsObserves": "Objets Observes",
+            "dateDebut": "Date Debut",
+            "dateFin": "Date Fin",
+            "nombreJours": "Nombre Jours",
+            "linkOf": "Link Of"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+
+{
+    "insightApp": {
+        "attackPattern" : {
+            "home": {
+                "title": "Attack Patterns",
+                "createLabel": "Create a new Attack Pattern",
+                "createOrEditLabel": "Create or edit a Attack Pattern",
+                "search": "Search for Attack Pattern"
+            },
+            "created": "A new Attack Pattern is created with identifier {{ param }}",
+            "updated": "A Attack Pattern is updated with identifier {{ param }}",
+            "deleted": "A Attack Pattern is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Attack Pattern {{ id }}?"
+            },
+            "detail": {
+                "title": "Attack Pattern"
+            },
+            "description": "Description",
+            "nom": "Nom",
+            "referenceExterne": "Reference Externe",
+            "tueurProcessus": "Tueur Processus",
+            "type": "Type",
+            "usesAttackPatternToMalware": "Uses Attack Pattern To Malware",
+            "linkOf": "Link Of"
+        }
+    }
+}

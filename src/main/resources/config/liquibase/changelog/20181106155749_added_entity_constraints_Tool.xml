@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Tool.
+    -->
+    <changeSet id="20181106155749-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="uses_tool_to_intrusion_set_id"
+                                 baseTableName="tool"
+                                 constraintName="fk_tool_uses_tool_to_intrusion_set_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="intrusion_set"/>
+
+        <addForeignKeyConstraint baseColumnNames="is_uses_tool_to_malware_id"
+                                 baseTableName="tool"
+                                 constraintName="fk_tool_is_uses_tool_to_malware_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="malware"/>
+
+        <addForeignKeyConstraint baseColumnNames="link_of_id"
+                                 baseTableName="tool"
+                                 constraintName="fk_tool_link_of_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="net_link"/>
+
+        <addForeignKeyConstraint baseColumnNames="uses_tool_to_threat_actor_id"
+                                 baseTableName="tool"
+                                 constraintName="fk_tool_uses_tool_to_threat_actor_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="threat_actor"/>
+
+    </changeSet>
+</databaseChangeLog>

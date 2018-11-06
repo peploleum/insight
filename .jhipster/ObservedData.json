@@ -1,0 +1,43 @@
+{
+    "name": "ObservedData",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "objetsObserves",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateDebut",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "dateFin",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "nombreJours",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "linkOf",
+            "otherEntityName": "netLink",
+            "otherEntityField": "nom"
+        }
+    ],
+    "changelogDate": "20181106155746",
+    "entityTableName": "observed_data",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": "elasticsearch"
+}
