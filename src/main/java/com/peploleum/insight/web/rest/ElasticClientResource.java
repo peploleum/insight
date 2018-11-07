@@ -28,15 +28,6 @@ public class ElasticClientResource {
     private ElasticClientService esClientService;
 
     /**
-     * GET regenerateDashboard
-     */
-    @GetMapping("/regenerate-dashboard")
-    public ResponseEntity<Void> regenerateDashboard() {
-        this.esClientService.generateAndPostKibanaDashboard();
-        return ResponseEntity.ok().headers(new HttpHeaders()).build();
-    }
-
-    /**
      * POST  /KibanaDashboardGenerationParameters : Parametres pour la generation d'un dashboard.
      *
      * @param dashboardParameters the KibanaDashboardGenerationParameters to create

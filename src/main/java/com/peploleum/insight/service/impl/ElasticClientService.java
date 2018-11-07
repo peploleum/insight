@@ -20,11 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,64 +33,68 @@ public class ElasticClientService {
     @Value("${application.kibana.uri}")
     private String KIBANA_ENTRY_URI;
 
-    private Set<KibanaObject> kibanaObjects = new HashSet<>();
+    //private Set<KibanaObject> kibanaObjects = new HashSet<>();
+    private List<KibanaObject> kibanaIndexPattern = new ArrayList<>();
+    private List<KibanaObject> kibanaDashboard = new ArrayList<>();
+    private List<KibanaObject> kibanaVisualization = new ArrayList<>();
+
     private Set<EntityMappingInfo> entitiesMappingInfo = new HashSet<>();
 
     public ElasticClientService() {
     }
 
     public List<String> getDashboardId() {
-        return this.kibanaObjects.stream().filter((ko) -> ko.getType().equals(KibanaObject.DASHBOARD)).map(ko -> ko.getId()).collect(Collectors.toList());
+        return this.kibanaDashboard.stream().map(ko -> ko.getId()).collect(Collectors.toList());
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void generateAndSaveKibanaIndexPattern() {
-        this.generateIndexPatterns();
-        final String jsonObjects = this.getJsonObjects();
-        if (!jsonObjects.isEmpty())
-            this.postMessageToKibana(jsonObjects, KibanaMessageUri.POST_BULK_OBJECT);
+    public void InitKibanaData() {
+        // Load kibana index-pattern, dashboard, visualization
+        Set<KibanaObject> kibanaObjects = getAllKibanaObjects();
+        this.kibanaIndexPattern = kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN)).collect(Collectors.toList());
+        this.kibanaDashboard = kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.DASHBOARD)).collect(Collectors.toList());
+        this.kibanaVisualization = kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.VISUALIZATION)).collect(Collectors.toList());
+
+        // Generate Index-pattern at first launch
+        if (this.kibanaIndexPattern.isEmpty()) {
+            this.kibanaIndexPattern = generateIndexPatterns();
+
+            createIndexPattern(this.kibanaIndexPattern);
+        }
+
+        // Init entityMappingInfo
+        this.entitiesMappingInfo = generateEntitiesMappingInfo(this.kibanaIndexPattern);
+    }
+
+    private void createIndexPattern(List<KibanaObject> kibanaIndexPattern) {
+        String jsonIndexPatterns = objectToJSONString(kibanaIndexPattern);
+
+        if (!jsonIndexPatterns.isEmpty())
+            this.postMessageToKibana(jsonIndexPatterns, KibanaMessageUri.POST_BULK_CREATE_OBJECTS);
 
         this.setDefaultKibanaIndexPattern(Actor.class.getSimpleName().toLowerCase());
     }
 
-    /**
-     * Fonction de test, genere un dashboard créer manuellement
-     */
-    public void generateAndPostKibanaDashboard() {
-        if (this.kibanaObjects.stream().anyMatch(ko -> ko.getType().equals(KibanaObject.DASHBOARD)))
-            return;
+    private Set<EntityMappingInfo> generateEntitiesMappingInfo(List<KibanaObject> kibanaIndexPattern) {
+        Set<EntityMappingInfo> ret = new HashSet<>();
 
-        KibanaObject defaultIndex = this.setDefaultKibanaIndexPattern("biographics");
-        KibanaObject evenementIndex = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN) && ko.getAttributes().getTitle().equals("evenement")).findFirst().get();
+        ClassPathScanningCandidateComponentProvider scanner =
+            new ClassPathScanningCandidateComponentProvider(true);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(Document.class));
 
-        List<KibanaVisualisationGenerationParameters> visuParamList = new ArrayList<>();
-        String ipTargetField = "language";
-        final KibanaObject visuTable = this.generateVisualization(defaultIndex, ipTargetField, KibanaVisualisationType.VISU_TABLE, visuParamList);
-        final KibanaObject visuPie = this.generateVisualization(defaultIndex, ipTargetField, KibanaVisualisationType.VISU_PIE, visuParamList);
-        final KibanaObject visuBar = this.generateVisualization(defaultIndex, ipTargetField, KibanaVisualisationType.VISU_VERT_BAR, visuParamList);
-        ipTargetField = "date";
-        final KibanaObject visuTime = this.generateVisualization(evenementIndex, ipTargetField, KibanaVisualisationType.VISU_TIMELINE, visuParamList);
-        ipTargetField = "coordonnee";
-        final KibanaObject visuMap = this.generateVisualization(defaultIndex, ipTargetField, KibanaVisualisationType.VISU_MAP, visuParamList);
-
-        final KibanaObject dash = this.generateDashboard(visuParamList, new ArrayList<>(), "Dashboard Test");
-        if (dash == null) {
-            return;
+        for (BeanDefinition bd : scanner.findCandidateComponents("com.peploleum.insight.domain")) {
+            try {
+                Class<?> cl = Class.forName(bd.getBeanClassName());
+                Optional<KibanaObject> ip = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(cl.getSimpleName().toLowerCase())).findFirst();
+                if (ip.isPresent())
+                    ret.add(KibanaObjectUtils.getEntityMappingInfo(cl, ip.get()));
+            } catch (ClassNotFoundException e) {
+                this.log.error("Erreur dans l'utilisation du classLoader sur un bean");
+            }
         }
 
-        KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
-        objectBundle.getObjects().add(visuTable);
-        objectBundle.getObjects().add(visuPie);
-        objectBundle.getObjects().add(visuBar);
-        objectBundle.getObjects().add(visuTime);
-        objectBundle.getObjects().add(visuMap);
-        objectBundle.getObjects().add(defaultIndex);
-        objectBundle.getObjects().add(evenementIndex);
-        objectBundle.getObjects().add(dash);
 
-        final String jsonBundle = this.getJsonDashboardBundleObjects(objectBundle);
-        if (!jsonBundle.isEmpty())
-            this.postMessageToKibana(jsonBundle, KibanaMessageUri.POST_DASHBOARD);
+        return ret;
     }
 
     public void generateAndPostKibanaDashboard(final KibanaDashboardGenerationParameters dashboardParameters) {
@@ -100,17 +102,17 @@ public class ElasticClientService {
             KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
             for (KibanaVisualisationGenerationParameters param : dashboardParameters.getVisualisations()) {
                 final KibanaObject visualisation = param.getVisualisationFromParameters();
-                KibanaObject index = this.kibanaObjects.stream().filter(ko -> ko.getId().equals(param.getIndexPatternId())).findFirst().get();
+                KibanaObject index = this.kibanaIndexPattern.stream().filter(ko -> ko.getId().equals(param.getIndexPatternId())).findFirst().get();
                 objectBundle.getObjects().add(visualisation);
                 objectBundle.getObjects().add(index);
-                this.kibanaObjects.add(visualisation);
+                this.kibanaVisualization.add(visualisation);
             }
             List<String> visualisationIds = objectBundle.getObjects().stream().filter(ko -> ko.getType().equals(KibanaObject.VISUALIZATION)).map(ko -> ko.getId()).collect(Collectors.toList());
             final KibanaObject dash = dashboardParameters.getDashboardFromParameters(visualisationIds);
             objectBundle.getObjects().add(dash);
-            this.kibanaObjects.add(dash);
+            this.kibanaDashboard.add(dash);
 
-            final String jsonBundle = this.getJsonDashboardBundleObjects(objectBundle);
+            final String jsonBundle = objectToJSONString(objectBundle);
             if (!jsonBundle.isEmpty())
                 this.postMessageToKibana(jsonBundle, KibanaMessageUri.POST_DASHBOARD);
         } catch (Exception e) {
@@ -122,38 +124,43 @@ public class ElasticClientService {
      * Supprime de Kibana, tous les dashboards et visualisations créés
      */
     public void deleteAllDashboard() {
-        final List<KibanaObject> visualisationToDelete = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.VISUALIZATION)).collect(Collectors.toList());
-        final List<KibanaObject> dashboardToDelete = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.DASHBOARD)).collect(Collectors.toList());
-        if (!visualisationToDelete.isEmpty())
-            visualisationToDelete.stream().forEach(ko -> {
-                this.sendDeleteMessageToKibana(ko.getId(), KibanaMessageUri.DELETE_VISUALISATION);
+        if (!this.kibanaVisualization.isEmpty()) {
+            kibanaVisualization.stream().forEach(ko -> {
+                sendDeleteMessageToKibana(ko.getId(), KibanaMessageUri.DELETE_VISUALISATION);
             });
-        if (!dashboardToDelete.isEmpty())
-            dashboardToDelete.stream().forEach(ko -> {
+            kibanaVisualization.clear();
+        }
+
+        if (!kibanaDashboard.isEmpty()) {
+            kibanaDashboard.stream().forEach(ko -> {
                 this.sendDeleteMessageToKibana(ko.getId(), KibanaMessageUri.DELETE_DASHBOARD);
             });
+            kibanaDashboard.clear();
+        }
     }
 
 
     /**
      * Generate les index pattern depuis les classes annotées @Document
      */
-    private void generateIndexPatterns() {
+    private List<KibanaObject> generateIndexPatterns() {
+        List<KibanaObject> ret = new ArrayList<>();
+
         ClassPathScanningCandidateComponentProvider scanner =
             new ClassPathScanningCandidateComponentProvider(true);
         scanner.addIncludeFilter(new AnnotationTypeFilter(Document.class));
 
         for (BeanDefinition bd : scanner.findCandidateComponents("com.peploleum.insight.domain")) {
-            System.out.println(bd.getBeanClassName());
             try {
                 Class<?> cl = Class.forName(bd.getBeanClassName());
                 KibanaObject ip = new KibanaObject(KibanaObject.INDEX_PATTERN, cl.getSimpleName().toLowerCase());
-                this.kibanaObjects.add(ip);
-                this.entitiesMappingInfo.add(KibanaObjectUtils.getEntityMappingInfo(cl, ip));
+                ret.add(ip);
             } catch (ClassNotFoundException e) {
                 this.log.error("Erreur dans l'utilisation du classLoader sur un bean");
             }
         }
+
+        return ret;
     }
 
     /**
@@ -167,7 +174,7 @@ public class ElasticClientService {
             final KibanaVisualisationGenerationParameters visuParam = new KibanaVisualisationGenerationParameters(indexPattern, targetField, visuType, visuType.toString(), timeFrom.toString(), timeTo.toString());
             visuParamList.add(visuParam);
             visualisation = visuParam.getVisualisationFromParameters();
-            this.kibanaObjects.add(visualisation);
+            this.kibanaVisualization.add(visualisation);
         } catch (Exception e) {
             this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
         }
@@ -181,7 +188,7 @@ public class ElasticClientService {
         KibanaObject dashboard = null;
         try {
             dashboard = new KibanaDashboardGenerationParameters(dashboardTitle, kibanaVisualisationsParams).getDashboardFromParameters(visualisationIds);
-            this.kibanaObjects.add(dashboard);
+            this.kibanaDashboard.add(dashboard);
         } catch (Exception e) {
             this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
         }
@@ -189,34 +196,66 @@ public class ElasticClientService {
     }
 
     private KibanaObject setDefaultKibanaIndexPattern(String indexName) {
-        KibanaObject defaultIndex = this.kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.INDEX_PATTERN) && ko.getAttributes().getTitle().equals(indexName)).findFirst().get();
+        KibanaObject defaultIndex = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(indexName)).findFirst().get();
         String jsonValue = "{\"value\":\"" + defaultIndex.getId() + "\"}";
         this.postMessageToKibana(jsonValue, KibanaMessageUri.SET_DEFAULT_INDEX_PATTERN);
         return defaultIndex;
     }
 
-    private String getJsonObjects() {
-        String jsonIndexPatterns = "";
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            jsonIndexPatterns = objectMapper.writeValueAsString(this.kibanaObjects);
-        } catch (Exception e) {
-            this.log.error("Erreur durant le parsing des index patterns", e);
-        }
-        return jsonIndexPatterns;
-    }
-
-    private String getJsonDashboardBundleObjects(KibanaObjectsBundle bundle) {
+    private String objectToJSONString(Object obj) {
         String jsonDashboardBundle = "";
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            jsonDashboardBundle = objectMapper.writeValueAsString(bundle);
+            jsonDashboardBundle = objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             this.log.error("Erreur durant le parsing des index patterns", e);
         }
         return jsonDashboardBundle;
+    }
+
+    /**
+     * Load all dashboard / visualization / index-pattern from Kibana.
+     * Request is paginate.
+     *
+     * @return
+     */
+    private Set<KibanaObject> getAllKibanaObjects() {
+        Set<KibanaObject> ret = new HashSet<>();
+
+        String baseUrl = KIBANA_ENTRY_URI + KibanaMessageUri.GET_FIND_OBJECTS.getUri();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        try {
+            int page = 0;
+            int current;
+            int total;
+
+            do {
+                page++;
+
+                String url = baseUrl + "&page=" + page + "&per_page=100";
+                RestTemplate rt = new RestTemplate();
+                final ResponseEntity<String> tResponseEntity = rt.getForEntity(url, String.class);
+
+                log.info(String.valueOf(tResponseEntity.getStatusCode()));
+                log.info(tResponseEntity.getBody());
+
+                KibanaFindObjects kfo = objectMapper.readValue(tResponseEntity.getBody(), KibanaFindObjects.class);
+                ret.addAll(kfo.getSaved_objects());
+
+                current = kfo.getPage() * kfo.getPer_page();
+                total = kfo.getTotal();
+            }
+            while (current < total);
+
+        } catch (IOException e) {
+            log.error("GetAllKibanaObject Failed", e);
+        }
+
+        return ret;
     }
 
     private void postMessageToKibana(final String schema, final KibanaMessageUri uriPattern) {
@@ -241,25 +280,29 @@ public class ElasticClientService {
         }
     }
 
-    private void sendDeleteMessageToKibana(final String id, final KibanaMessageUri uriPattern) {
+    private boolean sendDeleteMessageToKibana(final String id, final KibanaMessageUri uriPattern) {
         try {
             final RestTemplate rt = new RestTemplate();
             final StringBuilder sb = new StringBuilder(this.KIBANA_ENTRY_URI);
             sb.append(uriPattern.getUri());
             sb.append(id);
             rt.delete(sb.toString());
+            return true;
         } catch (Exception e) {
             this.log.info("Erreur posting kibana json", e);
+            return false;
         }
     }
 
     enum KibanaMessageUri {
 
+        GET_FIND_OBJECTS("api/saved_objects/_find?type=index-pattern&type=visualization&type=dashboard"),
         POST_INDEX_PATTERN("api/saved_objects/index-pattern/"),
         POST_VISUALISATION(""),
         /* POST_DASHBOARD comprend le dashboard et tous les éléments (index pattern + visu) dont il dépend*/
         POST_DASHBOARD("api/kibana/dashboards/import?exclude=index-pattern"),
-        POST_BULK_OBJECT("api/saved_objects/_bulk_create"),
+        POST_BULK_CREATE_OBJECTS("api/saved_objects/_bulk_create"),
+        POST_BULK_GET_OBJECTS("api/saved_objects/_bulk_get"),
         SET_DEFAULT_INDEX_PATTERN("api/kibana/settings/defaultIndex"),
         DELETE_VISUALISATION("api/saved_objects/visualization/"),
         DELETE_INDEX_PATTERN("api/saved_objects/index-pattern/"),

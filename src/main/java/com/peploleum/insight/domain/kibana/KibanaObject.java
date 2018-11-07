@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Object a importer dans Kibana
  */
-@JsonIgnoreProperties({""})
+@JsonIgnoreProperties({"updated_at"})
 public class KibanaObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
