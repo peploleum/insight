@@ -1,8 +1,8 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.ActorService;
-import com.peploleum.insight.service.GeneratorService;
-import com.peploleum.insight.service.IntrusionSetService;
+import com.peploleum.insight.service.*;
+import com.peploleum.insight.service.dto.ActorDTO;
+import com.peploleum.insight.service.dto.NetLinkDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -22,68 +25,97 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private ActorService actorService;
     private IntrusionSetService intrusionSetService;
+    private ThreatActorService threatActorService;
+    private ObservedDataService observedDataService;
+    private AttackPatternService attackPatternService;
+    private NetLinkService netLinkService;
 
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(ActorService actorService, IntrusionSetService intrusionSetService) {
+    public GeneratorServiceImpl(ActorService actorService, IntrusionSetService intrusionSetService, ThreatActorService threatActorService, ObservedDataService observedDataService, AttackPatternService attackPatternService, NetLinkService netLinkService) {
         this.actorService = actorService;
         this.intrusionSetService = intrusionSetService;
+        this.threatActorService = threatActorService;
+        this.observedDataService = observedDataService;
+        this.attackPatternService = attackPatternService;
+        this.netLinkService = netLinkService;
     }
 
     @Override
     public void feed() {
-//        this.log.info("FEEDING x " + GEN_THRESHOLD);
-//        int i = 0;
-//        while (i < GEN_THRESHOLD) {
-//            final int index = ThreadLocalRandom.current().nextInt(0, 3);
-//
-//            final Gender randomGender = Gender.values()[index];
-//            final String biographicsFirstname = UUID.randomUUID().toString();
-//            final String biographicsLastname = UUID.randomUUID().toString();
-//            int j = 0;
-//            final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
-//            this.log.info("Generating " + randomThreshold + " objects with values");
-//            this.log.info("biographicsFirstname " + biographicsFirstname);
-//            this.log.info("biographicsLastname " + biographicsLastname);
-//            this.log.info("randomGender " + randomGender);
-//            while (j < randomThreshold) {
-//                BiographicsDTO biographicsDTO = new BiographicsDTO();
-//                biographicsDTO.setBiographicsFirstname(biographicsFirstname);
-//                biographicsDTO.setBiographicsName(biographicsLastname);
-//                biographicsDTO.setBiographicsAge(12);
-//                biographicsDTO.setBiographicsGender(randomGender);
-//                biographicsDTO.setBiographicsCoordinates(this.generateLatitude() + "," + this.generateLongitude());
-//                this.biographicsService.save(biographicsDTO);
-//                j++;
-//            }
-//            i++;
-//        }
-//
-//        i = 0;
-//        while (i < GEN_THRESHOLD) {
-//            final int index = ThreadLocalRandom.current().nextInt(0, 4);
-//            final EventType randomEventType = EventType.values()[index];
-//            final String eventName = UUID.randomUUID().toString();
-//            int j = 0;
-//            final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
-//            this.log.info("Generating " + randomThreshold + " objects with values");
-//            this.log.info("eventName " + eventName);
-//            this.log.info("randomEventType " + randomEventType);
-//            while (j < randomThreshold) {
-//                final EventDTO eventDTO = new EventDTO();
-//                eventDTO.setEventName(eventName);
-//                eventDTO.setEventType(randomEventType);
-//                eventDTO.setEventDescription(UUID.randomUUID().toString());
-//                eventDTO.setEventCoordinates(this.generateLatitude() + "," + this.generateLongitude());
-//                final Instant instant = generateRandomInstant();
-//                eventDTO.setEventDate(instant);
-//                this.eventService.save(eventDTO);
-//                j++;
-//            }
-//            i++;
-//        }
+        this.log.info("FEEDING x " + GEN_THRESHOLD);
+
+        List<NetLinkDTO> netlinkList = new ArrayList<>();
+        for (int i = 0; i < GEN_THRESHOLD; i++) {
+            final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
+            for(int j = 0; j<randomThreshold; j++)
+            {
+                netlinkList.add(this.netLinkService.save(generateNetLink()));
+            }
+        }
+
+        for (int i = 0; i < GEN_THRESHOLD; i++) {
+            final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
+            for(int j = 0; j<randomThreshold; j++)
+            {
+                ActorDTO actorDTO = generateActor();
+
+                int idx = ThreadLocalRandom.current().nextInt(0, netlinkList.size());
+                actorDTO.setLinkOfId(netlinkList.get(idx).getId());
+
+                this.actorService.save(actorDTO);
+            }
+        }
     }
+
+    private NetLinkDTO generateNetLink()
+    {
+        final String netlinkName = UUID.randomUUID().toString();
+        final String netlinkDescrition = UUID.randomUUID().toString();
+        final String netlinkType = UUID.randomUUID().toString();
+        final String netlinkLevel = UUID.randomUUID().toString();
+
+        this.log.info("Generating netlink object with values");
+        this.log.info("netlinkName " + netlinkName);
+        this.log.info("netlinkDescrition " + netlinkDescrition);
+        this.log.info("netlinkType " + netlinkType);
+        this.log.info("netlinkLevel " + netlinkLevel);
+
+        NetLinkDTO netLinkDTO = new NetLinkDTO();
+        netLinkDTO.setNom(netlinkName);
+        netLinkDTO.setDescription(netlinkDescrition);
+        netLinkDTO.setType(netlinkType);
+        netLinkDTO.setLevel(netlinkLevel);
+
+        return netLinkDTO;
+    }
+
+    private ActorDTO generateActor()
+    {
+        final String actorName = UUID.randomUUID().toString();
+        final String actorLibelle = UUID.randomUUID().toString();
+        final String actorDescription = UUID.randomUUID().toString();
+        final String actorType = UUID.randomUUID().toString();
+        final String actorClasseIdentite = UUID.randomUUID().toString();
+
+        this.log.info("Generating actor object with values");
+        this.log.info("actorName " + actorName);
+        this.log.info("actorLibelle " + actorLibelle);
+        this.log.info("actorDescription " + actorDescription);
+        this.log.info("actorType " + actorType);
+        this.log.info("actorClasseIdentite " + actorClasseIdentite);
+
+        ActorDTO actorDTO = new ActorDTO();
+        actorDTO.setNom(actorName);
+        actorDTO.setLibelle(actorLibelle);
+        actorDTO.setDescription(actorDescription);
+        actorDTO.setType(actorType);
+        actorDTO.setClasseIdentite(actorClasseIdentite);
+
+        return actorDTO;
+    }
+
 
     private Instant generateRandomInstant() {
         final int monthIndex = ThreadLocalRandom.current().nextInt(0, 11);
@@ -98,12 +130,10 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     private double generateLatitude() {
-        final double v = ThreadLocalRandom.current().nextDouble(41, 51);
-        return v;
+        return ThreadLocalRandom.current().nextDouble(41, 51);
     }
 
     private double generateLongitude() {
-        final double v = ThreadLocalRandom.current().nextDouble(-6, 8.3);
-        return v;
+        return ThreadLocalRandom.current().nextDouble(-6, 8.3);
     }
 }
