@@ -28,6 +28,7 @@ public class KibanaObjectAttributes implements Serializable {
     //Index Pattern Attributes
     private String timeFieldName;
     private String notExpandable;
+    //    private List<KibanaAttributeField> fields;
     private String fields;
     private String fieldFormatMap;
 
@@ -102,6 +103,13 @@ public class KibanaObjectAttributes implements Serializable {
         this.notExpandable = notExpandable;
     }
 
+    //    public List<KibanaAttributeField> getFields() {
+//        return fields;
+//    }
+//
+//    public void setFields(List<KibanaAttributeField> fields) {
+//        this.fields = fields;
+//    }
     public String getFields() {
         return fields;
     }

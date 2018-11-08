@@ -147,4 +147,122 @@ public class KibanaObjectUtils {
         }
         return new EntityMappingInfo(indexPattern.getId(), indexPattern.getAttributes().getTitle(), fieldMappingInfos);
     }
+
+    public static String getIndexPatternFields(Class<?> cl) {
+        //"[{\"name\":\"description\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false}]"
+        StringBuilder sb = new StringBuilder("[");
+
+        /*
+        //_ID
+        sb.append("{");
+        sb.append("\"name\":\"").append("\"_id\"").append("\",");
+        sb.append("\"type\":\"").append("\"string\"").append("\",");
+        sb.append("\"count\":").append("0").append(",");
+        sb.append("\"scripted\":").append("false").append(",");
+        sb.append("\"searchable\":").append("true").append(",");
+        sb.append("\"aggregatable\":").append("true").append(",");
+        sb.append("\"readFromDocValues\":").append("false").append("");
+        sb.append("},");
+
+        //_INDEX
+        sb.append("{");
+        sb.append("\"name\":\"").append("\"_index\"").append("\",");
+        sb.append("\"type\":\"").append("\"string\"").append("\",");
+        sb.append("\"count\":").append("0").append(",");
+        sb.append("\"scripted\":").append("false").append(",");
+        sb.append("\"searchable\":").append("true").append(",");
+        sb.append("\"aggregatable\":").append("true").append(",");
+        sb.append("\"readFromDocValues\":").append("false").append("");
+        sb.append("},");
+
+        //_SCORE
+        sb.append("{");
+        sb.append("\"name\":\"").append("\"_score\"").append("\",");
+        sb.append("\"type\":\"").append("\"number\"").append("\",");
+        sb.append("\"count\":").append("0").append(",");
+        sb.append("\"scripted\":").append("false").append(",");
+        sb.append("\"searchable\":").append("false").append(",");
+        sb.append("\"aggregatable\":").append("false").append(",");
+        sb.append("\"readFromDocValues\":").append("false").append("");
+        sb.append("},");
+
+        //_SOURCE
+        sb.append("{");
+        sb.append("\"name\":\"").append("\"_source\"").append("\",");
+        sb.append("\"type\":\"").append("\"_source\"").append("\",");
+        sb.append("\"count\":").append("0").append(",");
+        sb.append("\"scripted\":").append("false").append(",");
+        sb.append("\"searchable\":").append("false").append(",");
+        sb.append("\"aggregatable\":").append("false").append(",");
+        sb.append("\"readFromDocValues\":").append("false").append("");
+        sb.append("},");
+
+        //_TYPE
+        sb.append("{");
+        sb.append("\"name\":\"").append("\"_type\"").append("\",");
+        sb.append("\"type\":\"").append("\"string\"").append("\",");
+        sb.append("\"count\":").append("0").append(",");
+        sb.append("\"scripted\":").append("false").append(",");
+        sb.append("\"searchable\":").append("true").append(",");
+        sb.append("\"aggregatable\":").append("true").append(",");
+        sb.append("\"readFromDocValues\":").append("false").append("");
+        sb.append("}");
+*/
+
+        boolean isFirst = true;
+        for (Field field : cl.getDeclaredFields()) {
+
+            if (!java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+                String name = field.getName();
+                String type = "string";
+
+                if (field.getAnnotation(GeoPointField.class) != null) {
+                    type = "geolocation";
+                } else if (field.getAnnotation(org.springframework.data.elasticsearch.annotations.Field.class) != null) {
+                    if (field.getAnnotation(org.springframework.data.elasticsearch.annotations.Field.class).type().equals(FieldType.Date))
+                        type = "date";
+                } else if (field.getType().equals(Integer.class) || field.getType().equals(Double.class)
+                    || field.getType().equals(Float.class) || field.getType().equals(Long.class)) {
+                    type = "number";
+                }
+
+                if (!isFirst)
+                    sb.append(",");
+                else
+                    isFirst = false;
+
+                sb.append("{");
+                sb.append("\"name\":\"").append(name).append("\",");
+                sb.append("\"type\":\"").append(type).append("\",");
+                sb.append("\"count\":").append("0").append(",");
+                sb.append("\"scripted\":").append("false").append(",");
+                sb.append("\"searchable\":").append("true").append(",");
+                sb.append("\"aggregatable\":");
+                if (type.equals("string"))
+                    sb.append("false");
+                else
+                    sb.append("true");
+                sb.append(",");
+                sb.append("\"readFromDocValues\":").append("false").append("");
+                sb.append("}");
+
+                // keyword
+                if (type.equals("string")) {
+                    sb.append(",{");
+                    sb.append("\"name\":\"").append(name).append(".keyword").append("\",");
+                    sb.append("\"type\":\"").append(type).append("\",");
+                    sb.append("\"count\":").append("0").append(",");
+                    sb.append("\"scripted\":").append("false").append(",");
+                    sb.append("\"searchable\":").append("true").append(",");
+                    sb.append("\"aggregatable\":").append("true").append(",");
+                    sb.append("\"readFromDocValues\":").append("true").append("");
+                    sb.append("}");
+                }
+
+            }
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
 }

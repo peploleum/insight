@@ -97,6 +97,23 @@ public class ElasticClientService {
         return ret;
     }
 
+    // @Scheduled(fixedDelay = 10000)
+    public void updateIndexPatternFiled() {
+        log.info("Update indexPattern Fields");
+
+        if (this.kibanaIndexPattern != null && !this.kibanaIndexPattern.isEmpty()) {
+            String baseUrl = KIBANA_ENTRY_URI + KibanaMessageUri.GET_UPDATE_INDEX_PATTERN_FIELDS.getUri();
+
+            for (KibanaObject ko : this.kibanaIndexPattern) {
+                RestTemplate rt = new RestTemplate();
+                String url = baseUrl.replace("$PATTERN$", ko.getAttributes().getTitle());
+                final ResponseEntity<String> tResponseEntity = rt.getForEntity(url, String.class);
+
+                log.info("Update of " + ko.getId() + " indexPattern ended with code " + tResponseEntity.getStatusCode());
+            }
+        }
+    }
+
     public void generateAndPostKibanaDashboard(final KibanaDashboardGenerationParameters dashboardParameters) {
         try {
             KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
@@ -154,6 +171,7 @@ public class ElasticClientService {
             try {
                 Class<?> cl = Class.forName(bd.getBeanClassName());
                 KibanaObject ip = new KibanaObject(KibanaObject.INDEX_PATTERN, cl.getSimpleName().toLowerCase());
+                ip.getAttributes().setFields(KibanaObjectUtils.getIndexPatternFields(cl));
                 ret.add(ip);
             } catch (ClassNotFoundException e) {
                 this.log.error("Erreur dans l'utilisation du classLoader sur un bean");
@@ -196,10 +214,12 @@ public class ElasticClientService {
     }
 
     private KibanaObject setDefaultKibanaIndexPattern(String indexName) {
-        KibanaObject defaultIndex = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(indexName)).findFirst().get();
-        String jsonValue = "{\"value\":\"" + defaultIndex.getId() + "\"}";
-        this.postMessageToKibana(jsonValue, KibanaMessageUri.SET_DEFAULT_INDEX_PATTERN);
-        return defaultIndex;
+        Optional<KibanaObject> defaultIndex = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(indexName)).findFirst();
+        if (defaultIndex.isPresent()) {
+            String jsonValue = "{\"value\":\"" + defaultIndex.get().getId() + "\"}";
+            this.postMessageToKibana(jsonValue, KibanaMessageUri.SET_DEFAULT_INDEX_PATTERN);
+        }
+        return defaultIndex.get();
     }
 
     private String objectToJSONString(Object obj) {
@@ -296,6 +316,7 @@ public class ElasticClientService {
 
     enum KibanaMessageUri {
 
+        GET_UPDATE_INDEX_PATTERN_FIELDS("api/index_patterns/_fields_for_wildcard?pattern=$PATTERN$&meta_fields=[\"_source\",\"_id\",\"_type\",\"_index\",\"_score\"]"),
         GET_FIND_OBJECTS("api/saved_objects/_find?type=index-pattern&type=visualization&type=dashboard"),
         POST_INDEX_PATTERN("api/saved_objects/index-pattern/"),
         POST_VISUALISATION(""),
