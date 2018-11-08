@@ -20,7 +20,7 @@ export class VisualisationCreateDashboardComponent implements OnInit, OnDestroy 
     dashboardParameters: KibanaDashboardGenerationParameters;
     @Input() mappingInfo: EntityMappingInfo[];
     @Output() dashboardEmitter: EventEmitter<KibanaDashboardGenerationParameters> = new EventEmitter();
-    private createDashboardForm: FormGroup;
+    createDashboardForm: FormGroup;
 
     constructor(private jhiAlertService: JhiAlertService, private formBuilder: FormBuilder) {}
 
