@@ -1,5 +1,14 @@
 version: '2'
 services:
+    
+    kibana:
+        image: docker.elastic.co/kibana/kibana-oss:6.4.0
+        container_name: kibana
+        ports: 
+            - "5601:5601"
+        environment:
+            - "ELASTICSEARCH_URL=http://elasticsearch:9200"    
+
     insight-elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.0
         container_name: elasticsearch
@@ -10,16 +19,3 @@ services:
         ports:
             - 9200:9200
             - 9300:9300
-        
-    kibana:
-        image: docker.elastic.co/kibana/kibana-oss:6.4.0
-        container_name: kibana
-        ports: 
-            - "5601:5601"
-        environment:
-            - "ELASTICSEARCH_URL=http://elasticsearch:9200"    
-        depends_on:
-            - insight-elasticsearch
-        
-        
-      

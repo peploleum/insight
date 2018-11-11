@@ -10,6 +10,7 @@ services:
             - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=insight-elasticsearch:9300
             - SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME=insight
             - SPRING_DATA_JEST_URI=insight-elasticsearch:9200
+            - APPLICATION_KIBANA_URI=http://kibana:5601/
         ports:
             - 8080:8080
     insight-postgresql:
@@ -20,3 +21,8 @@ services:
         extends:
             file: elasticsearch.yml
             service: insight-elasticsearch
+    kibana:
+        extends:
+            file: elasticsearch.yml
+            service: kibana
+            
