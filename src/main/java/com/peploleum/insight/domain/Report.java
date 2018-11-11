@@ -7,6 +7,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -40,6 +43,7 @@ public class Report implements Serializable {
     private String objetsReferences;
 
     @Column(name = "date_publication")
+    @Field(type = FieldType.Date)
     private ZonedDateTime datePublication;
 
     @ManyToOne

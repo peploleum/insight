@@ -7,6 +7,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -34,9 +37,11 @@ public class ObservedData implements Serializable {
     private String objetsObserves;
 
     @Column(name = "date_debut")
+    @Field(type = FieldType.Date)
     private ZonedDateTime dateDebut;
 
     @Column(name = "date_fin")
+    @Field(type = FieldType.Date)
     private ZonedDateTime dateFin;
 
     @Column(name = "nombre_jours")

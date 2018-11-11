@@ -8,6 +8,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -39,6 +42,7 @@ public class ActivityPattern implements Serializable {
     private String type;
 
     @Column(name = "valide_a_partir_de")
+    @Field(type = FieldType.Date)
     private ZonedDateTime valideAPartirDe;
 
     @ManyToOne

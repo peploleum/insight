@@ -3,6 +3,8 @@ package com.peploleum.insight.service.impl;
 import com.peploleum.insight.service.*;
 import com.peploleum.insight.service.dto.ActorDTO;
 import com.peploleum.insight.service.dto.NetLinkDTO;
+import com.peploleum.insight.service.dto.ObservedDataDTO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -67,6 +71,14 @@ public class GeneratorServiceImpl implements GeneratorService {
                 this.actorService.save(actorDTO);
             }
         }
+
+        for (int i = 0; i < GEN_THRESHOLD; i++) {
+            final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
+            for(int j = 0; j<randomThreshold; j++)
+            {
+                this.observedDataService.save(generateObservedData());
+            }
+        }
     }
 
     private NetLinkDTO generateNetLink()
@@ -116,17 +128,53 @@ public class GeneratorServiceImpl implements GeneratorService {
         return actorDTO;
     }
 
+    private ObservedDataDTO generateObservedData()
+    {
+        final String type = generateRandomType();
+        final String objObserve = UUID.randomUUID().toString();
+        final ZonedDateTime debut = generateRandomDateTime();
+        final ZonedDateTime fin = addRandomDuration(debut);
+        final int nbDay = ThreadLocalRandom.current().nextInt(0, 60);
 
-    private Instant generateRandomInstant() {
-        final int monthIndex = ThreadLocalRandom.current().nextInt(0, 11);
-        final Month month = Month.values()[monthIndex];
-        final int year = ThreadLocalRandom.current().nextInt(2014, 2018);
-        final int hour = ThreadLocalRandom.current().nextInt(0, 23);
-        final int minute = ThreadLocalRandom.current().nextInt(0, 59);
-        final int seconds = ThreadLocalRandom.current().nextInt(0, 59);
+        ObservedDataDTO oDataDTO = new ObservedDataDTO();
+        oDataDTO.setType(type);
+        oDataDTO.setObjetsObserves(objObserve);
+        oDataDTO.setDateDebut(debut);
+        oDataDTO.setDateFin(fin);
+        oDataDTO.setNombreJours(nbDay);
+
+        return oDataDTO;
+    }
+
+    private String generateRandomType() {
+        final int index = ThreadLocalRandom.current().nextInt(0, Type.values().length);
+
+        return Type.values()[index].getLabel();
+    }
+
+    private ZonedDateTime generateRandomDateTime() {
+        final int month = ThreadLocalRandom.current().nextInt(1, 13);
+        final int year = ThreadLocalRandom.current().nextInt(2017, 2019);
+        final int hour = ThreadLocalRandom.current().nextInt(0, 24);
+        final int minute = ThreadLocalRandom.current().nextInt(0, 60);
+        final int seconds = ThreadLocalRandom.current().nextInt(0, 60);
         final int day = ThreadLocalRandom.current().nextInt(1, 29);
-        LocalDateTime specificDate = LocalDateTime.of(year, month, day, hour, minute, seconds);
-        return specificDate.toInstant(ZoneOffset.UTC);
+
+        return ZonedDateTime.of(year, month, day, hour, minute, seconds, 0, ZoneId.systemDefault());
+    }
+
+    /**
+     * Add duration between 0 and 61 days
+     * @param init the initial date
+     * @return the new date
+     */
+    private ZonedDateTime addRandomDuration(ZonedDateTime init) {
+        final int day = ThreadLocalRandom.current().nextInt(0, 60);
+        final int hour = ThreadLocalRandom.current().nextInt(0, 24);
+        final int minute = ThreadLocalRandom.current().nextInt(0, 60);
+        final int seconds = ThreadLocalRandom.current().nextInt(0, 60);
+        
+        return init.plusDays(day).plusHours(hour).plusMinutes(minute).plusSeconds(seconds);
     }
 
     private double generateLatitude() {
@@ -135,5 +183,22 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private double generateLongitude() {
         return ThreadLocalRandom.current().nextDouble(-6, 8.3);
+    }
+
+    enum Type {
+        INFO("INFO"),
+        ERROR("ERROR"),
+        WARNING("WARNING"),
+        ALERT("ALERT");
+
+        private String label;
+
+        private Type(String label) {
+            this.label = label;
+        }
+
+        public String getLabel(){
+            return this.label;
+        }
     }
 }
