@@ -1,31 +1,26 @@
 package com.peploleum.insight.domain.kibana;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peploleum.insight.service.impl.ElasticClientService;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.GeoPointField;
-
-import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
 /**
  * Object a importer dans Kibana
  */
 public class KibanaObjectUtils {
 
-    public static KibanaObject deserializeJsonFileToKibanaObject(URL resource) throws Exception {
-        byte[] jsonData = Files.readAllBytes(Paths.get(resource.toURI()));
+    public static KibanaObject deserializeJsonFileToKibanaObject(InputStream input) throws Exception {
+        byte[] jsonData = IOUtils.toByteArray(input);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -35,9 +30,10 @@ public class KibanaObjectUtils {
     /**
      * @param filePath file path depuis /resources/
      */
-    private static String readFileLineByLine(String filePath) {
+    /*private static String readFileLineByLine(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();
         URL resource = ElasticClientService.class.getResource(filePath);
+
         try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         } catch (IOException | URISyntaxException e) {
@@ -45,7 +41,7 @@ public class KibanaObjectUtils {
         }
         return contentBuilder.toString();
     }
-
+    */
     public static KibanaObject updateDefaultVisualisation(KibanaObject visualisation, final String visuTitle, final String targetField, final String indexPatternId) {
 
         //Modification du title de la visualisation et du field cible de l'index_pattern

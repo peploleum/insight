@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class KibanaDashboardGenerationParameters implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private String dashboardTitle;
     @JsonProperty("visualisations")
     private List<KibanaVisualisationGenerationParameters> visualisations = new ArrayList<>();
@@ -43,7 +45,7 @@ public class KibanaDashboardGenerationParameters implements Serializable {
     @JsonIgnore
     public KibanaObject getDashboardFromParameters(List<String> visualisationIds) throws Exception {
         KibanaDashboardType dashboardType = KibanaDashboardType.getTypeFromNumber(this.visualisations.size());
-        KibanaObject dashboard = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaDashboardGenerationParameters.class.getResource(dashboardType.getJsonModelFileUrl()));
+        KibanaObject dashboard = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaDashboardGenerationParameters.class.getResourceAsStream(dashboardType.getJsonModelFileUrl()));
 
         KibanaVisualisationGenerationParameters timelineVisualisationParams = this.visualisations.stream().filter(visu -> visu.getVisualizationType().equals(KibanaVisualisationType.VISU_TIMELINE)).findAny().orElse(null);
         if (timelineVisualisationParams != null) {

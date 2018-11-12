@@ -2,7 +2,6 @@ package com.peploleum.insight.domain.kibana;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.peploleum.insight.service.impl.ElasticClientService;
 
 import java.io.Serializable;
 
@@ -10,6 +9,8 @@ import java.io.Serializable;
  * Visualisation parameters de Kibana
  */
 public class KibanaVisualisationGenerationParameters implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String visualizationTitle;
 
@@ -94,7 +95,7 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
 
     @JsonIgnore
     public KibanaObject getVisualisationFromParameters() throws Exception {
-        KibanaObject visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResource(this.visualizationType.getJsonModelFileUrl()));
+        KibanaObject visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResourceAsStream(this.visualizationType.getJsonModelFileUrl()));
         switch (this.visualizationType) {
             case VISU_TABLE:
             case VISU_PIE:
