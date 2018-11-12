@@ -31,6 +31,7 @@
     "ngx-cookie": "2.0.1",
     "ngx-infinite-scroll": "0.5.1",
     "ngx-webstorage": "2.0.1",
+    "node-sass": "^4.10.0",
     "ol": "^5.2.0",
     "reflect-metadata": "0.1.12",
     "rxjs": "6.1.0",
@@ -73,7 +74,6 @@
     "lint-staged": "7.0.0",
     "merge-jsons-webpack-plugin": "1.0.14",
     "moment-locales-webpack-plugin": "1.0.5",
-    "node-sass": "^4.9.3",
     "postcss-loader": "2.1.1",
     "prettier": "1.11.1",
     "protractor": "5.1.2",
@@ -137,7 +137,8 @@
     "webpack:prod": "yarn run cleanup && yarn run webpack:prod:main && yarn run clean-www",
     "webpack:test": "yarn run test",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
+    "full": "yarn add node-sass"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",
