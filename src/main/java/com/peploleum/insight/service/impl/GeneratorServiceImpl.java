@@ -1,6 +1,19 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.*;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.peploleum.insight.service.ActorService;
+import com.peploleum.insight.service.AttackPatternService;
+import com.peploleum.insight.service.GeneratorService;
+import com.peploleum.insight.service.IntrusionSetService;
+import com.peploleum.insight.service.NetLinkService;
+import com.peploleum.insight.service.ObservedDataService;
+import com.peploleum.insight.service.ThreatActorService;
 import com.peploleum.insight.service.dto.ActorDTO;
 import com.peploleum.insight.service.dto.NetLinkDTO;
 import com.peploleum.insight.service.dto.ObservedDataDTO;
@@ -9,17 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -177,13 +179,13 @@ public class GeneratorServiceImpl implements GeneratorService {
         return init.plusDays(day).plusHours(hour).plusMinutes(minute).plusSeconds(seconds);
     }
 
-    private double generateLatitude() {
-        return ThreadLocalRandom.current().nextDouble(41, 51);
-    }
+    // private double generateLatitude() {
+    //     return ThreadLocalRandom.current().nextDouble(41, 51);
+    // }
 
-    private double generateLongitude() {
-        return ThreadLocalRandom.current().nextDouble(-6, 8.3);
-    }
+    // private double generateLongitude() {
+    //     return ThreadLocalRandom.current().nextDouble(-6, 8.3);
+    // }
 
     enum Type {
         INFO("INFO"),

@@ -2,6 +2,16 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.CourseOfAction;
+import com.peploleum.insight.domain.CourseOfAction_;
+import com.peploleum.insight.domain.NetLink_;// for static metamodels
+import com.peploleum.insight.repository.CourseOfActionRepository;
+import com.peploleum.insight.repository.search.CourseOfActionSearchRepository;
+import com.peploleum.insight.service.dto.CourseOfActionCriteria;
+import com.peploleum.insight.service.dto.CourseOfActionDTO;
+import com.peploleum.insight.service.mapper.CourseOfActionMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.CourseOfAction;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.CourseOfActionRepository;
-import com.peploleum.insight.repository.search.CourseOfActionSearchRepository;
-import com.peploleum.insight.service.dto.CourseOfActionCriteria;
-
-import com.peploleum.insight.service.dto.CourseOfActionDTO;
-import com.peploleum.insight.service.mapper.CourseOfActionMapper;
 
 /**
  * Service for executing complex queries for CourseOfAction entities in the database.

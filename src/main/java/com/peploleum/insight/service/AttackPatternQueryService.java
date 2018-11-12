@@ -2,6 +2,17 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.AttackPattern;
+import com.peploleum.insight.domain.AttackPattern_;
+import com.peploleum.insight.domain.Malware_;
+import com.peploleum.insight.domain.NetLink_;// for static metamodels
+import com.peploleum.insight.repository.AttackPatternRepository;
+import com.peploleum.insight.repository.search.AttackPatternSearchRepository;
+import com.peploleum.insight.service.dto.AttackPatternCriteria;
+import com.peploleum.insight.service.dto.AttackPatternDTO;
+import com.peploleum.insight.service.mapper.AttackPatternMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.AttackPattern;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.AttackPatternRepository;
-import com.peploleum.insight.repository.search.AttackPatternSearchRepository;
-import com.peploleum.insight.service.dto.AttackPatternCriteria;
-
-import com.peploleum.insight.service.dto.AttackPatternDTO;
-import com.peploleum.insight.service.mapper.AttackPatternMapper;
 
 /**
  * Service for executing complex queries for AttackPattern entities in the database.

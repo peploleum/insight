@@ -2,6 +2,16 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.ActivityPattern;
+import com.peploleum.insight.domain.ActivityPattern_;
+import com.peploleum.insight.domain.NetLink_;// for static metamodels
+import com.peploleum.insight.repository.ActivityPatternRepository;
+import com.peploleum.insight.repository.search.ActivityPatternSearchRepository;
+import com.peploleum.insight.service.dto.ActivityPatternCriteria;
+import com.peploleum.insight.service.dto.ActivityPatternDTO;
+import com.peploleum.insight.service.mapper.ActivityPatternMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.ActivityPattern;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.ActivityPatternRepository;
-import com.peploleum.insight.repository.search.ActivityPatternSearchRepository;
-import com.peploleum.insight.service.dto.ActivityPatternCriteria;
-
-import com.peploleum.insight.service.dto.ActivityPatternDTO;
-import com.peploleum.insight.service.mapper.ActivityPatternMapper;
 
 /**
  * Service for executing complex queries for ActivityPattern entities in the database.

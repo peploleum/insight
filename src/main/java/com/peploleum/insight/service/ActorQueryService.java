@@ -2,6 +2,18 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.Actor;
+import com.peploleum.insight.domain.Actor_;
+import com.peploleum.insight.domain.IntrusionSet_;
+import com.peploleum.insight.domain.Malware_;
+import com.peploleum.insight.domain.NetLink_;// for static metamodels
+import com.peploleum.insight.repository.ActorRepository;
+import com.peploleum.insight.repository.search.ActorSearchRepository;
+import com.peploleum.insight.service.dto.ActorCriteria;
+import com.peploleum.insight.service.dto.ActorDTO;
+import com.peploleum.insight.service.mapper.ActorMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.Actor;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.ActorRepository;
-import com.peploleum.insight.repository.search.ActorSearchRepository;
-import com.peploleum.insight.service.dto.ActorCriteria;
-
-import com.peploleum.insight.service.dto.ActorDTO;
-import com.peploleum.insight.service.mapper.ActorMapper;
 
 /**
  * Service for executing complex queries for Actor entities in the database.

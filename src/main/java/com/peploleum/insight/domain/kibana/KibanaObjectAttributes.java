@@ -1,5 +1,6 @@
 package com.peploleum.insight.domain.kibana;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -16,8 +17,10 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"title", "hits", "visState", "uiStateJSON", "description", "panelsJSON", "optionsJSON", "version", "timeRestore", "kibanaSavedObjectMeta"})
 public class KibanaObjectAttributes implements Serializable {
+    @JsonIgnore
+    private static final long serialVersionUID = 1L;
 
-    //Common attributes
+    // Common attributes
     @JsonProperty("title")
     private String title;
     @JsonProperty("kibanaSavedObjectMeta")

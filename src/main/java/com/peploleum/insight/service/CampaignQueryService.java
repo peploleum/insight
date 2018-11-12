@@ -2,6 +2,16 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.Campaign;
+import com.peploleum.insight.domain.Campaign_;
+import com.peploleum.insight.domain.NetLink_;// for static metamodels
+import com.peploleum.insight.repository.CampaignRepository;
+import com.peploleum.insight.repository.search.CampaignSearchRepository;
+import com.peploleum.insight.service.dto.CampaignCriteria;
+import com.peploleum.insight.service.dto.CampaignDTO;
+import com.peploleum.insight.service.mapper.CampaignMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.Campaign;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.CampaignRepository;
-import com.peploleum.insight.repository.search.CampaignSearchRepository;
-import com.peploleum.insight.service.dto.CampaignCriteria;
-
-import com.peploleum.insight.service.dto.CampaignDTO;
-import com.peploleum.insight.service.mapper.CampaignMapper;
 
 /**
  * Service for executing complex queries for Campaign entities in the database.

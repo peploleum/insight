@@ -2,6 +2,16 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.NetLink_;
+import com.peploleum.insight.domain.ObservedData;
+import com.peploleum.insight.domain.ObservedData_;// for static metamodels
+import com.peploleum.insight.repository.ObservedDataRepository;
+import com.peploleum.insight.repository.search.ObservedDataSearchRepository;
+import com.peploleum.insight.service.dto.ObservedDataCriteria;
+import com.peploleum.insight.service.dto.ObservedDataDTO;
+import com.peploleum.insight.service.mapper.ObservedDataMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.ObservedData;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.ObservedDataRepository;
-import com.peploleum.insight.repository.search.ObservedDataSearchRepository;
-import com.peploleum.insight.service.dto.ObservedDataCriteria;
-
-import com.peploleum.insight.service.dto.ObservedDataDTO;
-import com.peploleum.insight.service.mapper.ObservedDataMapper;
 
 /**
  * Service for executing complex queries for ObservedData entities in the database.

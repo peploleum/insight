@@ -2,6 +2,20 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.IntrusionSet_;
+import com.peploleum.insight.domain.Malware_;
+import com.peploleum.insight.domain.NetLink_;
+import com.peploleum.insight.domain.ThreatActor_;
+import com.peploleum.insight.domain.Tool;
+import com.peploleum.insight.domain.Tool_;
+import com.peploleum.insight.domain.Vulnerability_;// for static metamodels
+import com.peploleum.insight.repository.ToolRepository;
+import com.peploleum.insight.repository.search.ToolSearchRepository;
+import com.peploleum.insight.service.dto.ToolCriteria;
+import com.peploleum.insight.service.dto.ToolDTO;
+import com.peploleum.insight.service.mapper.ToolMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.Tool;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.ToolRepository;
-import com.peploleum.insight.repository.search.ToolSearchRepository;
-import com.peploleum.insight.service.dto.ToolCriteria;
-
-import com.peploleum.insight.service.dto.ToolDTO;
-import com.peploleum.insight.service.mapper.ToolMapper;
 
 /**
  * Service for executing complex queries for Tool entities in the database.

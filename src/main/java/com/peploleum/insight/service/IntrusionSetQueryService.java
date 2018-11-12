@@ -2,6 +2,18 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.Actor_;
+import com.peploleum.insight.domain.IntrusionSet;
+import com.peploleum.insight.domain.IntrusionSet_;
+import com.peploleum.insight.domain.NetLink_;
+import com.peploleum.insight.domain.Tool_;// for static metamodels
+import com.peploleum.insight.repository.IntrusionSetRepository;
+import com.peploleum.insight.repository.search.IntrusionSetSearchRepository;
+import com.peploleum.insight.service.dto.IntrusionSetCriteria;
+import com.peploleum.insight.service.dto.IntrusionSetDTO;
+import com.peploleum.insight.service.mapper.IntrusionSetMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.IntrusionSet;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.IntrusionSetRepository;
-import com.peploleum.insight.repository.search.IntrusionSetSearchRepository;
-import com.peploleum.insight.service.dto.IntrusionSetCriteria;
-
-import com.peploleum.insight.service.dto.IntrusionSetDTO;
-import com.peploleum.insight.service.mapper.IntrusionSetMapper;
 
 /**
  * Service for executing complex queries for IntrusionSet entities in the database.

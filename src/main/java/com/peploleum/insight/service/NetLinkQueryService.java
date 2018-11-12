@@ -2,6 +2,27 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.ActivityPattern_;
+import com.peploleum.insight.domain.Actor_;
+import com.peploleum.insight.domain.AttackPattern_;
+import com.peploleum.insight.domain.Campaign_;
+import com.peploleum.insight.domain.CourseOfAction_;
+import com.peploleum.insight.domain.IntrusionSet_;
+import com.peploleum.insight.domain.Malware_;
+import com.peploleum.insight.domain.NetLink;
+import com.peploleum.insight.domain.NetLink_;
+import com.peploleum.insight.domain.ObservedData_;
+import com.peploleum.insight.domain.Report_;
+import com.peploleum.insight.domain.ThreatActor_;
+import com.peploleum.insight.domain.Tool_;
+import com.peploleum.insight.domain.Vulnerability_;// for static metamodels
+import com.peploleum.insight.repository.NetLinkRepository;
+import com.peploleum.insight.repository.search.NetLinkSearchRepository;
+import com.peploleum.insight.service.dto.NetLinkCriteria;
+import com.peploleum.insight.service.dto.NetLinkDTO;
+import com.peploleum.insight.service.mapper.NetLinkMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.NetLink;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.NetLinkRepository;
-import com.peploleum.insight.repository.search.NetLinkSearchRepository;
-import com.peploleum.insight.service.dto.NetLinkCriteria;
-
-import com.peploleum.insight.service.dto.NetLinkDTO;
-import com.peploleum.insight.service.mapper.NetLinkMapper;
 
 /**
  * Service for executing complex queries for NetLink entities in the database.

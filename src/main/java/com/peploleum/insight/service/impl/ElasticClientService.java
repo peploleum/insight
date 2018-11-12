@@ -1,9 +1,24 @@
 package com.peploleum.insight.service.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peploleum.insight.domain.Actor;
-import com.peploleum.insight.domain.kibana.*;
+import com.peploleum.insight.domain.kibana.EntityMappingInfo;
+import com.peploleum.insight.domain.kibana.KibanaDashboardGenerationParameters;
+import com.peploleum.insight.domain.kibana.KibanaFindObjects;
+import com.peploleum.insight.domain.kibana.KibanaObject;
+import com.peploleum.insight.domain.kibana.KibanaObjectUtils;
+import com.peploleum.insight.domain.kibana.KibanaObjectsBundle;
+import com.peploleum.insight.domain.kibana.KibanaVisualisationGenerationParameters;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +34,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ElasticClientService {
@@ -181,37 +191,37 @@ public class ElasticClientService {
         return ret;
     }
 
-    /**
-     * Generate une visualisation depuis un model JSON et un indexPattern
-     */
-    private KibanaObject generateVisualization(final KibanaObject indexPattern, final String targetField, final KibanaVisualisationType visuType, final List<KibanaVisualisationGenerationParameters> visuParamList) {
-        KibanaObject visualisation = null;
-        try {
-            final Instant timeFrom = Instant.parse("2018-09-01T00:00:00.00Z");
-            final Instant timeTo = Instant.parse("2018-10-01T00:00:00.00Z");
-            final KibanaVisualisationGenerationParameters visuParam = new KibanaVisualisationGenerationParameters(indexPattern, targetField, visuType, visuType.toString(), timeFrom.toString(), timeTo.toString());
-            visuParamList.add(visuParam);
-            visualisation = visuParam.getVisualisationFromParameters();
-            this.kibanaVisualization.add(visualisation);
-        } catch (Exception e) {
-            this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
-        }
-        return visualisation;
-    }
+    // /**
+    //  * Generate une visualisation depuis un model JSON et un indexPattern
+    //  */
+    // private KibanaObject generateVisualization(final KibanaObject indexPattern, final String targetField, final KibanaVisualisationType visuType, final List<KibanaVisualisationGenerationParameters> visuParamList) {
+    //     KibanaObject visualisation = null;
+    //     try {
+    //         final Instant timeFrom = Instant.parse("2018-09-01T00:00:00.00Z");
+    //         final Instant timeTo = Instant.parse("2018-10-01T00:00:00.00Z");
+    //         final KibanaVisualisationGenerationParameters visuParam = new KibanaVisualisationGenerationParameters(indexPattern, targetField, visuType, visuType.toString(), timeFrom.toString(), timeTo.toString());
+    //         visuParamList.add(visuParam);
+    //         visualisation = visuParam.getVisualisationFromParameters();
+    //         this.kibanaVisualization.add(visualisation);
+    //     } catch (Exception e) {
+    //         this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
+    //     }
+    //     return visualisation;
+    // }
 
-    /**
-     * Generate un dashboard depuis un model JSON et une visualisation
-     */
-    private KibanaObject generateDashboard(final List<KibanaVisualisationGenerationParameters> kibanaVisualisationsParams, List<String> visualisationIds, final String dashboardTitle) {
-        KibanaObject dashboard = null;
-        try {
-            dashboard = new KibanaDashboardGenerationParameters(dashboardTitle, kibanaVisualisationsParams).getDashboardFromParameters(visualisationIds);
-            this.kibanaDashboard.add(dashboard);
-        } catch (Exception e) {
-            this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
-        }
-        return dashboard;
-    }
+    // /**
+    //  * Generate un dashboard depuis un model JSON et une visualisation
+    //  */
+    // private KibanaObject generateDashboard(final List<KibanaVisualisationGenerationParameters> kibanaVisualisationsParams, List<String> visualisationIds, final String dashboardTitle) {
+    //     KibanaObject dashboard = null;
+    //     try {
+    //         dashboard = new KibanaDashboardGenerationParameters(dashboardTitle, kibanaVisualisationsParams).getDashboardFromParameters(visualisationIds);
+    //         this.kibanaDashboard.add(dashboard);
+    //     } catch (Exception e) {
+    //         this.log.error("Erreur durant le parsing de kibana_visualisation_model", e);
+    //     }
+    //     return dashboard;
+    // }
 
     private KibanaObject setDefaultKibanaIndexPattern(String indexName) {
         Optional<KibanaObject> defaultIndex = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(indexName)).findFirst();

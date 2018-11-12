@@ -8,6 +8,8 @@ import java.util.Set;
  */
 public class EntityMappingInfo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private String indexPatternId;
     private String indexPatternName;
     private Set<EntityFieldMappingInfo> fields;

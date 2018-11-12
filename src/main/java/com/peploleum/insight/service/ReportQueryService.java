@@ -2,6 +2,16 @@ package com.peploleum.insight.service;
 
 import java.util.List;
 
+// for static metamodels
+import com.peploleum.insight.domain.NetLink_;
+import com.peploleum.insight.domain.Report;
+import com.peploleum.insight.domain.Report_;// for static metamodels
+import com.peploleum.insight.repository.ReportRepository;
+import com.peploleum.insight.repository.search.ReportSearchRepository;
+import com.peploleum.insight.service.dto.ReportCriteria;
+import com.peploleum.insight.service.dto.ReportDTO;
+import com.peploleum.insight.service.mapper.ReportMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.jhipster.service.QueryService;
-
-import com.peploleum.insight.domain.Report;
-import com.peploleum.insight.domain.*; // for static metamodels
-import com.peploleum.insight.repository.ReportRepository;
-import com.peploleum.insight.repository.search.ReportSearchRepository;
-import com.peploleum.insight.service.dto.ReportCriteria;
-
-import com.peploleum.insight.service.dto.ReportDTO;
-import com.peploleum.insight.service.mapper.ReportMapper;
 
 /**
  * Service for executing complex queries for Report entities in the database.
