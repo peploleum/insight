@@ -33,19 +33,50 @@ Note: workbox creates the respective service worker and dynamically generate the
 
 ### Using angular-cli
 
-You can also use [Angular CLI][] to generate some custom client code.
+You should use [Angular CLI][] to generate some custom client code:
 
-For example, the following command:
+1. Generate a new module
+    
+    
+    ng g m Sources --routing
 
-    ng generate component my-component
+will generate: 
+
+    CREATE src/main/webapp/app/sources/sources-routing.module.ts (250 bytes)
+    CREATE src/main/webapp/app/sources/sources.module.spec.ts (283 bytes)
+    CREATE src/main/webapp/app/sources/sources.module.ts (283 bytes)
+    
+2. Register module in app.module
+    
+edit app.module.ts add it to imported modules
+
+3. Generate new component
+
+    ng g c sources/sources-manager --module sources/sources.module
 
 will generate few files:
 
-    create src/main/webapp/app/my-component/my-component.component.html
-    create src/main/webapp/app/my-component/my-component.component.ts
-    update src/main/webapp/app/app.module.ts
+    CREATE src/main/webapp/app/sources/sources-manager.component.html (34 bytes)
+    CREATE src/main/webapp/app/sources/sources-manager.component.spec.ts (685 bytes)
+    CREATE src/main/webapp/app/sources/sources-manager.component.ts (268 bytes)
+    UPDATE src/main/webapp/app/sources/sources.module.ts (377 bytes)
 
 
+4. Edit newly created route to match component
+
+create file 
+
+    .\insight\src\main\webapp\i18n\en\sources.json
+    
+edit sources-routing.module.ts and add route like so: 
+
+    const routes: Routes = [{
+        path: 'sources',
+        component: SourcesManagerComponent,
+        data: {
+            pageTitle: 'sources.title'
+        }
+    }];
 ## Building for production
 
 To optimize the insight application for production, run:

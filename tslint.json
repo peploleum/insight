@@ -107,8 +107,8 @@
             "named": "never"
         }],
 
-        "directive-selector": [true, "attribute", "jhi", "camelCase"],
-        "component-selector": [true, "element", "jhi", "kebab-case"],
+        "directive-selector": [true, "attribute", ["jhi", "ins"], "camelCase"],
+        "component-selector": [true, "element", ["jhi", "ins"], "kebab-case"],
         "use-input-property-decorator": true,
         "use-output-property-decorator": true,
         "use-host-property-decorator": true,

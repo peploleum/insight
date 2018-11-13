@@ -22,6 +22,7 @@ import { MapModule } from './map/map.module';
 import { NetworkModule } from './network/network.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { InsightSharedAnalysisModule } from './analysis/analysis.module';
+import { SourcesModule } from 'app/sources/sources.module';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { InsightSharedAnalysisModule } from './analysis/analysis.module';
         MapModule,
         NetworkModule,
         AnalyticsModule,
+        SourcesModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
         InsightSharedAnalysisModule
     ],

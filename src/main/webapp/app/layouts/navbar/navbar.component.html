@@ -21,6 +21,14 @@
                     </span>
                 </a>
             </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="/sources" (click)="collapseNavbar()">
+                    <span>
+                        <fa-icon [icon]="'plug'"></fa-icon>
+                        <span jhiTranslate="global.menu.sources">Home</span>
+                    </span>
+                </a>
+            </li>
             <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/map" (click)="collapseNavbar()">
                     <span>
