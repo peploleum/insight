@@ -120,7 +120,7 @@ build image
     
 deploy components
 
-    cd C:\dev\pipe\src\main\docker\prod
+    cd C:\dev\pipe\src\main\docker\compose
     docker-compose  -f .\insight.yml -p insight up -d
 
 ### Manage app
