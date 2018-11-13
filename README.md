@@ -81,7 +81,7 @@ To use those tests, you must install Gatling from [https://gatling.io/](https://
 
 For more information, refer to the [Running tests page][].
 
-### docker-compose
+### Docker-compose
 
 build image
     
@@ -91,7 +91,18 @@ deploy components
 
     cd C:\dev\pipe\src\main\docker\prod
     docker-compose  -f .\insight.yml -p insight up -d
-    
+
+### Manage app
+
+app endpoint: [http://localhost:8080](http://localhost:8080)
+
+kafka default endpoint: kafka:9092
+
+kibana endpoint: [http://localhost:5601](http://localhost:5601)
+
+elasticsearch endpoint: [http://localhost:9200](http://localhost:9200)
+
+nifi endpoint: [http://localhost:8090](http://localhost:8090)
 ### kubernetes
 
 Coming soon
