@@ -1,0 +1,110 @@
+version: '3'
+services:
+    #BROKER
+    zookeeper:
+        image: wurstmeister/zookeeper:latest
+        container_name: zookeeper
+        ports:
+        - 2181:2181
+        networks:
+        - insight
+    kafka:
+        image: wurstmeister/kafka:latest
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: 10.71.2.85
+            KAFKA_ADVERTISED_PORT: 8092
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_CREATE_TOPICS: "topic:1:1"
+        ports:
+        - 8092:9092
+        networks:
+        - insight
+    #ELK
+    elasticsearch:
+        container_name: elasticsearch
+        build:
+            context: ./elk/elasticsearch/
+            args:
+                ELK_VERSION: 6.4.2
+        volumes:
+        - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+        ports:
+        - "9200:9200"
+        - "9300:9300"
+        environment:
+            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+        networks:
+        - insight
+    logstash:
+        build:
+            context: ./elk/logstash/
+            args:
+                ELK_VERSION: 6.4.2
+        volumes:
+        - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+        - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro
+        - ./elk/logstash/in:/usr/share/logstash/in
+        ports:
+        - "5000:5000"
+        - "9600:9600"
+        environment:
+            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+        networks:
+        - insight
+        depends_on:
+        - elasticsearch
+    kibana:
+        container_name: kibana
+        build:
+            context: ./elk/kibana/
+            args:
+                ELK_VERSION: 6.4.2
+        volumes:
+        - ./elk/kibana/config/:/usr/share/kibana/config:ro
+        ports:
+        - "5601:5601"
+        networks:
+        - insight
+        depends_on:
+        - elasticsearch
+    #NIFI
+#    nifi:
+#        image: apache/nifi:latest
+#        ports:
+#        - "8090:8080"
+#        volumes:
+#        - ./feeder/templates/:/opt/nifi/nifi-current/conf/templates/
+#        networks:
+#        - insight
+    #APP
+    insight-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/insight/postgresql/:/var/lib/postgresql/data/
+        environment:
+        - POSTGRES_USER=insight
+        - POSTGRES_PASSWORD=
+        ports:
+        - 5432:5432
+        networks:
+          - insight
+    insight-app:
+        image: insight
+        environment:
+        # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+        - SPRING_PROFILES_ACTIVE=prod,swagger
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://insight-postgresql:5432/insight
+        - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
+        - SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME=insight
+        - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
+        - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
+        - SPRING_DATA_JEST_URI=elasticsearch:9200
+        - APPLICATION_KIBANA_URI=http://kibana:5601/
+        ports:
+        - 8080:8080
+        networks:
+          - insight
+networks:
+    insight:
+        driver: bridge
