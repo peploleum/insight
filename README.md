@@ -94,15 +94,11 @@ deploy components
 
 ### Manage app
 
-app endpoint: [http://localhost:8080](http://localhost:8080)
-
-kafka default endpoint: kafka:9092
-
-kibana endpoint: [http://localhost:5601](http://localhost:5601)
-
-elasticsearch endpoint: [http://localhost:9200](http://localhost:9200)
-
-nifi endpoint: [http://localhost:8090](http://localhost:8090)
+* app endpoint: [http://localhost:8080](http://localhost:8080)
+* kafka default endpoint: kafka:9092
+* kibana endpoint: [http://localhost:5601](http://localhost:5601)
+* elasticsearch endpoint: [http://localhost:9200](http://localhost:9200)
+* nifi endpoint: [http://localhost:8090](http://localhost:8090)
 ### kubernetes
 
 Coming soon
