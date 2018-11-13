@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka:1.0.0
+        image: wurstmeister/kafka:latest
         env:
         - name: KAFKA_ADVERTISED_HOST_NAME
           value: jhipster-kafka.insight.svc.cluster.local
