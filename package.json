@@ -138,7 +138,7 @@
     "webpack:test": "yarn run test",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "full": "yarn add node-sass"
+    "full": "yarn remove node-sass && yarn add node-sass"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",
