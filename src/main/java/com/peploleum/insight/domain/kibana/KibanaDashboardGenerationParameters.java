@@ -13,7 +13,7 @@ import java.util.List;
 public class KibanaDashboardGenerationParameters implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String dashboardTitle;
     @JsonProperty("visualisations")
     private List<KibanaVisualisationGenerationParameters> visualisations = new ArrayList<>();
@@ -51,7 +51,9 @@ public class KibanaDashboardGenerationParameters implements Serializable {
         if (timelineVisualisationParams != null) {
             final String timeFrom = timelineVisualisationParams.getTimeFromFilter() != null ? timelineVisualisationParams.getTimeFromFilter() : "2000-01-01T00:00:00.00Z";
             final String timeTo = timelineVisualisationParams.getTimeToFilter() != null ? timelineVisualisationParams.getTimeToFilter() : "2020-01-01T00:00:00.00Z";
-            dashboard = KibanaObjectUtils.updateDashboard(dashboard, this.dashboardTitle, visualisationIds, timeFrom, timeTo);
+            final String timeInterval = timelineVisualisationParams.getTimeInterval() != null ? timelineVisualisationParams.getTimeInterval() : "1d";
+
+            dashboard = KibanaObjectUtils.updateDashboard(dashboard, this.dashboardTitle, visualisationIds, timeFrom, timeTo, timeInterval);
         } else {
             dashboard = KibanaObjectUtils.updateDashboard(dashboard, this.dashboardTitle, visualisationIds);
         }

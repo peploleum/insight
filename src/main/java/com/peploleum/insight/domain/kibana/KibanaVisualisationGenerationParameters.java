@@ -23,11 +23,12 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
 
     private String timeFromFilter;
     private String timeToFilter;
+    private String timeInterval;
 
     public KibanaVisualisationGenerationParameters() {
     }
 
-    public KibanaVisualisationGenerationParameters(final KibanaObject indexPattern, final String indexPatternFieldTarget, final KibanaVisualisationType visualizationType, String visualizationTitle, String timeFromFilter, String timeToFilter) {
+    public KibanaVisualisationGenerationParameters(final KibanaObject indexPattern, final String indexPatternFieldTarget, final KibanaVisualisationType visualizationType, String visualizationTitle, String timeFromFilter, String timeToFilter, String timeInterval) {
         this.visualizationTitle = visualizationTitle;
         this.visualizationType = visualizationType;
         this.indexPatternId = indexPattern.getId();
@@ -35,6 +36,7 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
         this.indexPatternFieldTarget = indexPatternFieldTarget;
         this.timeFromFilter = timeFromFilter;
         this.timeToFilter = timeToFilter;
+        this.timeInterval = timeInterval;
     }
 
     public String getVisualizationTitle() {
@@ -93,6 +95,14 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
         this.visualizationType = visualizationType;
     }
 
+    public String getTimeInterval() {
+        return timeInterval;
+    }
+
+    public void setTimeInterval(String timeInterval) {
+        this.timeInterval = timeInterval;
+    }
+
     @JsonIgnore
     public KibanaObject getVisualisationFromParameters() throws Exception {
         KibanaObject visualisation = KibanaObjectUtils.deserializeJsonFileToKibanaObject(KibanaVisualisationGenerationParameters.class.getResourceAsStream(this.visualizationType.getJsonModelFileUrl()));
@@ -103,7 +113,7 @@ public class KibanaVisualisationGenerationParameters implements Serializable {
                 visualisation = KibanaObjectUtils.updateDefaultVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternId);
                 break;
             case VISU_TIMELINE:
-                visualisation = KibanaObjectUtils.updateTimelineVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternName, this.indexPatternId);
+                visualisation = KibanaObjectUtils.updateTimelineVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternName, this.indexPatternId, this.timeInterval);
                 break;
             case VISU_MAP:
                 visualisation = KibanaObjectUtils.updateMapVisualisation(visualisation, this.visualizationTitle, this.indexPatternFieldTarget, this.indexPatternId);

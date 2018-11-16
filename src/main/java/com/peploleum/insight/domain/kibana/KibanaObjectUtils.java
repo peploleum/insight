@@ -57,12 +57,14 @@ public class KibanaObjectUtils {
         return visualisation;
     }
 
-    public static KibanaObject updateTimelineVisualisation(KibanaObject visualisation, final String visuTitle, final String targetIndexTemporalFieldName, final String targetIndexName, final String indexPatternId) {
+    public static KibanaObject updateTimelineVisualisation(KibanaObject visualisation, final String visuTitle, final String targetIndexTemporalFieldName, final String targetIndexName, final String indexPatternId, final String timeInterval) {
 
         //Modification du title de la visualisation et du l'index_pattern cible
         //Par défaut le champs date
         visualisation.getAttributes().setTitle(visuTitle);
-        final String modifiedVisState = visualisation.getAttributes().getVisState().replace("visualization_title", visuTitle).replace("index_name", targetIndexName).replace("index_temporal_field", targetIndexTemporalFieldName);
+
+        String interval = timeInterval != null ? timeInterval : "1w";
+        final String modifiedVisState = visualisation.getAttributes().getVisState().replace("visualization_title", visuTitle).replace("index_name", targetIndexName).replace("index_temporal_field", targetIndexTemporalFieldName).replace("auto", interval);
         visualisation.getAttributes().setVisState(modifiedVisState);
 
         //Modification de l'IndexPattern
@@ -104,12 +106,13 @@ public class KibanaObjectUtils {
         return dashboard;
     }
 
-    public static KibanaObject updateDashboard(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds, final String timeFrom, final String timeTo) {
+    public static KibanaObject updateDashboard(KibanaObject dashboard, final String dashboardTitle, final List<String> visualisationIds, final String timeFrom, final String timeTo, final String timeInterval) {
 
         dashboard = updateDashboard(dashboard, dashboardTitle, visualisationIds);
         //Formattage des dates
         dashboard.getAttributes().setTimeFrom(timeFrom);
         dashboard.getAttributes().setTimeTo(timeTo);
+
         return dashboard;
     }
 
