@@ -212,3 +212,30 @@ The default setting are optimized for middle scale clusters. You are free to inc
 > my SQL based microservice stuck during liquibase initialization when running multiple replicas
 
 Sometimes the database changelog lock gets corrupted. You will need to connect to the database using `kubectl exec -it` and remove all lines of liquibases `databasechangeloglock` table.
+
+## Saving images
+
+    docker save -o insight-bundle.tar postgres:10.4 busybox:latest insight:latest elasticsearch:5.6.5 wurstmeister/kafka:latest wurstmeister/zookeeper:latest jhipster/jhipster-logstash:v3.0.1 jhipster/jhipster-console:v3.0.1 jhipster/jhipster-elasticsearch:v3.0.1 jhipster/jhipster-import-dashboards:v3.0.1
+    docker load --input insight-bundle.tar
+    docker tag postgres 192.168.65.5:8093/postgres:10.4
+    docker push 192.168.65.5:8093/postgres:10.4
+    docker tag busybox 192.168.65.5:8093/busybox:latest
+    docker push 192.168.65.5:8093/busybox:latest
+    docker tag insight 192.168.65.5:8093/insight:latest
+    docker push 192.168.65.5:8093/insight:latest
+    docker tag elasticsearch 192.168.65.5:8093/elasticsearch:5.6.5
+    docker push 192.168.65.5:8093/elasticsearch:5.6.5
+    docker tag wurstmeister/kafka 192.168.65.5:8093/wurstmeister/kafka:latest
+    docker push 192.168.65.5:8093/wurstmeister/kafka:latest
+    docker tag wurstmeister/zookeeper 192.168.65.5:8093/wurstmeister/zookeeper:latest
+    docker push 192.168.65.5:8093/wurstmeister/zookeeper:latest
+    docker tag jhipster/jhipster-logstash 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
+    docker push 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
+    docker tag jhipster/jhipster-console 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
+    docker push 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
+    docker tag jhipster/jhipster-elasticsearch 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
+    docker push 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
+    docker tag jhipster/jhipster-import-dashboards 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
+    docker push 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
+    
+      
