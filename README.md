@@ -216,26 +216,41 @@ Sometimes the database changelog lock gets corrupted. You will need to connect t
 ## Saving images
 
     docker save -o insight-bundle.tar postgres:10.4 busybox:latest insight:latest elasticsearch:5.6.5 wurstmeister/kafka:latest wurstmeister/zookeeper:latest jhipster/jhipster-logstash:v3.0.1 jhipster/jhipster-console:v3.0.1 jhipster/jhipster-elasticsearch:v3.0.1 jhipster/jhipster-import-dashboards:v3.0.1
-    docker load --input insight-bundle.tar
-    docker tag postgres 192.168.65.5:8093/postgres:10.4
-    docker push 192.168.65.5:8093/postgres:10.4
-    docker tag busybox 192.168.65.5:8093/busybox:latest
-    docker push 192.168.65.5:8093/busybox:latest
-    docker tag insight 192.168.65.5:8093/insight:latest
-    docker push 192.168.65.5:8093/insight:latest
-    docker tag elasticsearch 192.168.65.5:8093/elasticsearch:5.6.5
-    docker push 192.168.65.5:8093/elasticsearch:5.6.5
-    docker tag wurstmeister/kafka 192.168.65.5:8093/wurstmeister/kafka:latest
-    docker push 192.168.65.5:8093/wurstmeister/kafka:latest
-    docker tag wurstmeister/zookeeper 192.168.65.5:8093/wurstmeister/zookeeper:latest
-    docker push 192.168.65.5:8093/wurstmeister/zookeeper:latest
-    docker tag jhipster/jhipster-logstash 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
-    docker push 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
-    docker tag jhipster/jhipster-console 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
-    docker push 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
-    docker tag jhipster/jhipster-elasticsearch 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
-    docker push 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
-    docker tag jhipster/jhipster-import-dashboards 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
-    docker push 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
+
+## Loading images
+
+Login to the docker engine host. Load archive:
+
+    sudo docker load --input insight-bundle.tar
+    
+## Tagging and pushing images
+
+Log into registry 
+
+    sudo docker login -u admin -p ****** 192.168.65.5:8093
+    
+Tag and push
+
+    sudo docker tag postgres:10.4 192.168.65.5:8093/postgres:10.4
+    sudo docker push 192.168.65.5:8093/postgres:10.4
+    sudo docker tag busybox 192.168.65.5:8093/busybox:latest
+    sudo docker push 192.168.65.5:8093/busybox:latest
+    sudo docker tag insight 192.168.65.5:8093/insight:latest
+    sudo docker push 192.168.65.5:8093/insight:latest
+    sudo docker tag elasticsearch:5.6.5 192.168.65.5:8093/elasticsearch:5.6.5
+    sudo docker push 192.168.65.5:8093/elasticsearch:5.6.5
+    sudo docker tag wurstmeister/kafka 192.168.65.5:8093/wurstmeister/kafka:latest
+    sudo docker push 192.168.65.5:8093/wurstmeister/kafka:latest
+    sudo docker tag wurstmeister/zookeeper 192.168.65.5:8093/wurstmeister/zookeeper:latest
+    sudo docker push 192.168.65.5:8093/wurstmeister/zookeeper:latest
+    sudo docker tag jhipster/jhipster-logstash:v3.0.1 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
+    sudo docker push 192.168.65.5:8093/jhipster/jhipster-logstash:v3.0.1
+    sudo docker tag jhipster/jhipster-console:v3.0.1 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
+    sudo docker push 192.168.65.5:8093/jhipster/jhipster-console:v3.0.1
+    sudo docker tag jhipster/jhipster-elasticsearch:v3.0.1 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
+    sudo docker push 192.168.65.5:8093/jhipster/jhipster-elasticsearch:v3.0.1
+    sudo docker tag jhipster/jhipster-import-dashboards:v3.0.1 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
+    sudo docker push 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
+
     
       
