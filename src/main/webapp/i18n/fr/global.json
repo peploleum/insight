@@ -7,6 +7,7 @@
             "map": "Carte",
             "network": "Réseau",
             "analytics": "Analyse",
+            "dashboards": "Dashboards",
             "sources": "Sources",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
@@ -153,5 +154,5 @@
         "idexists": "Une nouvelle entité {{entityName}} ne peut pas avoir d'ID !",
         "idnull": "Invalid ID"
     },
-    "footer": "Ceci est votre pied de page"
+    "footer": "INSIGHT - Capgemini"
 }

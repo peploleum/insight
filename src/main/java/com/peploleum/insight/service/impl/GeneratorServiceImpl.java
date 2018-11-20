@@ -1,27 +1,23 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.service.*;
+import com.peploleum.insight.service.dto.ActorDTO;
+import com.peploleum.insight.service.dto.NetLinkDTO;
+import com.peploleum.insight.service.dto.ObservedDataDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.peploleum.insight.service.ActorService;
-import com.peploleum.insight.service.AttackPatternService;
-import com.peploleum.insight.service.GeneratorService;
-import com.peploleum.insight.service.IntrusionSetService;
-import com.peploleum.insight.service.NetLinkService;
-import com.peploleum.insight.service.ObservedDataService;
-import com.peploleum.insight.service.ThreatActorService;
-import com.peploleum.insight.service.dto.ActorDTO;
-import com.peploleum.insight.service.dto.NetLinkDTO;
-import com.peploleum.insight.service.dto.ObservedDataDTO;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -55,16 +51,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         List<NetLinkDTO> netlinkList = new ArrayList<>();
         for (int i = 0; i < GEN_THRESHOLD; i++) {
             final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
-            for(int j = 0; j<randomThreshold; j++)
-            {
+            for (int j = 0; j < randomThreshold; j++) {
                 netlinkList.add(this.netLinkService.save(generateNetLink()));
             }
         }
 
         for (int i = 0; i < GEN_THRESHOLD; i++) {
             final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
-            for(int j = 0; j<randomThreshold; j++)
-            {
+            for (int j = 0; j < randomThreshold; j++) {
                 ActorDTO actorDTO = generateActor();
 
                 int idx = ThreadLocalRandom.current().nextInt(0, netlinkList.size());
@@ -76,15 +70,13 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         for (int i = 0; i < GEN_THRESHOLD; i++) {
             final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
-            for(int j = 0; j<randomThreshold; j++)
-            {
+            for (int j = 0; j < randomThreshold; j++) {
                 this.observedDataService.save(generateObservedData());
             }
         }
     }
 
-    private NetLinkDTO generateNetLink()
-    {
+    private NetLinkDTO generateNetLink() {
         final String netlinkName = UUID.randomUUID().toString();
         final String netlinkDescrition = UUID.randomUUID().toString();
         final String netlinkType = UUID.randomUUID().toString();
@@ -105,8 +97,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         return netLinkDTO;
     }
 
-    private ActorDTO generateActor()
-    {
+    private ActorDTO generateActor() {
         final String actorName = UUID.randomUUID().toString();
         final String actorLibelle = UUID.randomUUID().toString();
         final String actorDescription = UUID.randomUUID().toString();
@@ -130,8 +121,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         return actorDTO;
     }
 
-    private ObservedDataDTO generateObservedData()
-    {
+    private ObservedDataDTO generateObservedData() {
         final String type = generateRandomType();
         final String objObserve = UUID.randomUUID().toString();
         final ZonedDateTime debut = generateRandomDateTime();
@@ -167,6 +157,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     /**
      * Add duration between 0 and 61 days
+     *
      * @param init the initial date
      * @return the new date
      */
@@ -175,7 +166,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         final int hour = ThreadLocalRandom.current().nextInt(0, 24);
         final int minute = ThreadLocalRandom.current().nextInt(0, 60);
         final int seconds = ThreadLocalRandom.current().nextInt(0, 60);
-        
+
         return init.plusDays(day).plusHours(hour).plusMinutes(minute).plusSeconds(seconds);
     }
 
@@ -199,8 +190,27 @@ public class GeneratorServiceImpl implements GeneratorService {
             this.label = label;
         }
 
-        public String getLabel(){
+        public String getLabel() {
             return this.label;
+        }
+    }
+
+    @Override
+    public void clean() {
+        this.log.info("deleting all oserved data");
+        Pageable page = PageRequest.of(0, 100);
+        boolean leftover = true;
+        while (leftover) {
+            final Page<ObservedDataDTO> allObservedData = this.observedDataService.findAll(page);
+            leftover = (allObservedData.getNumberOfElements() == 100);
+            try {
+                this.log.info("found " + allObservedData.getNumberOfElements() + " elements");
+                allObservedData.map(observedDataDTO -> observedDataDTO.getId()).forEach(id -> this.observedDataService.delete(id));
+                page = page.next();
+                this.log.info("next page  " + page.getPageNumber() + " " + page.getPageSize() + " " + page.getOffset());
+            } catch (Exception e) {
+                this.log.warn("Echec de suppression de la page ", e.getMessage(), e);
+            }
         }
     }
 }

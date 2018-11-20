@@ -7,6 +7,7 @@
             "map": "Map",
             "network": "Network",
             "analytics": "Analytics",
+            "dashboards": "Dashboards",
             "sources": "Sources",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
@@ -154,5 +155,5 @@
         "idexists": "A new {{ entityName }} cannot already have an ID",
         "idnull": "Invalid ID"
     },
-    "footer": "This is your footer"
+    "footer": "INSIGHT - Capgemini"
 }

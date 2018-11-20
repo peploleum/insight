@@ -36,4 +36,17 @@ public class GeneratorResource {
         this.generatorService.feed();
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * GET  /clean
+     *
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @GetMapping("/generator/clean")
+    @Timed
+    public ResponseEntity<Void> clean() {
+        log.debug("REST request to clean : {}");
+        this.generatorService.clean();
+        return ResponseEntity.ok().build();
+    }
 }

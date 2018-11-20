@@ -25,35 +25,35 @@
                 <a class="nav-link" routerLink="/sources" (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'plug'"></fa-icon>
-                        <span jhiTranslate="global.menu.sources">Home</span>
+                        <span jhiTranslate="global.menu.sources">Sources</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/map" (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'globe'"></fa-icon>
-                        <span jhiTranslate="global.menu.map">Home</span>
+                        <span jhiTranslate="global.menu.map">Map</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/network" (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'sitemap'"></fa-icon>
-                        <span jhiTranslate="global.menu.network">Home</span>
+                        <span jhiTranslate="global.menu.network">Network</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/visualisation" (click)="collapseNavbar()">
                     <span>
-                        <fa-icon [icon]="'chart-pie'"></fa-icon>
-                        <span jhiTranslate="global.menu.analytics">Home</span>
+                        <fa-icon [icon]="'chart-area'"></fa-icon>
+                        <span jhiTranslate="global.menu.dashboards">Dashboards</span>
                     </span>
                 </a>
             </li>
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/analytics" (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'chart-pie'"></fa-icon>
