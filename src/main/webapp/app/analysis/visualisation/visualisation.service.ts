@@ -18,7 +18,7 @@ export class VisualisationService {
     kibanaUrl: string;
 
     constructor(private http: HttpClient) {
-        this.kibanaUrl = 'http://' + KIBANA_HOST + ':5601/';
+        this.kibanaUrl = 'http://' + window.location.hostname + ':5601/';
     }
 
     getEntitiesSchema(): Observable<HttpResponse<IEntityMappingInfo[]>> {
