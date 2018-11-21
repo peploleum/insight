@@ -12,10 +12,12 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
+const KIBANA_HOST = 'kibana';
+
 const extractSASS = new ExtractTextPlugin(`content/[name]-sass.[hash].css`);
 const extractCSS = new ExtractTextPlugin(`content/[name].[hash].css`);
 
-module.exports = webpackMerge(commonConfig({ env: ENV }), {
+module.exports = webpackMerge(commonConfig({env: ENV, kibana_host: KIBANA_HOST}), {
     // Enable source maps. Please note that this will slow down the build.
     // You have to enable it in UglifyJSPlugin config below and in tsconfig-aot.json as well
     // devtool: 'source-map',
@@ -32,34 +34,34 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     module: {
         rules: [{
             test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-            use: [ '@ngtools/webpack' ]
+            use: ['@ngtools/webpack']
         },
-        {
-            test: /\.scss$/,
-            loaders: ['to-string-loader', 'css-loader', 'sass-loader'],
-            exclude: /(vendor\.scss|global\.scss)/
-        },
-        {
-            test: /(vendor\.scss|global\.scss)/,
-            use: extractSASS.extract({
-                fallback: 'style-loader',
-                use: ['css-loader', 'postcss-loader', 'sass-loader'],
-                publicPath: '../'
-            })
-        },
-        {
-            test: /\.css$/,
-            loaders: ['to-string-loader', 'css-loader'],
-            exclude: /(vendor\.css|global\.css)/
-        },
-        {
-            test: /(vendor\.css|global\.css)/,
-            use: extractCSS.extract({
-                fallback: 'style-loader',
-                use: ['css-loader'],
-                publicPath: '../'
-            })
-        }]
+            {
+                test: /\.scss$/,
+                loaders: ['to-string-loader', 'css-loader', 'sass-loader'],
+                exclude: /(vendor\.scss|global\.scss)/
+            },
+            {
+                test: /(vendor\.scss|global\.scss)/,
+                use: extractSASS.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'postcss-loader', 'sass-loader'],
+                    publicPath: '../'
+                })
+            },
+            {
+                test: /\.css$/,
+                loaders: ['to-string-loader', 'css-loader'],
+                exclude: /(vendor\.css|global\.css)/
+            },
+            {
+                test: /(vendor\.css|global\.css)/,
+                use: extractCSS.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader'],
+                    publicPath: '../'
+                })
+            }]
     },
     optimization: {
         runtimeChunk: false,
@@ -107,10 +109,10 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         extractCSS,
         new MomentLocalesPlugin({
             localesToKeep: [
-                    'fr',
-                    'en'
-                    // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
-                ]
+                'fr',
+                'en'
+                // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
+            ]
         }),
         new Visualizer({
             // Webpack statistics in target folder
@@ -126,8 +128,8 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
             debug: false
         }),
         new WorkboxPlugin.GenerateSW({
-          clientsClaim: true,
-          skipWaiting: true,
+            clientsClaim: true,
+            skipWaiting: true,
         })
     ],
     mode: 'production'

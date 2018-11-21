@@ -12,8 +12,9 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
+const KIBANA_HOST = 'localhost';
 
-module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
+module.exports = (options) => webpackMerge(commonConfig({ env: ENV, kibana_host: KIBANA_HOST }), {
     devtool: 'eval-source-map',
     devServer: {
         contentBase: './target/www',

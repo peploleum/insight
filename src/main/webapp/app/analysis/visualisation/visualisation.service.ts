@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SERVER_API_URL } from 'app/app.constants';
-import { IKibanaDashboardGenerationParameters, IEntityMappingInfo } from './kibana-object.model';
+import { KIBANA_HOST, SERVER_API_URL } from 'app/app.constants';
+import { IEntityMappingInfo, IKibanaDashboardGenerationParameters } from './kibana-object.model';
 
 type EntityResponseType = HttpResponse<string[]>;
 
@@ -15,11 +15,10 @@ export class VisualisationService {
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
 
-    private KIBANA_HOST = 'localhost';
     kibanaUrl: string;
 
     constructor(private http: HttpClient) {
-        this.kibanaUrl = 'http://' + this.KIBANA_HOST + ':5601/';
+        this.kibanaUrl = 'http://' + KIBANA_HOST + ':5601/';
     }
 
     getEntitiesSchema(): Observable<HttpResponse<IEntityMappingInfo[]>> {
