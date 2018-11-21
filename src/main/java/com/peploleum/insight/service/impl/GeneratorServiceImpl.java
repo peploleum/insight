@@ -204,12 +204,10 @@ public class GeneratorServiceImpl implements GeneratorService {
             final Page<ObservedDataDTO> allObservedData = this.observedDataService.findAll(page);
             last = (allObservedData.getNumberOfElements() < 100);
             try {
+                this.log.info("deleting " + allObservedData.getNumberOfElements() + " elements");
                 allObservedData.map(observedDataDTO -> observedDataDTO.getId()).forEach(id -> this.observedDataService.delete(id));
-                page = page.next();
-                this.log.info("next page  " + page.getPageNumber() + " " + page.getPageSize() + " " + page.getOffset());
-                this.log.info("found " + allObservedData.getNumberOfElements() + " elements");
             } catch (Exception e) {
-                this.log.warn("Echec de suppression de la page ", e.getMessage(), e);
+                this.log.warn("failed to delete elements ", e.getMessage(), e);
             }
         }
     }
