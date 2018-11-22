@@ -61,6 +61,7 @@ export interface IKibanaVisualisationGenerationParameters {
 
     timeFromFilter?: string;
     timeToFilter?: string;
+    timeInterval?: string;
 }
 
 export class KibanaVisualisationGenerationParameters implements IKibanaVisualisationGenerationParameters {

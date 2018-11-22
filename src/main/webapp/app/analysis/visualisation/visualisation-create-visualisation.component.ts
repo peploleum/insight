@@ -36,8 +36,10 @@ export class VisualisationCreateVisualisationDashboardComponent implements OnIni
         if (this.visualisationParameters.visualizationType === 'VISU_TIMELINE') {
             const timeFromFilter = new FormControl('', Validators.required);
             const timeToFilter = new FormControl('', Validators.required);
+            const timeInterval = new FormControl('');
             this.visualisationCreationForm.addControl('timeFromFilter', timeFromFilter);
             this.visualisationCreationForm.addControl('timeToFilter', timeToFilter);
+            this.visualisationCreationForm.addControl('timeInterval', timeInterval);
         }
         this.visualisationCreationFormName = 'Visualisation_' + this.visualisationIndex;
         this.parent.form.addControl(this.visualisationCreationFormName, this.visualisationCreationForm);
@@ -47,6 +49,7 @@ export class VisualisationCreateVisualisationDashboardComponent implements OnIni
             this.visualisationParameters.indexPatternFieldTarget = value.indexPatternFieldTarget;
             this.visualisationParameters.timeFromFilter = value.hasOwnProperty('timeFromFilter') ? value.timeFromFilter : '';
             this.visualisationParameters.timeToFilter = value.hasOwnProperty('timeToFilter') ? value.timeToFilter : '';
+            this.visualisationParameters.timeInterval = value.hasOwnProperty('timeInterval') ? value.timeInterval : '';
         });
     }
 
