@@ -140,8 +140,8 @@ Coming soon
 You will need to push your image to a registry. If you have not done so, use the following commands to tag and push the images:
 
 ```
-$ docker image tag insight 192.168.65.2:8094/insight
-$ docker push 192.168.65.2:8094/insight
+$ docker image tag insight 192.168.65.5:8093/insight
+$ docker push 192.168.65.5:8093/insight
 ```
 
 ## Deployment
