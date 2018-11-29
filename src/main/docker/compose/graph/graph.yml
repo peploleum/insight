@@ -7,7 +7,7 @@ services:
       args:
         version: 0.2.2
         hadoop: hadoop2
-      context: ./
+      context: ./janus
     container_name: janusgraph
     command: ["./bin/gremlin.sh"]
     ports:
