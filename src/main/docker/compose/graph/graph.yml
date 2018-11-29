@@ -9,7 +9,7 @@ services:
         hadoop: hadoop2
       context: ./janus
     container_name: janusgraph
-    command: ["./bin/gremlin.sh"]
+    command: ["tail", "-f", "/dev/null"]
     ports:
       - "8182:8182"
     #volumes:

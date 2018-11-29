@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN cd app && unzip janusgraph-0.2.2-hadoop2.zip && rm janusgraph-0.2.2-hadoop2.zip && cd janusgraph-0.2.2-hadoop2
 
-ADD conf/gremlin-server/gremlin-server-configuration.yaml conf/gremlin-server/gremlin-server-configuration.yaml
-ADD conf/janusgraph.properties conf/janusgraph.properties
+ADD conf/gremlin-server/gremlin-server-configuration.yaml /app/janusgraph-0.2.2-hadoop2/conf/gremlin-server/gremlin-server-configuration.yaml
+ADD conf/janusgraph.properties /app/janusgraph-0.2.2-hadoop2/conf/janusgraph.properties
 
 WORKDIR /app/janusgraph-0.2.2-hadoop2
 
