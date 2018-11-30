@@ -12,9 +12,14 @@ services:
     command: ["tail", "-f", "/dev/null"]
     ports:
       - "8182:8182"
+      - "9160:9160"
+      - "9042:9042"
+    expose:
+      - 9042
+      - 9160
     #volumes:
       #- ./conf/gremlin-server-rest-modern.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server-rest-modern.yaml
-    #command: ["./bin/gremlin-server.sh", "./conf/gremlin-server/gremlin-server-configuration.yaml" ]
+    command: ["./bin/gremlin-server.sh", "./conf/gremlin-server/gremlin-server-configuration.yaml" ]
     depends_on:
       - elasticsearch
       - cassandra
@@ -40,10 +45,7 @@ services:
     container_name: cassandra
     image: cassandra:latest
     #command: /bin /bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
-    #command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
-    ports:
-      - "7000:7000"
-      - "9042:9042"
+    command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
     expose:
       - 7000
       - 7001
