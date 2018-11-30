@@ -267,7 +267,10 @@ Tag and push
     curl -X POST -d "{\"gremlin\":\"map = new HashMap();map.put('storage.backend', 'cql');map.put('storage.hostname', 'cassandra');map.put('graph.graphname', 'example');ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map));\"}" "http://localhost:8182"
     curl -X POST -d "{\"gremlin\":\"def graph=ConfiguredGraphFactory.open('example'); GraphOfTheGodsFactory.loadWithoutMixedIndex(graph,true);\"}" "http://localhost:8182"
     curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal(); def saturn=g.V().has('name', 'saturn').next()\"}" "http://localhost:8182"
-
+    ## ajout de vertex ##
+    curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal();def v1 = g.addV(); def p1=v1.property('name', 'Nicolas')\"}" "http://localhost:8182"
+    curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal();def nicolas=g.V().has('name', 'Nicolas').next()\"}" "http://localhost:8182"
+     
     
 ### CRUD Vertices and Edges from java client
 
