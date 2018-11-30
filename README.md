@@ -254,3 +254,18 @@ Tag and push
 
     
       
+## Janus graph settings
+
+### Start the app
+
+    cd PROJECT_ROOT\src\main\docker\compose\graph
+    
+    docker-compose -f graph.yml -p janusgraph -d --build
+    
+### Create graph from the command line
+
+    curl ...
+    
+### CRUD Vertices and Edges from java client
+
+
