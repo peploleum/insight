@@ -260,11 +260,14 @@ Tag and push
 
     cd PROJECT_ROOT\src\main\docker\compose\graph
     
-    docker-compose -f graph.yml -p janusgraph -d --build
+    docker-compose -f .\graph.yml -p janusgraph -d --build
     
 ### Create graph from the command line
 
-    curl ...
+    curl -X POST -d "{\"gremlin\":\"map = new HashMap();map.put('storage.backend', 'cql');map.put('storage.hostname', 'cassandra');map.put('graph.graphname', 'example');ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map));\"}" "http://localhost:8182"
+    curl -X POST -d "{\"gremlin\":\"def graph=ConfiguredGraphFactory.open('example'); GraphOfTheGodsFactory.loadWithoutMixedIndex(graph,true);\"}" "http://localhost:8182"
+    curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal(); def saturn=g.V().has('name', 'saturn').next()\"}" "http://localhost:8182"
+
     
 ### CRUD Vertices and Edges from java client
 
