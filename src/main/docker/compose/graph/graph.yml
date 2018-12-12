@@ -17,15 +17,16 @@ services:
     expose:
       - 9042
       - 9160
-    #volumes:
-      #- ./conf/gremlin-server-rest-modern.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server-rest-modern.yaml
-    command: bash -c 'sleep 60 && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
+    command: bash -c 'sleep 90 && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
     depends_on:
       - elasticsearch
       - cassandra
+    volumes:
+      - C:\dev\insight\src\main\docker\compose\graph\janus\conf\gremlin-server\gremlin-server-configuration.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server/gremlin-server-configuration.yaml
+      - C:\dev\insight\src\main\docker\compose\graph\janus\conf\janusgraph.properties:/app/janusgraph-0.2.2-hadoop2/conf/janusgraph.properties
 
   elasticsearch:
-    #container_name: elasticsearch_container
+    container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -39,7 +40,7 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - ./es/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - C:\dev\insight\src\main\docker\compose\graph\es\elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   cassandra:
     container_name: cassandra
@@ -52,5 +53,5 @@ services:
       - 7199
       - 9042
       - 9160
-    # volumes: # uncomment if you desire mounts, also uncomment cluster.sh
-    #   - ./data/cassandra-1:/var/lib/cassandra:rw
+    volumes: # uncomment if you desire mounts, also uncomment cluster.sh
+      - C:\dev\insight\src\main\docker\compose\graph\cassandra:/var/lib/cassandra
