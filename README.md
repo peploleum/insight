@@ -65,6 +65,9 @@ will generate:
     CREATE src/main/webapp/app/sources/sources.module.spec.ts (283 bytes)
     CREATE src/main/webapp/app/sources/sources.module.ts (283 bytes)
 
+add dependency to InsightSharedModule to get faIcons and utilities
+add schema dependency
+
 2. Register module in app.module
 
 edit app.module.ts add it to imported modules

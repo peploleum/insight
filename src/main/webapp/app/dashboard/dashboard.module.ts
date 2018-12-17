@@ -6,10 +6,11 @@ import {DashboardManagerComponent} from './dashboard-manager.component';
 import {DashboardCreateComponent} from './dashboard-create.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { DashboardPanelCreateComponent } from './dashboard-panel-create.component';
+import {InsightSharedModule} from 'app/shared';
 
 @NgModule({
     declarations: [DashboardManagerComponent, DashboardCreateComponent, DashboardPanelCreateComponent],
-    imports: [CommonModule, DashboardRoutingModule, ReactiveFormsModule],
+    imports: [InsightSharedModule, CommonModule, DashboardRoutingModule, ReactiveFormsModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardModule {
