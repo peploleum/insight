@@ -1,0 +1,36 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.peploleum.insight",
+            "nativeLanguage": "en"
+        },
+        "jhipsterVersion": "5.7.1",
+        "applicationType": "monolith",
+        "baseName": "insight",
+        "packageName": "com.peploleum.insight",
+        "packageFolder": "com/peploleum/insight",
+        "serverPort": "8080",
+        "authenticationType": "session",
+        "cacheProvider": "ehcache",
+        "enableHibernateCache": false,
+        "websocket": "spring-websocket",
+        "databaseType": "mongodb",
+        "devDatabaseType": "mongodb",
+        "prodDatabaseType": "mongodb",
+        "searchEngine": "elasticsearch",
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "rememberMeKey": "81398912d55101f94956cdfa1f313c042767404f8f15ba5ec24bf1b9e23368274e4b0891f8f1103267e8faeee922427a7866",
+        "clientFramework": "angularX",
+        "useSass": true,
+        "clientPackageManager": "npm",
+        "testFrameworks": ["gatling", "protractor"],
+        "jhiPrefix": "jhi",
+        "otherModules": [],
+        "enableTranslation": true,
+        "nativeLanguage": "en",
+        "languages": ["en", "fr"]
+    }
+}
