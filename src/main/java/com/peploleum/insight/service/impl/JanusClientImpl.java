@@ -3,6 +3,7 @@ package com.peploleum.insight.service.impl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ehcache.xml.model.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -23,7 +24,7 @@ public class JanusClientImpl {
         Runnable target = new Runnable() {
             @Override
             public void run() {
-                //inal String command1 = "map = new HashMap();map.put('storage.backend', 'cql');map.put('storage.hostname', 'cassandra');map.put('graph.graphname', 'test');ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map));";
+                //inal String command1 = "map = new HashMap();map.put('storage.backend', 'cql');map.put('storage.hostname', 'cassandra');map.put('graph.graphname', 'testa');ConfiguredGraphFactory.createConfiguration(new MapConfiguration(map));";
                 //GremlinObject gremlinObject = new GremlinObject(command1);
                 final RestTemplate rt = new RestTemplate();
                 final HttpHeaders headers = new HttpHeaders();
@@ -31,8 +32,8 @@ public class JanusClientImpl {
                 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
                 int cpt = 0;
-                while (cpt < 10000) {
-                    GremlinObject newObject = new GremlinObject("def g=ConfiguredGraphFactory.open('testo'); for(i = 0; i < 100; i++) { g.addVertex(label, 'person', 'name', i);  }");
+                while (cpt < 1000) {
+                    GremlinObject newObject = new GremlinObject("def g=ConfiguredGraphFactory.open('testa'); for(i = 0; i < 1000; i++) { g.addVertex(label, 'book');  }");
                     ObjectMapper mapperObj = new ObjectMapper();
                     mapperObj.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
                     try {
@@ -47,14 +48,24 @@ public class JanusClientImpl {
                         final ResponseEntity<String> tResponseEntity = rt.exchange(url, HttpMethod.POST, entity, String.class);
                         JanusClientImpl.log.info("Received " + tResponseEntity);
                     } catch (IOException e) {
-
+                        e.printStackTrace();
+                    }
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     cpt++;
                 }
             }
         };
-        new Thread(target).start();
+        for (int i = 0; i < 10; i++) {
+            new Thread(target).start();
+            System.out.println("new Thread started");
+        }
+
+
+
 
 
         //TODO parcourir tous les Vertex, pour chaque vertex créer un edge vers tous les autres

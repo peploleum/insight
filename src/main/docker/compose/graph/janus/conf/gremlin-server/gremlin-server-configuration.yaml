@@ -1,6 +1,6 @@
 host: 0.0.0.0
 port: 8182
-scriptEvaluationTimeout: 300000
+scriptEvaluationTimeout: 30000000
 channelizer: org.apache.tinkerpop.gremlin.server.channel.HttpChannelizer
 graphManager: org.janusgraph.graphdb.management.JanusGraphManager
 graphs: {
