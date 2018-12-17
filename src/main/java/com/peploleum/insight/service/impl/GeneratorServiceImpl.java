@@ -5,6 +5,7 @@ import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -124,10 +124,11 @@ public class GeneratorServiceImpl implements GeneratorService {
         Pageable page = PageRequest.of(0, 100);
         boolean last = false;
         while (!last) {
-            final List<RawDataDTO> allObservedData = this.rawDataService.findAll();
+            final Page<RawDataDTO> allRawDataDTOs = this.rawDataService.findAll(page);
+            last = (allRawDataDTOs.getNumberOfElements() < 100);
             try {
-                this.log.info("deleting " + allObservedData.size() + " elements");
-                allObservedData.stream().map(observedDataDTO -> observedDataDTO.getId()).forEach(id -> this.rawDataService.delete(id));
+                this.log.info("deleting " + allRawDataDTOs.getNumberOfElements() + " elements");
+                allRawDataDTOs.map(rdto -> rdto.getId()).forEach(id -> this.rawDataService.delete(id));
             } catch (Exception e) {
                 this.log.warn("failed to delete elements ", e.getMessage(), e);
             }
