@@ -1,0 +1,76 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-equipment-heading" jhiTranslate="insightApp.equipment.home.createOrEditLabel">Create or edit a Equipment</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!equipment.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="equipment.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentName" for="field_equipmentName">Equipment Name</label>
+                    <input type="text" class="form-control" name="equipmentName" id="field_equipmentName"
+                        [(ngModel)]="equipment.equipmentName" required/>
+                    <div [hidden]="!(editForm.controls.equipmentName?.dirty && editForm.controls.equipmentName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.equipmentName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentDescription" for="field_equipmentDescription">Equipment Description</label>
+                    <input type="text" class="form-control" name="equipmentDescription" id="field_equipmentDescription"
+                        [(ngModel)]="equipment.equipmentDescription" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentType" for="field_equipmentType">Equipment Type</label>
+                    <select class="form-control" name="equipmentType" [(ngModel)]="equipment.equipmentType" id="field_equipmentType" >
+                        <option value="WEAPON">{{'insightApp.EquipmentType.WEAPON' | translate}}</option>
+                        <option value="TOOL">{{'insightApp.EquipmentType.TOOL' | translate}}</option>
+                        <option value="COMMON">{{'insightApp.EquipmentType.COMMON' | translate}}</option>
+                        <option value="UNKNOWN">{{'insightApp.EquipmentType.UNKNOWN' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentCoordinates" for="field_equipmentCoordinates">Equipment Coordinates</label>
+                    <input type="text" class="form-control" name="equipmentCoordinates" id="field_equipmentCoordinates"
+                        [(ngModel)]="equipment.equipmentCoordinates" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentSymbol" for="field_equipmentSymbol">Equipment Symbol</label>
+                    <input type="text" class="form-control" name="equipmentSymbol" id="field_equipmentSymbol"
+                        [(ngModel)]="equipment.equipmentSymbol" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.equipment.equipmentImage" for="field_equipmentImage">Equipment Image</label>
+                    <div>
+                        <img [src]="'data:' + equipment.equipmentImageContentType + ';base64,' + equipment.equipmentImage" style="max-height: 100px;" *ngIf="equipment.equipmentImage" alt="equipment image"/>
+                        <div *ngIf="equipment.equipmentImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{equipment.equipmentImageContentType}}, {{byteSize(equipment.equipmentImage)}}</span>
+                            <button type="button" (click)="clearInputImage('equipmentImage', 'equipmentImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_equipmentImage" (change)="setFileData($event, equipment, 'equipmentImage', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="equipmentImage" id="field_equipmentImage"
+                        [(ngModel)]="equipment.equipmentImage" />
+                    <input type="hidden" class="form-control" name="equipmentImageContentType" id="field_equipmentImageContentType"
+                        [(ngModel)]="equipment.equipmentImageContentType" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

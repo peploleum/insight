@@ -1,0 +1,11 @@
+{
+    "insightApp": {
+        "EquipmentType": {
+            "null": "",
+            "WEAPON": "WEAPON",
+            "TOOL": "TOOL",
+            "COMMON": "COMMON",
+            "UNKNOWN": "UNKNOWN"
+        }
+    }
+}

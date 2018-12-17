@@ -1,0 +1,12 @@
+{
+    "insightApp": {
+        "LocationType": {
+            "null": "",
+            "CITY": "CITY",
+            "COUNTRY": "COUNTRY",
+            "REGION": "REGION",
+            "ADMINISTRATIVE": "ADMINISTRATIVE",
+            "UNKNOWN": "UNKNOWN"
+        }
+    }
+}

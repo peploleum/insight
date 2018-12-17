@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="organisation">
+            <h2><span jhiTranslate="insightApp.organisation.detail.title">Organisation</span> {{organisation.id}}</h2>
+            <hr>
+            <ins-alert-error></ins-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.organisation.organisationName">Organisation Name</span></dt>
+                <dd>
+                    <span>{{organisation.organisationName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.organisation.organisationDescrption">Organisation Descrption</span></dt>
+                <dd>
+                    <span>{{organisation.organisationDescrption}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.organisation.organisationSize">Organisation Size</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'insightApp.Size.' + organisation.organisationSize}}">{{organisation.organisationSize}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.organisation.organisationCoordinates">Organisation Coordinates</span></dt>
+                <dd>
+                    <span>{{organisation.organisationCoordinates}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.organisation.organisationImage">Organisation Image</span></dt>
+                <dd>
+                    <div *ngIf="organisation.organisationImage">
+                        <a (click)="openFile(organisation.organisationImageContentType, organisation.organisationImage)">
+                            <img [src]="'data:' + organisation.organisationImageContentType + ';base64,' + organisation.organisationImage" style="max-width: 100%;" alt="organisation image"/>
+                        </a>
+                        {{organisation.organisationImageContentType}}, {{byteSize(organisation.organisationImage)}}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.organisation.organisationSymbol">Organisation Symbol</span></dt>
+                <dd>
+                    <span>{{organisation.organisationSymbol}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/organisation', organisation.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

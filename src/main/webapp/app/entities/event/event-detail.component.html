@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="event">
+            <h2><span jhiTranslate="insightApp.event.detail.title">Event</span> {{event.id}}</h2>
+            <hr>
+            <ins-alert-error></ins-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.event.eventName">Event Name</span></dt>
+                <dd>
+                    <span>{{event.eventName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventDescription">Event Description</span></dt>
+                <dd>
+                    <span>{{event.eventDescription}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventType">Event Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'insightApp.EventType.' + event.eventType}}">{{event.eventType}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventDate">Event Date</span></dt>
+                <dd>
+                    <span>{{event.eventDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventCoordinates">Event Coordinates</span></dt>
+                <dd>
+                    <span>{{event.eventCoordinates}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventImage">Event Image</span></dt>
+                <dd>
+                    <div *ngIf="event.eventImage">
+                        <a (click)="openFile(event.eventImageContentType, event.eventImage)">
+                            <img [src]="'data:' + event.eventImageContentType + ';base64,' + event.eventImage" style="max-width: 100%;" alt="event image"/>
+                        </a>
+                        {{event.eventImageContentType}}, {{byteSize(event.eventImage)}}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.event.eventSymbol">Event Symbol</span></dt>
+                <dd>
+                    <span>{{event.eventSymbol}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/event', event.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

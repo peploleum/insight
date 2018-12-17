@@ -1,0 +1,113 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-raw-data-heading" jhiTranslate="insightApp.rawData.home.createOrEditLabel">Create or edit a Raw Data</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!rawData.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="rawData.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataName" for="field_rawDataName">Raw Data Name</label>
+                    <input type="text" class="form-control" name="rawDataName" id="field_rawDataName"
+                        [(ngModel)]="rawData.rawDataName" required/>
+                    <div [hidden]="!(editForm.controls.rawDataName?.dirty && editForm.controls.rawDataName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.rawDataName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataType" for="field_rawDataType">Raw Data Type</label>
+                    <input type="text" class="form-control" name="rawDataType" id="field_rawDataType"
+                        [(ngModel)]="rawData.rawDataType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataSubType" for="field_rawDataSubType">Raw Data Sub Type</label>
+                    <input type="text" class="form-control" name="rawDataSubType" id="field_rawDataSubType"
+                        [(ngModel)]="rawData.rawDataSubType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataSourceName" for="field_rawDataSourceName">Raw Data Source Name</label>
+                    <input type="text" class="form-control" name="rawDataSourceName" id="field_rawDataSourceName"
+                        [(ngModel)]="rawData.rawDataSourceName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataSourceUri" for="field_rawDataSourceUri">Raw Data Source Uri</label>
+                    <input type="text" class="form-control" name="rawDataSourceUri" id="field_rawDataSourceUri"
+                        [(ngModel)]="rawData.rawDataSourceUri" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataSourceType" for="field_rawDataSourceType">Raw Data Source Type</label>
+                    <input type="text" class="form-control" name="rawDataSourceType" id="field_rawDataSourceType"
+                        [(ngModel)]="rawData.rawDataSourceType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataContent" for="field_rawDataContent">Raw Data Content</label>
+                    <input type="text" class="form-control" name="rawDataContent" id="field_rawDataContent"
+                        [(ngModel)]="rawData.rawDataContent" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataCreationDate" for="field_rawDataCreationDate">Raw Data Creation Date</label>
+                    <div class="input-group">
+                        <input id="field_rawDataCreationDate" type="text" class="form-control" name="rawDataCreationDate" ngbDatepicker  #rawDataCreationDateDp="ngbDatepicker" [(ngModel)]="rawData.rawDataCreationDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="rawDataCreationDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataExtractedDate" for="field_rawDataExtractedDate">Raw Data Extracted Date</label>
+                    <div class="input-group">
+                        <input id="field_rawDataExtractedDate" type="text" class="form-control" name="rawDataExtractedDate" ngbDatepicker  #rawDataExtractedDateDp="ngbDatepicker" [(ngModel)]="rawData.rawDataExtractedDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="rawDataExtractedDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataSymbol" for="field_rawDataSymbol">Raw Data Symbol</label>
+                    <input type="text" class="form-control" name="rawDataSymbol" id="field_rawDataSymbol"
+                        [(ngModel)]="rawData.rawDataSymbol" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataData" for="field_rawDataData">Raw Data Data</label>
+                    <div>
+                        <div *ngIf="rawData.rawDataData" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(rawData.rawDataDataContentType, rawData.rawDataData)" jhiTranslate="entity.action.open">open</a><br>
+                            <span class="pull-left">{{rawData.rawDataDataContentType}}, {{byteSize(rawData.rawDataData)}}</span>
+                            <button type="button" (click)="rawData.rawDataData=null;rawData.rawDataDataContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_rawDataData" (change)="setFileData($event, rawData, 'rawDataData', false)" jhiTranslate="entity.action.addblob"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="rawDataData" id="field_rawDataData"
+                        [(ngModel)]="rawData.rawDataData" />
+                    <input type="hidden" class="form-control" name="rawDataDataContentType" id="field_rawDataDataContentType"
+                        [(ngModel)]="rawData.rawDataDataContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataCoordinates" for="field_rawDataCoordinates">Raw Data Coordinates</label>
+                    <input type="text" class="form-control" name="rawDataCoordinates" id="field_rawDataCoordinates"
+                        [(ngModel)]="rawData.rawDataCoordinates" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

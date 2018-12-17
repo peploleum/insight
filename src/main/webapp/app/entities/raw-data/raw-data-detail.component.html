@@ -1,0 +1,74 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="rawData">
+            <h2><span jhiTranslate="insightApp.rawData.detail.title">Raw Data</span> {{rawData.id}}</h2>
+            <hr>
+            <ins-alert-error></ins-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.rawData.rawDataName">Raw Data Name</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataType">Raw Data Type</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataType}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataSubType">Raw Data Sub Type</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataSubType}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataSourceName">Raw Data Source Name</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataSourceName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataSourceUri">Raw Data Source Uri</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataSourceUri}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataSourceType">Raw Data Source Type</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataSourceType}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataContent">Raw Data Content</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataContent}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataCreationDate">Raw Data Creation Date</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataCreationDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataExtractedDate">Raw Data Extracted Date</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataExtractedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataSymbol">Raw Data Symbol</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataSymbol}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span></dt>
+                <dd>
+                    <div *ngIf="rawData.rawDataData">
+                        <a (click)="openFile(rawData.rawDataDataContentType, rawData.rawDataData)" jhiTranslate="entity.action.open">open</a>
+                        {{rawData.rawDataDataContentType}}, {{byteSize(rawData.rawDataData)}}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.rawData.rawDataCoordinates">Raw Data Coordinates</span></dt>
+                <dd>
+                    <span>{{rawData.rawDataCoordinates}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/raw-data', rawData.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

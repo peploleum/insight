@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-organisation-heading" jhiTranslate="insightApp.organisation.home.createOrEditLabel">Create or edit a Organisation</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!organisation.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="organisation.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationName" for="field_organisationName">Organisation Name</label>
+                    <input type="text" class="form-control" name="organisationName" id="field_organisationName"
+                        [(ngModel)]="organisation.organisationName" required/>
+                    <div [hidden]="!(editForm.controls.organisationName?.dirty && editForm.controls.organisationName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.organisationName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationDescrption" for="field_organisationDescrption">Organisation Descrption</label>
+                    <input type="text" class="form-control" name="organisationDescrption" id="field_organisationDescrption"
+                        [(ngModel)]="organisation.organisationDescrption" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationSize" for="field_organisationSize">Organisation Size</label>
+                    <select class="form-control" name="organisationSize" [(ngModel)]="organisation.organisationSize" id="field_organisationSize" >
+                        <option value="SMALL">{{'insightApp.Size.SMALL' | translate}}</option>
+                        <option value="MEDIUM">{{'insightApp.Size.MEDIUM' | translate}}</option>
+                        <option value="LARGE">{{'insightApp.Size.LARGE' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationCoordinates" for="field_organisationCoordinates">Organisation Coordinates</label>
+                    <input type="text" class="form-control" name="organisationCoordinates" id="field_organisationCoordinates"
+                        [(ngModel)]="organisation.organisationCoordinates" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationImage" for="field_organisationImage">Organisation Image</label>
+                    <div>
+                        <img [src]="'data:' + organisation.organisationImageContentType + ';base64,' + organisation.organisationImage" style="max-height: 100px;" *ngIf="organisation.organisationImage" alt="organisation image"/>
+                        <div *ngIf="organisation.organisationImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{organisation.organisationImageContentType}}, {{byteSize(organisation.organisationImage)}}</span>
+                            <button type="button" (click)="clearInputImage('organisationImage', 'organisationImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_organisationImage" (change)="setFileData($event, organisation, 'organisationImage', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="organisationImage" id="field_organisationImage"
+                        [(ngModel)]="organisation.organisationImage" />
+                    <input type="hidden" class="form-control" name="organisationImageContentType" id="field_organisationImageContentType"
+                        [(ngModel)]="organisation.organisationImageContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.organisation.organisationSymbol" for="field_organisationSymbol">Organisation Symbol</label>
+                    <input type="text" class="form-control" name="organisationSymbol" id="field_organisationSymbol"
+                        [(ngModel)]="organisation.organisationSymbol" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

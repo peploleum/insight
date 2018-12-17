@@ -1,0 +1,33 @@
+{
+    "insightApp": {
+        "rawData": {
+            "home": {
+                "title": "RawData",
+                "createLabel": "Créer un nouveau Raw Data",
+                "createOrEditLabel": "Créer ou éditer un Raw Data",
+                "search": "Recherche pour Raw Data"
+            },
+            "created": "Un nouveau Raw Data a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Raw Data avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Raw Data avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Raw Data {{ id }} ?"
+            },
+            "detail": {
+                "title": "Raw Data"
+            },
+            "rawDataName": "Raw Data Name",
+            "rawDataType": "Raw Data Type",
+            "rawDataSubType": "Raw Data Sub Type",
+            "rawDataSourceName": "Raw Data Source Name",
+            "rawDataSourceUri": "Raw Data Source Uri",
+            "rawDataSourceType": "Raw Data Source Type",
+            "rawDataContent": "Raw Data Content",
+            "rawDataCreationDate": "Raw Data Creation Date",
+            "rawDataExtractedDate": "Raw Data Extracted Date",
+            "rawDataSymbol": "Raw Data Symbol",
+            "rawDataData": "Raw Data Data",
+            "rawDataCoordinates": "Raw Data Coordinates"
+        }
+    }
+}

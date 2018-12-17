@@ -1,0 +1,10 @@
+{
+    "insightApp": {
+        "Size": {
+            "null": "",
+            "SMALL": "SMALL",
+            "MEDIUM": "MEDIUM",
+            "LARGE": "LARGE"
+        }
+    }
+}

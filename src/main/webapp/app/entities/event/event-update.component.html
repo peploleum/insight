@@ -1,0 +1,88 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-event-heading" jhiTranslate="insightApp.event.home.createOrEditLabel">Create or edit a Event</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!event.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="event.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventName" for="field_eventName">Event Name</label>
+                    <input type="text" class="form-control" name="eventName" id="field_eventName"
+                        [(ngModel)]="event.eventName" required/>
+                    <div [hidden]="!(editForm.controls.eventName?.dirty && editForm.controls.eventName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.eventName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventDescription" for="field_eventDescription">Event Description</label>
+                    <input type="text" class="form-control" name="eventDescription" id="field_eventDescription"
+                        [(ngModel)]="event.eventDescription" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventType" for="field_eventType">Event Type</label>
+                    <select class="form-control" name="eventType" [(ngModel)]="event.eventType" id="field_eventType" >
+                        <option value="POLITICAL">{{'insightApp.EventType.POLITICAL' | translate}}</option>
+                        <option value="DOMESTIC">{{'insightApp.EventType.DOMESTIC' | translate}}</option>
+                        <option value="ACCIDENT">{{'insightApp.EventType.ACCIDENT' | translate}}</option>
+                        <option value="TERRORIST">{{'insightApp.EventType.TERRORIST' | translate}}</option>
+                        <option value="CRIMINAL">{{'insightApp.EventType.CRIMINAL' | translate}}</option>
+                        <option value="UNKNOWN">{{'insightApp.EventType.UNKNOWN' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventDate" for="field_eventDate">Event Date</label>
+                    <div class="input-group">
+                        <input id="field_eventDate" type="text" class="form-control" name="eventDate" ngbDatepicker  #eventDateDp="ngbDatepicker" [(ngModel)]="event.eventDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="eventDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventCoordinates" for="field_eventCoordinates">Event Coordinates</label>
+                    <input type="text" class="form-control" name="eventCoordinates" id="field_eventCoordinates"
+                        [(ngModel)]="event.eventCoordinates" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventImage" for="field_eventImage">Event Image</label>
+                    <div>
+                        <img [src]="'data:' + event.eventImageContentType + ';base64,' + event.eventImage" style="max-height: 100px;" *ngIf="event.eventImage" alt="event image"/>
+                        <div *ngIf="event.eventImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{event.eventImageContentType}}, {{byteSize(event.eventImage)}}</span>
+                            <button type="button" (click)="clearInputImage('eventImage', 'eventImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_eventImage" (change)="setFileData($event, event, 'eventImage', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="eventImage" id="field_eventImage"
+                        [(ngModel)]="event.eventImage" />
+                    <input type="hidden" class="form-control" name="eventImageContentType" id="field_eventImageContentType"
+                        [(ngModel)]="event.eventImageContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.event.eventSymbol" for="field_eventSymbol">Event Symbol</label>
+                    <input type="text" class="form-control" name="eventSymbol" id="field_eventSymbol"
+                        [(ngModel)]="event.eventSymbol" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

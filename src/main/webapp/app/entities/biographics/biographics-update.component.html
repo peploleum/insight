@@ -1,0 +1,86 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-biographics-heading" jhiTranslate="insightApp.biographics.home.createOrEditLabel">Create or edit a Biographics</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!biographics.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="biographics.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsFirstname" for="field_biographicsFirstname">Biographics Firstname</label>
+                    <input type="text" class="form-control" name="biographicsFirstname" id="field_biographicsFirstname"
+                        [(ngModel)]="biographics.biographicsFirstname" required/>
+                    <div [hidden]="!(editForm.controls.biographicsFirstname?.dirty && editForm.controls.biographicsFirstname?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.biographicsFirstname?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsName" for="field_biographicsName">Biographics Name</label>
+                    <input type="text" class="form-control" name="biographicsName" id="field_biographicsName"
+                        [(ngModel)]="biographics.biographicsName" required/>
+                    <div [hidden]="!(editForm.controls.biographicsName?.dirty && editForm.controls.biographicsName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.biographicsName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsAge" for="field_biographicsAge">Biographics Age</label>
+                    <input type="number" class="form-control" name="biographicsAge" id="field_biographicsAge"
+                        [(ngModel)]="biographics.biographicsAge" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsGender" for="field_biographicsGender">Biographics Gender</label>
+                    <select class="form-control" name="biographicsGender" [(ngModel)]="biographics.biographicsGender" id="field_biographicsGender" >
+                        <option value="MALE">{{'insightApp.Gender.MALE' | translate}}</option>
+                        <option value="FEMALE">{{'insightApp.Gender.FEMALE' | translate}}</option>
+                        <option value="UNKNOWN">{{'insightApp.Gender.UNKNOWN' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsImage" for="field_biographicsImage">Biographics Image</label>
+                    <div>
+                        <img [src]="'data:' + biographics.biographicsImageContentType + ';base64,' + biographics.biographicsImage" style="max-height: 100px;" *ngIf="biographics.biographicsImage" alt="biographics image"/>
+                        <div *ngIf="biographics.biographicsImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{biographics.biographicsImageContentType}}, {{byteSize(biographics.biographicsImage)}}</span>
+                            <button type="button" (click)="clearInputImage('biographicsImage', 'biographicsImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_biographicsImage" (change)="setFileData($event, biographics, 'biographicsImage', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="biographicsImage" id="field_biographicsImage"
+                        [(ngModel)]="biographics.biographicsImage" />
+                    <input type="hidden" class="form-control" name="biographicsImageContentType" id="field_biographicsImageContentType"
+                        [(ngModel)]="biographics.biographicsImageContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsCoordinates" for="field_biographicsCoordinates">Biographics Coordinates</label>
+                    <input type="text" class="form-control" name="biographicsCoordinates" id="field_biographicsCoordinates"
+                        [(ngModel)]="biographics.biographicsCoordinates" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.biographics.biographicsSymbol" for="field_biographicsSymbol">Biographics Symbol</label>
+                    <input type="text" class="form-control" name="biographicsSymbol" id="field_biographicsSymbol"
+                        [(ngModel)]="biographics.biographicsSymbol" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

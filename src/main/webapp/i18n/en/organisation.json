@@ -1,0 +1,27 @@
+{
+    "insightApp": {
+        "organisation": {
+            "home": {
+                "title": "Organisations",
+                "createLabel": "Create a new Organisation",
+                "createOrEditLabel": "Create or edit a Organisation",
+                "search": "Search for Organisation"
+            },
+            "created": "A new Organisation is created with identifier {{ param }}",
+            "updated": "A Organisation is updated with identifier {{ param }}",
+            "deleted": "A Organisation is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Organisation {{ id }}?"
+            },
+            "detail": {
+                "title": "Organisation"
+            },
+            "organisationName": "Organisation Name",
+            "organisationDescrption": "Organisation Descrption",
+            "organisationSize": "Organisation Size",
+            "organisationCoordinates": "Organisation Coordinates",
+            "organisationImage": "Organisation Image",
+            "organisationSymbol": "Organisation Symbol"
+        }
+    }
+}

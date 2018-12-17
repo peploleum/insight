@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="biographics">
+            <h2><span jhiTranslate="insightApp.biographics.detail.title">Biographics</span> {{biographics.id}}</h2>
+            <hr>
+            <ins-alert-error></ins-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="insightApp.biographics.biographicsFirstname">Biographics Firstname</span></dt>
+                <dd>
+                    <span>{{biographics.biographicsFirstname}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsName">Biographics Name</span></dt>
+                <dd>
+                    <span>{{biographics.biographicsName}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsAge">Biographics Age</span></dt>
+                <dd>
+                    <span>{{biographics.biographicsAge}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsGender">Biographics Gender</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'insightApp.Gender.' + biographics.biographicsGender}}">{{biographics.biographicsGender}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsImage">Biographics Image</span></dt>
+                <dd>
+                    <div *ngIf="biographics.biographicsImage">
+                        <a (click)="openFile(biographics.biographicsImageContentType, biographics.biographicsImage)">
+                            <img [src]="'data:' + biographics.biographicsImageContentType + ';base64,' + biographics.biographicsImage" style="max-width: 100%;" alt="biographics image"/>
+                        </a>
+                        {{biographics.biographicsImageContentType}}, {{byteSize(biographics.biographicsImage)}}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsCoordinates">Biographics Coordinates</span></dt>
+                <dd>
+                    <span>{{biographics.biographicsCoordinates}}</span>
+                </dd>
+                <dt><span jhiTranslate="insightApp.biographics.biographicsSymbol">Biographics Symbol</span></dt>
+                <dd>
+                    <span>{{biographics.biographicsSymbol}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/biographics', biographics.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

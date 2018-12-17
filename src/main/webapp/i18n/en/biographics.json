@@ -1,0 +1,28 @@
+{
+    "insightApp": {
+        "biographics": {
+            "home": {
+                "title": "Biographics",
+                "createLabel": "Create a new Biographics",
+                "createOrEditLabel": "Create or edit a Biographics",
+                "search": "Search for Biographics"
+            },
+            "created": "A new Biographics is created with identifier {{ param }}",
+            "updated": "A Biographics is updated with identifier {{ param }}",
+            "deleted": "A Biographics is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Biographics {{ id }}?"
+            },
+            "detail": {
+                "title": "Biographics"
+            },
+            "biographicsFirstname": "Biographics Firstname",
+            "biographicsName": "Biographics Name",
+            "biographicsAge": "Biographics Age",
+            "biographicsGender": "Biographics Gender",
+            "biographicsImage": "Biographics Image",
+            "biographicsCoordinates": "Biographics Coordinates",
+            "biographicsSymbol": "Biographics Symbol"
+        }
+    }
+}

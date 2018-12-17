@@ -1,0 +1,72 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="ins-location-heading" jhiTranslate="insightApp.location.home.createOrEditLabel">Create or edit a Location</h2>
+            <div>
+                <ins-alert-error></ins-alert-error>
+                <div class="form-group" [hidden]="!location.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="location.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.location.locationName" for="field_locationName">Location Name</label>
+                    <input type="text" class="form-control" name="locationName" id="field_locationName"
+                        [(ngModel)]="location.locationName" required/>
+                    <div [hidden]="!(editForm.controls.locationName?.dirty && editForm.controls.locationName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.locationName?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.location.locationType" for="field_locationType">Location Type</label>
+                    <select class="form-control" name="locationType" [(ngModel)]="location.locationType" id="field_locationType" >
+                        <option value="CITY">{{'insightApp.LocationType.CITY' | translate}}</option>
+                        <option value="COUNTRY">{{'insightApp.LocationType.COUNTRY' | translate}}</option>
+                        <option value="REGION">{{'insightApp.LocationType.REGION' | translate}}</option>
+                        <option value="ADMINISTRATIVE">{{'insightApp.LocationType.ADMINISTRATIVE' | translate}}</option>
+                        <option value="UNKNOWN">{{'insightApp.LocationType.UNKNOWN' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.location.locationCoordinates" for="field_locationCoordinates">Location Coordinates</label>
+                    <input type="text" class="form-control" name="locationCoordinates" id="field_locationCoordinates"
+                        [(ngModel)]="location.locationCoordinates" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.location.locationImage" for="field_locationImage">Location Image</label>
+                    <div>
+                        <img [src]="'data:' + location.locationImageContentType + ';base64,' + location.locationImage" style="max-height: 100px;" *ngIf="location.locationImage" alt="location image"/>
+                        <div *ngIf="location.locationImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{location.locationImageContentType}}, {{byteSize(location.locationImage)}}</span>
+                            <button type="button" (click)="clearInputImage('locationImage', 'locationImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_locationImage" (change)="setFileData($event, location, 'locationImage', true)" accept="image/*" jhiTranslate="entity.action.addimage"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="locationImage" id="field_locationImage"
+                        [(ngModel)]="location.locationImage" />
+                    <input type="hidden" class="form-control" name="locationImageContentType" id="field_locationImageContentType"
+                        [(ngModel)]="location.locationImageContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.location.locationSymbol" for="field_locationSymbol">Location Symbol</label>
+                    <input type="text" class="form-control" name="locationSymbol" id="field_locationSymbol"
+                        [(ngModel)]="location.locationSymbol" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

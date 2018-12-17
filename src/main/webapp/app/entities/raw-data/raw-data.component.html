@@ -1,0 +1,94 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="insightApp.rawData.home.title">Raw Data</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-raw-data" [routerLink]="['/raw-data/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="insightApp.rawData.home.createLabel">
+            Create new Raw Data
+            </span>
+        </button>
+    </h2>
+    <ins-alert></ins-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'insightApp.rawData.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="rawData">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataName">Raw Data Name</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataType">Raw Data Type</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataSubType">Raw Data Sub Type</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataSourceName">Raw Data Source Name</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataSourceUri">Raw Data Source Uri</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataSourceType">Raw Data Source Type</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataContent">Raw Data Content</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataCreationDate">Raw Data Creation Date</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataExtractedDate">Raw Data Extracted Date</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataSymbol">Raw Data Symbol</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span></th>
+            <th><span jhiTranslate="insightApp.rawData.rawDataCoordinates">Raw Data Coordinates</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let rawData of rawData ;trackBy: trackId">
+                <td><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.id}}</a></td>
+                <td>{{rawData.rawDataName}}</td>
+                <td>{{rawData.rawDataType}}</td>
+                <td>{{rawData.rawDataSubType}}</td>
+                <td>{{rawData.rawDataSourceName}}</td>
+                <td>{{rawData.rawDataSourceUri}}</td>
+                <td>{{rawData.rawDataSourceType}}</td>
+                <td>{{rawData.rawDataContent}}</td>
+                <td>{{rawData.rawDataCreationDate | date:'mediumDate'}}</td>
+                <td>{{rawData.rawDataExtractedDate | date:'mediumDate'}}</td>
+                <td>{{rawData.rawDataSymbol}}</td>
+                <td>
+                    <a *ngIf="rawData.rawDataData" (click)="openFile(rawData.rawDataDataContentType, rawData.rawDataData)" jhiTranslate="entity.action.open">open</a>
+                    <span *ngIf="rawData.rawDataData">{{rawData.rawDataDataContentType}}, {{byteSize(rawData.rawDataData)}}</span>
+                </td>
+                <td>{{rawData.rawDataCoordinates}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/raw-data', rawData.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/raw-data', rawData.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'raw-data/'+ rawData.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

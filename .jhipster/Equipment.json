@@ -1,0 +1,44 @@
+{
+    "name": "Equipment",
+    "fields": [
+        {
+            "fieldName": "equipmentName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "equipmentDescription",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "equipmentType",
+            "fieldType": "EquipmentType",
+            "fieldValues": "WEAPON,TOOL,COMMON,UNKNOWN"
+        },
+        {
+            "fieldName": "equipmentCoordinates",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "equipmentSymbol",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "equipmentImage",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20181217133816",
+    "entityTableName": "equipment",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

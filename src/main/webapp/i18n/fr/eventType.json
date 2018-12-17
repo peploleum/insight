@@ -1,0 +1,13 @@
+{
+    "insightApp": {
+        "EventType": {
+            "null": "",
+            "POLITICAL": "POLITICAL",
+            "DOMESTIC": "DOMESTIC",
+            "ACCIDENT": "ACCIDENT",
+            "TERRORIST": "TERRORIST",
+            "CRIMINAL": "CRIMINAL",
+            "UNKNOWN": "UNKNOWN"
+        }
+    }
+}

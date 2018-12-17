@@ -1,0 +1,67 @@
+{
+    "name": "RawData",
+    "fields": [
+        {
+            "fieldName": "rawDataName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "rawDataType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataSubType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataSourceName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataSourceUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataSourceType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataContent",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataCreationDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "rawDataExtractedDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "rawDataSymbol",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataData",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "rawDataCoordinates",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20181217133817",
+    "entityTableName": "raw_data",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}
