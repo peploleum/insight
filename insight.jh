@@ -81,7 +81,7 @@ enum EquipmentType {
 
 // Set pagination options
 
-paginate Biographics, Event, Equipment, Location, Organisation with pagination
+paginate Biographics, Event, Equipment, Location, Organisation, RawData with pagination
 
 dto * with mapstruct
 
