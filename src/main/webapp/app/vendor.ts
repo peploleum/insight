@@ -4,6 +4,7 @@ import '../content/scss/vendor.scss';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {
     faArrowLeft,
+    faArrowRight,
     faAsterisk,
     faBan,
     faBars,
@@ -78,5 +79,7 @@ library.add(faSearch);
 library.add(faTrashAlt);
 library.add(faAsterisk);
 library.add(faChartArea);
+library.add(faArrowLeft);
+library.add(faArrowRight);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

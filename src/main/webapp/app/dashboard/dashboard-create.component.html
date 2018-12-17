@@ -30,9 +30,9 @@
                         </select>
                     </div>
                     <div *ngFor="let visualisation of dashboardParameters.visualisations;  let idx = index">
-                        <jhi-visualisation-create-visualisation [visualisationParameters]="visualisation"
-                                                                [mappingInfo]="mappingInfo"
-                                                                [visualisationIndex]="idx"></jhi-visualisation-create-visualisation>
+                        <ins-dashboard-panel-create [visualisationParameters]="visualisation"
+                                                    [mappingInfo]="mappingInfo"
+                                                    [visualisationIndex]="idx"></ins-dashboard-panel-create>
                     </div>
                 </div>
             </div>

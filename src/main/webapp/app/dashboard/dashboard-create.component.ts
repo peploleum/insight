@@ -26,6 +26,7 @@ export class DashboardCreateComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.mappingInfo.length);
         this.dashboardParameters = new KibanaDashboardGenerationParameters('', []);
 
         this.createDashboardForm = this.formBuilder.group({
