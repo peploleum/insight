@@ -18,13 +18,14 @@
         "@schematics/angular:component": {
             "inlineStyle": true,
             "inlineTemplate": false,
-            "spec": false,
-            "prefix": "jhi",
+            "spec": true,
+            "flat": true,
+            "prefix": "ins",
             "styleExt": "scss"
         },
         "@schematics/angular:directive": {
             "spec": false,
-            "prefix": "jhi"
+            "prefix": "ins"
         },
         "@schematics/angular:guard": {
             "spec": false
@@ -34,6 +35,9 @@
         },
         "@schematics/angular:service": {
             "spec": false
+        },
+        "@schematics/angular:module": {
+            "spec": true
         }
     }
 }
