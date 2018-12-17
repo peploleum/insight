@@ -16,6 +16,8 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -388,8 +390,8 @@ public class RawDataResourceIntTest {
     public void searchRawData() throws Exception {
         // Initialize the database
         rawDataRepository.save(rawData);
-        when(mockRawDataSearchRepository.search(queryStringQuery("id:" + rawData.getId())))
-            .thenReturn(Collections.singletonList(rawData));
+        when(mockRawDataSearchRepository.search(queryStringQuery("id:" + rawData.getId()), PageRequest.of(0, 20)))
+            .thenReturn(new PageImpl<>(Collections.singletonList(rawData), PageRequest.of(0, 1), 1));
         // Search the rawData
         restRawDataMockMvc.perform(get("/api/_search/raw-data?query=id:" + rawData.getId()))
             .andExpect(status().isOk())

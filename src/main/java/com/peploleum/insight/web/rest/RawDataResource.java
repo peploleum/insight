@@ -4,10 +4,15 @@ import com.codahale.metrics.annotation.Timed;
 import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
+import com.peploleum.insight.web.rest.util.PaginationUtil;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,13 +88,16 @@ public class RawDataResource {
     /**
      * GET  /raw-data : get all the rawData.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of rawData in body
      */
     @GetMapping("/raw-data")
     @Timed
-    public List<RawDataDTO> getAllRawData() {
-        log.debug("REST request to get all RawData");
-        return rawDataService.findAll();
+    public ResponseEntity<List<RawDataDTO>> getAllRawData(Pageable pageable) {
+        log.debug("REST request to get a page of RawData");
+        Page<RawDataDTO> page = rawDataService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/raw-data");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -125,13 +133,16 @@ public class RawDataResource {
      * to the query.
      *
      * @param query the query of the rawData search
+     * @param pageable the pagination information
      * @return the result of the search
      */
     @GetMapping("/_search/raw-data")
     @Timed
-    public List<RawDataDTO> searchRawData(@RequestParam String query) {
-        log.debug("REST request to search RawData for query {}", query);
-        return rawDataService.search(query);
+    public ResponseEntity<List<RawDataDTO>> searchRawData(@RequestParam String query, Pageable pageable) {
+        log.debug("REST request to search for a page of RawData for query {}", query);
+        Page<RawDataDTO> page = rawDataService.search(query, pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/raw-data");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 }

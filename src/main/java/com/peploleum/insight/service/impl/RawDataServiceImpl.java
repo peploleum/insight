@@ -9,13 +9,11 @@ import com.peploleum.insight.service.mapper.RawDataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -59,14 +57,14 @@ public class RawDataServiceImpl implements RawDataService {
     /**
      * Get all the rawData.
      *
+     * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
-    public List<RawDataDTO> findAll() {
+    public Page<RawDataDTO> findAll(Pageable pageable) {
         log.debug("Request to get all RawData");
-        return rawDataRepository.findAll().stream()
-            .map(rawDataMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return rawDataRepository.findAll(pageable)
+            .map(rawDataMapper::toDto);
     }
 
 
@@ -99,14 +97,13 @@ public class RawDataServiceImpl implements RawDataService {
      * Search for the rawData corresponding to the query.
      *
      * @param query the query of the search
+     * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
-    public List<RawDataDTO> search(String query) {
-        log.debug("Request to search RawData for query {}", query);
-        return StreamSupport
-            .stream(rawDataSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-            .map(rawDataMapper::toDto)
-            .collect(Collectors.toList());
+    public Page<RawDataDTO> search(String query, Pageable pageable) {
+        log.debug("Request to search for a page of RawData for query {}", query);
+        return rawDataSearchRepository.search(queryStringQuery(query), pageable)
+            .map(rawDataMapper::toDto);
     }
 }

@@ -2,7 +2,9 @@ package com.peploleum.insight.service;
 
 import com.peploleum.insight.service.dto.RawDataDTO;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 /**
@@ -21,9 +23,10 @@ public interface RawDataService {
     /**
      * Get all the rawData.
      *
+     * @param pageable the pagination information
      * @return the list of entities
      */
-    List<RawDataDTO> findAll();
+    Page<RawDataDTO> findAll(Pageable pageable);
 
 
     /**
@@ -46,7 +49,8 @@ public interface RawDataService {
      *
      * @param query the query of the search
      * 
+     * @param pageable the pagination information
      * @return the list of entities
      */
-    List<RawDataDTO> search(String query);
+    Page<RawDataDTO> search(String query, Pageable pageable);
 }
