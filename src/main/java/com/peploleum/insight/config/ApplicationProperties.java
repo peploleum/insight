@@ -10,5 +10,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
+    private final ApplicationProperties.Kibana kibana = new ApplicationProperties.Kibana();
 
+    public ApplicationProperties() {
+    }
+
+    public ApplicationProperties.Kibana getKibana() {
+        return this.kibana;
+    }
+
+    public static class Kibana {
+        private String uri = "http://localhost:5601/";
+
+        public Kibana() {
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public void setUri(String uri) {
+            this.uri = uri;
+        }
+    }
 }

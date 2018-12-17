@@ -42,4 +42,8 @@ public final class HeaderUtil {
         headers.add("X-" + APPLICATION_NAME + "-params", entityName);
         return headers;
     }
+
+    public static HttpHeaders createDashboardCreationAlert(String dashboardTitle) {
+        return createAlert("A new dashboard is created with title " + dashboardTitle, dashboardTitle);
+    }
 }

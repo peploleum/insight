@@ -1,0 +1,15 @@
+{
+    "id": "visualization_id",
+    "type": "visualization",
+    "version": 1,
+    "attributes": {
+        "title": "visualization_title",
+        "visState": "{ \"title\": \"visualization_title\", \"type\": \"pie\", \"params\": { \"type\": \"pie\", \"addTooltip\": true, \"addLegend\": true, \"legendPosition\": \"right\", \"isDonut\": true, \"labels\": { \"show\": false, \"values\": true, \"last_level\": true, \"truncate\": 100 } }, \"aggs\": [ { \"id\": \"1\", \"enabled\": true, \"type\": \"count\", \"schema\": \"metric\", \"params\": {} }, { \"id\": \"2\", \"enabled\": true, \"type\": \"terms\", \"schema\": \"segment\", \"params\": { \"field\": \"index_field\", \"size\": 5, \"order\": \"desc\", \"orderBy\": \"1\", \"otherBucket\": false, \"otherBucketLabel\": \"Other\", \"missingBucket\": false, \"missingBucketLabel\": \"Missing\" } } ] }",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+            "searchSourceJSON": "{\"index\":\"index_pattern_id\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        }
+    }
+}
