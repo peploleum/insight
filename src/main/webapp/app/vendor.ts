@@ -1,7 +1,7 @@
 /* after changing this file run 'npm run webpack:build' */
 /* tslint:disable */
 import '../content/scss/vendor.scss';
-import {library} from '@fortawesome/fontawesome-svg-core';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faArrowLeft,
     faArrowRight,
@@ -16,6 +16,7 @@ import {
     faCloud,
     faEye,
     faFlag,
+    faGlobe,
     faHdd,
     faHeart,
     faHome,
@@ -81,5 +82,6 @@ library.add(faAsterisk);
 library.add(faChartArea);
 library.add(faArrowLeft);
 library.add(faArrowRight);
+library.add(faGlobe);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
