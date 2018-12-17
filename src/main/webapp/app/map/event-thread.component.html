@@ -1,13 +1,11 @@
 <div *ngFor="let rawData of rawData ;trackBy: trackId">
-    <p><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.id}}</a></p>
-    <p>{{rawData.rawDataName}}</p>
-    <p>{{rawData.rawDataType}}</p>
-    <p>{{rawData.rawDataSubType}}</p>
-    <p>{{rawData.rawDataSourceName}}</p>
-    <p>{{rawData.rawDataSourceUri}}</p>
-    <p>{{rawData.rawDataSourceType}}</p>
+    <p><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.rawDataName}}</a></p>
+    <p>
+        <fa-icon [icon]="'rss-square'"></fa-icon>
+        <span [style.fontWeight]="'bold'">{{rawData.rawDataSourceName}}</span> {{rawData.rawDataType}} {{rawData.rawDataSubType}} <span
+        [style.font-size.px]="14">{{rawData.rawDataCreationDate |
+        date:'mediumDate'}}</span>
+    </p>
     <p>{{rawData.rawDataContent}}</p>
-    <p>{{rawData.rawDataCreationDate | date:'mediumDate'}}</p>
-    <p>{{rawData.rawDataExtractedDate | date:'mediumDate'}}</p>
-    <p>{{rawData.rawDataSymbol}}</p>
+    <p>{{rawData.rawDataSourceUri}}</p>
 </div>
