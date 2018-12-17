@@ -50,7 +50,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         final ZonedDateTime debut = generateRandomDateTime();
 
         final RawDataDTO rawDataDTO = new RawDataDTO();
-        rawDataDTO.setRawDataContent(UUID.randomUUID().toString());
+        rawDataDTO.setRawDataContent(UUID.randomUUID().toString() + " " + UUID.randomUUID().toString() + " " + UUID.randomUUID().toString());
         rawDataDTO.setRawDataName(name);
         rawDataDTO.setRawDataCreationDate(LocalDate.now());
         rawDataDTO.setRawDataExtractedDate(debut.toLocalDate());
