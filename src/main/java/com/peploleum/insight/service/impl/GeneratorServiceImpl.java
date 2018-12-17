@@ -46,17 +46,17 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private RawDataDTO generateRawDataDTO() {
         final String type = generateRandomType();
-        final String objObserve = UUID.randomUUID().toString();
+        final String name = UUID.randomUUID().toString();
         final ZonedDateTime debut = generateRandomDateTime();
-        final ZonedDateTime fin = addRandomDuration(debut);
-        final int nbDay = ThreadLocalRandom.current().nextInt(0, 60);
 
         final RawDataDTO rawDataDTO = new RawDataDTO();
         rawDataDTO.setRawDataContent(UUID.randomUUID().toString());
+        rawDataDTO.setRawDataName(name);
         rawDataDTO.setRawDataCreationDate(LocalDate.now());
-        rawDataDTO.setRawDataExtractedDate(generateRandomDateTime().toLocalDate());
+        rawDataDTO.setRawDataExtractedDate(debut.toLocalDate());
         rawDataDTO.setRawDataCoordinates(this.generateLatitude() + "," + this.generateLongitude());
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
+        rawDataDTO.setRawDataSubType(type);
 
         return rawDataDTO;
     }
