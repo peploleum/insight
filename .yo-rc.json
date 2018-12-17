@@ -27,7 +27,7 @@
         "useSass": true,
         "clientPackageManager": "npm",
         "testFrameworks": ["gatling", "protractor"],
-        "jhiPrefix": "jhi",
+        "jhiPrefix": "ins",
         "otherModules": [],
         "enableTranslation": true,
         "nativeLanguage": "en",

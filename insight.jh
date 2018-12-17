@@ -1,0 +1,92 @@
+entity Biographics {
+	biographicsFirstname String required,
+    biographicsName String required,
+    biographicsAge Integer,
+    biographicsGender Gender,
+    biographicsImage ImageBlob,
+    biographicsCoordinates String,
+    biographicsSymbol String
+}
+
+entity Organisation {
+	organisationName String required,
+	organisationDescrption String,
+    organisationSize Size,
+    organisationCoordinates String,
+    organisationImage ImageBlob,
+    organisationSymbol String
+}
+
+entity Location {
+	locationName String required,
+    locationType LocationType,
+    locationCoordinates String,
+    locationImage ImageBlob,
+    locationSymbol String
+}
+
+entity Event {
+	eventName String required,
+    eventDescription String
+    eventType EventType,
+    eventDate LocalDate,
+    eventCoordinates String,
+    eventImage ImageBlob,
+    eventSymbol String
+}
+
+entity Equipment {
+	equipmentName String required,
+    equipmentDescription String
+    equipmentType EquipmentType,
+    equipmentCoordinates String,
+    equipmentSymbol String,
+    equipmentImage ImageBlob
+}
+
+entity RawData {
+    rawDataName String required,
+    rawDataType String,
+    rawDataSubType String,
+    rawDataSourceName String,
+    rawDataSourceUri String,
+    rawDataSourceType String,
+    rawDataContent String,
+    rawDataCreationDate LocalDate,
+    rawDataExtractedDate LocalDate,
+    rawDataSymbol String,
+    rawDataData Blob,
+    rawDataCoordinates String
+}
+
+enum Gender {
+    MALE, FEMALE, UNKNOWN
+}
+
+enum Size {
+    SMALL, MEDIUM, LARGE
+}
+
+enum LocationType {
+    CITY, COUNTRY, REGION, ADMINISTRATIVE, UNKNOWN
+}
+
+enum EventType {
+    POLITICAL, DOMESTIC, ACCIDENT, TERRORIST, CRIMINAL, UNKNOWN
+}
+
+enum EquipmentType {
+    WEAPON, TOOL, COMMON, UNKNOWN
+}
+
+// Set pagination options
+
+paginate Biographics, Event, Equipment, Location, Organisation with pagination
+
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+filter Biographics, Event, Equipment, Location, Organisation, RawData
+// Set an angular suffix
+// angularSuffix * with mySuffix
