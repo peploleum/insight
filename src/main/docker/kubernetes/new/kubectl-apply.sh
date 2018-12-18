@@ -4,6 +4,6 @@
 
 kubectl apply -f namespace.yml
 kubectl apply -f volumes/
-kubectl apply -f insight/
-kubectl apply -f messagebroker/
-kubectl apply -f console/
+#kubectl apply -f insight/
+#kubectl apply -f messagebroker/
+#kubectl apply -f console/
