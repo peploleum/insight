@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-logstash
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-logstash
+    spec:
+      containers:
+      - image: logstash:latest
+        name: insight-logstash
+        ports:
+        - containerPort: 5000
+          protocol: UDP
+        - containerPort: 5000
+          protocol: TCP
+        env:
+        - name: CONFIG_RELOAD_AUTOMATIC
+          value: "true"
+        - name: CONFIG_RELOAD_INTERVAL
+          value: 3s 
+        resources: {}
+        volumeMounts:
+        - name: config 
+          mountPath: /usr/share/logstash/pipeline
+      restartPolicy: Always
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: insight-storage-logstash-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-logstash
+  namespace: insight
+  labels:
+    app: insight-logstash
+spec:
+  ports:
+  - name: "udp"
+    port: 5000
+    protocol: UDP
+    targetPort: 5010
+  - name: "tcp"
+    port: 5000
+    protocol: TCP
+    targetPort: 5010
+  selector:
+    app: insight-logstash
