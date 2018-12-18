@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template encoding-version="1.2">
+    <description>listen syslog (UDP) publish kafka</description>
+    <groupId>7a4162ff-0167-1000-0cad-fc2da6d5cfa2</groupId>
+    <name>syslog_to_kafka</name>
+    <snippet>
+        <processGroups>
+            <id>f4ff1aad-939f-3ce5-0000-000000000000</id>
+            <parentGroupId>fc8527cc-212e-34a4-0000-000000000000</parentGroupId>
+            <position>
+                <x>0.0</x>
+                <y>0.0</y>
+            </position>
+            <comments></comments>
+            <contents>
+                <connections>
+                    <id>29a7328e-5349-3cee-0000-000000000000</id>
+                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+                    <destination>
+                        <groupId>f4ff1aad-939f-3ce5-0000-000000000000</groupId>
+                        <id>89a59f2c-a6fc-32d4-0000-000000000000</id>
+                        <type>PROCESSOR</type>
+                    </destination>
+                    <flowFileExpiration>0 sec</flowFileExpiration>
+                    <labelIndex>1</labelIndex>
+                    <name></name>
+                    <selectedRelationships>invalid</selectedRelationships>
+                    <selectedRelationships>success</selectedRelationships>
+                    <source>
+                        <groupId>f4ff1aad-939f-3ce5-0000-000000000000</groupId>
+                        <id>62e7ca97-5c4d-3b82-0000-000000000000</id>
+                        <type>PROCESSOR</type>
+                    </source>
+                    <zIndex>0</zIndex>
+                </connections>
+                <processors>
+                    <id>62e7ca97-5c4d-3b82-0000-000000000000</id>
+                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <position>
+                        <x>46.0</x>
+                        <y>-151.0</y>
+                    </position>
+                    <bundle>
+                        <artifact>nifi-standard-nar</artifact>
+                        <group>org.apache.nifi</group>
+                        <version>1.7.1</version>
+                    </bundle>
+                    <config>
+                        <bulletinLevel>WARN</bulletinLevel>
+                        <comments></comments>
+                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                        <descriptors>
+                            <entry>
+<key>Protocol</key>
+<value>
+    <name>Protocol</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Port</key>
+<value>
+    <name>Port</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Local Network Interface</key>
+<value>
+    <name>Local Network Interface</name>
+</value>
+                            </entry>
+                            <entry>
+<key>SSL Context Service</key>
+<value>
+    <identifiesControllerService>org.apache.nifi.ssl.RestrictedSSLContextService</identifiesControllerService>
+    <name>SSL Context Service</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Client Auth</key>
+<value>
+    <name>Client Auth</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Receive Buffer Size</key>
+<value>
+    <name>Receive Buffer Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Max Size of Message Queue</key>
+<value>
+    <name>Max Size of Message Queue</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Max Size of Socket Buffer</key>
+<value>
+    <name>Max Size of Socket Buffer</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Max Number of TCP Connections</key>
+<value>
+    <name>Max Number of TCP Connections</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Max Batch Size</key>
+<value>
+    <name>Max Batch Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Message Delimiter</key>
+<value>
+    <name>Message Delimiter</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Parse Messages</key>
+<value>
+    <name>Parse Messages</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Character Set</key>
+<value>
+    <name>Character Set</name>
+</value>
+                            </entry>
+                        </descriptors>
+                        <executionNode>ALL</executionNode>
+                        <lossTolerant>false</lossTolerant>
+                        <penaltyDuration>30 sec</penaltyDuration>
+                        <properties>
+                            <entry>
+<key>Protocol</key>
+<value>UDP</value>
+                            </entry>
+                            <entry>
+<key>Port</key>
+<value>10514</value>
+                            </entry>
+                            <entry>
+<key>Local Network Interface</key>
+<value>eth0</value>
+                            </entry>
+                            <entry>
+<key>SSL Context Service</key>
+                            </entry>
+                            <entry>
+<key>Client Auth</key>
+<value>NONE</value>
+                            </entry>
+                            <entry>
+<key>Receive Buffer Size</key>
+<value>65507 B</value>
+                            </entry>
+                            <entry>
+<key>Max Size of Message Queue</key>
+<value>10000</value>
+                            </entry>
+                            <entry>
+<key>Max Size of Socket Buffer</key>
+<value>1 MB</value>
+                            </entry>
+                            <entry>
+<key>Max Number of TCP Connections</key>
+<value>2</value>
+                            </entry>
+                            <entry>
+<key>Max Batch Size</key>
+<value>1</value>
+                            </entry>
+                            <entry>
+<key>Message Delimiter</key>
+<value>\n</value>
+                            </entry>
+                            <entry>
+<key>Parse Messages</key>
+<value>false</value>
+                            </entry>
+                            <entry>
+<key>Character Set</key>
+<value>UTF-8</value>
+                            </entry>
+                        </properties>
+                        <runDurationMillis>0</runDurationMillis>
+                        <schedulingPeriod>0 sec</schedulingPeriod>
+                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                        <yieldDuration>1 sec</yieldDuration>
+                    </config>
+                    <executionNodeRestricted>false</executionNodeRestricted>
+                    <name>ListenSyslog</name>
+                    <relationships>
+                        <autoTerminate>false</autoTerminate>
+                        <name>invalid</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>false</autoTerminate>
+                        <name>success</name>
+                    </relationships>
+                    <state>STOPPED</state>
+                    <style/>
+                    <type>org.apache.nifi.processors.standard.ListenSyslog</type>
+                </processors>
+                <processors>
+                    <id>89a59f2c-a6fc-32d4-0000-000000000000</id>
+                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <position>
+                        <x>339.0000305175781</x>
+                        <y>98.0</y>
+                    </position>
+                    <bundle>
+                        <artifact>nifi-kafka-0-9-nar</artifact>
+                        <group>org.apache.nifi</group>
+                        <version>1.7.1</version>
+                    </bundle>
+                    <config>
+                        <bulletinLevel>WARN</bulletinLevel>
+                        <comments></comments>
+                        <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                        <descriptors>
+                            <entry>
+<key>bootstrap.servers</key>
+<value>
+    <name>bootstrap.servers</name>
+</value>
+                            </entry>
+                            <entry>
+<key>security.protocol</key>
+<value>
+    <name>security.protocol</name>
+</value>
+                            </entry>
+                            <entry>
+<key>sasl.kerberos.service.name</key>
+<value>
+    <name>sasl.kerberos.service.name</name>
+</value>
+                            </entry>
+                            <entry>
+<key>ssl.context.service</key>
+<value>
+    <identifiesControllerService>org.apache.nifi.ssl.SSLContextService</identifiesControllerService>
+    <name>ssl.context.service</name>
+</value>
+                            </entry>
+                            <entry>
+<key>topic</key>
+<value>
+    <name>topic</name>
+</value>
+                            </entry>
+                            <entry>
+<key>acks</key>
+<value>
+    <name>acks</name>
+</value>
+                            </entry>
+                            <entry>
+<key>kafka-key</key>
+<value>
+    <name>kafka-key</name>
+</value>
+                            </entry>
+                            <entry>
+<key>key-attribute-encoding</key>
+<value>
+    <name>key-attribute-encoding</name>
+</value>
+                            </entry>
+                            <entry>
+<key>message-demarcator</key>
+<value>
+    <name>message-demarcator</name>
+</value>
+                            </entry>
+                            <entry>
+<key>max.request.size</key>
+<value>
+    <name>max.request.size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>ack.wait.time</key>
+<value>
+    <name>ack.wait.time</name>
+</value>
+                            </entry>
+                            <entry>
+<key>max.block.ms</key>
+<value>
+    <name>max.block.ms</name>
+</value>
+                            </entry>
+                            <entry>
+<key>partitioner.class</key>
+<value>
+    <name>partitioner.class</name>
+</value>
+                            </entry>
+                            <entry>
+<key>compression.type</key>
+<value>
+    <name>compression.type</name>
+</value>
+                            </entry>
+                        </descriptors>
+                        <executionNode>ALL</executionNode>
+                        <lossTolerant>false</lossTolerant>
+                        <penaltyDuration>30 sec</penaltyDuration>
+                        <properties>
+                            <entry>
+<key>bootstrap.servers</key>
+<value>insight-kafka:9092</value>
+                            </entry>
+                            <entry>
+<key>security.protocol</key>
+<value>PLAINTEXT</value>
+                            </entry>
+                            <entry>
+<key>sasl.kerberos.service.name</key>
+                            </entry>
+                            <entry>
+<key>ssl.context.service</key>
+                            </entry>
+                            <entry>
+<key>topic</key>
+<value>topic</value>
+                            </entry>
+                            <entry>
+<key>acks</key>
+<value>0</value>
+                            </entry>
+                            <entry>
+<key>kafka-key</key>
+                            </entry>
+                            <entry>
+<key>key-attribute-encoding</key>
+<value>utf-8</value>
+                            </entry>
+                            <entry>
+<key>message-demarcator</key>
+                            </entry>
+                            <entry>
+<key>max.request.size</key>
+<value>1 MB</value>
+                            </entry>
+                            <entry>
+<key>ack.wait.time</key>
+<value>5 secs</value>
+                            </entry>
+                            <entry>
+<key>max.block.ms</key>
+<value>5 sec</value>
+                            </entry>
+                            <entry>
+<key>partitioner.class</key>
+<value>org.apache.kafka.clients.producer.internals.DefaultPartitioner</value>
+                            </entry>
+                            <entry>
+<key>compression.type</key>
+<value>none</value>
+                            </entry>
+                        </properties>
+                        <runDurationMillis>0</runDurationMillis>
+                        <schedulingPeriod>0 sec</schedulingPeriod>
+                        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                        <yieldDuration>1 sec</yieldDuration>
+                    </config>
+                    <executionNodeRestricted>false</executionNodeRestricted>
+                    <name>PublishKafka</name>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
+                        <name>failure</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
+                        <name>success</name>
+                    </relationships>
+                    <state>STOPPED</state>
+                    <style/>
+                    <type>org.apache.nifi.processors.kafka.pubsub.PublishKafka</type>
+                </processors>
+            </contents>
+            <name>SyslogToKafka</name>
+            <variables/>
+        </processGroups>
+    </snippet>
+    <timestamp>12/04/2018 17:29:35 UTC</timestamp>
+</template>

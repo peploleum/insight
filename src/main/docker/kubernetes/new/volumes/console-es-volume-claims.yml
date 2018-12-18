@@ -1,0 +1,31 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: insight-storage-master-claim
+  namespace: insight
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  selector:
+    matchLabels:
+      component: insight-console-es-master-volume
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: insight-storage-data-claim
+  namespace: insight
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  selector:
+    matchLabels:
+      component: insight-console-es-data-volume
