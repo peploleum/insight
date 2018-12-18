@@ -52,6 +52,10 @@
         {
             "fieldName": "rawDataCoordinates",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "rawDataAnnotations",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

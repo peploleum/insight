@@ -56,7 +56,8 @@ entity RawData {
     rawDataExtractedDate LocalDate,
     rawDataSymbol String,
     rawDataData Blob,
-    rawDataCoordinates String
+    rawDataCoordinates String,
+    rawDataAnnotations String
 }
 
 enum Gender {

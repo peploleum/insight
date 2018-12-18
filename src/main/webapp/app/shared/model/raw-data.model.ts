@@ -15,6 +15,7 @@ export interface IRawData {
     rawDataDataContentType?: string;
     rawDataData?: any;
     rawDataCoordinates?: string;
+    rawDataAnnotations?: string;
 }
 
 export class RawData implements IRawData {
@@ -32,6 +33,7 @@ export class RawData implements IRawData {
         public rawDataSymbol?: string,
         public rawDataDataContentType?: string,
         public rawDataData?: any,
-        public rawDataCoordinates?: string
+        public rawDataCoordinates?: string,
+        public rawDataAnnotations?: string
     ) {}
 }

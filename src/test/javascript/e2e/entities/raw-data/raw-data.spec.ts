@@ -54,7 +54,8 @@ describe('RawData e2e test', () => {
             rawDataUpdatePage.setRawDataExtractedDateInput('2000-12-31'),
             rawDataUpdatePage.setRawDataSymbolInput('rawDataSymbol'),
             rawDataUpdatePage.setRawDataDataInput(absolutePath),
-            rawDataUpdatePage.setRawDataCoordinatesInput('rawDataCoordinates')
+            rawDataUpdatePage.setRawDataCoordinatesInput('rawDataCoordinates'),
+            rawDataUpdatePage.setRawDataAnnotationsInput('rawDataAnnotations')
         ]);
         expect(await rawDataUpdatePage.getRawDataNameInput()).to.eq('rawDataName');
         expect(await rawDataUpdatePage.getRawDataTypeInput()).to.eq('rawDataType');
@@ -68,6 +69,7 @@ describe('RawData e2e test', () => {
         expect(await rawDataUpdatePage.getRawDataSymbolInput()).to.eq('rawDataSymbol');
         expect(await rawDataUpdatePage.getRawDataDataInput()).to.endsWith(fileNameToUpload);
         expect(await rawDataUpdatePage.getRawDataCoordinatesInput()).to.eq('rawDataCoordinates');
+        expect(await rawDataUpdatePage.getRawDataAnnotationsInput()).to.eq('rawDataAnnotations');
         await rawDataUpdatePage.save();
         expect(await rawDataUpdatePage.getSaveButton().isPresent()).to.be.false;
 

@@ -39,6 +39,7 @@ describe('Service Tests', () => {
                 'AAAAAAA',
                 'image/png',
                 'AAAAAAA',
+                'AAAAAAA',
                 'AAAAAAA'
             );
         });
@@ -99,7 +100,8 @@ describe('Service Tests', () => {
                         rawDataExtractedDate: currentDate.format(DATE_FORMAT),
                         rawDataSymbol: 'BBBBBB',
                         rawDataData: 'BBBBBB',
-                        rawDataCoordinates: 'BBBBBB'
+                        rawDataCoordinates: 'BBBBBB',
+                        rawDataAnnotations: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -133,7 +135,8 @@ describe('Service Tests', () => {
                         rawDataExtractedDate: currentDate.format(DATE_FORMAT),
                         rawDataSymbol: 'BBBBBB',
                         rawDataData: 'BBBBBB',
-                        rawDataCoordinates: 'BBBBBB'
+                        rawDataCoordinates: 'BBBBBB',
+                        rawDataAnnotations: 'BBBBBB'
                     },
                     elemDefault
                 );

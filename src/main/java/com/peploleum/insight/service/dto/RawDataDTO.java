@@ -38,6 +38,8 @@ public class RawDataDTO implements Serializable {
 
     private String rawDataCoordinates;
 
+    private String rawDataAnnotations;
+
     public String getId() {
         return id;
     }
@@ -150,6 +152,14 @@ public class RawDataDTO implements Serializable {
         this.rawDataCoordinates = rawDataCoordinates;
     }
 
+    public String getRawDataAnnotations() {
+        return rawDataAnnotations;
+    }
+
+    public void setRawDataAnnotations(String rawDataAnnotations) {
+        this.rawDataAnnotations = rawDataAnnotations;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -187,6 +197,7 @@ public class RawDataDTO implements Serializable {
             ", rawDataSymbol='" + getRawDataSymbol() + "'" +
             ", rawDataData='" + getRawDataData() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
+            ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
             "}";
     }
 }

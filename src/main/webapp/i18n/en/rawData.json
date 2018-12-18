@@ -27,7 +27,8 @@
             "rawDataExtractedDate": "Raw Data Extracted Date",
             "rawDataSymbol": "Raw Data Symbol",
             "rawDataData": "Raw Data Data",
-            "rawDataCoordinates": "Raw Data Coordinates"
+            "rawDataCoordinates": "Raw Data Coordinates",
+            "rawDataAnnotations": "Raw Data Annotations"
         }
     }
 }

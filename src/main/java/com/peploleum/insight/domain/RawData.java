@@ -62,6 +62,9 @@ public class RawData implements Serializable {
     @Field("raw_data_coordinates")
     private String rawDataCoordinates;
 
+    @Field("raw_data_annotations")
+    private String rawDataAnnotations;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -239,6 +242,19 @@ public class RawData implements Serializable {
     public void setRawDataCoordinates(String rawDataCoordinates) {
         this.rawDataCoordinates = rawDataCoordinates;
     }
+
+    public String getRawDataAnnotations() {
+        return rawDataAnnotations;
+    }
+
+    public RawData rawDataAnnotations(String rawDataAnnotations) {
+        this.rawDataAnnotations = rawDataAnnotations;
+        return this;
+    }
+
+    public void setRawDataAnnotations(String rawDataAnnotations) {
+        this.rawDataAnnotations = rawDataAnnotations;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -278,6 +294,7 @@ public class RawData implements Serializable {
             ", rawDataData='" + getRawDataData() + "'" +
             ", rawDataDataContentType='" + getRawDataDataContentType() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
+            ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
             "}";
     }
 }

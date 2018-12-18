@@ -42,6 +42,7 @@
             <th jhiSortBy="rawDataSymbol"><span jhiTranslate="insightApp.rawData.rawDataSymbol">Raw Data Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="rawDataData"><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="rawDataCoordinates"><span jhiTranslate="insightApp.rawData.rawDataCoordinates">Raw Data Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="rawDataAnnotations"><span jhiTranslate="insightApp.rawData.rawDataAnnotations">Raw Data Annotations</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -63,6 +64,7 @@
                     <span *ngIf="rawData.rawDataData">{{rawData.rawDataDataContentType}}, {{byteSize(rawData.rawDataData)}}</span>
                 </td>
                 <td>{{rawData.rawDataCoordinates}}</td>
+                <td>{{rawData.rawDataAnnotations}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

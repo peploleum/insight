@@ -88,6 +88,9 @@ public class RawDataResourceIntTest {
     private static final String DEFAULT_RAW_DATA_COORDINATES = "AAAAAAAAAA";
     private static final String UPDATED_RAW_DATA_COORDINATES = "BBBBBBBBBB";
 
+    private static final String DEFAULT_RAW_DATA_ANNOTATIONS = "AAAAAAAAAA";
+    private static final String UPDATED_RAW_DATA_ANNOTATIONS = "BBBBBBBBBB";
+
     @Autowired
     private RawDataRepository rawDataRepository;
 
@@ -153,7 +156,8 @@ public class RawDataResourceIntTest {
             .rawDataSymbol(DEFAULT_RAW_DATA_SYMBOL)
             .rawDataData(DEFAULT_RAW_DATA_DATA)
             .rawDataDataContentType(DEFAULT_RAW_DATA_DATA_CONTENT_TYPE)
-            .rawDataCoordinates(DEFAULT_RAW_DATA_COORDINATES);
+            .rawDataCoordinates(DEFAULT_RAW_DATA_COORDINATES)
+            .rawDataAnnotations(DEFAULT_RAW_DATA_ANNOTATIONS);
         return rawData;
     }
 
@@ -191,6 +195,7 @@ public class RawDataResourceIntTest {
         assertThat(testRawData.getRawDataData()).isEqualTo(DEFAULT_RAW_DATA_DATA);
         assertThat(testRawData.getRawDataDataContentType()).isEqualTo(DEFAULT_RAW_DATA_DATA_CONTENT_TYPE);
         assertThat(testRawData.getRawDataCoordinates()).isEqualTo(DEFAULT_RAW_DATA_COORDINATES);
+        assertThat(testRawData.getRawDataAnnotations()).isEqualTo(DEFAULT_RAW_DATA_ANNOTATIONS);
 
         // Validate the RawData in Elasticsearch
         verify(mockRawDataSearchRepository, times(1)).save(testRawData);
@@ -258,7 +263,8 @@ public class RawDataResourceIntTest {
             .andExpect(jsonPath("$.[*].rawDataSymbol").value(hasItem(DEFAULT_RAW_DATA_SYMBOL.toString())))
             .andExpect(jsonPath("$.[*].rawDataDataContentType").value(hasItem(DEFAULT_RAW_DATA_DATA_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].rawDataData").value(hasItem(Base64Utils.encodeToString(DEFAULT_RAW_DATA_DATA))))
-            .andExpect(jsonPath("$.[*].rawDataCoordinates").value(hasItem(DEFAULT_RAW_DATA_COORDINATES.toString())));
+            .andExpect(jsonPath("$.[*].rawDataCoordinates").value(hasItem(DEFAULT_RAW_DATA_COORDINATES.toString())))
+            .andExpect(jsonPath("$.[*].rawDataAnnotations").value(hasItem(DEFAULT_RAW_DATA_ANNOTATIONS.toString())));
     }
     
     @Test
@@ -283,7 +289,8 @@ public class RawDataResourceIntTest {
             .andExpect(jsonPath("$.rawDataSymbol").value(DEFAULT_RAW_DATA_SYMBOL.toString()))
             .andExpect(jsonPath("$.rawDataDataContentType").value(DEFAULT_RAW_DATA_DATA_CONTENT_TYPE))
             .andExpect(jsonPath("$.rawDataData").value(Base64Utils.encodeToString(DEFAULT_RAW_DATA_DATA)))
-            .andExpect(jsonPath("$.rawDataCoordinates").value(DEFAULT_RAW_DATA_COORDINATES.toString()));
+            .andExpect(jsonPath("$.rawDataCoordinates").value(DEFAULT_RAW_DATA_COORDINATES.toString()))
+            .andExpect(jsonPath("$.rawDataAnnotations").value(DEFAULT_RAW_DATA_ANNOTATIONS.toString()));
     }
 
     @Test
@@ -315,7 +322,8 @@ public class RawDataResourceIntTest {
             .rawDataSymbol(UPDATED_RAW_DATA_SYMBOL)
             .rawDataData(UPDATED_RAW_DATA_DATA)
             .rawDataDataContentType(UPDATED_RAW_DATA_DATA_CONTENT_TYPE)
-            .rawDataCoordinates(UPDATED_RAW_DATA_COORDINATES);
+            .rawDataCoordinates(UPDATED_RAW_DATA_COORDINATES)
+            .rawDataAnnotations(UPDATED_RAW_DATA_ANNOTATIONS);
         RawDataDTO rawDataDTO = rawDataMapper.toDto(updatedRawData);
 
         restRawDataMockMvc.perform(put("/api/raw-data")
@@ -340,6 +348,7 @@ public class RawDataResourceIntTest {
         assertThat(testRawData.getRawDataData()).isEqualTo(UPDATED_RAW_DATA_DATA);
         assertThat(testRawData.getRawDataDataContentType()).isEqualTo(UPDATED_RAW_DATA_DATA_CONTENT_TYPE);
         assertThat(testRawData.getRawDataCoordinates()).isEqualTo(UPDATED_RAW_DATA_COORDINATES);
+        assertThat(testRawData.getRawDataAnnotations()).isEqualTo(UPDATED_RAW_DATA_ANNOTATIONS);
 
         // Validate the RawData in Elasticsearch
         verify(mockRawDataSearchRepository, times(1)).save(testRawData);
@@ -409,7 +418,8 @@ public class RawDataResourceIntTest {
             .andExpect(jsonPath("$.[*].rawDataSymbol").value(hasItem(DEFAULT_RAW_DATA_SYMBOL)))
             .andExpect(jsonPath("$.[*].rawDataDataContentType").value(hasItem(DEFAULT_RAW_DATA_DATA_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].rawDataData").value(hasItem(Base64Utils.encodeToString(DEFAULT_RAW_DATA_DATA))))
-            .andExpect(jsonPath("$.[*].rawDataCoordinates").value(hasItem(DEFAULT_RAW_DATA_COORDINATES)));
+            .andExpect(jsonPath("$.[*].rawDataCoordinates").value(hasItem(DEFAULT_RAW_DATA_COORDINATES)))
+            .andExpect(jsonPath("$.[*].rawDataAnnotations").value(hasItem(DEFAULT_RAW_DATA_ANNOTATIONS)));
     }
 
     @Test
