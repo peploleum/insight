@@ -31,6 +31,17 @@
         "otherModules": [],
         "enableTranslation": true,
         "nativeLanguage": "en",
-        "languages": ["en", "fr"]
+        "languages": ["en", "fr"],
+        "appsFolders": ["insight"],
+        "directoryPath": "../",
+        "clusteredDbApps": ["insight"],
+        "jwtSecretKey": "NWUyNGU4MTAwYWNlM2M4MzVmMzcyMzY2YTAwMjM4OWMwYzE5YmVjNDI3ZjQ0MmE5ZjJkM2ZhYmFkMzU1ZDk4YWVlZmUwMjk3MWNkYWI0MWU4MDI5ODZiZmVkOWY1MGViMjMyYw==",
+        "dockerRepositoryName": "192.168.65.0:8093",
+        "dockerPushCommand": "docker push",
+        "kubernetesNamespace": "insight",
+        "kubernetesServiceType": "NodePort",
+        "monitoring": "elk",
+        "istio": "no",
+        "istioRoute": false
     }
 }
