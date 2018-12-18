@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nifi-config
+  namespace: insight
+data:
+    nifi.uri: insight-nifi
+    nifi.port: "10514"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-rsyslog-server
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-rsyslog-server
+    spec:
+     containers:
+      - name: rsyslogserver
+        image: 192.168.65.5:8094/rsyslog/server:latest
+        ports:
+        - containerPort: 22 
+        - containerPort: 514
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "256Mi"
+            cpu: "1"
+        env:
+        - name: NIFI_URI
+          valueFrom:
+            configMapKeyRef:
+              name: nifi-config
+              key: nifi.uri
+        - name: NIFI_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: nifi-config
+              key: nifi.port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-rsyslog-server
+  namespace: insight
+spec:
+  selector:
+    app: insight-rsyslog-server
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 22 
+    targetPort: 22
+  - name: tcp 
+    port: 514 
+    targetPort: 514

@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-postgresql
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-postgresql
+    spec:
+      volumes:
+      - name: data
+        emptyDir: {}
+      containers:
+      - name: postgres
+        image: 192.168.65.5:8094/postgres:latest
+        imagePullPolicy: Always 
+        env:
+        - name: POSTGRES_USER
+          value: insight
+        - name: POSTGRES_PASSWORD
+          value:
+        ports:
+        - containerPort: 5432
+       # args:
+       #   - --auto-generate-certificates 
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/
+      #serviceAccountName: insight-postgresql 
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-postgresql
+  namespace: insight
+spec:
+  selector:
+    app: insight-postgresql
+  ports:
+  - port: 5432
+
