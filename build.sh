@@ -1,1 +1,1 @@
-mvn package -DskipTests -Pprod verify jib:dockerBuild
+sudo mvn package -DskipTests -Pprod verify jib:dockerBuild
