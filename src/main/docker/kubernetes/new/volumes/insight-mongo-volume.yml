@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: insight-storage-mongodb-data
+  namespace: insight
+  labels:
+    component: insight-mongodb-volume
+    role: data
+    type: local
+spec:
+  capacity:
+    storage: 200Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage 
+  local:
+    path: /tmp/kubernetes/INSIGHT/mongodb/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - kubernetes-node
+---

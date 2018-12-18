@@ -287,14 +287,9 @@ spec:
             name: insight-mongodb-init
         - name: configdir
           emptyDir: {}
-  volumeClaimTemplates:
-    - metadata:
-        name: datadir
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: "1Gi"
+        - name: datadir 
+          persistentVolumeClaim:
+            claimName: insight-storage-mongodb-claim
 ---
 # Headless service for DNS record
 apiVersion: v1

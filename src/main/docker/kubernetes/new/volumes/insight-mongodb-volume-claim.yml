@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: insight-storage-mongodb-claim
+  namespace: insight
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Gi
+  selector:
+    matchLabels:
+      component: insight-mongodb-volume
+---
