@@ -11,7 +11,7 @@ spec:
         app: insight-logstash
     spec:
       containers:
-      - image: logstash:latest
+      - image: peploleum/logstash:latest
         name: insight-logstash
         ports:
         - containerPort: 5000
