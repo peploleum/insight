@@ -29,7 +29,7 @@ spec:
             cpu: "1"
         volumeMounts:
         - name: storage
-          mountPath: /opt/nifi/nifi-1.7.1/conf/templates/
+          mountPath: /opt/nifi/nifi-current/conf/templates/
       volumes:
       - name: storage
         persistentVolumeClaim:
