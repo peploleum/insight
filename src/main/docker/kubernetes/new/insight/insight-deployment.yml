@@ -34,7 +34,7 @@ spec:
                 done
       containers:
       - name: insight-app
-        image: insight
+        image: peploleum/insight:latest
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: prod,swagger
