@@ -43,11 +43,12 @@ spec:
         - name: SPRING_DATA_MONGODB_URI
           value: "mongodb://insight-mongodb-0.insight-mongodb.insight:27017,insight-mongodb-1.insight-mongodb.insight:27017,insight-mongodb-2.insight-mongodb.insight:27017"
         - name: SPRING_DATA_JEST_URI
+#          value: http://insight-elasticsearch.insight.corp.capgemini.com:9200
           value: http://insight-elasticsearch.insight.svc.cluster.local:9200
-        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES
-          value: insight-elasticsearch.insight.svc.cluster.local:9300
-        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME
-          value: insight
+#        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES
+#          value: insight-elasticsearch.insight.svc.cluster.local:9300
+#        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME
+#          value: insight
         - name: JHIPSTER_METRICS_LOGS_ENABLED
           value: 'true'
         - name: JHIPSTER_LOGGING_LOGSTASH_ENABLED
