@@ -4,7 +4,7 @@
         <fa-icon [icon]="'rss-square'"></fa-icon>
         <span [style.fontWeight]="'bold'">{{rawData.rawDataSourceName}}</span> {{rawData.rawDataType}} {{rawData.rawDataSubType}} <span
         [style.font-size.px]="14">{{rawData.rawDataCreationDate |
-        date:'mediumDate'}}</span>
+        date:'short'}}</span>
     </p>
     <p>{{rawData.rawDataContent}}</p>
     <p>{{rawData.rawDataSourceUri}}</p>
