@@ -143,3 +143,4 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+**/janusgraph-0.2.2-hadoop2.zip
