@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yummy
+  namespace: insight
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yummy
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: yummy
+        version: "1.0"
+    spec:
+      initContainers:
+        - name: init-ds
+          image: busybox
+          command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                while true
+                do
+                  rt=$(nc -z -w 1 insight 8080)
+                  if [ $? -eq 0 ]; then
+                    echo "Insight is UP"
+                    break
+                  fi
+                  echo "Insight app is not yet reachable;sleep for 10s before retry"
+                  sleep 10
+                done
+      containers:
+      - name: yummy-app
+        image: peploleum/yummy:latest
+        env:
+         - name: SPRING_MAIN_WEB_APPLICATION_TYPE
+           value: none
+         - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS
+           value: insight-kafka:9092
+         - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES
+           value: insight-kafka
+         - name: SPRING_CLOUD_STREAM_BINDINGS_INPUT_BINDER
+           value: kafka
+         - name: SPRING_CLOUD_STREAM_BINDINGS_INPUT_DESTINATION
+           value: topicrss
+         - name: SPRING_CLOUD_STREAM_BINDINGS_OUTPUT_BINDER
+           value: kafka
+         - name: SPRING_CLOUD_STREAM_BINDINGS_OUTPUT_DESTINATION
+           value: topicrss
+         - name: FORMAT
+           value: dd/MM/YYYY hh:mm:ss
+         - name: FIXED_DELAY
+           value: '3000'
+         - name: URLNER
+           value: http://localhost:9999/opener
+         - name: URLINSIGHT
+           value: http://insight:8080/api/
+         - name: NER
+           value: 'false'
+         - name: JAVA_OPTS
+           value: " -Xmx2048m -Xms256m"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        ports:
+        - name: http
+          containerPort: 8081
