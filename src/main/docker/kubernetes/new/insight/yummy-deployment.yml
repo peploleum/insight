@@ -59,7 +59,7 @@ spec:
          - name: URLINSIGHT
            value: http://insight:8080/api/
          - name: NER
-           value: 'false'
+           value: 'true'
          - name: JAVA_OPTS
            value: " -Xmx2048m -Xms256m"
         resources:

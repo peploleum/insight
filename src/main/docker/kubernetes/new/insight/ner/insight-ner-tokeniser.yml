@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-ner-tokenizer
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-ner-tokenizer
+    spec:
+      containers:
+      - image: cwolff/opener-docker-tokenizer
+        name: insight-ner-tokenizer
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-ner-tokenizer
+  namespace: insight
+  labels:
+    app: insight-ner-tokenizer
+spec:
+  ports:
+  - name: http
+    port: 82
+    targetPort: 80
+  selector:
+    app: insight-ner-tokenizer
+---

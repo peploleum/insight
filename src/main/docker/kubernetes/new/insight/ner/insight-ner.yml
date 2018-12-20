@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-ner
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-ner
+    spec:
+      containers:
+      - image: cwolff/opener-docker-wrapper
+        name: insight-ner
+        ports:
+        - containerPort: 80
+        env:
+        - name: SANIC_OPENER_IDENTIFY_LANGUAGE_URL 
+          value: http://insight-ner-language-identifier:81
+        - name: SANIC_OPENER_TOKENIZE_URL
+          value: http://insight-ner-tokenizer:82
+        - name: SANIC_OPENER_POS_URL
+          value: http://insight-ner-pos-tagger:83
+        - name: SANIC_OPENER_NER_URL
+          value: http://insight-ner-docker:84
+        - name: SANIC_OPENER_KAF2JSON_URL
+          value: http://insight-ner-kaf2json:85
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-ner
+  namespace: insight
+  labels:
+    app: insight-ner
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: NodePort
+  selector:
+    app: insight-ner
+---
