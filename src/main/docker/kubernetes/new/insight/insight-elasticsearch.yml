@@ -12,7 +12,8 @@ spec:
     spec:
       volumes:
       - name: data
-        emptyDir: {}
+        persistentVolumeClaim:
+            claimName: insight-storage-elasticsearch-claim
       initContainers:
       - name: init-sysctl
         image: busybox
@@ -42,6 +43,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /usr/share/elasticsearch/data/
+
 ---
 apiVersion: v1
 kind: Service
