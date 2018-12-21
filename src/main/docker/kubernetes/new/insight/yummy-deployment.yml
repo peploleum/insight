@@ -55,11 +55,13 @@ spec:
          - name: FIXED_DELAY
            value: '3000'
          - name: URLNER
-           value: http://localhost:9999/opener
+           value: http://insight-ner:80/opener
          - name: URLINSIGHT
            value: http://insight:8080/api/
          - name: NER
-           value: 'true'
+           value: 'false'
+         - name: MOCK
+           value: 'false'
          - name: JAVA_OPTS
            value: " -Xmx2048m -Xms256m"
         resources:
