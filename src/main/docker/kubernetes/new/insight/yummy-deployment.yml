@@ -59,7 +59,7 @@ spec:
          - name: URLINSIGHT
            value: http://insight:8080/api/
          - name: NER
-           value: 'false'
+           value: 'true'
          - name: MOCK
            value: 'false'
          - name: JAVA_OPTS
