@@ -1,0 +1,29 @@
+version: '2'
+services:
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana-oss:6.4.2
+        container_name: kibana
+        ports:
+        - "5601:5601"
+        environment:
+        - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+
+    insight-elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.2
+        container_name: elasticsearch
+        environment:
+        - network.host=0.0.0.0
+        - discovery.type=single-node
+        - cluster.name=insight
+        ports:
+        - 9200:9200
+        - 9300:9300
+
+    insight-mongodb:
+        image: mongo:4.0.2
+        ports:
+        - "27017:27017"
+        # volumes:
+        #     - ~/volumes/jhipster/insight/mongodb/:/data/db/
+
