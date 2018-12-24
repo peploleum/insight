@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-ner-language-identifier
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-ner-language-identifier
+    spec:
+      containers:
+      - image: cwolff/opener-docker-language-identifier
+        name: insight-ner-language-identifier
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-ner-language-identifier
+  namespace: insight
+  labels:
+    app: insight-ner-language-identifier
+spec:
+  ports:
+  - name: http
+    port: 81
+    targetPort: 80
+  selector:
+    app: insight-ner-language-identifier
+---

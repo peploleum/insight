@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: insight-storage-elasticsearch-data
+  namespace: insight
+  labels:
+    component: insight-elasticsearch-volume
+    role: data
+    type: local
+spec:
+  capacity:
+    storage: 20Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage 
+  local:
+    path: /tmp/kubernetes/INSIGHT/elasticsearch/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - kubernetes-node
+---
