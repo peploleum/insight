@@ -131,6 +131,10 @@ public class KibanaObjectUtils {
         Set<EntityFieldMappingInfo> fieldMappingInfos = new HashSet<>();
         for (Field field : cl.getDeclaredFields()) {
             EntityFieldMappingInfo fieldInfo = null;
+            if (field.isAnnotationPresent(org.springframework.data.annotation.Id.class)) {
+                // exluding mongodb ids which are Strings
+                continue;
+            }
             if (field.getAnnotation(GeoPointField.class) != null) {
                 fieldInfo = new EntityFieldMappingInfo(field.getName(), EntityFieldType.GEOLOCATION);
             } else if (field.getAnnotation(org.springframework.data.elasticsearch.annotations.Field.class) != null) {

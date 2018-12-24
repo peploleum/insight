@@ -151,6 +151,7 @@ http://stackoverflow.com/questions/19562903/remove-padding-from-columns-in-boots
         }
     }
 }
+
 @include no-padding('left');
 @include no-padding('right');
 @include no-padding('top');
@@ -224,3 +225,26 @@ ui bootstrap tweaks
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+
+.flex-global-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-global-slave {
+    flex-grow: 0;
+}
+
+.flex-global-master {
+    flex-grow: 1;
+}
+
+.flex-container-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.ins-wrapper {
+    padding: 1.5%;
+    border: none;
+}

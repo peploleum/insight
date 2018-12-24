@@ -85,14 +85,14 @@ public class ElasticClientService {
             try {
                 Class<?> cl = Class.forName(bd.getBeanClassName());
                 Optional<KibanaObject> ip = this.kibanaIndexPattern.stream().filter(ko -> ko.getAttributes().getTitle().equals(cl.getSimpleName().toLowerCase())).findFirst();
-                if (ip.isPresent())
-                    ret.add(KibanaObjectUtils.getEntityMappingInfo(cl, ip.get()));
+                if (ip.isPresent()) {
+                    final EntityMappingInfo entityMappingInfo = KibanaObjectUtils.getEntityMappingInfo(cl, ip.get());
+                    ret.add(entityMappingInfo);
+                }
             } catch (ClassNotFoundException e) {
                 this.log.error("Erreur dans l'utilisation du classLoader sur un bean");
             }
         }
-
-
         return ret;
     }
 
