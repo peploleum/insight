@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { OSM, Vector as VectorSource } from 'ol/source';
@@ -10,7 +10,7 @@ import View from 'ol/View';
 @Component({
     selector: 'jhi-map',
     templateUrl: './map.component.html',
-    styles: []
+    styles: [':host { flex-grow: 1 }']
 })
 export class MapComponent implements OnInit, AfterViewInit {
     private circleImage = new CircleStyle({
@@ -83,7 +83,21 @@ export class MapComponent implements OnInit, AfterViewInit {
         })
     };
 
-    constructor() {}
+    computedHeight = 0;
+
+    @HostListener('window:resize', ['$event'])
+    onResize() {
+        this.internalOnResize();
+    }
+
+    internalOnResize() {
+        console.log('RESIZE');
+        console.log(this.er.nativeElement.offsetHeight);
+        this.computedHeight = this.er.nativeElement.offsetHeight;
+        this.cdr.detectChanges();
+    }
+
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef) {}
 
     ngOnInit() {}
 
@@ -200,6 +214,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                 center: [0, 0],
                 zoom: 2
             })
+        });
+        setTimeout(() => {
+            console.log('dispatch');
+            window.dispatchEvent(new Event('resize'));
         });
     }
 
