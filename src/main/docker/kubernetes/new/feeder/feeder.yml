@@ -30,10 +30,15 @@ spec:
         volumeMounts:
         - name: storage
           mountPath: /opt/nifi/nifi-current/conf/templates/
+        - name: storage-json
+          mountPath: /opt/nifi/nifi-current/json_twitter/
       volumes:
       - name: storage
         persistentVolumeClaim:
           claimName: insight-storage-nifi-claim
+      - name: storage-json
+        persistentVolumeClaim:
+          claimName: insight-storage-nifi-claim-json    
 ---
 apiVersion: v1
 kind: Service
