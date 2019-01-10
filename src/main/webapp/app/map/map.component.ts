@@ -1,9 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { OSM, Vector as VectorSource } from 'ol/source';
-import { GeoJSON } from 'ol/format';
-import { defaults as defaultControls } from 'ol/control.js';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit} from '@angular/core';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {OSM, Vector as VectorSource} from 'ol/source';
+import {GeoJSON} from 'ol/format';
+import {defaults as defaultControls} from 'ol/control.js';
 import Map from 'ol/Map';
 import View from 'ol/View';
 
@@ -16,7 +16,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     private circleImage = new CircleStyle({
         radius: 5,
         fill: null,
-        stroke: new Stroke({ color: 'red', width: 1 })
+        stroke: new Stroke({color: 'red', width: 1})
     });
     private styles = {
         Point: new Style({
@@ -85,9 +85,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     computedHeight = 0;
 
-    @HostListener('window:resize', ['$event'])
+    @HostListener('window:resize')
     onResize() {
         this.internalOnResize();
+    }
+
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef) {
     }
 
     internalOnResize() {
@@ -97,9 +100,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     ngAfterViewInit(): void {
         this.initMap();
