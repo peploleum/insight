@@ -21,6 +21,8 @@ import * as moment from 'moment';
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { MapModule } from 'app/map/map.module';
+import { SourcesModule } from 'app/sources/sources.module';
+import { NetworkModule } from 'app/network/network.module';
 
 @NgModule({
     imports: [
@@ -41,7 +43,9 @@ import { MapModule } from 'app/map/map.module';
         // jhipster-needle-angular-add-module JHipster will add new module here
         InsightEntityModule,
         DashboardModule,
-        MapModule
+        MapModule,
+        SourcesModule,
+        NetworkModule
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
     providers: [

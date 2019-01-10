@@ -19,6 +19,22 @@
                 </a>
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="/sources" (click)="collapseNavbar()">
+                    <span>
+                        <fa-icon [icon]="'plug'"></fa-icon>
+                        <span jhiTranslate="global.menu.sources">Sources</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="/network" (click)="collapseNavbar()">
+                    <span>
+                        <fa-icon [icon]="'sitemap'"></fa-icon>
+                        <span jhiTranslate="global.menu.network">Network</span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/dashboard" (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'chart-area'"></fa-icon>
