@@ -22,10 +22,10 @@ spec:
           protocol: UDP 
         resources:
           requests:
-            memory: "2048Mi"
+            memory: "3072Mi"
             cpu: "1"
           limits:
-            memory: "2048Mi"
+            memory: "3072Mi"
             cpu: "1"
         volumeMounts:
         - name: storage
