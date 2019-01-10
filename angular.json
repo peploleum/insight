@@ -37,7 +37,8 @@
             "spec": false
         },
         "@schematics/angular:module": {
-            "spec": true
+            "spec": true,
+            "flat": true
         }
     }
 }
