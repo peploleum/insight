@@ -298,3 +298,35 @@ Tag and push
 
 
 ### CRUD Vertices and Edges from java client
+
+## Installation de kafkatool sur le noeud master de kubernetes
+
+### Execute script kafkatool.sh
+
+    cd /home/capgemini/insight/src/main/docker/kubernetes/new/messagebroker/kafkatool/
+    
+    chmod 777 kafkatool.sh
+    
+    ./kafkatool.sh
+    
+    L'installeur se lance, faite la config par défaut.
+    
+### Paramétrage IP, DNS
+
+    Ouvrir le fichier hosts dans /etc sur le noeud master de kubernetes
+    
+      Exemple : 192.168.2.88  insight-kafka.insight.svc.cluster.local  insight-kafka
+      
+### Lancer dans la VM ubuntu avec ihm l'outil kafkatool
+
+    Créer la connection avec les paramètres suivants :
+        
+        Cluster name : kafka
+        
+        Kafka Cluster Version : 1.0
+        
+        ip : 192.168.2.89(IP de zookeeper)
+        
+        Port 2181 (Par défaut)
+        
+               
