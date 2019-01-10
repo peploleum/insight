@@ -35,6 +35,7 @@ spec:
   ports:
   - name: http
     port: 5601
+    nodePort: 30100 
     targetPort: 5601
   type: NodePort
   selector:
