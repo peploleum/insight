@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.2">
     <description></description>
-    <groupId>d0eae3ea-0167-1000-4c45-1921cb7662d1</groupId>
-    <name>TWITTER_TO_JSON</name>
+    <groupId>3ca2c085-0168-1000-87f5-eb972f935dcc</groupId>
+    <name>Twitter_to_kafka</name>
     <snippet>
         <processGroups>
-            <id>1f9c80ed-f316-327b-0000-000000000000</id>
-            <parentGroupId>4005430f-cd5f-3319-0000-000000000000</parentGroupId>
+            <id>171e6e93-7404-3a99-0000-000000000000</id>
+            <parentGroupId>230191f7-82eb-3238-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
                 <y>0.0</y>
@@ -14,13 +14,13 @@
             <comments></comments>
             <contents>
                 <connections>
-                    <id>b450016e-f391-3938-0000-000000000000</id>
-                    <parentGroupId>1f9c80ed-f316-327b-0000-000000000000</parentGroupId>
+                    <id>a391ed6a-eb17-35a8-0000-000000000000</id>
+                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
                     <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
                     <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>1f9c80ed-f316-327b-0000-000000000000</groupId>
-                        <id>395e8acb-e3e6-3c28-0000-000000000000</id>
+                        <groupId>171e6e93-7404-3a99-0000-000000000000</groupId>
+                        <id>64cae309-1f18-3105-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
@@ -32,40 +32,15 @@
                     <name></name>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>1f9c80ed-f316-327b-0000-000000000000</groupId>
-                        <id>29daa61c-a85d-3aab-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </source>
-                    <zIndex>0</zIndex>
-                </connections>
-                <connections>
-                    <id>b8c9c7a7-503f-39d0-0000-000000000000</id>
-                    <parentGroupId>1f9c80ed-f316-327b-0000-000000000000</parentGroupId>
-                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-                    <destination>
-                        <groupId>1f9c80ed-f316-327b-0000-000000000000</groupId>
-                        <id>aba85566-5d6d-3c24-0000-000000000000</id>
-                        <type>PROCESSOR</type>
-                    </destination>
-                    <flowFileExpiration>0 sec</flowFileExpiration>
-                    <labelIndex>1</labelIndex>
-                    <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
-                    <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
-                    <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
-                    <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
-                    <name></name>
-                    <selectedRelationships>success</selectedRelationships>
-                    <source>
-                        <groupId>1f9c80ed-f316-327b-0000-000000000000</groupId>
-                        <id>29daa61c-a85d-3aab-0000-000000000000</id>
+                        <groupId>171e6e93-7404-3a99-0000-000000000000</groupId>
+                        <id>29a8257a-246c-3a09-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <processors>
-                    <id>29daa61c-a85d-3aab-0000-000000000000</id>
-                    <parentGroupId>1f9c80ed-f316-327b-0000-000000000000</parentGroupId>
+                    <id>29a8257a-246c-3a09-0000-000000000000</id>
+                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
                     <position>
                         <x>314.00000123217933</x>
                         <y>108.99999936626767</y>
@@ -162,7 +137,7 @@
                             </entry>
                             <entry>
 <key>Terms to Filter On</key>
-<value>THOR</value>
+<value>e</value>
                             </entry>
                             <entry>
 <key>IDs to Follow</key>
@@ -182,13 +157,13 @@
                         <autoTerminate>false</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>STOPPED</state>
+                    <state>RUNNING</state>
                     <style/>
                     <type>org.apache.nifi.processors.twitter.GetTwitter</type>
                 </processors>
                 <processors>
-                    <id>395e8acb-e3e6-3c28-0000-000000000000</id>
-                    <parentGroupId>1f9c80ed-f316-327b-0000-000000000000</parentGroupId>
+                    <id>64cae309-1f18-3105-0000-000000000000</id>
+                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
                     <position>
                         <x>916.0000012321793</x>
                         <y>71.99999936626767</y>
@@ -361,13 +336,13 @@
                         <autoTerminate>true</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>STOPPED</state>
+                    <state>RUNNING</state>
                     <style/>
                     <type>org.apache.nifi.processors.kafka.pubsub.PublishKafka</type>
                 </processors>
                 <processors>
-                    <id>aba85566-5d6d-3c24-0000-000000000000</id>
-                    <parentGroupId>1f9c80ed-f316-327b-0000-000000000000</parentGroupId>
+                    <id>88667962-f78a-31b8-0000-000000000000</id>
+                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
                     <position>
                         <x>900.0000012321793</x>
                         <y>316.9999993662677</y>
@@ -478,7 +453,7 @@
                         <autoTerminate>true</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>STOPPED</state>
+                    <state>DISABLED</state>
                     <style/>
                     <type>org.apache.nifi.processors.standard.PutFile</type>
                 </processors>
@@ -487,5 +462,5 @@
             <variables/>
         </processGroups>
     </snippet>
-    <timestamp>12/21/2018 15:54:53 UTC</timestamp>
+    <timestamp>01/11/2019 15:02:07 UTC</timestamp>
 </template>
