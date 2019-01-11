@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
     EntityMappingInfo,
     IEntityMappingInfo,
     IKibanaDashboardGenerationParameters,
     KibanaDashboardReference
 } from 'app/dashboard/kibana-object.model';
-import {JhiAlertService} from 'ng-jhipster';
-import {DashboardService} from 'app/dashboard/dashboard.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {HttpResponse} from '@angular/common/http';
+import { JhiAlertService } from 'ng-jhipster';
+import { DashboardService } from 'app/dashboard/dashboard.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'ins-dashboard-manager',
     templateUrl: './dashboard-manager.component.html',
-    styles: []
+    styles: [':host { width:100% }']
 })
 export class DashboardManagerComponent implements OnInit {
     dashboardIds: KibanaDashboardReference[] = [];
@@ -23,8 +23,7 @@ export class DashboardManagerComponent implements OnInit {
     isEditing = false;
     mappingInfo: EntityMappingInfo[] = [];
 
-    constructor(private jhiAlertService: JhiAlertService, private dbs: DashboardService, private ds: DomSanitizer) {
-    }
+    constructor(private jhiAlertService: JhiAlertService, private dbs: DashboardService, private ds: DomSanitizer) {}
 
     ngOnInit() {
         this.dbs.getEntitiesSchema().subscribe(

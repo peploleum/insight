@@ -12,7 +12,8 @@ import { OrganisationService } from './organisation.service';
 
 @Component({
     selector: 'ins-organisation',
-    templateUrl: './organisation.component.html'
+    templateUrl: './organisation.component.html',
+    styles: [':host { width:100% }']
 })
 export class OrganisationComponent implements OnInit, OnDestroy {
     currentAccount: any;

@@ -294,3 +294,12 @@ body {
     width: 20%;
     overflow: auto;
 }
+
+.filler {
+    background-color: red;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-grow: 1;
+}

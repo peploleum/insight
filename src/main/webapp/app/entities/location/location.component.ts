@@ -12,7 +12,8 @@ import { LocationService } from './location.service';
 
 @Component({
     selector: 'ins-location',
-    templateUrl: './location.component.html'
+    templateUrl: './location.component.html',
+    styles: [':host { width:100% }']
 })
 export class LocationComponent implements OnInit, OnDestroy {
     currentAccount: any;

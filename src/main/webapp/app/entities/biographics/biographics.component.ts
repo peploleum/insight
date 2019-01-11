@@ -12,7 +12,8 @@ import { BiographicsService } from './biographics.service';
 
 @Component({
     selector: 'ins-biographics',
-    templateUrl: './biographics.component.html'
+    templateUrl: './biographics.component.html',
+    styles: [':host { width:100% }']
 })
 export class BiographicsComponent implements OnInit, OnDestroy {
     currentAccount: any;

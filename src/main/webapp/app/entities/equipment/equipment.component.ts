@@ -12,7 +12,8 @@ import { EquipmentService } from './equipment.service';
 
 @Component({
     selector: 'ins-equipment',
-    templateUrl: './equipment.component.html'
+    templateUrl: './equipment.component.html',
+    styles: [':host { width:100% }']
 })
 export class EquipmentComponent implements OnInit, OnDestroy {
     currentAccount: any;
