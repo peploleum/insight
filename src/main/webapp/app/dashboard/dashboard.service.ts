@@ -21,7 +21,7 @@ export class DashboardService {
         if (DEBUG_INFO_ENABLED) {
             this.kibanaUrl = 'http://' + window.location.hostname + ':5601/';
         } else {
-            this.kibanaUrl = 'http://10.65.34.149:30100';
+            this.kibanaUrl = 'http://10.65.34.149:30100/';
         }
     }
 
