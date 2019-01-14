@@ -1,7 +1,10 @@
-mkdir -p /tmp/kubernetes/INSIGHT/nifi/
-cp ./nifi/* /tmp/kubernetes/INSIGHT/nifi/
-mkdir -p /tmp/kubernetes/INSIGHT/master
-mkdir -p /tmp/kubernetes/INSIGHT/data
-mkdir -p /tmp/kubernetes/INSIGHT/logstash/
-cp ./logstash/* /tmp/kubernetes/INSIGHT/logstash/
-mkdir -p /tmp/kubernetes/INSIGHT/mongodb/
+mkdir -p /home/capgemini/binding/INSIGHT/nifi/
+cp ../feeder/* /home/capgemini/binding/INSIGHT/nifi/
+mkdir -p /home/capgemini/binding/INSIGHT/nifi/out
+mkdir -p /home/capgemini/binding/INSIGHT/master
+mkdir -p /home/capgemini/binding/INSIGHT/data
+mkdir -p /home/capgemini/binding/INSIGHT/logstash/
+cp ./logstash/* /home/capgemini/binding/INSIGHT/logstash/
+mkdir -p /home/capgemini/binding/INSIGHT/mongodb/
+mkdir -p /home/capgemini/binding/INSIGHT/graph
+cp ../graph/* /home/capgemini/binding/INSIGHT/graph/
