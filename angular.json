@@ -14,6 +14,8 @@
     "cli": {
         "packageManager": "npm"
     },
+    "styles": ["node_modules/vis/dist/vis.min.css"],
+    "scripts": ["node_modules/vis/dist/vis.min.js"],
     "schematics": {
         "@schematics/angular:component": {
             "inlineStyle": true,
