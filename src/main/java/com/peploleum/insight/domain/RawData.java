@@ -1,15 +1,13 @@
 package com.peploleum.insight.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -22,8 +20,6 @@ public class RawData implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Keyword)
-    @Mapping(mappingPath = "/mappings/asset_id_mapping.json")
     private String id;
 
     @NotNull
@@ -49,10 +45,10 @@ public class RawData implements Serializable {
     private String rawDataContent;
 
     @Field("raw_data_creation_date")
-    private LocalDate rawDataCreationDate;
+    private Instant rawDataCreationDate;
 
     @Field("raw_data_extracted_date")
-    private LocalDate rawDataExtractedDate;
+    private Instant rawDataExtractedDate;
 
     @Field("raw_data_symbol")
     private String rawDataSymbol;
@@ -169,29 +165,29 @@ public class RawData implements Serializable {
         this.rawDataContent = rawDataContent;
     }
 
-    public LocalDate getRawDataCreationDate() {
+    public Instant getRawDataCreationDate() {
         return rawDataCreationDate;
     }
 
-    public RawData rawDataCreationDate(LocalDate rawDataCreationDate) {
+    public RawData rawDataCreationDate(Instant rawDataCreationDate) {
         this.rawDataCreationDate = rawDataCreationDate;
         return this;
     }
 
-    public void setRawDataCreationDate(LocalDate rawDataCreationDate) {
+    public void setRawDataCreationDate(Instant rawDataCreationDate) {
         this.rawDataCreationDate = rawDataCreationDate;
     }
 
-    public LocalDate getRawDataExtractedDate() {
+    public Instant getRawDataExtractedDate() {
         return rawDataExtractedDate;
     }
 
-    public RawData rawDataExtractedDate(LocalDate rawDataExtractedDate) {
+    public RawData rawDataExtractedDate(Instant rawDataExtractedDate) {
         this.rawDataExtractedDate = rawDataExtractedDate;
         return this;
     }
 
-    public void setRawDataExtractedDate(LocalDate rawDataExtractedDate) {
+    public void setRawDataExtractedDate(Instant rawDataExtractedDate) {
         this.rawDataExtractedDate = rawDataExtractedDate;
     }
 

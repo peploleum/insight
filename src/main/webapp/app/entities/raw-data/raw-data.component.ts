@@ -12,8 +12,7 @@ import { RawDataService } from './raw-data.service';
 
 @Component({
     selector: 'ins-raw-data',
-    templateUrl: './raw-data.component.html',
-    styles: [':host { width:100% }']
+    templateUrl: './raw-data.component.html'
 })
 export class RawDataComponent implements OnInit, OnDestroy {
     currentAccount: any;

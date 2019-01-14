@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -52,8 +53,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         final RawDataDTO rawDataDTO = new RawDataDTO();
         rawDataDTO.setRawDataContent(UUID.randomUUID().toString() + " " + UUID.randomUUID().toString() + " " + UUID.randomUUID().toString());
         rawDataDTO.setRawDataName(name);
-        rawDataDTO.setRawDataCreationDate(LocalDate.now());
-        rawDataDTO.setRawDataExtractedDate(debut.toLocalDate());
+        rawDataDTO.setRawDataCreationDate(Instant.now());
+        rawDataDTO.setRawDataExtractedDate(Instant.now());
         rawDataDTO.setRawDataCoordinates(this.generateLatitude() + "," + this.generateLongitude());
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
         rawDataDTO.setRawDataSubType(type);

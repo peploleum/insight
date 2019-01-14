@@ -34,11 +34,11 @@
         },
         {
             "fieldName": "rawDataCreationDate",
-            "fieldType": "LocalDate"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "rawDataExtractedDate",
-            "fieldType": "LocalDate"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "rawDataSymbol",

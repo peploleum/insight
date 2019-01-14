@@ -1,5 +1,5 @@
 /* tslint:disable no-unused-expression */
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec, protractor, promise } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { EventComponentsPage, EventDeleteDialog, EventUpdatePage } from './event.page-object';
@@ -46,14 +46,14 @@ describe('Event e2e test', () => {
             eventUpdatePage.setEventNameInput('eventName'),
             eventUpdatePage.setEventDescriptionInput('eventDescription'),
             eventUpdatePage.eventTypeSelectLastOption(),
-            eventUpdatePage.setEventDateInput('2000-12-31'),
+            eventUpdatePage.setEventDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
             eventUpdatePage.setEventCoordinatesInput('eventCoordinates'),
             eventUpdatePage.setEventImageInput(absolutePath),
             eventUpdatePage.setEventSymbolInput('eventSymbol')
         ]);
         expect(await eventUpdatePage.getEventNameInput()).to.eq('eventName');
         expect(await eventUpdatePage.getEventDescriptionInput()).to.eq('eventDescription');
-        expect(await eventUpdatePage.getEventDateInput()).to.eq('2000-12-31');
+        expect(await eventUpdatePage.getEventDateInput()).to.contain('2001-01-01T02:30');
         expect(await eventUpdatePage.getEventCoordinatesInput()).to.eq('eventCoordinates');
         expect(await eventUpdatePage.getEventImageInput()).to.endsWith(fileNameToUpload);
         expect(await eventUpdatePage.getEventSymbolInput()).to.eq('eventSymbol');

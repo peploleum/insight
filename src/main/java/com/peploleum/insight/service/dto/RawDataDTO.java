@@ -1,6 +1,6 @@
 package com.peploleum.insight.service.dto;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,9 +27,9 @@ public class RawDataDTO implements Serializable {
 
     private String rawDataContent;
 
-    private LocalDate rawDataCreationDate;
+    private Instant rawDataCreationDate;
 
-    private LocalDate rawDataExtractedDate;
+    private Instant rawDataExtractedDate;
 
     private String rawDataSymbol;
 
@@ -104,19 +104,19 @@ public class RawDataDTO implements Serializable {
         this.rawDataContent = rawDataContent;
     }
 
-    public LocalDate getRawDataCreationDate() {
+    public Instant getRawDataCreationDate() {
         return rawDataCreationDate;
     }
 
-    public void setRawDataCreationDate(LocalDate rawDataCreationDate) {
+    public void setRawDataCreationDate(Instant rawDataCreationDate) {
         this.rawDataCreationDate = rawDataCreationDate;
     }
 
-    public LocalDate getRawDataExtractedDate() {
+    public Instant getRawDataExtractedDate() {
         return rawDataExtractedDate;
     }
 
-    public void setRawDataExtractedDate(LocalDate rawDataExtractedDate) {
+    public void setRawDataExtractedDate(Instant rawDataExtractedDate) {
         this.rawDataExtractedDate = rawDataExtractedDate;
     }
 

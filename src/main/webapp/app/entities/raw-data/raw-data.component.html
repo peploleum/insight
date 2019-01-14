@@ -25,11 +25,6 @@
         </div>
     </div>
     <br/>
-    <div *ngIf="rawData && rawData.length">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-    </div>
     <div class="table-responsive" *ngIf="rawData">
         <table class="table table-striped">
             <thead>
@@ -61,8 +56,8 @@
                 <td>{{rawData.rawDataSourceUri}}</td>
                 <td>{{rawData.rawDataSourceType}}</td>
                 <td>{{rawData.rawDataContent}}</td>
-                <td>{{rawData.rawDataCreationDate | date:'short'}}</td>
-                <td>{{rawData.rawDataExtractedDate | date:'short'}}</td>
+                <td>{{rawData.rawDataCreationDate | date:'medium'}}</td>
+                <td>{{rawData.rawDataExtractedDate | date:'medium'}}</td>
                 <td>{{rawData.rawDataSymbol}}</td>
                 <td>
                     <a *ngIf="rawData.rawDataData" (click)="openFile(rawData.rawDataDataContentType, rawData.rawDataData)" jhiTranslate="entity.action.open">open</a>

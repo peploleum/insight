@@ -27,8 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,8 +60,8 @@ public class EventResourceIntTest {
     private static final EventType DEFAULT_EVENT_TYPE = EventType.POLITICAL;
     private static final EventType UPDATED_EVENT_TYPE = EventType.DOMESTIC;
 
-    private static final LocalDate DEFAULT_EVENT_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_EVENT_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final Instant DEFAULT_EVENT_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_EVENT_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String DEFAULT_EVENT_COORDINATES = "AAAAAAAAAA";
     private static final String UPDATED_EVENT_COORDINATES = "BBBBBBBBBB";

@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { EventService } from 'app/entities/event/event.service';
 import { IEvent, Event, EventType } from 'app/shared/model/event.model';
 
@@ -42,7 +42,7 @@ describe('Service Tests', () => {
             it('should find an element', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        eventDate: currentDate.format(DATE_FORMAT)
+                        eventDate: currentDate.format(DATE_TIME_FORMAT)
                     },
                     elemDefault
                 );
@@ -59,7 +59,7 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         id: 'ID',
-                        eventDate: currentDate.format(DATE_FORMAT)
+                        eventDate: currentDate.format(DATE_TIME_FORMAT)
                     },
                     elemDefault
                 );
@@ -83,7 +83,7 @@ describe('Service Tests', () => {
                         eventName: 'BBBBBB',
                         eventDescription: 'BBBBBB',
                         eventType: 'BBBBBB',
-                        eventDate: currentDate.format(DATE_FORMAT),
+                        eventDate: currentDate.format(DATE_TIME_FORMAT),
                         eventCoordinates: 'BBBBBB',
                         eventImage: 'BBBBBB',
                         eventSymbol: 'BBBBBB'
@@ -111,7 +111,7 @@ describe('Service Tests', () => {
                         eventName: 'BBBBBB',
                         eventDescription: 'BBBBBB',
                         eventType: 'BBBBBB',
-                        eventDate: currentDate.format(DATE_FORMAT),
+                        eventDate: currentDate.format(DATE_TIME_FORMAT),
                         eventCoordinates: 'BBBBBB',
                         eventImage: 'BBBBBB',
                         eventSymbol: 'BBBBBB'

@@ -29,7 +29,7 @@ entity Event {
 	eventName String required,
     eventDescription String
     eventType EventType,
-    eventDate LocalDate,
+    eventDate Instant,
     eventCoordinates String,
     eventImage ImageBlob,
     eventSymbol String
@@ -52,8 +52,8 @@ entity RawData {
     rawDataSourceUri String,
     rawDataSourceType String,
     rawDataContent String,
-    rawDataCreationDate LocalDate,
-    rawDataExtractedDate LocalDate,
+    rawDataCreationDate Instant,
+    rawDataExtractedDate Instant,
     rawDataSymbol String,
     rawDataData Blob,
     rawDataCoordinates String,

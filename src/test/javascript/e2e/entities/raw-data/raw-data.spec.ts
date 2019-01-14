@@ -1,5 +1,5 @@
 /* tslint:disable no-unused-expression */
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec, protractor, promise } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { RawDataComponentsPage, RawDataDeleteDialog, RawDataUpdatePage } from './raw-data.page-object';
@@ -50,8 +50,8 @@ describe('RawData e2e test', () => {
             rawDataUpdatePage.setRawDataSourceUriInput('rawDataSourceUri'),
             rawDataUpdatePage.setRawDataSourceTypeInput('rawDataSourceType'),
             rawDataUpdatePage.setRawDataContentInput('rawDataContent'),
-            rawDataUpdatePage.setRawDataCreationDateInput('2000-12-31'),
-            rawDataUpdatePage.setRawDataExtractedDateInput('2000-12-31'),
+            rawDataUpdatePage.setRawDataCreationDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+            rawDataUpdatePage.setRawDataExtractedDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
             rawDataUpdatePage.setRawDataSymbolInput('rawDataSymbol'),
             rawDataUpdatePage.setRawDataDataInput(absolutePath),
             rawDataUpdatePage.setRawDataCoordinatesInput('rawDataCoordinates'),
@@ -64,8 +64,8 @@ describe('RawData e2e test', () => {
         expect(await rawDataUpdatePage.getRawDataSourceUriInput()).to.eq('rawDataSourceUri');
         expect(await rawDataUpdatePage.getRawDataSourceTypeInput()).to.eq('rawDataSourceType');
         expect(await rawDataUpdatePage.getRawDataContentInput()).to.eq('rawDataContent');
-        expect(await rawDataUpdatePage.getRawDataCreationDateInput()).to.eq('2000-12-31');
-        expect(await rawDataUpdatePage.getRawDataExtractedDateInput()).to.eq('2000-12-31');
+        expect(await rawDataUpdatePage.getRawDataCreationDateInput()).to.contain('2001-01-01T02:30');
+        expect(await rawDataUpdatePage.getRawDataExtractedDateInput()).to.contain('2001-01-01T02:30');
         expect(await rawDataUpdatePage.getRawDataSymbolInput()).to.eq('rawDataSymbol');
         expect(await rawDataUpdatePage.getRawDataDataInput()).to.endsWith(fileNameToUpload);
         expect(await rawDataUpdatePage.getRawDataCoordinatesInput()).to.eq('rawDataCoordinates');

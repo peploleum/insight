@@ -1,6 +1,6 @@
 package com.peploleum.insight.service.dto;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class EventDTO implements Serializable {
 
     private EventType eventType;
 
-    private LocalDate eventDate;
+    private Instant eventDate;
 
     private String eventCoordinates;
 
@@ -61,11 +61,11 @@ public class EventDTO implements Serializable {
         this.eventType = eventType;
     }
 
-    public LocalDate getEventDate() {
+    public Instant getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(Instant eventDate) {
         this.eventDate = eventDate;
     }
 

@@ -59,7 +59,7 @@ export class EventService {
 
     protected convertDateFromClient(event: IEvent): IEvent {
         const copy: IEvent = Object.assign({}, event, {
-            eventDate: event.eventDate != null && event.eventDate.isValid() ? event.eventDate.format(DATE_FORMAT) : null
+            eventDate: event.eventDate != null && event.eventDate.isValid() ? event.eventDate.toJSON() : null
         });
         return copy;
     }

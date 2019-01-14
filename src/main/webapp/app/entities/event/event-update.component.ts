@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiDataUtils } from 'ng-jhipster';
 
 import { IEvent } from 'app/shared/model/event.model';
@@ -15,7 +16,7 @@ import { EventService } from './event.service';
 export class EventUpdateComponent implements OnInit {
     event: IEvent;
     isSaving: boolean;
-    eventDateDp: any;
+    eventDate: string;
 
     constructor(
         protected dataUtils: JhiDataUtils,
@@ -28,6 +29,7 @@ export class EventUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ event }) => {
             this.event = event;
+            this.eventDate = this.event.eventDate != null ? this.event.eventDate.format(DATE_TIME_FORMAT) : null;
         });
     }
 
@@ -53,6 +55,7 @@ export class EventUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.event.eventDate = this.eventDate != null ? moment(this.eventDate, DATE_TIME_FORMAT) : null;
         if (this.event.id !== undefined) {
             this.subscribeToSaveResponse(this.eventService.update(this.event));
         } else {

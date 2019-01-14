@@ -19,7 +19,7 @@
         },
         {
             "fieldName": "eventDate",
-            "fieldType": "LocalDate"
+            "fieldType": "Instant"
         },
         {
             "fieldName": "eventCoordinates",

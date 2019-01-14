@@ -60,12 +60,10 @@ export class RawDataService {
     protected convertDateFromClient(rawData: IRawData): IRawData {
         const copy: IRawData = Object.assign({}, rawData, {
             rawDataCreationDate:
-                rawData.rawDataCreationDate != null && rawData.rawDataCreationDate.isValid()
-                    ? rawData.rawDataCreationDate.format(DATE_FORMAT)
-                    : null,
+                rawData.rawDataCreationDate != null && rawData.rawDataCreationDate.isValid() ? rawData.rawDataCreationDate.toJSON() : null,
             rawDataExtractedDate:
                 rawData.rawDataExtractedDate != null && rawData.rawDataExtractedDate.isValid()
-                    ? rawData.rawDataExtractedDate.format(DATE_FORMAT)
+                    ? rawData.rawDataExtractedDate.toJSON()
                     : null
         });
         return copy;

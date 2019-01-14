@@ -27,8 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,11 +71,11 @@ public class RawDataResourceIntTest {
     private static final String DEFAULT_RAW_DATA_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_RAW_DATA_CONTENT = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_RAW_DATA_CREATION_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_RAW_DATA_CREATION_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final Instant DEFAULT_RAW_DATA_CREATION_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_RAW_DATA_CREATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final LocalDate DEFAULT_RAW_DATA_EXTRACTED_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_RAW_DATA_EXTRACTED_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final Instant DEFAULT_RAW_DATA_EXTRACTED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_RAW_DATA_EXTRACTED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String DEFAULT_RAW_DATA_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_RAW_DATA_SYMBOL = "BBBBBBBBBB";

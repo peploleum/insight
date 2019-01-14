@@ -46,7 +46,7 @@
                 <td>{{event.eventName}}</td>
                 <td>{{event.eventDescription}}</td>
                 <td jhiTranslate="{{'insightApp.EventType.' + event.eventType}}">{{event.eventType}}</td>
-                <td>{{event.eventDate | date:'mediumDate'}}</td>
+                <td>{{event.eventDate | date:'medium'}}</td>
                 <td>{{event.eventCoordinates}}</td>
                 <td>
                     <a *ngIf="event.eventImage" (click)="openFile(event.eventImageContentType, event.eventImage)">

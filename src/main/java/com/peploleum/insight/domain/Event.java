@@ -1,15 +1,13 @@
 package com.peploleum.insight.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.EventType;
@@ -24,8 +22,6 @@ public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Keyword)
-    @Mapping(mappingPath = "/mappings/asset_id_mapping.json")
     private String id;
 
     @NotNull
@@ -39,7 +35,7 @@ public class Event implements Serializable {
     private EventType eventType;
 
     @Field("event_date")
-    private LocalDate eventDate;
+    private Instant eventDate;
 
     @Field("event_coordinates")
     private String eventCoordinates;
@@ -101,16 +97,16 @@ public class Event implements Serializable {
         this.eventType = eventType;
     }
 
-    public LocalDate getEventDate() {
+    public Instant getEventDate() {
         return eventDate;
     }
 
-    public Event eventDate(LocalDate eventDate) {
+    public Event eventDate(Instant eventDate) {
         this.eventDate = eventDate;
         return this;
     }
 
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(Instant eventDate) {
         this.eventDate = eventDate;
     }
 

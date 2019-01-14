@@ -52,22 +52,16 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataCreationDate" for="field_rawDataCreationDate">Raw Data Creation Date</label>
-                    <div class="input-group">
-                        <input id="field_rawDataCreationDate" type="text" class="form-control" name="rawDataCreationDate" ngbDatepicker  #rawDataCreationDateDp="ngbDatepicker" [(ngModel)]="rawData.rawDataCreationDate"
+                    <div class="d-flex">
+                        <input id="field_rawDataCreationDate" type="datetime-local" class="form-control" name="rawDataCreationDate" [(ngModel)]="rawDataCreationDate"
                         />
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="rawDataCreationDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataExtractedDate" for="field_rawDataExtractedDate">Raw Data Extracted Date</label>
-                    <div class="input-group">
-                        <input id="field_rawDataExtractedDate" type="text" class="form-control" name="rawDataExtractedDate" ngbDatepicker  #rawDataExtractedDateDp="ngbDatepicker" [(ngModel)]="rawData.rawDataExtractedDate"
+                    <div class="d-flex">
+                        <input id="field_rawDataExtractedDate" type="datetime-local" class="form-control" name="rawDataExtractedDate" [(ngModel)]="rawDataExtractedDate"
                         />
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-secondary" (click)="rawDataExtractedDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
-                        </span>
                     </div>
                 </div>
                 <div class="form-group">
