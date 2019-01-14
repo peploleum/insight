@@ -34,7 +34,7 @@ spec:
                 done
       containers:
       - name: yummy-app
-        image: peploleum/yummy:latest
+        image: peploleum/yummy:1.0.0
         env:
          - name: SPRING_MAIN_WEB_APPLICATION_TYPE
            value: none

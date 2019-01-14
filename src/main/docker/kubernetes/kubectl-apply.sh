@@ -7,6 +7,7 @@ kubectl apply -f volumes/
 #kubectl apply -f insight/
 #kubectl apply -f messagebroker/
 #kubectl apply -f console/
+#kubectl apply -f feeder/
 #kubectl apply -f insight/ner/insight-ner-language-identifier.yml
 #kubectl apply -f insight/ner/insight-ner-tokeniser.yml
 #kubectl apply -f insight/ner/insight-ner-pos-tagger.yml

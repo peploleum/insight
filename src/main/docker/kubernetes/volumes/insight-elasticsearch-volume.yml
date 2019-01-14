@@ -15,7 +15,7 @@ spec:
     - ReadWriteOnce
   storageClassName: local-storage 
   local:
-    path: /tmp/kubernetes/INSIGHT/elasticsearch/
+    path: /home/capgemini/binding/INSIGHT/elasticsearch/
   nodeAffinity:
     required:
       nodeSelectorTerms:

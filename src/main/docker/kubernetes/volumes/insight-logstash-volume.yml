@@ -15,7 +15,7 @@ spec:
     - ReadWriteOnce
   storageClassName: local-storage 
   local:
-    path: /tmp/kubernetes/INSIGHT/logstash/
+    path: /home/capgemini/binding/INSIGHT/logstash/
   nodeAffinity:
     required:
       nodeSelectorTerms:

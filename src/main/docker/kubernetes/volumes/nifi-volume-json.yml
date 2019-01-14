@@ -15,7 +15,7 @@ spec:
     - ReadWriteOnce
   storageClassName: local-storage 
   local:
-    path: /tmp/kubernetes/INSIGHT/nifi/out
+    path: /home/capgemini/binding/INSIGHT/nifi/out
   nodeAffinity:
     required:
       nodeSelectorTerms:
