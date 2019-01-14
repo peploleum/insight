@@ -22,7 +22,7 @@ spec:
               set -x
               sleep 90 && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml
       containers:
-      - name: nifi 
+      - name: janusgraph 
         image: janusgraph:0.2.2-hadoop2
         ports:
         - containerPort: 8182
