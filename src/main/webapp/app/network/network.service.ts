@@ -12,31 +12,49 @@ import { map } from 'rxjs/internal/operators';
 export class NetworkService {
     private resourceUrl;
 
-    static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): Node {
-        return {
-            id: id,
-            label: label,
-            title: title,
-            image: imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType),
-            color: {
-                border: NetworkService.getNodeColor(objectType)
-            },
-            borderWidth: 3,
-            font: {
-                color: 'white'
-            }
+    static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): any {
+        const node = {};
+        node['id'] = id;
+        node['label'] = label;
+        node['title'] = title;
+        node['image'] = imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType);
+        node['color'] = {
+            border: NetworkService.getNodeColor(objectType)
         };
+        node['borderWidth'] = 3;
+        node['font'] = {
+            color: 'white'
+        };
+        return node;
+        // return {
+        //    id: id,
+        //    label: label,
+        //    title: title,
+        //    image: imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType),
+        //    color: {
+        //        border: NetworkService.getNodeColor(objectType)
+        //    },
+        //    borderWidth: 3,
+        //    font: {
+        //        color: 'white'
+        //    }
+        // };
     }
 
     static getEdgeCollection(idOrigin: IdType, nodes: Node[]): Edge[] {
         return nodes.map(node => NetworkService.getEdgeDto(idOrigin, node.id));
     }
 
-    static getEdgeDto(from: IdType, to: IdType): Edge {
-        return {
-            from: from,
-            to: to
-        };
+    static getEdgeDto(from: IdType, to: IdType): any {
+        const edge = {};
+        edge['from'] = from;
+        edge['to'] = to;
+        return edge;
+
+        // return {
+        //    from: from,
+        //    to: to
+        // };
     }
 
     static getNodeColor(objectType: string): string {
@@ -102,10 +120,11 @@ export class NetworkService {
 
     getGraphData(idOrigin: IdType): Observable<any> {
         const headers = new HttpHeaders();
-        return this.http.get(`${this.resourceUrl}api/traversal/mock/${idOrigin}`, { headers, observe: 'response' }).pipe(
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
+        return this.http.get(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
             map(res => {
                 const data = {};
-                data['nodes'] = res.body.map(item => NetworkService.getNodeDto(item.label, item.type, <IdType>item.id));
+                data['nodes'] = (<{}[]>res.body).map(item => NetworkService.getNodeDto(item['label'], item['type'], <IdType>item['id']));
                 data['edges'] = NetworkService.getEdgeCollection(idOrigin, data['nodes']);
                 return data;
             })
