@@ -12,7 +12,8 @@ import { EventService } from './event.service';
 
 @Component({
     selector: 'ins-event',
-    templateUrl: './event.component.html'
+    templateUrl: './event.component.html',
+    styles: [':host { width:100% }']
 })
 export class EventComponent implements OnInit, OnDestroy {
     currentAccount: any;
