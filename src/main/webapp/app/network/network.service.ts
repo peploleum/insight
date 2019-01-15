@@ -2,17 +2,18 @@
  * Created by gFolgoas on 14/01/2019.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
 import { Edge, IdType, Node } from 'vis';
 import { map } from 'rxjs/internal/operators';
+import { INodeDTO } from 'app/shared/model/node.model';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
     private resourceUrl;
 
-    static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): any {
+    public static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): any {
         const node = {};
         node['id'] = id;
         node['label'] = label;
@@ -130,7 +131,14 @@ export class NetworkService {
             })
         );
     }
+
+    getNodeProperties(idOrigin: IdType): Observable<HttpResponse<INodeDTO>> {
+        const headers = new HttpHeaders();
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties';
+        return this.http.get<INodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' });
+    }
 }
+
 export const IMAGE_URL_BIO = 'https://img.icons8.com/color/1600/person-male.png';
 export const IMAGE_URL_EVENT =
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Explosion-155624_icon.svg/2000px-Explosion-155624_icon.svg.png';

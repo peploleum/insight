@@ -2,7 +2,8 @@ import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChi
 import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { NodeDTO } from 'app/shared/model/node.model';
 
 @Component({
     selector: 'ins-network',
@@ -23,14 +24,11 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     ngAfterViewInit() {
         this.initNetwork();
         this.initNetworkEventListener();
-        this.activatedRoute.data.subscribe(({ idOrigin }) => {
-            console.log('ROUTING DONE');
-            console.log('ROUTING DONE');
-            console.log('ROUTING DONE');
-            console.log('ROUTING DONE');
-            console.log(idOrigin);
-            if (idOrigin) {
-                this.getNodesNeighbours([idOrigin]);
+        this.activatedRoute.data.subscribe(({ originNode }) => {
+            if (originNode) {
+                const theNode: NodeDTO = <NodeDTO>originNode;
+                this.getNodesNeighbours([theNode.id]);
+                this.addNodes([NetworkService.getNodeDto(theNode.label, theNode.type, theNode.id, theNode.label)], []);
             } else {
                 this.getMockData();
             }
