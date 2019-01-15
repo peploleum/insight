@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChi
 import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
     selector: 'ins-network',
@@ -24,6 +24,11 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.initNetwork();
         this.initNetworkEventListener();
         this.activatedRoute.data.subscribe(({ idOrigin }) => {
+            console.log('ROUTING DONE');
+            console.log('ROUTING DONE');
+            console.log('ROUTING DONE');
+            console.log('ROUTING DONE');
+            console.log(idOrigin);
             if (idOrigin) {
                 this.getNodesNeighbours([idOrigin]);
             } else {

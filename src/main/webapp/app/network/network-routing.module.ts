@@ -5,18 +5,21 @@ import { NetworkService } from './network.service';
 import { Observable, of } from 'rxjs/index';
 
 @Injectable({ providedIn: 'root' })
-export class NetworkResolve implements Resolve<any> {
+export class NetworkResolve implements Resolve<string> {
     constructor(private service: NetworkService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<string> {
+        console.log('ROUTING');
+        console.log('ROUTING');
+        console.log('ROUTING');
+        console.log('ROUTING');
+        console.log('ROUTING');
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.getGraphData(id);
+            return of(id);
+        } else {
+            return of(null);
         }
-        return of({
-            nodes: [],
-            edges: []
-        });
     }
 }
 
