@@ -317,3 +317,11 @@ Custom network css
     top: 100px;
     background-color: white;
 }
+
+.popover-menu-item {
+    cursor: pointer;
+}
+
+.popover-menu-item:hover {
+    background-color: #f2f2f2;
+}

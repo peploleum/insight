@@ -2,17 +2,15 @@
  * Created by gFolgoas on 14/01/2019.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { SERVER_API_URL } from 'app/app.constants';
+import { HttpClient } from '@angular/common/http';
+import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
-import { Node, Edge, IdType } from 'vis';
+import { Edge, IdType, Node } from 'vis';
 import { map } from 'rxjs/internal/operators';
-
-type EntityResponseType = HttpResponse<string[]>;
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
-    private resourceUrl = SERVER_API_URL + '/api/';
+    private resourceUrl;
 
     static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): Node {
         return {
@@ -30,7 +28,11 @@ export class NetworkService {
         };
     }
 
-    static getEdgeDto(from: IdType, to?: IdType): Edge {
+    static getEdgeCollection(idOrigin: IdType, nodes: Node[]): Edge[] {
+        return nodes.map(node => NetworkService.getEdgeDto(idOrigin, node.id));
+    }
+
+    static getEdgeDto(from: IdType, to: IdType): Edge {
         return {
             from: from,
             to: to
@@ -66,9 +68,15 @@ export class NetworkService {
         }
     }
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+        if (DEBUG_INFO_ENABLED) {
+            this.resourceUrl = 'http://' + window.location.hostname + ':8090/';
+        } else {
+            this.resourceUrl = 'http://10.65.34.149:30200/';
+        }
+    }
 
-    getGraphData(): Observable<any> {
+    getMockGraphData(): Observable<any> {
         return of(MOCK_GRAPH_DATA).pipe(
             map(data => {
                 data['nodes'] = data['nodes'].map(item =>
@@ -79,22 +87,33 @@ export class NetworkService {
             })
         );
     }
+
+    getGraphData(idOrigin: IdType): Observable<any> {
+        return this.http.get(`${this.resourceUrl}/api/traversal/mock/${idOrigin}`, { observe: 'response' }).pipe(
+            map(res => {
+                const data = {};
+                data['nodes'] = res.body.map(item => NetworkService.getNodeDto(item.label, item.type, <IdType>item.id));
+                data['edges'] = NetworkService.getEdgeCollection(idOrigin, data['nodes']);
+                return data;
+            })
+        );
+    }
 }
 export const IMAGE_URL_PERSONNE = 'https://parismatch.be/app/uploads/2018/04/Macaca_nigra_self-portrait_large-e1524567086123-1100x715.jpg';
 export const IMAGE_URL_EVENT = 'https://fridg-front.s3.amazonaws.com/media/products/banane_DAC0XAQ.jpg';
 export const IMAGE_URL_DEFAULT = 'http://www.stickersnews.fr/7212-10878-thickbox/sticker-enfant-arbre-animaux-de-la-jungle.jpg';
 export const MOCK_GRAPH_DATA = {
     nodes: [
-        { id: 1, label: 'node 1', title: 'bidou 1', image: '', type: 'PERSONNE' },
-        { id: 2, label: 'node 2', title: 'bidou 2', image: '', type: 'PERSONNE' },
-        { id: 3, label: 'node 3', title: 'bidou 3', image: '', type: 'EVENT' },
-        { id: 4, label: 'node 4', title: 'bidou 4', image: '', type: 'PERSONNE' },
-        { id: 5, label: 'node 5', title: 'bidou 5', image: '', type: 'EVENT' },
-        { id: 6, label: 'node 6', title: 'bidou 6', image: '', type: 'EVENT' },
-        { id: 7, label: 'node 7', title: 'bidou 7', image: '', type: 'PERSONNE' },
-        { id: 8, label: 'node 8', title: 'bidou 8', image: '', type: 'EVENT' },
-        { id: 9, label: 'node 9', title: 'bidou 9', image: '', type: 'LOCATION' },
-        { id: 10, label: 'node 10', title: 'bidou 10', image: '', type: 'LOCATION' }
+        { id: 1, label: 'node 1', title: 'bidou 1', type: 'PERSONNE' },
+        { id: 2, label: 'node 2', title: 'bidou 2', type: 'PERSONNE' },
+        { id: 3, label: 'node 3', title: 'bidou 3', type: 'EVENT' },
+        { id: 4, label: 'node 4', title: 'bidou 4', type: 'PERSONNE' },
+        { id: 5, label: 'node 5', title: 'bidou 5', type: 'EVENT' },
+        { id: 6, label: 'node 6', title: 'bidou 6', type: 'EVENT' },
+        { id: 7, label: 'node 7', title: 'bidou 7', type: 'PERSONNE' },
+        { id: 8, label: 'node 8', title: 'bidou 8', type: 'EVENT' },
+        { id: 9, label: 'node 9', title: 'bidou 9', type: 'LOCATION' },
+        { id: 10, label: 'node 10', title: 'bidou 10', type: 'LOCATION' }
     ],
     edges: [
         { from: 1, to: 3 },

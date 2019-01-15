@@ -1,6 +1,7 @@
 import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DataSet, Edge, Network, Node, Options } from 'vis';
+import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
+import { Subscription } from 'rxjs/index';
 
 @Component({
     selector: 'ins-network',
@@ -12,13 +13,17 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     network: Network;
     networkData: any = { 'network-items': {} };
 
+    graphDataSubscription: Subscription;
+    nodeAddSubscription: Subscription;
+
     constructor(private _ns: NetworkService) {}
 
     ngOnInit() {}
 
     ngAfterViewInit() {
         this.initNetwork();
-        this._ns.getGraphData().subscribe(data => {
+        this.initNetworkEventListener();
+        this.graphDataSubscription = this._ns.getMockGraphData().subscribe(data => {
             this.addNodes(data['nodes'], data['edges']);
         });
     }
@@ -46,7 +51,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                     keyboard: {
                         enabled: true
                     },
-                    multiselect: true
+                    multiselect: true,
+                    navigationButtons: true
                 },
                 nodes: {
                     shape: 'circularImage'
@@ -56,10 +62,38 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         }
     }
 
+    initNetworkEventListener() {
+        this.network.on('hoverNode', node => {
+            console.log(node);
+        });
+        this.network.on('selectNode', (event, properties) => {
+            this.getNodesNeighbours(properties.nodes);
+        });
+        this.networkData['network-items']['nodes'].on('add', (event, properties) => {
+            console.log(properties);
+        });
+    }
+
+    getNodesNeighbours(idOrigins: string[]) {
+        for (let i of idOrigins) {
+            this._ns.getGraphData(i).subscribe(data => {
+                this.addNodes(data['nodes'], data['edges']);
+            });
+        }
+    }
+
     addNodes(nodes: Node[], edges: Edge[]) {
         this.network.storePositions();
         this.networkData['network-items']['nodes'].add(nodes);
         this.networkData['network-items']['edges'].add(edges);
+    }
+
+    removeNodes(ids: IdType[]) {
+        this.networkData['network-items']['nodes'].remove(ids);
+        const removableEdges: Edge[] = this.networkData['network-items']['edges'].get().filter((edge: Edge) => {
+            return ids.indexOf(edge.from) === -1 || ids.indexOf(edge.to) === -1;
+        });
+        this.networkData['network-items']['edges'].remove(removableEdges);
     }
 
     onActionReceived(action: string) {
