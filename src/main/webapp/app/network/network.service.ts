@@ -2,7 +2,7 @@
  * Created by gFolgoas on 14/01/2019.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
 import { Edge, IdType, Node } from 'vis';
@@ -89,7 +89,8 @@ export class NetworkService {
     }
 
     getGraphData(idOrigin: IdType): Observable<any> {
-        return this.http.get(`${this.resourceUrl}/api/traversal/mock/${idOrigin}`, { observe: 'response' }).pipe(
+        const headers = new HttpHeaders();
+        return this.http.get(`${this.resourceUrl}api/traversal/mock/${idOrigin}`, { headers, observe: 'response' }).pipe(
             map(res => {
                 const data = {};
                 data['nodes'] = res.body.map(item => NetworkService.getNodeDto(item.label, item.type, <IdType>item.id));

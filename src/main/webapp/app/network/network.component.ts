@@ -14,7 +14,6 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     networkData: any = { 'network-items': {} };
 
     graphDataSubscription: Subscription;
-    nodeAddSubscription: Subscription;
 
     constructor(private _ns: NetworkService) {}
 
@@ -66,7 +65,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.network.on('hoverNode', node => {
             console.log(node);
         });
-        this.network.on('selectNode', (event, properties) => {
+        this.network.on('selectNode', properties => {
             this.getNodesNeighbours(properties.nodes);
         });
         this.networkData['network-items']['nodes'].on('add', (event, properties) => {
