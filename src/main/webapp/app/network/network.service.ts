@@ -2,8 +2,8 @@
  * Created by gFolgoas on 14/01/2019.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
-import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
 import { Edge, IdType, Node } from 'vis';
 import { map } from 'rxjs/internal/operators';
@@ -42,11 +42,17 @@ export class NetworkService {
     static getNodeColor(objectType: string): string {
         let color: string;
         switch (objectType) {
-            case 'PERSONNE':
+            case 'Biographics':
                 color = 'red';
                 break;
-            case 'EVENT':
+            case 'Event':
                 color = 'blue';
+                break;
+            case 'Equipment':
+                color = 'green';
+                break;
+            case 'RawData':
+                color = 'black';
                 break;
             default:
                 color = 'pink';
@@ -57,11 +63,17 @@ export class NetworkService {
 
     static getNodeImageUrl(objectType: string): string {
         switch (objectType) {
-            case 'PERSONNE':
-                return IMAGE_URL_PERSONNE;
+            case 'Biographics':
+                return IMAGE_URL_BIO;
                 break;
-            case 'EVENT':
+            case 'Event':
                 return IMAGE_URL_EVENT;
+                break;
+            case 'Equipment':
+                return IMAGE_URL_EQUIP;
+                break;
+            case 'RawData':
+                return IMAGE_URL_RAW;
                 break;
             default:
                 return IMAGE_URL_DEFAULT;
@@ -100,21 +112,25 @@ export class NetworkService {
         );
     }
 }
-export const IMAGE_URL_PERSONNE = 'https://parismatch.be/app/uploads/2018/04/Macaca_nigra_self-portrait_large-e1524567086123-1100x715.jpg';
-export const IMAGE_URL_EVENT = 'https://fridg-front.s3.amazonaws.com/media/products/banane_DAC0XAQ.jpg';
-export const IMAGE_URL_DEFAULT = 'http://www.stickersnews.fr/7212-10878-thickbox/sticker-enfant-arbre-animaux-de-la-jungle.jpg';
+export const IMAGE_URL_BIO = 'https://img.icons8.com/color/1600/person-male.png';
+export const IMAGE_URL_EVENT =
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Explosion-155624_icon.svg/2000px-Explosion-155624_icon.svg.png';
+export const IMAGE_URL_EQUIP = 'http://cdn.onlinewebfonts.com/svg/img_236380.png';
+export const IMAGE_URL_RAW = 'https://cdn3.iconfinder.com/data/icons/analytics-4/500/Analytic-49-512.png';
+export const IMAGE_URL_DEFAULT =
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Information_icon_with_gradient_background.svg/1024px-Information_icon_with_gradient_background.svg.png';
 export const MOCK_GRAPH_DATA = {
     nodes: [
-        { id: 1, label: 'node 1', title: 'bidou 1', type: 'PERSONNE' },
-        { id: 2, label: 'node 2', title: 'bidou 2', type: 'PERSONNE' },
-        { id: 3, label: 'node 3', title: 'bidou 3', type: 'EVENT' },
-        { id: 4, label: 'node 4', title: 'bidou 4', type: 'PERSONNE' },
-        { id: 5, label: 'node 5', title: 'bidou 5', type: 'EVENT' },
-        { id: 6, label: 'node 6', title: 'bidou 6', type: 'EVENT' },
-        { id: 7, label: 'node 7', title: 'bidou 7', type: 'PERSONNE' },
-        { id: 8, label: 'node 8', title: 'bidou 8', type: 'EVENT' },
-        { id: 9, label: 'node 9', title: 'bidou 9', type: 'LOCATION' },
-        { id: 10, label: 'node 10', title: 'bidou 10', type: 'LOCATION' }
+        { id: 1, label: 'Bobby', title: 'Personne', type: 'Biographics' },
+        { id: 2, label: 'Explosion', title: 'Evenement', type: 'Event' },
+        { id: 3, label: 'Voiture', title: 'Equipement', type: 'Equipment' },
+        { id: 4, label: 'Brian', title: 'Personne', type: 'Biographics' },
+        { id: 5, label: 'AK-47', title: 'Equipement', type: 'Equipment' },
+        { id: 6, label: 'Attentat', title: 'Evenement', type: 'Event' },
+        { id: 7, label: 'Raoul', title: 'Personne', type: 'Biographics' },
+        { id: 8, label: 'RawData', title: 'Donnee brute', type: 'RawData' },
+        { id: 9, label: 'Rencontre', title: 'Evenement', type: 'Event' },
+        { id: 10, label: 'RawData', title: 'Donnee brute', type: 'RawData' }
     ],
     edges: [
         { from: 1, to: 3 },

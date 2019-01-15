@@ -2,6 +2,7 @@ import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChi
 import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'ins-network',
@@ -15,13 +16,23 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     graphDataSubscription: Subscription;
 
-    constructor(private _ns: NetworkService) {}
+    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {}
 
     ngAfterViewInit() {
         this.initNetwork();
         this.initNetworkEventListener();
+        this.activatedRoute.data.subscribe(({ idOrigin }) => {
+            if (idOrigin) {
+                this.getNodesNeighbours([idOrigin]);
+            } else {
+                this.getMockData();
+            }
+        });
+    }
+
+    getMockData() {
         this.graphDataSubscription = this._ns.getMockGraphData().subscribe(data => {
             this.addNodes(data['nodes'], data['edges']);
         });
@@ -74,7 +85,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     getNodesNeighbours(idOrigins: string[]) {
-        for (let i of idOrigins) {
+        for (const i of idOrigins) {
             this._ns.getGraphData(i).subscribe(data => {
                 this.addNodes(data['nodes'], data['edges']);
             });
