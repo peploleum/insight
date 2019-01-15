@@ -36,14 +36,14 @@ spring:
             indent-output: true
     data:
         mongodb:
-            uri: mongodb://192.168.99.100:27017
+            uri: mongodb://localhost:27017
             database: insight
         elasticsearch:
             properties:
                 path:
                     home: target/elasticsearch
         jest:
-            uri: http://192.168.99.100:9200
+            uri: http://localhost:9200
     mail:
         host: localhost
         port: 25
