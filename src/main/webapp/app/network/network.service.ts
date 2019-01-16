@@ -134,7 +134,7 @@ export class NetworkService {
 
     getNodeProperties(idOrigin: IdType): Observable<HttpResponse<INodeDTO>> {
         const headers = new HttpHeaders();
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties';
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties/';
         return this.http.get<INodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' });
     }
 }
