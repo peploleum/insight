@@ -5,57 +5,32 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
-import { Edge, IdType, Node } from 'vis';
+import { IdType } from 'vis';
 import { map } from 'rxjs/internal/operators';
-import { INodeDTO } from 'app/shared/model/node.model';
+import { EdgeDTO, GraphDataCollection, GraphyNodeDTO, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
+import { UUID } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
     private resourceUrl;
 
-    public static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): any {
-        const node = {};
-        node['id'] = id;
-        node['label'] = label;
-        node['title'] = title;
-        node['image'] = imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType);
-        node['color'] = {
+    public static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): NodeDTO {
+        const image: string = imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType);
+        const color = {
             border: NetworkService.getNodeColor(objectType)
         };
-        node['borderWidth'] = 3;
-        node['font'] = {
+        const font = {
             color: 'white'
         };
-        return node;
-        // return {
-        //    id: id,
-        //    label: label,
-        //    title: title,
-        //    image: imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType),
-        //    color: {
-        //        border: NetworkService.getNodeColor(objectType)
-        //    },
-        //    borderWidth: 3,
-        //    font: {
-        //        color: 'white'
-        //    }
-        // };
+        return new NodeDTO(label, id, title, image, color, 3, font);
     }
 
-    static getEdgeCollection(idOrigin: IdType, nodes: Node[]): Edge[] {
+    public static getEdgeCollection(idOrigin: IdType, nodes: NodeDTO[]): EdgeDTO[] {
         return nodes.map(node => NetworkService.getEdgeDto(idOrigin, node.id));
     }
 
-    static getEdgeDto(from: IdType, to: IdType): any {
-        const edge = {};
-        edge['from'] = from;
-        edge['to'] = to;
-        return edge;
-
-        // return {
-        //    from: from,
-        //    to: to
-        // };
+    public static getEdgeDto(from: IdType, to: IdType): EdgeDTO {
+        return new EdgeDTO(from, to);
     }
 
     static getNodeColor(objectType: string): string {
@@ -107,35 +82,49 @@ export class NetworkService {
         }
     }
 
-    getMockGraphData(): Observable<any> {
+    getMockGraphData(): Observable<GraphDataCollection> {
         return of(MOCK_GRAPH_DATA).pipe(
             map(data => {
-                data['nodes'] = data['nodes'].map(item =>
-                    NetworkService.getNodeDto(item.label, item.type, <IdType>item.id, item.title, null)
+                const dataCollection = new GraphDataCollection([], []);
+                dataCollection.nodes = data['nodes'].map(item =>
+                    NetworkService.getNodeDto(item['label'], item['type'], <IdType>item['id'], item['title'])
                 );
-                data['edges'] = data['edges'].map(item => NetworkService.getEdgeDto(<IdType>item.from, <IdType>item.to));
-                return data;
+                dataCollection.edges = data['edges'].map(item => NetworkService.getEdgeDto(<IdType>item['from'], <IdType>item['to']));
+                return dataCollection;
             })
         );
     }
 
-    getGraphData(idOrigin: IdType): Observable<any> {
+    getGraphData(idOrigin: IdType): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
         return this.http.get(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
             map(res => {
-                const data = {};
-                data['nodes'] = (<{}[]>res.body).map(item => NetworkService.getNodeDto(item['label'], item['type'], <IdType>item['id']));
-                data['edges'] = NetworkService.getEdgeCollection(idOrigin, data['nodes']);
+                const body: IGraphyNodeDTO[] = res.body;
+                const data = new GraphDataCollection([], []);
+                data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
+                data.edges = NetworkService.getEdgeCollection(idOrigin, data.nodes);
                 return data;
             })
         );
     }
 
-    getNodeProperties(idOrigin: IdType): Observable<HttpResponse<INodeDTO>> {
+    getNodeProperties(idOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
+        if (DEBUG_INFO_ENABLED) {
+            /** Tant que l'endpoint de graphy n'est pas dispo */
+            const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse(
+                new GraphyNodeDTO(UUID, 'Personne Origine', 'Biographics'),
+                headers,
+                200
+            );
+            return of(fakeResponse);
+        }
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties/';
-        return this.http.get<INodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' });
+        return this.http.get<IGraphyNodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, {
+            headers,
+            observe: 'response'
+        });
     }
 }
 

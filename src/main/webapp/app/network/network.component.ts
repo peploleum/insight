@@ -3,7 +3,7 @@ import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
-import { NodeDTO } from 'app/shared/model/node.model';
+import { GraphDataCollection, GraphDataSet, NodeDTO } from 'app/shared/model/node.model';
 
 @Component({
     selector: 'ins-network',
@@ -13,7 +13,7 @@ import { NodeDTO } from 'app/shared/model/node.model';
 export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit {
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
-    networkData: any = { 'network-items': {} };
+    networkData: GraphDataSet;
 
     graphDataSubscription: Subscription;
 
@@ -27,8 +27,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.activatedRoute.data.subscribe(({ originNode }) => {
             if (originNode) {
                 const theNode: NodeDTO = <NodeDTO>originNode;
+                this.addNodes([theNode], []);
                 this.getNodesNeighbours([theNode.id]);
-                this.addNodes([NetworkService.getNodeDto(theNode.label, theNode.type, theNode.id, theNode.label)], []);
             } else {
                 this.getMockData();
             }
@@ -36,16 +36,15 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     getMockData() {
-        this.graphDataSubscription = this._ns.getMockGraphData().subscribe(data => {
-            this.addNodes(data['nodes'], data['edges']);
+        this.graphDataSubscription = this._ns.getMockGraphData().subscribe((data: GraphDataCollection) => {
+            this.addNodes(data.nodes, data.edges);
         });
     }
 
     ngAfterContentInit() {}
 
     initNetwork() {
-        this.networkData['network-items']['nodes'] = new DataSet();
-        this.networkData['network-items']['edges'] = new DataSet();
+        this.networkData = new GraphDataSet(new DataSet(), new DataSet());
         if (this._networkRef && !this.network) {
             const options: Options = {
                 layout: {
@@ -71,7 +70,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                     shape: 'circularImage'
                 }
             };
-            this.network = new Network(this._networkRef.nativeElement, this.networkData['network-items'], options);
+            this.network = new Network(this._networkRef.nativeElement, this.networkData, options);
         }
     }
 
@@ -82,31 +81,31 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.network.on('selectNode', properties => {
             this.getNodesNeighbours(properties.nodes);
         });
-        this.networkData['network-items']['nodes'].on('add', (event, properties) => {
+        this.networkData.nodes.on('add', (event, properties) => {
             console.log(properties);
         });
     }
 
     getNodesNeighbours(idOrigins: string[]) {
         for (const i of idOrigins) {
-            this._ns.getGraphData(i).subscribe(data => {
-                this.addNodes(data['nodes'], data['edges']);
+            this._ns.getGraphData(i).subscribe((data: GraphDataCollection) => {
+                this.addNodes(data.nodes, data.edges);
             });
         }
     }
 
     addNodes(nodes: Node[], edges: Edge[]) {
         this.network.storePositions();
-        this.networkData['network-items']['nodes'].add(nodes);
-        this.networkData['network-items']['edges'].add(edges);
+        this.networkData.nodes.add(nodes);
+        this.networkData.edges.add(edges);
     }
 
     removeNodes(ids: IdType[]) {
-        this.networkData['network-items']['nodes'].remove(ids);
-        const removableEdges: Edge[] = this.networkData['network-items']['edges'].get().filter((edge: Edge) => {
+        this.networkData.nodes.remove(ids);
+        const removableEdges: Edge[] = this.networkData.edges.get().filter((edge: Edge) => {
             return ids.indexOf(edge.from) === -1 || ids.indexOf(edge.to) === -1;
         });
-        this.networkData['network-items']['edges'].remove(removableEdges);
+        this.networkData.edges.remove(removableEdges);
     }
 
     onActionReceived(action: string) {
