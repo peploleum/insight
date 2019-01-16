@@ -1,7 +1,26 @@
 <div class="popover-menu shadow rounded">
     <ul class="list-group">
-        <li class="list-group-item popover-menu-item" (click)="sendAction('ADD_NODES')">Ajouter des Nodes</li>
-        <li class="list-group-item popover-menu-item" (click)="sendAction('DELETE_NODES')">Supprimer des Nodes</li>
-        <li class="list-group-item popover-menu-item" (click)="sendAction('UPDATE_NODES')">Updater des Nodes</li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkActionStates['ADD_NEIGHBOURS']}"
+            (click)="sendAction('ADD_NEIGHBOURS')" title="Ajouter des Voisins">
+            <p>
+                <fa-icon [icon]="'code-branch'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" (click)="sendAction('ADD_NODES')" title="Ajouter des Nodes">
+            <p>
+                <fa-icon [icon]="'plus'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" (click)="sendAction('DELETE_NODES')" title="Supprimer des Nodes">
+            <p>
+                <fa-icon [icon]="'times'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkActionStates['CLUSTER_NODES']}"
+            (click)="sendAction('CLUSTER_NODES')" title="Activer le clustering">
+            <p>
+                <fa-icon [icon]="'dot-circle'"></fa-icon>
+            </p>
+        </li>
     </ul>
 </div>

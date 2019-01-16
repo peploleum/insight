@@ -14,6 +14,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
+    networkActionStates = {};
 
     graphDataSubscription: Subscription;
 
@@ -79,7 +80,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             console.log(node);
         });
         this.network.on('selectNode', properties => {
-            this.getNodesNeighbours(properties.nodes);
+            if (this.networkActionStates['ADD_NEIGHBOURS']) {
+                this.getNodesNeighbours(properties.nodes);
+            }
         });
         this.networkData.nodes.on('add', (event, properties) => {
             console.log(properties);
@@ -100,28 +103,55 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.networkData.edges.add(edges);
     }
 
-    removeNodes(ids: IdType[]) {
-        this.networkData.nodes.remove(ids);
-        const removableEdges: Edge[] = this.networkData.edges.get().filter((edge: Edge) => {
-            return ids.indexOf(edge.from) === -1 || ids.indexOf(edge.to) === -1;
-        });
-        this.networkData.edges.remove(removableEdges.map(edge => edge.id));
+    removeNodes(idNodes: IdType[], idEdges: IdType[]) {
+        this.network.storePositions();
+        this.networkData.nodes.remove(idNodes);
+        this.networkData.edges.remove(idEdges);
+    }
+
+    clusterNodes() {
+        const clusterOption = {
+            clusterNodeProperties: {
+                label: 'Cluster',
+                borderWidth: 3,
+                shape: 'circle',
+                size: 30,
+                color: {
+                    background: 'red'
+                },
+                font: {
+                    bold: {
+                        size: 18
+                    }
+                }
+            }
+        };
+        this.network.clusterByHubsize(3, clusterOption);
     }
 
     onActionReceived(action: string) {
         switch (action) {
             case 'ADD_NODES':
-                const newNodes2 = [
-                    { label: 'node 11', type: 'PERSONNE' },
-                    { label: 'node 12', type: 'EVENT' },
-                    { label: 'node 13', type: 'LOCATION' }
-                ];
-                const transformDto: Node[] = newNodes2.map(item => NetworkService.getNodeDto(item.label, item.type));
-                this.addNodes(transformDto, []);
                 break;
             case 'DELETE_NODES':
+                this.removeNodes(this.network.getSelection().nodes, this.network.getSelection().edges);
                 break;
             case 'UPDATE_NODES':
+                break;
+            case 'ADD_NEIGHBOURS':
+                this.networkActionStates['ADD_NEIGHBOURS'] = !this.networkActionStates['ADD_NEIGHBOURS'];
+                break;
+            case 'CLUSTER_NODES':
+                this.networkActionStates['CLUSTER_NODES'] = !this.networkActionStates['CLUSTER_NODES'];
+                if (this.networkActionStates['CLUSTER_NODES']) {
+                    this.clusterNodes();
+                } else {
+                    const clusteredIds: IdType[] = this.networkData.nodes
+                        .get()
+                        .filter(node => this.network.isCluster(node.id))
+                        .map(node => node.id);
+                    clusteredIds.forEach(id => this.network.openCluster(id));
+                }
                 break;
             default:
                 break;

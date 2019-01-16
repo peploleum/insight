@@ -14,6 +14,8 @@ import {
     faChartArea,
     faClock,
     faCloud,
+    faCodeBranch,
+    faDotCircle,
     faEye,
     faFlag,
     faGlobe,
@@ -89,5 +91,7 @@ library.add(faGlobe);
 library.add(faRssSquare);
 library.add(faPlug);
 library.add(faSitemap);
+library.add(faCodeBranch);
+library.add(faDotCircle);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
