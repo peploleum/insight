@@ -1,6 +1,6 @@
 <div *ngFor="let rawData of rawData ;trackBy: trackId">
     <p><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.rawDataName}}</a></p>
-    <p><a [routerLink]="['/network', rawData.id]"><fa-icon [icon]="'sitemap'"></fa-icon></a></p>
+    <p><a [routerLink]="['/network', rawData.id]"><fa-icon [icon]="'sitemap'"></fa-icon> Network</a></p>
     <p>
         <fa-icon [icon]="'rss-square'"></fa-icon>
         <span [style.fontWeight]="'bold'">{{rawData.rawDataSourceName}}</span> {{rawData.rawDataType}}

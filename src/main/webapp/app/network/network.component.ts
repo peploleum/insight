@@ -86,7 +86,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         });
     }
 
-    getNodesNeighbours(idOrigins: string[]) {
+    getNodesNeighbours(idOrigins: IdType[]) {
         for (const i of idOrigins) {
             this._ns.getGraphData(i).subscribe((data: GraphDataCollection) => {
                 this.addNodes(data.nodes, data.edges);
@@ -105,7 +105,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         const removableEdges: Edge[] = this.networkData.edges.get().filter((edge: Edge) => {
             return ids.indexOf(edge.from) === -1 || ids.indexOf(edge.to) === -1;
         });
-        this.networkData.edges.remove(removableEdges);
+        this.networkData.edges.remove(removableEdges.map(edge => edge.id));
     }
 
     onActionReceived(action: string) {

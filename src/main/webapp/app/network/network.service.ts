@@ -99,7 +99,7 @@ export class NetworkService {
         const headers = new HttpHeaders();
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
         return this.http.get(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
-            map(res => {
+            map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
                 data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
@@ -113,11 +113,11 @@ export class NetworkService {
         const headers = new HttpHeaders();
         if (DEBUG_INFO_ENABLED) {
             /** Tant que l'endpoint de graphy n'est pas dispo */
-            const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse(
-                new GraphyNodeDTO(UUID, 'Personne Origine', 'Biographics'),
-                headers,
-                200
-            );
+            const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse({
+                body: new GraphyNodeDTO(UUID(), 'Personne Origine', 'Biographics'),
+                headers: new HttpHeaders(),
+                status: 200
+            });
             return of(fakeResponse);
         }
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties/';

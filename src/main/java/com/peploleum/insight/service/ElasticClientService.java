@@ -46,7 +46,7 @@ public class ElasticClientService {
         return this.kibanaDashboard.stream().map(ko -> ko.getId()).collect(Collectors.toList());
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+    // @EventListener(ApplicationReadyEvent.class)
     public void InitKibanaData() {
         // Load kibana index-pattern, dashboard, visualization
         Set<KibanaObject> kibanaObjects = getAllKibanaObjects();
