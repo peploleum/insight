@@ -1,6 +1,6 @@
 <div class="popover-menu shadow rounded">
     <ul class="list-group">
-        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkActionStates['ADD_NEIGHBOURS']}"
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkStates['ADD_NEIGHBOURS']}"
             (click)="sendAction('ADD_NEIGHBOURS')" title="Ajouter des Voisins">
             <p>
                 <fa-icon [icon]="'code-branch'"></fa-icon>
@@ -16,10 +16,16 @@
                 <fa-icon [icon]="'times'"></fa-icon>
             </p>
         </li>
-        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkActionStates['CLUSTER_NODES']}"
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkStates['CLUSTER_NODES']}"
             (click)="sendAction('CLUSTER_NODES')" title="Activer le clustering">
             <p>
                 <fa-icon [icon]="'dot-circle'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" title="Change le layout"
+            insSideMenuDirective [networkStates]="networkStates" (actionEmitter)="sendAction($event)">
+            <p>
+                <fa-icon [icon]="'arrows-alt'"></fa-icon>
             </p>
         </li>
     </ul>

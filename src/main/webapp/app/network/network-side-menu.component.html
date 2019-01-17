@@ -1,0 +1,27 @@
+<ul class="list-group popover-side-menu" [style.top.px]="dimension.top"
+    [style.right.px]="dimension.right" [style.height.px]="dimension.height">
+    <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'UD')}"
+        (click)="sendAction('LAYOUT_DIR_UD')" title="UD Layout">
+        <p>
+            <fa-icon [icon]="'arrow-circle-down'"></fa-icon>
+        </p>
+    </li>
+    <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'DU')}"
+        (click)="sendAction('LAYOUT_DIR_DU')" title="DU Layout">
+        <p>
+            <fa-icon [icon]="'arrow-circle-up'"></fa-icon>
+        </p>
+    </li>
+    <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'LR')}"
+        (click)="sendAction('LAYOUT_DIR_LR')" title="LR Layout">
+        <p>
+            <fa-icon [icon]="'arrow-circle-right'"></fa-icon>
+        </p>
+    </li>
+    <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'RL')}"
+        (click)="sendAction('LAYOUT_DIR_RL')" title="RL Layout">
+        <p>
+            <fa-icon [icon]="'arrow-circle-left'"></fa-icon>
+        </p>
+    </li>
+</ul>

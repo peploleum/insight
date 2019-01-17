@@ -3,8 +3,12 @@
 import '../content/scss/vendor.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+    faArrowCircleLeft,
+    faArrowCircleRight,
+    faArrowCircleUp,
     faArrowLeft,
     faArrowRight,
+    faArrowsAlt,
     faAsterisk,
     faBan,
     faBars,
@@ -46,6 +50,7 @@ import {
     faUserPlus,
     faWrench
 } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleDown } from '@fortawesome/free-solid-svg-icons/faArrowCircleDown';
 
 // Imports all fontawesome core and solid icons
 
@@ -93,5 +98,10 @@ library.add(faPlug);
 library.add(faSitemap);
 library.add(faCodeBranch);
 library.add(faDotCircle);
+library.add(faArrowsAlt);
+library.add(faArrowCircleDown);
+library.add(faArrowCircleUp);
+library.add(faArrowCircleRight);
+library.add(faArrowCircleLeft);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

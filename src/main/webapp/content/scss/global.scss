@@ -319,14 +319,26 @@ Custom network css
     align-items: stretch;
 }
 
+.popover-side-menu {
+    z-index: 3;
+    position: absolute;
+    background-color: white;
+    align-items: stretch;
+    flex-direction: row !important;
+}
+
 .popover-menu-item {
     cursor: pointer;
     font-size: larger;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 !important;
 }
 
 .popover-menu-item > p {
     width: 100%;
-    text-align: center;
 }
 
 .popover-menu-item:hover {
@@ -335,4 +347,8 @@ Custom network css
 
 .selected {
     background-color: #4dff4d;
+}
+
+.selected:hover {
+    background-color: #4dff4d !important;
 }

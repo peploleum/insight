@@ -14,7 +14,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
-    networkActionStates = {};
+    networkStates = { LAYOUT_DIR: 'UD' };
 
     graphDataSubscription: Subscription;
 
@@ -44,34 +44,38 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     ngAfterContentInit() {}
 
+    getNetworkOption(): Options {
+        return {
+            layout: {
+                hierarchical: {
+                    enabled: true,
+                    levelSeparation: 100,
+                    direction: this.networkStates['LAYOUT_DIR']
+                }
+            },
+            physics: {
+                enabled: false
+            },
+            interaction: {
+                hideEdgesOnDrag: true,
+                hover: true,
+                hoverConnectedEdges: true,
+                keyboard: {
+                    enabled: true
+                },
+                multiselect: true,
+                navigationButtons: true
+            },
+            nodes: {
+                shape: 'circularImage'
+            }
+        };
+    }
+
     initNetwork() {
         this.networkData = new GraphDataSet(new DataSet(), new DataSet());
         if (this._networkRef && !this.network) {
-            const options: Options = {
-                layout: {
-                    hierarchical: {
-                        enabled: true,
-                        levelSeparation: 100
-                    }
-                },
-                physics: {
-                    enabled: false
-                },
-                interaction: {
-                    hideEdgesOnDrag: true,
-                    hover: true,
-                    hoverConnectedEdges: true,
-                    keyboard: {
-                        enabled: true
-                    },
-                    multiselect: true,
-                    navigationButtons: true
-                },
-                nodes: {
-                    shape: 'circularImage'
-                }
-            };
-            this.network = new Network(this._networkRef.nativeElement, this.networkData, options);
+            this.network = new Network(this._networkRef.nativeElement, this.networkData, this.getNetworkOption());
         }
     }
 
@@ -80,8 +84,12 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             console.log(node);
         });
         this.network.on('selectNode', properties => {
-            if (this.networkActionStates['ADD_NEIGHBOURS']) {
+            if (this.networkStates['ADD_NEIGHBOURS']) {
                 this.getNodesNeighbours(properties.nodes);
+            }
+            if (!this.networkStates['CLUSTER_NODES']) {
+                const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
+                clusteredIds.forEach(id => this.network.openCluster(id));
             }
         });
         this.networkData.nodes.on('add', (event, properties) => {
@@ -139,19 +147,29 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             case 'UPDATE_NODES':
                 break;
             case 'ADD_NEIGHBOURS':
-                this.networkActionStates['ADD_NEIGHBOURS'] = !this.networkActionStates['ADD_NEIGHBOURS'];
+                this.networkStates['ADD_NEIGHBOURS'] = !this.networkStates['ADD_NEIGHBOURS'];
                 break;
             case 'CLUSTER_NODES':
-                this.networkActionStates['CLUSTER_NODES'] = !this.networkActionStates['CLUSTER_NODES'];
-                if (this.networkActionStates['CLUSTER_NODES']) {
+                this.networkStates['CLUSTER_NODES'] = !this.networkStates['CLUSTER_NODES'];
+                if (this.networkStates['CLUSTER_NODES']) {
                     this.clusterNodes();
-                } else {
-                    const clusteredIds: IdType[] = this.networkData.nodes
-                        .get()
-                        .filter(node => this.network.isCluster(node.id))
-                        .map(node => node.id);
-                    clusteredIds.forEach(id => this.network.openCluster(id));
                 }
+                break;
+            case 'LAYOUT_DIR_UD':
+                this.networkStates['LAYOUT_DIR'] = 'UD';
+                this.network.setOptions(this.getNetworkOption());
+                break;
+            case 'LAYOUT_DIR_DU':
+                this.networkStates['LAYOUT_DIR'] = 'DU';
+                this.network.setOptions(this.getNetworkOption());
+                break;
+            case 'LAYOUT_DIR_LR':
+                this.networkStates['LAYOUT_DIR'] = 'LR';
+                this.network.setOptions(this.getNetworkOption());
+                break;
+            case 'LAYOUT_DIR_RL':
+                this.networkStates['LAYOUT_DIR'] = 'RL';
+                this.network.setOptions(this.getNetworkOption());
                 break;
             default:
                 break;

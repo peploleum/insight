@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class NetworkMenuComponent implements OnInit {
     @Input()
-    networkActionStates;
+    networkStates;
 
     @Output()
     actionEmitter: EventEmitter<string> = new EventEmitter();
