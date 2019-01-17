@@ -23,6 +23,7 @@ import {
     faEye,
     faFlag,
     faGlobe,
+    faHandPaper,
     faHdd,
     faHeart,
     faHome,
@@ -103,5 +104,6 @@ library.add(faArrowCircleDown);
 library.add(faArrowCircleUp);
 library.add(faArrowCircleRight);
 library.add(faArrowCircleLeft);
+library.add(faHandPaper);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

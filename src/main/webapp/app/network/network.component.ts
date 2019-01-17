@@ -14,7 +14,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
-    networkStates = { LAYOUT_DIR: 'UD' };
+    networkStates = { LAYOUT_DIR: 'UD', LAYOUT_FREE: false };
 
     graphDataSubscription: Subscription;
 
@@ -48,7 +48,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         return {
             layout: {
                 hierarchical: {
-                    enabled: true,
+                    enabled: !this.networkStates['LAYOUT_FREE'],
                     levelSeparation: 100,
                     direction: this.networkStates['LAYOUT_DIR']
                 }
@@ -154,6 +154,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 if (this.networkStates['CLUSTER_NODES']) {
                     this.clusterNodes();
                 }
+                break;
+            case 'LAYOUT_FREE':
+                this.networkStates['LAYOUT_FREE'] = !this.networkStates['LAYOUT_FREE'];
+                this.network.setOptions(this.getNetworkOption());
                 break;
             case 'LAYOUT_DIR_UD':
                 this.networkStates['LAYOUT_DIR'] = 'UD';

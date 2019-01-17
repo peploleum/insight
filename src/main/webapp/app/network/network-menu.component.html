@@ -22,7 +22,13 @@
                 <fa-icon [icon]="'dot-circle'"></fa-icon>
             </p>
         </li>
-        <li class="list-group-item popover-menu-item" title="Change le layout"
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkStates['LAYOUT_FREE']}"
+            (click)="sendAction('LAYOUT_FREE')" title="Activer le positionnement libre">
+            <p>
+                <fa-icon [icon]="'hand-paper'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" title="Changer la disposition"
             insSideMenuDirective [networkStates]="networkStates" (actionEmitter)="sendAction($event)">
             <p>
                 <fa-icon [icon]="'arrows-alt'"></fa-icon>
