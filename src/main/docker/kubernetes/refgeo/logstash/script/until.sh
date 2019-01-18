@@ -1,13 +1,13 @@
 
 i=1
 echo ecoute $i
-until nc -z -w 1 192.168.65.4 32000
+until nc -z -w 1 refgeo-elasticsearch 9200
 do
     echo Waiting for elasticsearch cluster to get initialized $i
     i=$(($i+1))
     sleep 5
 done
-curl  -X PUT '192.168.65.4:32000/gazetter?pretty' -H 'Content-Type: application/json' -d '{
+curl  -X PUT 'refgeo-elasticsearch:9200/gazetter?pretty' -H 'Content-Type: application/json' -d '{
   "settings" : {
     "number_of_shards" : 1
   },
