@@ -22,7 +22,7 @@ spec:
             - '-c'
             - 'chmod +x /usr/share/logstash/script/until.sh && /usr/share/logstash/script/until.sh'
       containers:
-      - image: logstash:latest
+      - image: docker.elastic.co/logstash/logstash:6.4.2
         name: refgeo-logstash
         ports:
         - containerPort: 9600
