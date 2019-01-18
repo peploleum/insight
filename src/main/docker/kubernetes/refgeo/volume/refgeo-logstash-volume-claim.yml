@@ -2,7 +2,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: refgeo-storage-logstash-claim
-  namespace: refgeo
+  namespace: insight
 spec:
   storageClassName: local-storage
   accessModes:

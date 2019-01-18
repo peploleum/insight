@@ -1,7 +1,7 @@
-mkdir -p /home/capgemini/refgeo/binding/logstash/
-mkdir -p /home/capgemini/refgeo/binding/logstash/csv
-cp ../logstash/csv/* /home/capgemini/refgeo/binding/logstash/csv
-mkdir -p /home/capgemini/refgeo/binding/logstash/pipeline
-cp ../logstash/pipeline/* /home/capgemini/refgeo/binding/logstash/pipeline
-mkdir -p /home/capgemini/refgeo/binding/logstash/script
-cp ../logstash/script/* /home/capgemini/refgeo/binding/logstash/script
+mkdir -p /home/capgemini/binding/refgeo/logstash/
+mkdir -p /home/capgemini/binding/refgeo/logstash/csv
+cp ../logstash/csv/* /home/capgemini/binding/refgeo/logstash/csv
+mkdir -p /home/capgemini/binding/refgeo/logstash/pipeline
+cp ../logstash/pipeline/* /home/capgemini/binding/refgeo/logstash/pipeline
+mkdir -p /home/capgemini/binding/refgeo/logstash/script
+cp ../logstash/script/* /home/capgemini/binding/refgeo/logstash/script
