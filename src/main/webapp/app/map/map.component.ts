@@ -1,11 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { Feature } from 'ol/Feature';
 import { OSM, Vector as VectorSource } from 'ol/source';
 import { GeoJSON } from 'ol/format';
 import { defaults as defaultControls } from 'ol/control.js';
 import Map from 'ol/Map';
 import View from 'ol/View';
+import { GEO_JSON_OBJECT, MapService } from './map.service';
 
 @Component({
     selector: 'jhi-map',
@@ -13,6 +15,9 @@ import View from 'ol/View';
     styles: [':host { flex-grow: 1 }']
 })
 export class MapComponent implements OnInit, AfterViewInit {
+    rawDataSource: VectorSource = new VectorSource();
+    vectorLayer: VectorLayer = new VectorLayer();
+
     private circleImage = new CircleStyle({
         radius: 5,
         fill: null,
@@ -90,7 +95,12 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.internalOnResize();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef) {}
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
+        this.vectorLayer = new VectorLayer({
+            source: this.rawDataSource,
+            style: feature => this.styleFunction(feature)
+        });
+    }
 
     internalOnResize() {
         console.log('RESIZE');
@@ -103,106 +113,20 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.initMap();
+        this.ms.getFeaturesForIds([]).subscribe((features: Feature[]) => {
+            this.rawDataSource.addFeatures(features);
+        });
     }
 
     private initMap() {
-        const geojsonObject = {
-            type: 'FeatureCollection',
-            crs: {
-                type: 'name',
-                properties: {
-                    name: 'EPSG:3857'
-                }
-            },
-            features: [
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [0, 0]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: [[4e6, -2e6], [8e6, 2e6]]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: [[4e6, 2e6], [8e6, -2e6]]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [[[-5e6, -1e6], [-4e6, 1e6], [-3e6, -1e6]]]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'MultiLineString',
-                        coordinates: [
-                            [[-1e6, -7.5e5], [-1e6, 7.5e5]],
-                            [[1e6, -7.5e5], [1e6, 7.5e5]],
-                            [[-7.5e5, -1e6], [7.5e5, -1e6]],
-                            [[-7.5e5, 1e6], [7.5e5, 1e6]]
-                        ]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'MultiPolygon',
-                        coordinates: [
-                            [[[-5e6, 6e6], [-5e6, 8e6], [-3e6, 8e6], [-3e6, 6e6]]],
-                            [[[-2e6, 6e6], [-2e6, 8e6], [0, 8e6], [0, 6e6]]],
-                            [[[1e6, 6e6], [1e6, 8e6], [3e6, 8e6], [3e6, 6e6]]]
-                        ]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'GeometryCollection',
-                        geometries: [
-                            {
-                                type: 'LineString',
-                                coordinates: [[-5e6, -5e6], [0, -5e6]]
-                            },
-                            {
-                                type: 'Point',
-                                coordinates: [4e6, -5e6]
-                            },
-                            {
-                                type: 'Polygon',
-                                coordinates: [[[1e6, -6e6], [2e6, -4e6], [3e6, -6e6]]]
-                            }
-                        ]
-                    }
-                }
-            ]
-        };
-
-        const readFeatures = new GeoJSON().readFeatures(geojsonObject);
-        const vectorSource = new VectorSource({
-            features: readFeatures
-        });
-        const vectorLayer: VectorLayer = new VectorLayer({
-            source: vectorSource,
-            style: feature => this.styleFunction(feature)
-        });
+        const readFeatures = new GeoJSON().readFeatures(GEO_JSON_OBJECT);
+        this.rawDataSource.addFeatures(readFeatures);
         const map = new Map({
             layers: [
                 new TileLayer({
                     source: new OSM()
                 }),
-                vectorLayer
+                this.vectorLayer
             ],
             target: 'map',
             controls: defaultControls({
@@ -221,7 +145,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
     }
 
-    styleFunction(feature) {
+    styleFunction(feature: Feature) {
         return this.styles[feature.getGeometry().getType()];
     }
 }

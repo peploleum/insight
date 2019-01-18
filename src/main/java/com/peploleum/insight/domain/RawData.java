@@ -2,12 +2,12 @@ package com.peploleum.insight.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
 import org.springframework.data.elasticsearch.annotations.Mapping;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import javax.validation.constraints.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -49,6 +49,7 @@ public class RawData implements Serializable {
     private String rawDataContent;
 
     @Field("raw_data_creation_date")
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Date)
     private Instant rawDataCreationDate;
 
     @Field("raw_data_extracted_date")
@@ -64,6 +65,7 @@ public class RawData implements Serializable {
     private String rawDataDataContentType;
 
     @Field("raw_data_coordinates")
+    @GeoPointField
     private String rawDataCoordinates;
 
     @Field("raw_data_annotations")
