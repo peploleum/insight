@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.2">
     <description></description>
-    <groupId>3ca2c085-0168-1000-87f5-eb972f935dcc</groupId>
+    <groupId>61a02408-0168-1000-bf88-fa5e66c3b915</groupId>
     <name>Twitter_to_kafka</name>
     <snippet>
         <processGroups>
-            <id>171e6e93-7404-3a99-0000-000000000000</id>
-            <parentGroupId>230191f7-82eb-3238-0000-000000000000</parentGroupId>
+            <id>78640e0e-6671-3c61-0000-000000000000</id>
+            <parentGroupId>43217930-feaa-34f9-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
                 <y>0.0</y>
@@ -14,13 +14,13 @@
             <comments></comments>
             <contents>
                 <connections>
-                    <id>a391ed6a-eb17-35a8-0000-000000000000</id>
-                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
+                    <id>481964fd-6299-303c-0000-000000000000</id>
+                    <parentGroupId>78640e0e-6671-3c61-0000-000000000000</parentGroupId>
                     <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
                     <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>171e6e93-7404-3a99-0000-000000000000</groupId>
-                        <id>64cae309-1f18-3105-0000-000000000000</id>
+                        <groupId>78640e0e-6671-3c61-0000-000000000000</groupId>
+                        <id>6291162f-b385-310d-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
@@ -32,15 +32,40 @@
                     <name></name>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>171e6e93-7404-3a99-0000-000000000000</groupId>
-                        <id>29a8257a-246c-3a09-0000-000000000000</id>
+                        <groupId>78640e0e-6671-3c61-0000-000000000000</groupId>
+                        <id>1f59c6d8-80d8-3683-0000-000000000000</id>
+                        <type>PROCESSOR</type>
+                    </source>
+                    <zIndex>0</zIndex>
+                </connections>
+                <connections>
+                    <id>e6bbd602-90b7-3a18-0000-000000000000</id>
+                    <parentGroupId>78640e0e-6671-3c61-0000-000000000000</parentGroupId>
+                    <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+                    <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+                    <destination>
+                        <groupId>78640e0e-6671-3c61-0000-000000000000</groupId>
+                        <id>5dc948f8-dd4e-3d45-0000-000000000000</id>
+                        <type>PROCESSOR</type>
+                    </destination>
+                    <flowFileExpiration>0 sec</flowFileExpiration>
+                    <labelIndex>1</labelIndex>
+                    <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+                    <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+                    <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+                    <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+                    <name></name>
+                    <selectedRelationships>success</selectedRelationships>
+                    <source>
+                        <groupId>78640e0e-6671-3c61-0000-000000000000</groupId>
+                        <id>1f59c6d8-80d8-3683-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <processors>
-                    <id>29a8257a-246c-3a09-0000-000000000000</id>
-                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
+                    <id>1f59c6d8-80d8-3683-0000-000000000000</id>
+                    <parentGroupId>78640e0e-6671-3c61-0000-000000000000</parentGroupId>
                     <position>
                         <x>314.00000123217933</x>
                         <y>108.99999936626767</y>
@@ -157,13 +182,13 @@
                         <autoTerminate>false</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>RUNNING</state>
+                    <state>STOPPED</state>
                     <style/>
                     <type>org.apache.nifi.processors.twitter.GetTwitter</type>
                 </processors>
                 <processors>
-                    <id>64cae309-1f18-3105-0000-000000000000</id>
-                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
+                    <id>5dc948f8-dd4e-3d45-0000-000000000000</id>
+                    <parentGroupId>78640e0e-6671-3c61-0000-000000000000</parentGroupId>
                     <position>
                         <x>916.0000012321793</x>
                         <y>71.99999936626767</y>
@@ -336,16 +361,16 @@
                         <autoTerminate>true</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>RUNNING</state>
+                    <state>STOPPED</state>
                     <style/>
                     <type>org.apache.nifi.processors.kafka.pubsub.PublishKafka</type>
                 </processors>
                 <processors>
-                    <id>88667962-f78a-31b8-0000-000000000000</id>
-                    <parentGroupId>171e6e93-7404-3a99-0000-000000000000</parentGroupId>
+                    <id>6291162f-b385-310d-0000-000000000000</id>
+                    <parentGroupId>78640e0e-6671-3c61-0000-000000000000</parentGroupId>
                     <position>
-                        <x>900.0000012321793</x>
-                        <y>316.9999993662677</y>
+                        <x>454.0</x>
+                        <y>333.0</y>
                     </position>
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
@@ -358,27 +383,93 @@
                         <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
                         <descriptors>
                             <entry>
-<key>Directory</key>
+<key>Hostname</key>
 <value>
-    <name>Directory</name>
+    <name>Hostname</name>
 </value>
                             </entry>
                             <entry>
-<key>Conflict Resolution Strategy</key>
+<key>Port</key>
 <value>
-    <name>Conflict Resolution Strategy</name>
+    <name>Port</name>
 </value>
                             </entry>
                             <entry>
-<key>Create Missing Directories</key>
+<key>Username</key>
 <value>
-    <name>Create Missing Directories</name>
+    <name>Username</name>
 </value>
                             </entry>
                             <entry>
-<key>Maximum File Count</key>
+<key>Password</key>
 <value>
-    <name>Maximum File Count</name>
+    <name>Password</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Remote Path</key>
+<value>
+    <name>Remote Path</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Create Directory</key>
+<value>
+    <name>Create Directory</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Batch Size</key>
+<value>
+    <name>Batch Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Connection Timeout</key>
+<value>
+    <name>Connection Timeout</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Data Timeout</key>
+<value>
+    <name>Data Timeout</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Conflict Resolution</key>
+<value>
+    <name>Conflict Resolution</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Dot Rename</key>
+<value>
+    <name>Dot Rename</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Temporary Filename</key>
+<value>
+    <name>Temporary Filename</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Transfer Mode</key>
+<value>
+    <name>Transfer Mode</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Connection Mode</key>
+<value>
+    <name>Connection Mode</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Reject Zero-Byte Files</key>
+<value>
+    <name>Reject Zero-Byte Files</name>
 </value>
                             </entry>
                             <entry>
@@ -394,15 +485,58 @@
 </value>
                             </entry>
                             <entry>
-<key>Owner</key>
+<key>Use Compression</key>
 <value>
-    <name>Owner</name>
+    <name>Use Compression</name>
 </value>
                             </entry>
                             <entry>
-<key>Group</key>
+<key>proxy-configuration-service</key>
 <value>
-    <name>Group</name>
+    <identifiesControllerService>org.apache.nifi.proxy.ProxyConfigurationService</identifiesControllerService>
+    <name>proxy-configuration-service</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Proxy Type</key>
+<value>
+    <name>Proxy Type</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Proxy Host</key>
+<value>
+    <name>Proxy Host</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Proxy Port</key>
+<value>
+    <name>Proxy Port</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Http Proxy Username</key>
+<value>
+    <name>Http Proxy Username</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Http Proxy Password</key>
+<value>
+    <name>Http Proxy Password</name>
+</value>
+                            </entry>
+                            <entry>
+<key>Internal Buffer Size</key>
+<value>
+    <name>Internal Buffer Size</name>
+</value>
+                            </entry>
+                            <entry>
+<key>ftp-use-utf8</key>
+<value>
+    <name>ftp-use-utf8</name>
 </value>
                             </entry>
                         </descriptors>
@@ -411,19 +545,62 @@
                         <penaltyDuration>30 sec</penaltyDuration>
                         <properties>
                             <entry>
-<key>Directory</key>
-<value>/opt/nifi/nifi-current/json_twitter</value>
+<key>Hostname</key>
+<value>10.65.34.238</value>
                             </entry>
                             <entry>
-<key>Conflict Resolution Strategy</key>
-<value>replace</value>
+<key>Port</key>
+<value>21</value>
                             </entry>
                             <entry>
-<key>Create Missing Directories</key>
+<key>Username</key>
+<value>capgemini</value>
+                            </entry>
+                            <entry>
+<key>Password</key>
+                            </entry>
+                            <entry>
+<key>Remote Path</key>
+<value>/Partage</value>
+                            </entry>
+                            <entry>
+<key>Create Directory</key>
 <value>true</value>
                             </entry>
                             <entry>
-<key>Maximum File Count</key>
+<key>Batch Size</key>
+<value>500</value>
+                            </entry>
+                            <entry>
+<key>Connection Timeout</key>
+<value>30 sec</value>
+                            </entry>
+                            <entry>
+<key>Data Timeout</key>
+<value>30 sec</value>
+                            </entry>
+                            <entry>
+<key>Conflict Resolution</key>
+<value>REPLACE</value>
+                            </entry>
+                            <entry>
+<key>Dot Rename</key>
+<value>true</value>
+                            </entry>
+                            <entry>
+<key>Temporary Filename</key>
+                            </entry>
+                            <entry>
+<key>Transfer Mode</key>
+<value>Binary</value>
+                            </entry>
+                            <entry>
+<key>Connection Mode</key>
+<value>Passive</value>
+                            </entry>
+                            <entry>
+<key>Reject Zero-Byte Files</key>
+<value>true</value>
                             </entry>
                             <entry>
 <key>Last Modified Time</key>
@@ -432,10 +609,35 @@
 <key>Permissions</key>
                             </entry>
                             <entry>
-<key>Owner</key>
+<key>Use Compression</key>
+<value>false</value>
                             </entry>
                             <entry>
-<key>Group</key>
+<key>proxy-configuration-service</key>
+                            </entry>
+                            <entry>
+<key>Proxy Type</key>
+<value>DIRECT</value>
+                            </entry>
+                            <entry>
+<key>Proxy Host</key>
+                            </entry>
+                            <entry>
+<key>Proxy Port</key>
+                            </entry>
+                            <entry>
+<key>Http Proxy Username</key>
+                            </entry>
+                            <entry>
+<key>Http Proxy Password</key>
+                            </entry>
+                            <entry>
+<key>Internal Buffer Size</key>
+<value>16KB</value>
+                            </entry>
+                            <entry>
+<key>ftp-use-utf8</key>
+<value>false</value>
                             </entry>
                         </properties>
                         <runDurationMillis>0</runDurationMillis>
@@ -444,23 +646,27 @@
                         <yieldDuration>1 sec</yieldDuration>
                     </config>
                     <executionNodeRestricted>false</executionNodeRestricted>
-                    <name>PutFile</name>
+                    <name>PutFTP</name>
                     <relationships>
                         <autoTerminate>true</autoTerminate>
                         <name>failure</name>
                     </relationships>
                     <relationships>
                         <autoTerminate>true</autoTerminate>
+                        <name>reject</name>
+                    </relationships>
+                    <relationships>
+                        <autoTerminate>true</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>DISABLED</state>
+                    <state>STOPPED</state>
                     <style/>
-                    <type>org.apache.nifi.processors.standard.PutFile</type>
+                    <type>org.apache.nifi.processors.standard.PutFTP</type>
                 </processors>
             </contents>
             <name>Twitter</name>
             <variables/>
         </processGroups>
     </snippet>
-    <timestamp>01/11/2019 15:02:07 UTC</timestamp>
+    <timestamp>01/18/2019 16:33:42 UTC</timestamp>
 </template>
