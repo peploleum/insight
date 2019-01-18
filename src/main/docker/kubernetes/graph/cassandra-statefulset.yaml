@@ -76,9 +76,13 @@ spec:
         # These volume mounts are persistent. They are like inline claims,
         # but not exactly because the names need to match exactly one of
         # the stateful pod volumes.
-        #volumeMounts:
-        #- name: cassandra-data
-        #  mountPath: /cassandra_data
+        volumeMounts:
+        - name: cassandra-data
+          mountPath: /cassandra_data
+      volumes:
+      - name: cassandra-data
+        persistentVolumeClaim:
+            claimName: insight-storage-graph-claim
   # These are converted to volume claims by the controller
   # and mounted at the paths mentioned above.
   # do not use these in production until ssd GCEPersistentDisk or other ssd pd
