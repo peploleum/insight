@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Mi
+      storage: 5Gi
   selector:
     matchLabels:
       component: insight-graph-volume
