@@ -46,17 +46,22 @@ export class MapService {
         });
     }
 
-    getGeoJsonFromDto(dto: IMapDataDTO): Feature {
-        const feature: Feature = {
+    getGeoJsonFromDto(dto: IMapDataDTO): any {
+        const feature = {
             geometry: {
                 type: 'Point',
                 coordinates: dto.coordinate
             },
-            name: dto.label
+            name: dto.label,
+            properties: {
+                id: dto.id,
+                description: dto.description,
+                objectType: dto.objectType
+            }
         };
-        feature.setId(dto.id);
-        feature.set('description', dto.description);
-        feature.set('objectType', dto.objectType);
+        // feature.set('id', dto.id);
+        // feature.set('description', dto.description);
+        // feature.set('objectType', dto.objectType);
         return feature;
     }
 }
