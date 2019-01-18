@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: refgeo-logstash
+  namespace: refgeo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: refgeo-logstash
+    spec:
+      initContainers:
+      - name: init-es-check
+        image: 192.168.65.5:8093/ubuntu-curl-nc:latest
+        volumeMounts:
+        - name: logstash-data 
+          mountPath: /usr/share/logstash/script
+          subPath: script
+        command:
+            - '/bin/sh'
+            - '-c'
+            - 'chmod +x /usr/share/logstash/script/until.sh && /usr/share/logstash/script/until.sh'
+      containers:
+      - image: 192.168.65.5:8093/logstash:latest
+        name: refgeo-logstash
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xmx256m -Xms256m
+        ports:
+        - containerPort: 9600
+          protocol: TCP
+        - containerPort: 5000
+          protocol: TCP
+        env:
+        - name: CONFIG_RELOAD_AUTOMATIC
+          value: "true"
+        - name: CONFIG_RELOAD_INTERVAL
+          value: 3s 
+        resources: {}
+        volumeMounts:
+        - name: logstash-data 
+          mountPath: /usr/share/logstash/csv
+          subPath: csv
+        - name: logstash-data 
+          mountPath: /usr/share/logstash/pipeline
+          subPath: pipeline
+      restartPolicy: Always
+      volumes:
+      - name: logstash-data
+        persistentVolumeClaim:
+          claimName: refgeo-storage-logstash-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: refgeo-logstash
+  namespace: refgeo
+  labels:
+    app: refgeo-logstash
+spec:
+  ports:
+  - name: http
+    port: 9600
+    protocol: TCP
+    targetPort: 9610
+  - name: "tcp"
+    port: 5000
+    protocol: TCP
+    targetPort: 5010
+  selector:
+    app: refgeo-logstash

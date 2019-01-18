@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: refgeo-kibana
+  namespace: refgeo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: refgeo-kibana
+    spec:
+      containers:
+      - name: kibana
+        image: 192.168.65.5:8093/kibana:6.4.2
+        env:
+         - name: server.name
+           value: kibana
+         - name: server.host
+           value: "0"
+         - name: ELASTICSEARCH_URL
+           value: http://refgeo-elasticsearch.refgeo:9200
+        ports:
+        - containerPort: 5601
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: refgeo-kibana
+  namespace: refgeo
+  labels:
+    app: refgeo-kibana
+spec:
+  selector:
+    app: refgeo-kibana
+  ports:
+  - name: http
+    port: 5601
+    targetPort: 5601
+    nodePort: 31000
+  type: NodePort
+    
