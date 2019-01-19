@@ -83,6 +83,7 @@ class BiographicsGatlingTest extends Simulation {
                 , "biographicsImage":null
                 , "biographicsCoordinates":"SAMPLE_TEXT"
                 , "biographicsSymbol":"SAMPLE_TEXT"
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_biographics_url"))).exitHereIfFailed

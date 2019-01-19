@@ -22,7 +22,8 @@
             "biographicsGender": "Biographics Gender",
             "biographicsImage": "Biographics Image",
             "biographicsCoordinates": "Biographics Coordinates",
-            "biographicsSymbol": "Biographics Symbol"
+            "biographicsSymbol": "Biographics Symbol",
+            "externalId": "External Id"
         }
     }
 }

@@ -33,6 +33,10 @@
         {
             "fieldName": "eventSymbol",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "externalId",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

@@ -69,6 +69,9 @@ public class EquipmentResourceIntTest {
     private static final String DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_EQUIPMENT_IMAGE_CONTENT_TYPE = "image/png";
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     @Autowired
     private EquipmentRepository equipmentRepository;
 
@@ -128,7 +131,8 @@ public class EquipmentResourceIntTest {
             .equipmentCoordinates(DEFAULT_EQUIPMENT_COORDINATES)
             .equipmentSymbol(DEFAULT_EQUIPMENT_SYMBOL)
             .equipmentImage(DEFAULT_EQUIPMENT_IMAGE)
-            .equipmentImageContentType(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE);
+            .equipmentImageContentType(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE)
+            .externalId(DEFAULT_EXTERNAL_ID);
         return equipment;
     }
 
@@ -160,6 +164,7 @@ public class EquipmentResourceIntTest {
         assertThat(testEquipment.getEquipmentSymbol()).isEqualTo(DEFAULT_EQUIPMENT_SYMBOL);
         assertThat(testEquipment.getEquipmentImage()).isEqualTo(DEFAULT_EQUIPMENT_IMAGE);
         assertThat(testEquipment.getEquipmentImageContentType()).isEqualTo(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE);
+        assertThat(testEquipment.getExternalId()).isEqualTo(DEFAULT_EXTERNAL_ID);
 
         // Validate the Equipment in Elasticsearch
         verify(mockEquipmentSearchRepository, times(1)).save(testEquipment);
@@ -221,7 +226,8 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.[*].equipmentCoordinates").value(hasItem(DEFAULT_EQUIPMENT_COORDINATES.toString())))
             .andExpect(jsonPath("$.[*].equipmentSymbol").value(hasItem(DEFAULT_EQUIPMENT_SYMBOL.toString())))
             .andExpect(jsonPath("$.[*].equipmentImageContentType").value(hasItem(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].equipmentImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE))));
+            .andExpect(jsonPath("$.[*].equipmentImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE))))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())));
     }
     
     @Test
@@ -240,7 +246,8 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.equipmentCoordinates").value(DEFAULT_EQUIPMENT_COORDINATES.toString()))
             .andExpect(jsonPath("$.equipmentSymbol").value(DEFAULT_EQUIPMENT_SYMBOL.toString()))
             .andExpect(jsonPath("$.equipmentImageContentType").value(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE))
-            .andExpect(jsonPath("$.equipmentImage").value(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE)));
+            .andExpect(jsonPath("$.equipmentImage").value(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE)))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()));
     }
 
     @Test
@@ -266,7 +273,8 @@ public class EquipmentResourceIntTest {
             .equipmentCoordinates(UPDATED_EQUIPMENT_COORDINATES)
             .equipmentSymbol(UPDATED_EQUIPMENT_SYMBOL)
             .equipmentImage(UPDATED_EQUIPMENT_IMAGE)
-            .equipmentImageContentType(UPDATED_EQUIPMENT_IMAGE_CONTENT_TYPE);
+            .equipmentImageContentType(UPDATED_EQUIPMENT_IMAGE_CONTENT_TYPE)
+            .externalId(UPDATED_EXTERNAL_ID);
         EquipmentDTO equipmentDTO = equipmentMapper.toDto(updatedEquipment);
 
         restEquipmentMockMvc.perform(put("/api/equipment")
@@ -285,6 +293,7 @@ public class EquipmentResourceIntTest {
         assertThat(testEquipment.getEquipmentSymbol()).isEqualTo(UPDATED_EQUIPMENT_SYMBOL);
         assertThat(testEquipment.getEquipmentImage()).isEqualTo(UPDATED_EQUIPMENT_IMAGE);
         assertThat(testEquipment.getEquipmentImageContentType()).isEqualTo(UPDATED_EQUIPMENT_IMAGE_CONTENT_TYPE);
+        assertThat(testEquipment.getExternalId()).isEqualTo(UPDATED_EXTERNAL_ID);
 
         // Validate the Equipment in Elasticsearch
         verify(mockEquipmentSearchRepository, times(1)).save(testEquipment);
@@ -348,7 +357,8 @@ public class EquipmentResourceIntTest {
             .andExpect(jsonPath("$.[*].equipmentCoordinates").value(hasItem(DEFAULT_EQUIPMENT_COORDINATES)))
             .andExpect(jsonPath("$.[*].equipmentSymbol").value(hasItem(DEFAULT_EQUIPMENT_SYMBOL)))
             .andExpect(jsonPath("$.[*].equipmentImageContentType").value(hasItem(DEFAULT_EQUIPMENT_IMAGE_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].equipmentImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE))));
+            .andExpect(jsonPath("$.[*].equipmentImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EQUIPMENT_IMAGE))))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
     }
 
     @Test

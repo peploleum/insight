@@ -36,6 +36,7 @@
             <th jhiSortBy="organisationCoordinates"><span jhiTranslate="insightApp.organisation.organisationCoordinates">Organisation Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="organisationImage"><span jhiTranslate="insightApp.organisation.organisationImage">Organisation Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="organisationSymbol"><span jhiTranslate="insightApp.organisation.organisationSymbol">Organisation Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.organisation.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -53,6 +54,7 @@
                     <span *ngIf="organisation.organisationImage">{{organisation.organisationImageContentType}}, {{byteSize(organisation.organisationImage)}}</span>
                 </td>
                 <td>{{organisation.organisationSymbol}}</td>
+                <td>{{organisation.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

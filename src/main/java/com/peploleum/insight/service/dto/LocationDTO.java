@@ -24,6 +24,8 @@ public class LocationDTO implements Serializable {
 
     private String locationSymbol;
 
+    private String externalId;
+
     public String getId() {
         return id;
     }
@@ -80,6 +82,14 @@ public class LocationDTO implements Serializable {
         this.locationSymbol = locationSymbol;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -110,6 +120,7 @@ public class LocationDTO implements Serializable {
             ", locationCoordinates='" + getLocationCoordinates() + "'" +
             ", locationImage='" + getLocationImage() + "'" +
             ", locationSymbol='" + getLocationSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

@@ -19,6 +19,7 @@ export interface IEvent {
     eventImageContentType?: string;
     eventImage?: any;
     eventSymbol?: string;
+    externalId?: string;
 }
 
 export class Event implements IEvent {
@@ -31,6 +32,7 @@ export class Event implements IEvent {
         public eventCoordinates?: string,
         public eventImageContentType?: string,
         public eventImage?: any,
-        public eventSymbol?: string
+        public eventSymbol?: string,
+        public externalId?: string
     ) {}
 }

@@ -83,6 +83,7 @@ class EventGatlingTest extends Simulation {
                 , "eventCoordinates":"SAMPLE_TEXT"
                 , "eventImage":null
                 , "eventSymbol":"SAMPLE_TEXT"
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_event_url"))).exitHereIfFailed

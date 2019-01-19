@@ -81,6 +81,7 @@ class LocationGatlingTest extends Simulation {
                 , "locationCoordinates":"SAMPLE_TEXT"
                 , "locationImage":null
                 , "locationSymbol":"SAMPLE_TEXT"
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_location_url"))).exitHereIfFailed

@@ -5,7 +5,8 @@ entity Biographics {
     biographicsGender Gender,
     biographicsImage ImageBlob,
     biographicsCoordinates String,
-    biographicsSymbol String
+    biographicsSymbol String,
+    externalId String
 }
 
 entity Organisation {
@@ -14,7 +15,8 @@ entity Organisation {
     organisationSize Size,
     organisationCoordinates String,
     organisationImage ImageBlob,
-    organisationSymbol String
+    organisationSymbol String,
+    externalId String
 }
 
 entity Location {
@@ -22,7 +24,8 @@ entity Location {
     locationType LocationType,
     locationCoordinates String,
     locationImage ImageBlob,
-    locationSymbol String
+    locationSymbol String,
+    externalId String
 }
 
 entity Event {
@@ -32,7 +35,8 @@ entity Event {
     eventDate Instant,
     eventCoordinates String,
     eventImage ImageBlob,
-    eventSymbol String
+    eventSymbol String,
+    externalId String
 }
 
 entity Equipment {
@@ -41,7 +45,8 @@ entity Equipment {
     equipmentType EquipmentType,
     equipmentCoordinates String,
     equipmentSymbol String,
-    equipmentImage ImageBlob
+    equipmentImage ImageBlob,
+    externalId String
 }
 
 entity RawData {
@@ -57,7 +62,8 @@ entity RawData {
     rawDataSymbol String,
     rawDataData Blob,
     rawDataCoordinates String,
-    rawDataAnnotations String
+    rawDataAnnotations String,
+    externalId String
 }
 
 enum Gender {

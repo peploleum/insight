@@ -49,6 +49,9 @@ public class Organisation implements Serializable {
     @Field("organisation_symbol")
     private String organisationSymbol;
 
+    @Field("external_id")
+    private String externalId;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -148,6 +151,19 @@ public class Organisation implements Serializable {
     public void setOrganisationSymbol(String organisationSymbol) {
         this.organisationSymbol = organisationSymbol;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public Organisation externalId(String externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -181,6 +197,7 @@ public class Organisation implements Serializable {
             ", organisationImage='" + getOrganisationImage() + "'" +
             ", organisationImageContentType='" + getOrganisationImageContentType() + "'" +
             ", organisationSymbol='" + getOrganisationSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

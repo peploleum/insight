@@ -40,6 +40,7 @@ describe('Service Tests', () => {
                 'image/png',
                 'AAAAAAA',
                 'AAAAAAA',
+                'AAAAAAA',
                 'AAAAAAA'
             );
         });
@@ -101,7 +102,8 @@ describe('Service Tests', () => {
                         rawDataSymbol: 'BBBBBB',
                         rawDataData: 'BBBBBB',
                         rawDataCoordinates: 'BBBBBB',
-                        rawDataAnnotations: 'BBBBBB'
+                        rawDataAnnotations: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -136,7 +138,8 @@ describe('Service Tests', () => {
                         rawDataSymbol: 'BBBBBB',
                         rawDataData: 'BBBBBB',
                         rawDataCoordinates: 'BBBBBB',
-                        rawDataAnnotations: 'BBBBBB'
+                        rawDataAnnotations: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

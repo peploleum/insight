@@ -36,6 +36,7 @@
             <th jhiSortBy="equipmentCoordinates"><span jhiTranslate="insightApp.equipment.equipmentCoordinates">Equipment Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="equipmentSymbol"><span jhiTranslate="insightApp.equipment.equipmentSymbol">Equipment Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="equipmentImage"><span jhiTranslate="insightApp.equipment.equipmentImage">Equipment Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.equipment.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -53,6 +54,7 @@
                     </a>
                     <span *ngIf="equipment.equipmentImage">{{equipment.equipmentImageContentType}}, {{byteSize(equipment.equipmentImage)}}</span>
                 </td>
+                <td>{{equipment.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

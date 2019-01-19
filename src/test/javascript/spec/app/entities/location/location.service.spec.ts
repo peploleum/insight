@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(LocationService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Location('ID', 'AAAAAAA', LocationType.CITY, 'AAAAAAA', 'image/png', 'AAAAAAA', 'AAAAAAA');
+            elemDefault = new Location('ID', 'AAAAAAA', LocationType.CITY, 'AAAAAAA', 'image/png', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -59,7 +59,8 @@ describe('Service Tests', () => {
                         locationType: 'BBBBBB',
                         locationCoordinates: 'BBBBBB',
                         locationImage: 'BBBBBB',
-                        locationSymbol: 'BBBBBB'
+                        locationSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -80,7 +81,8 @@ describe('Service Tests', () => {
                         locationType: 'BBBBBB',
                         locationCoordinates: 'BBBBBB',
                         locationImage: 'BBBBBB',
-                        locationSymbol: 'BBBBBB'
+                        locationSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

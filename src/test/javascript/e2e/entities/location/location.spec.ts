@@ -47,12 +47,14 @@ describe('Location e2e test', () => {
             locationUpdatePage.locationTypeSelectLastOption(),
             locationUpdatePage.setLocationCoordinatesInput('locationCoordinates'),
             locationUpdatePage.setLocationImageInput(absolutePath),
-            locationUpdatePage.setLocationSymbolInput('locationSymbol')
+            locationUpdatePage.setLocationSymbolInput('locationSymbol'),
+            locationUpdatePage.setExternalIdInput('externalId')
         ]);
         expect(await locationUpdatePage.getLocationNameInput()).to.eq('locationName');
         expect(await locationUpdatePage.getLocationCoordinatesInput()).to.eq('locationCoordinates');
         expect(await locationUpdatePage.getLocationImageInput()).to.endsWith(fileNameToUpload);
         expect(await locationUpdatePage.getLocationSymbolInput()).to.eq('locationSymbol');
+        expect(await locationUpdatePage.getExternalIdInput()).to.eq('externalId');
         await locationUpdatePage.save();
         expect(await locationUpdatePage.getSaveButton().isPresent()).to.be.false;
 

@@ -32,6 +32,7 @@ export class EquipmentUpdatePage {
     equipmentCoordinatesInput = element(by.id('field_equipmentCoordinates'));
     equipmentSymbolInput = element(by.id('field_equipmentSymbol'));
     equipmentImageInput = element(by.id('file_equipmentImage'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -90,6 +91,14 @@ export class EquipmentUpdatePage {
 
     async getEquipmentImageInput() {
         return this.equipmentImageInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

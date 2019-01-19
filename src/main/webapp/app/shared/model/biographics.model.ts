@@ -14,6 +14,7 @@ export interface IBiographics {
     biographicsImage?: any;
     biographicsCoordinates?: string;
     biographicsSymbol?: string;
+    externalId?: string;
 }
 
 export class Biographics implements IBiographics {
@@ -26,6 +27,7 @@ export class Biographics implements IBiographics {
         public biographicsImageContentType?: string,
         public biographicsImage?: any,
         public biographicsCoordinates?: string,
-        public biographicsSymbol?: string
+        public biographicsSymbol?: string,
+        public externalId?: string
     ) {}
 }

@@ -34,6 +34,7 @@ describe('Service Tests', () => {
                 'AAAAAAA',
                 'image/png',
                 'AAAAAAA',
+                'AAAAAAA',
                 'AAAAAAA'
             );
         });
@@ -86,7 +87,8 @@ describe('Service Tests', () => {
                         eventDate: currentDate.format(DATE_TIME_FORMAT),
                         eventCoordinates: 'BBBBBB',
                         eventImage: 'BBBBBB',
-                        eventSymbol: 'BBBBBB'
+                        eventSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -114,7 +116,8 @@ describe('Service Tests', () => {
                         eventDate: currentDate.format(DATE_TIME_FORMAT),
                         eventCoordinates: 'BBBBBB',
                         eventImage: 'BBBBBB',
-                        eventSymbol: 'BBBBBB'
+                        eventSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

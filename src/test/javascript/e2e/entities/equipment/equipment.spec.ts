@@ -48,13 +48,15 @@ describe('Equipment e2e test', () => {
             equipmentUpdatePage.equipmentTypeSelectLastOption(),
             equipmentUpdatePage.setEquipmentCoordinatesInput('equipmentCoordinates'),
             equipmentUpdatePage.setEquipmentSymbolInput('equipmentSymbol'),
-            equipmentUpdatePage.setEquipmentImageInput(absolutePath)
+            equipmentUpdatePage.setEquipmentImageInput(absolutePath),
+            equipmentUpdatePage.setExternalIdInput('externalId')
         ]);
         expect(await equipmentUpdatePage.getEquipmentNameInput()).to.eq('equipmentName');
         expect(await equipmentUpdatePage.getEquipmentDescriptionInput()).to.eq('equipmentDescription');
         expect(await equipmentUpdatePage.getEquipmentCoordinatesInput()).to.eq('equipmentCoordinates');
         expect(await equipmentUpdatePage.getEquipmentSymbolInput()).to.eq('equipmentSymbol');
         expect(await equipmentUpdatePage.getEquipmentImageInput()).to.endsWith(fileNameToUpload);
+        expect(await equipmentUpdatePage.getExternalIdInput()).to.eq('externalId');
         await equipmentUpdatePage.save();
         expect(await equipmentUpdatePage.getSaveButton().isPresent()).to.be.false;
 

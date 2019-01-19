@@ -66,6 +66,9 @@ public class LocationResourceIntTest {
     private static final String DEFAULT_LOCATION_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_LOCATION_SYMBOL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     @Autowired
     private LocationRepository locationRepository;
 
@@ -124,7 +127,8 @@ public class LocationResourceIntTest {
             .locationCoordinates(DEFAULT_LOCATION_COORDINATES)
             .locationImage(DEFAULT_LOCATION_IMAGE)
             .locationImageContentType(DEFAULT_LOCATION_IMAGE_CONTENT_TYPE)
-            .locationSymbol(DEFAULT_LOCATION_SYMBOL);
+            .locationSymbol(DEFAULT_LOCATION_SYMBOL)
+            .externalId(DEFAULT_EXTERNAL_ID);
         return location;
     }
 
@@ -155,6 +159,7 @@ public class LocationResourceIntTest {
         assertThat(testLocation.getLocationImage()).isEqualTo(DEFAULT_LOCATION_IMAGE);
         assertThat(testLocation.getLocationImageContentType()).isEqualTo(DEFAULT_LOCATION_IMAGE_CONTENT_TYPE);
         assertThat(testLocation.getLocationSymbol()).isEqualTo(DEFAULT_LOCATION_SYMBOL);
+        assertThat(testLocation.getExternalId()).isEqualTo(DEFAULT_EXTERNAL_ID);
 
         // Validate the Location in Elasticsearch
         verify(mockLocationSearchRepository, times(1)).save(testLocation);
@@ -215,7 +220,8 @@ public class LocationResourceIntTest {
             .andExpect(jsonPath("$.[*].locationCoordinates").value(hasItem(DEFAULT_LOCATION_COORDINATES.toString())))
             .andExpect(jsonPath("$.[*].locationImageContentType").value(hasItem(DEFAULT_LOCATION_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].locationImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_LOCATION_IMAGE))))
-            .andExpect(jsonPath("$.[*].locationSymbol").value(hasItem(DEFAULT_LOCATION_SYMBOL.toString())));
+            .andExpect(jsonPath("$.[*].locationSymbol").value(hasItem(DEFAULT_LOCATION_SYMBOL.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())));
     }
     
     @Test
@@ -233,7 +239,8 @@ public class LocationResourceIntTest {
             .andExpect(jsonPath("$.locationCoordinates").value(DEFAULT_LOCATION_COORDINATES.toString()))
             .andExpect(jsonPath("$.locationImageContentType").value(DEFAULT_LOCATION_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.locationImage").value(Base64Utils.encodeToString(DEFAULT_LOCATION_IMAGE)))
-            .andExpect(jsonPath("$.locationSymbol").value(DEFAULT_LOCATION_SYMBOL.toString()));
+            .andExpect(jsonPath("$.locationSymbol").value(DEFAULT_LOCATION_SYMBOL.toString()))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()));
     }
 
     @Test
@@ -258,7 +265,8 @@ public class LocationResourceIntTest {
             .locationCoordinates(UPDATED_LOCATION_COORDINATES)
             .locationImage(UPDATED_LOCATION_IMAGE)
             .locationImageContentType(UPDATED_LOCATION_IMAGE_CONTENT_TYPE)
-            .locationSymbol(UPDATED_LOCATION_SYMBOL);
+            .locationSymbol(UPDATED_LOCATION_SYMBOL)
+            .externalId(UPDATED_EXTERNAL_ID);
         LocationDTO locationDTO = locationMapper.toDto(updatedLocation);
 
         restLocationMockMvc.perform(put("/api/locations")
@@ -276,6 +284,7 @@ public class LocationResourceIntTest {
         assertThat(testLocation.getLocationImage()).isEqualTo(UPDATED_LOCATION_IMAGE);
         assertThat(testLocation.getLocationImageContentType()).isEqualTo(UPDATED_LOCATION_IMAGE_CONTENT_TYPE);
         assertThat(testLocation.getLocationSymbol()).isEqualTo(UPDATED_LOCATION_SYMBOL);
+        assertThat(testLocation.getExternalId()).isEqualTo(UPDATED_EXTERNAL_ID);
 
         // Validate the Location in Elasticsearch
         verify(mockLocationSearchRepository, times(1)).save(testLocation);
@@ -338,7 +347,8 @@ public class LocationResourceIntTest {
             .andExpect(jsonPath("$.[*].locationCoordinates").value(hasItem(DEFAULT_LOCATION_COORDINATES)))
             .andExpect(jsonPath("$.[*].locationImageContentType").value(hasItem(DEFAULT_LOCATION_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].locationImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_LOCATION_IMAGE))))
-            .andExpect(jsonPath("$.[*].locationSymbol").value(hasItem(DEFAULT_LOCATION_SYMBOL)));
+            .andExpect(jsonPath("$.[*].locationSymbol").value(hasItem(DEFAULT_LOCATION_SYMBOL)))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
     }
 
     @Test

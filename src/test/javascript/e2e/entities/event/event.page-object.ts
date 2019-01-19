@@ -33,6 +33,7 @@ export class EventUpdatePage {
     eventCoordinatesInput = element(by.id('field_eventCoordinates'));
     eventImageInput = element(by.id('file_eventImage'));
     eventSymbolInput = element(by.id('field_eventSymbol'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -99,6 +100,14 @@ export class EventUpdatePage {
 
     async getEventSymbolInput() {
         return this.eventSymbolInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

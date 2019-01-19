@@ -29,6 +29,8 @@ public class EventDTO implements Serializable {
 
     private String eventSymbol;
 
+    private String externalId;
+
     public String getId() {
         return id;
     }
@@ -101,6 +103,14 @@ public class EventDTO implements Serializable {
         this.eventSymbol = eventSymbol;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -133,6 +143,7 @@ public class EventDTO implements Serializable {
             ", eventCoordinates='" + getEventCoordinates() + "'" +
             ", eventImage='" + getEventImage() + "'" +
             ", eventSymbol='" + getEventSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

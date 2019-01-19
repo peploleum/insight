@@ -49,7 +49,8 @@ describe('Biographics e2e test', () => {
             biographicsUpdatePage.biographicsGenderSelectLastOption(),
             biographicsUpdatePage.setBiographicsImageInput(absolutePath),
             biographicsUpdatePage.setBiographicsCoordinatesInput('biographicsCoordinates'),
-            biographicsUpdatePage.setBiographicsSymbolInput('biographicsSymbol')
+            biographicsUpdatePage.setBiographicsSymbolInput('biographicsSymbol'),
+            biographicsUpdatePage.setExternalIdInput('externalId')
         ]);
         expect(await biographicsUpdatePage.getBiographicsFirstnameInput()).to.eq('biographicsFirstname');
         expect(await biographicsUpdatePage.getBiographicsNameInput()).to.eq('biographicsName');
@@ -57,6 +58,7 @@ describe('Biographics e2e test', () => {
         expect(await biographicsUpdatePage.getBiographicsImageInput()).to.endsWith(fileNameToUpload);
         expect(await biographicsUpdatePage.getBiographicsCoordinatesInput()).to.eq('biographicsCoordinates');
         expect(await biographicsUpdatePage.getBiographicsSymbolInput()).to.eq('biographicsSymbol');
+        expect(await biographicsUpdatePage.getExternalIdInput()).to.eq('externalId');
         await biographicsUpdatePage.save();
         expect(await biographicsUpdatePage.getSaveButton().isPresent()).to.be.false;
 

@@ -26,6 +26,8 @@ public class OrganisationDTO implements Serializable {
 
     private String organisationSymbol;
 
+    private String externalId;
+
     public String getId() {
         return id;
     }
@@ -90,6 +92,14 @@ public class OrganisationDTO implements Serializable {
         this.organisationSymbol = organisationSymbol;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,6 +131,7 @@ public class OrganisationDTO implements Serializable {
             ", organisationCoordinates='" + getOrganisationCoordinates() + "'" +
             ", organisationImage='" + getOrganisationImage() + "'" +
             ", organisationSymbol='" + getOrganisationSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

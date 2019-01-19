@@ -25,11 +25,6 @@
         </div>
     </div>
     <br/>
-    <div *ngIf="rawData && rawData.length">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-    </div>
     <div class="table-responsive" *ngIf="rawData">
         <table class="table table-striped">
             <thead>
@@ -48,6 +43,7 @@
             <th jhiSortBy="rawDataData"><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="rawDataCoordinates"><span jhiTranslate="insightApp.rawData.rawDataCoordinates">Raw Data Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="rawDataAnnotations"><span jhiTranslate="insightApp.rawData.rawDataAnnotations">Raw Data Annotations</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.rawData.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -70,6 +66,7 @@
                 </td>
                 <td>{{rawData.rawDataCoordinates}}</td>
                 <td>{{rawData.rawDataAnnotations}}</td>
+                <td>{{rawData.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

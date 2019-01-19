@@ -49,7 +49,8 @@ describe('Event e2e test', () => {
             eventUpdatePage.setEventDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
             eventUpdatePage.setEventCoordinatesInput('eventCoordinates'),
             eventUpdatePage.setEventImageInput(absolutePath),
-            eventUpdatePage.setEventSymbolInput('eventSymbol')
+            eventUpdatePage.setEventSymbolInput('eventSymbol'),
+            eventUpdatePage.setExternalIdInput('externalId')
         ]);
         expect(await eventUpdatePage.getEventNameInput()).to.eq('eventName');
         expect(await eventUpdatePage.getEventDescriptionInput()).to.eq('eventDescription');
@@ -57,6 +58,7 @@ describe('Event e2e test', () => {
         expect(await eventUpdatePage.getEventCoordinatesInput()).to.eq('eventCoordinates');
         expect(await eventUpdatePage.getEventImageInput()).to.endsWith(fileNameToUpload);
         expect(await eventUpdatePage.getEventSymbolInput()).to.eq('eventSymbol');
+        expect(await eventUpdatePage.getExternalIdInput()).to.eq('externalId');
         await eventUpdatePage.save();
         expect(await eventUpdatePage.getSaveButton().isPresent()).to.be.false;
 

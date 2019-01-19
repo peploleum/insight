@@ -37,6 +37,7 @@
             <th jhiSortBy="biographicsImage"><span jhiTranslate="insightApp.biographics.biographicsImage">Biographics Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="biographicsCoordinates"><span jhiTranslate="insightApp.biographics.biographicsCoordinates">Biographics Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="biographicsSymbol"><span jhiTranslate="insightApp.biographics.biographicsSymbol">Biographics Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.biographics.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -55,6 +56,7 @@
                 </td>
                 <td>{{biographics.biographicsCoordinates}}</td>
                 <td>{{biographics.biographicsSymbol}}</td>
+                <td>{{biographics.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

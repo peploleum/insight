@@ -69,6 +69,9 @@ public class OrganisationResourceIntTest {
     private static final String DEFAULT_ORGANISATION_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_ORGANISATION_SYMBOL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     @Autowired
     private OrganisationRepository organisationRepository;
 
@@ -128,7 +131,8 @@ public class OrganisationResourceIntTest {
             .organisationCoordinates(DEFAULT_ORGANISATION_COORDINATES)
             .organisationImage(DEFAULT_ORGANISATION_IMAGE)
             .organisationImageContentType(DEFAULT_ORGANISATION_IMAGE_CONTENT_TYPE)
-            .organisationSymbol(DEFAULT_ORGANISATION_SYMBOL);
+            .organisationSymbol(DEFAULT_ORGANISATION_SYMBOL)
+            .externalId(DEFAULT_EXTERNAL_ID);
         return organisation;
     }
 
@@ -160,6 +164,7 @@ public class OrganisationResourceIntTest {
         assertThat(testOrganisation.getOrganisationImage()).isEqualTo(DEFAULT_ORGANISATION_IMAGE);
         assertThat(testOrganisation.getOrganisationImageContentType()).isEqualTo(DEFAULT_ORGANISATION_IMAGE_CONTENT_TYPE);
         assertThat(testOrganisation.getOrganisationSymbol()).isEqualTo(DEFAULT_ORGANISATION_SYMBOL);
+        assertThat(testOrganisation.getExternalId()).isEqualTo(DEFAULT_EXTERNAL_ID);
 
         // Validate the Organisation in Elasticsearch
         verify(mockOrganisationSearchRepository, times(1)).save(testOrganisation);
@@ -221,7 +226,8 @@ public class OrganisationResourceIntTest {
             .andExpect(jsonPath("$.[*].organisationCoordinates").value(hasItem(DEFAULT_ORGANISATION_COORDINATES.toString())))
             .andExpect(jsonPath("$.[*].organisationImageContentType").value(hasItem(DEFAULT_ORGANISATION_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].organisationImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_ORGANISATION_IMAGE))))
-            .andExpect(jsonPath("$.[*].organisationSymbol").value(hasItem(DEFAULT_ORGANISATION_SYMBOL.toString())));
+            .andExpect(jsonPath("$.[*].organisationSymbol").value(hasItem(DEFAULT_ORGANISATION_SYMBOL.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())));
     }
     
     @Test
@@ -240,7 +246,8 @@ public class OrganisationResourceIntTest {
             .andExpect(jsonPath("$.organisationCoordinates").value(DEFAULT_ORGANISATION_COORDINATES.toString()))
             .andExpect(jsonPath("$.organisationImageContentType").value(DEFAULT_ORGANISATION_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.organisationImage").value(Base64Utils.encodeToString(DEFAULT_ORGANISATION_IMAGE)))
-            .andExpect(jsonPath("$.organisationSymbol").value(DEFAULT_ORGANISATION_SYMBOL.toString()));
+            .andExpect(jsonPath("$.organisationSymbol").value(DEFAULT_ORGANISATION_SYMBOL.toString()))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()));
     }
 
     @Test
@@ -266,7 +273,8 @@ public class OrganisationResourceIntTest {
             .organisationCoordinates(UPDATED_ORGANISATION_COORDINATES)
             .organisationImage(UPDATED_ORGANISATION_IMAGE)
             .organisationImageContentType(UPDATED_ORGANISATION_IMAGE_CONTENT_TYPE)
-            .organisationSymbol(UPDATED_ORGANISATION_SYMBOL);
+            .organisationSymbol(UPDATED_ORGANISATION_SYMBOL)
+            .externalId(UPDATED_EXTERNAL_ID);
         OrganisationDTO organisationDTO = organisationMapper.toDto(updatedOrganisation);
 
         restOrganisationMockMvc.perform(put("/api/organisations")
@@ -285,6 +293,7 @@ public class OrganisationResourceIntTest {
         assertThat(testOrganisation.getOrganisationImage()).isEqualTo(UPDATED_ORGANISATION_IMAGE);
         assertThat(testOrganisation.getOrganisationImageContentType()).isEqualTo(UPDATED_ORGANISATION_IMAGE_CONTENT_TYPE);
         assertThat(testOrganisation.getOrganisationSymbol()).isEqualTo(UPDATED_ORGANISATION_SYMBOL);
+        assertThat(testOrganisation.getExternalId()).isEqualTo(UPDATED_EXTERNAL_ID);
 
         // Validate the Organisation in Elasticsearch
         verify(mockOrganisationSearchRepository, times(1)).save(testOrganisation);
@@ -348,7 +357,8 @@ public class OrganisationResourceIntTest {
             .andExpect(jsonPath("$.[*].organisationCoordinates").value(hasItem(DEFAULT_ORGANISATION_COORDINATES)))
             .andExpect(jsonPath("$.[*].organisationImageContentType").value(hasItem(DEFAULT_ORGANISATION_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].organisationImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_ORGANISATION_IMAGE))))
-            .andExpect(jsonPath("$.[*].organisationSymbol").value(hasItem(DEFAULT_ORGANISATION_SYMBOL)));
+            .andExpect(jsonPath("$.[*].organisationSymbol").value(hasItem(DEFAULT_ORGANISATION_SYMBOL)))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
     }
 
     @Test

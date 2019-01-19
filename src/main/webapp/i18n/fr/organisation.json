@@ -21,7 +21,8 @@
             "organisationSize": "Organisation Size",
             "organisationCoordinates": "Organisation Coordinates",
             "organisationImage": "Organisation Image",
-            "organisationSymbol": "Organisation Symbol"
+            "organisationSymbol": "Organisation Symbol",
+            "externalId": "External Id"
         }
     }
 }

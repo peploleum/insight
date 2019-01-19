@@ -53,6 +53,9 @@ public class Event implements Serializable {
     @Field("event_symbol")
     private String eventSymbol;
 
+    @Field("external_id")
+    private String externalId;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -165,6 +168,19 @@ public class Event implements Serializable {
     public void setEventSymbol(String eventSymbol) {
         this.eventSymbol = eventSymbol;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public Event externalId(String externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -199,6 +215,7 @@ public class Event implements Serializable {
             ", eventImage='" + getEventImage() + "'" +
             ", eventImageContentType='" + getEventImageContentType() + "'" +
             ", eventSymbol='" + getEventSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

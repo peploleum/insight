@@ -48,13 +48,15 @@ describe('Organisation e2e test', () => {
             organisationUpdatePage.organisationSizeSelectLastOption(),
             organisationUpdatePage.setOrganisationCoordinatesInput('organisationCoordinates'),
             organisationUpdatePage.setOrganisationImageInput(absolutePath),
-            organisationUpdatePage.setOrganisationSymbolInput('organisationSymbol')
+            organisationUpdatePage.setOrganisationSymbolInput('organisationSymbol'),
+            organisationUpdatePage.setExternalIdInput('externalId')
         ]);
         expect(await organisationUpdatePage.getOrganisationNameInput()).to.eq('organisationName');
         expect(await organisationUpdatePage.getOrganisationDescrptionInput()).to.eq('organisationDescrption');
         expect(await organisationUpdatePage.getOrganisationCoordinatesInput()).to.eq('organisationCoordinates');
         expect(await organisationUpdatePage.getOrganisationImageInput()).to.endsWith(fileNameToUpload);
         expect(await organisationUpdatePage.getOrganisationSymbolInput()).to.eq('organisationSymbol');
+        expect(await organisationUpdatePage.getExternalIdInput()).to.eq('externalId');
         await organisationUpdatePage.save();
         expect(await organisationUpdatePage.getSaveButton().isPresent()).to.be.false;
 

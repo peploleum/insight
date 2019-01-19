@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(OrganisationService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Organisation('ID', 'AAAAAAA', 'AAAAAAA', Size.SMALL, 'AAAAAAA', 'image/png', 'AAAAAAA', 'AAAAAAA');
+            elemDefault = new Organisation('ID', 'AAAAAAA', 'AAAAAAA', Size.SMALL, 'AAAAAAA', 'image/png', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -60,7 +60,8 @@ describe('Service Tests', () => {
                         organisationSize: 'BBBBBB',
                         organisationCoordinates: 'BBBBBB',
                         organisationImage: 'BBBBBB',
-                        organisationSymbol: 'BBBBBB'
+                        organisationSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -82,7 +83,8 @@ describe('Service Tests', () => {
                         organisationSize: 'BBBBBB',
                         organisationCoordinates: 'BBBBBB',
                         organisationImage: 'BBBBBB',
-                        organisationSymbol: 'BBBBBB'
+                        organisationSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

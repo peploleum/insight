@@ -36,6 +36,10 @@
         {
             "fieldName": "biographicsSymbol",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "externalId",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

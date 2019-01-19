@@ -20,7 +20,8 @@
             "locationType": "Location Type",
             "locationCoordinates": "Location Coordinates",
             "locationImage": "Location Image",
-            "locationSymbol": "Location Symbol"
+            "locationSymbol": "Location Symbol",
+            "externalId": "External Id"
         }
     }
 }

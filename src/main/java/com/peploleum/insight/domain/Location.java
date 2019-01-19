@@ -46,6 +46,9 @@ public class Location implements Serializable {
     @Field("location_symbol")
     private String locationSymbol;
 
+    @Field("external_id")
+    private String externalId;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -132,6 +135,19 @@ public class Location implements Serializable {
     public void setLocationSymbol(String locationSymbol) {
         this.locationSymbol = locationSymbol;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public Location externalId(String externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -164,6 +180,7 @@ public class Location implements Serializable {
             ", locationImage='" + getLocationImage() + "'" +
             ", locationImageContentType='" + getLocationImageContentType() + "'" +
             ", locationSymbol='" + getLocationSymbol() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

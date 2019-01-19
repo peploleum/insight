@@ -21,7 +21,17 @@ describe('Service Tests', () => {
             service = injector.get(EquipmentService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Equipment('ID', 'AAAAAAA', 'AAAAAAA', EquipmentType.WEAPON, 'AAAAAAA', 'AAAAAAA', 'image/png', 'AAAAAAA');
+            elemDefault = new Equipment(
+                'ID',
+                'AAAAAAA',
+                'AAAAAAA',
+                EquipmentType.WEAPON,
+                'AAAAAAA',
+                'AAAAAAA',
+                'image/png',
+                'AAAAAAA',
+                'AAAAAAA'
+            );
         });
 
         describe('Service methods', async () => {
@@ -60,7 +70,8 @@ describe('Service Tests', () => {
                         equipmentType: 'BBBBBB',
                         equipmentCoordinates: 'BBBBBB',
                         equipmentSymbol: 'BBBBBB',
-                        equipmentImage: 'BBBBBB'
+                        equipmentImage: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -82,7 +93,8 @@ describe('Service Tests', () => {
                         equipmentType: 'BBBBBB',
                         equipmentCoordinates: 'BBBBBB',
                         equipmentSymbol: 'BBBBBB',
-                        equipmentImage: 'BBBBBB'
+                        equipmentImage: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

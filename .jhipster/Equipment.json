@@ -29,6 +29,10 @@
             "fieldName": "equipmentImage",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "image"
+        },
+        {
+            "fieldName": "externalId",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

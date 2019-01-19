@@ -14,6 +14,7 @@ export interface IEquipment {
     equipmentSymbol?: string;
     equipmentImageContentType?: string;
     equipmentImage?: any;
+    externalId?: string;
 }
 
 export class Equipment implements IEquipment {
@@ -25,6 +26,7 @@ export class Equipment implements IEquipment {
         public equipmentCoordinates?: string,
         public equipmentSymbol?: string,
         public equipmentImageContentType?: string,
-        public equipmentImage?: any
+        public equipmentImage?: any,
+        public externalId?: string
     ) {}
 }

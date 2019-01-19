@@ -72,6 +72,9 @@ public class BiographicsResourceIntTest {
     private static final String DEFAULT_BIOGRAPHICS_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_BIOGRAPHICS_SYMBOL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     @Autowired
     private BiographicsRepository biographicsRepository;
 
@@ -132,7 +135,8 @@ public class BiographicsResourceIntTest {
             .biographicsImage(DEFAULT_BIOGRAPHICS_IMAGE)
             .biographicsImageContentType(DEFAULT_BIOGRAPHICS_IMAGE_CONTENT_TYPE)
             .biographicsCoordinates(DEFAULT_BIOGRAPHICS_COORDINATES)
-            .biographicsSymbol(DEFAULT_BIOGRAPHICS_SYMBOL);
+            .biographicsSymbol(DEFAULT_BIOGRAPHICS_SYMBOL)
+            .externalId(DEFAULT_EXTERNAL_ID);
         return biographics;
     }
 
@@ -165,6 +169,7 @@ public class BiographicsResourceIntTest {
         assertThat(testBiographics.getBiographicsImageContentType()).isEqualTo(DEFAULT_BIOGRAPHICS_IMAGE_CONTENT_TYPE);
         assertThat(testBiographics.getBiographicsCoordinates()).isEqualTo(DEFAULT_BIOGRAPHICS_COORDINATES);
         assertThat(testBiographics.getBiographicsSymbol()).isEqualTo(DEFAULT_BIOGRAPHICS_SYMBOL);
+        assertThat(testBiographics.getExternalId()).isEqualTo(DEFAULT_EXTERNAL_ID);
 
         // Validate the Biographics in Elasticsearch
         verify(mockBiographicsSearchRepository, times(1)).save(testBiographics);
@@ -245,7 +250,8 @@ public class BiographicsResourceIntTest {
             .andExpect(jsonPath("$.[*].biographicsImageContentType").value(hasItem(DEFAULT_BIOGRAPHICS_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].biographicsImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_BIOGRAPHICS_IMAGE))))
             .andExpect(jsonPath("$.[*].biographicsCoordinates").value(hasItem(DEFAULT_BIOGRAPHICS_COORDINATES.toString())))
-            .andExpect(jsonPath("$.[*].biographicsSymbol").value(hasItem(DEFAULT_BIOGRAPHICS_SYMBOL.toString())));
+            .andExpect(jsonPath("$.[*].biographicsSymbol").value(hasItem(DEFAULT_BIOGRAPHICS_SYMBOL.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())));
     }
     
     @Test
@@ -265,7 +271,8 @@ public class BiographicsResourceIntTest {
             .andExpect(jsonPath("$.biographicsImageContentType").value(DEFAULT_BIOGRAPHICS_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.biographicsImage").value(Base64Utils.encodeToString(DEFAULT_BIOGRAPHICS_IMAGE)))
             .andExpect(jsonPath("$.biographicsCoordinates").value(DEFAULT_BIOGRAPHICS_COORDINATES.toString()))
-            .andExpect(jsonPath("$.biographicsSymbol").value(DEFAULT_BIOGRAPHICS_SYMBOL.toString()));
+            .andExpect(jsonPath("$.biographicsSymbol").value(DEFAULT_BIOGRAPHICS_SYMBOL.toString()))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()));
     }
 
     @Test
@@ -292,7 +299,8 @@ public class BiographicsResourceIntTest {
             .biographicsImage(UPDATED_BIOGRAPHICS_IMAGE)
             .biographicsImageContentType(UPDATED_BIOGRAPHICS_IMAGE_CONTENT_TYPE)
             .biographicsCoordinates(UPDATED_BIOGRAPHICS_COORDINATES)
-            .biographicsSymbol(UPDATED_BIOGRAPHICS_SYMBOL);
+            .biographicsSymbol(UPDATED_BIOGRAPHICS_SYMBOL)
+            .externalId(UPDATED_EXTERNAL_ID);
         BiographicsDTO biographicsDTO = biographicsMapper.toDto(updatedBiographics);
 
         restBiographicsMockMvc.perform(put("/api/biographics")
@@ -312,6 +320,7 @@ public class BiographicsResourceIntTest {
         assertThat(testBiographics.getBiographicsImageContentType()).isEqualTo(UPDATED_BIOGRAPHICS_IMAGE_CONTENT_TYPE);
         assertThat(testBiographics.getBiographicsCoordinates()).isEqualTo(UPDATED_BIOGRAPHICS_COORDINATES);
         assertThat(testBiographics.getBiographicsSymbol()).isEqualTo(UPDATED_BIOGRAPHICS_SYMBOL);
+        assertThat(testBiographics.getExternalId()).isEqualTo(UPDATED_EXTERNAL_ID);
 
         // Validate the Biographics in Elasticsearch
         verify(mockBiographicsSearchRepository, times(1)).save(testBiographics);
@@ -376,7 +385,8 @@ public class BiographicsResourceIntTest {
             .andExpect(jsonPath("$.[*].biographicsImageContentType").value(hasItem(DEFAULT_BIOGRAPHICS_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].biographicsImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_BIOGRAPHICS_IMAGE))))
             .andExpect(jsonPath("$.[*].biographicsCoordinates").value(hasItem(DEFAULT_BIOGRAPHICS_COORDINATES)))
-            .andExpect(jsonPath("$.[*].biographicsSymbol").value(hasItem(DEFAULT_BIOGRAPHICS_SYMBOL)));
+            .andExpect(jsonPath("$.[*].biographicsSymbol").value(hasItem(DEFAULT_BIOGRAPHICS_SYMBOL)))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
     }
 
     @Test

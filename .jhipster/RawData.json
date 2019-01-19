@@ -56,6 +56,10 @@
         {
             "fieldName": "rawDataAnnotations",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "externalId",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

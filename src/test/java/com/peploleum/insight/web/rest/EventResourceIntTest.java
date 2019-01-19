@@ -74,6 +74,9 @@ public class EventResourceIntTest {
     private static final String DEFAULT_EVENT_SYMBOL = "AAAAAAAAAA";
     private static final String UPDATED_EVENT_SYMBOL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_ID = "BBBBBBBBBB";
+
     @Autowired
     private EventRepository eventRepository;
 
@@ -134,7 +137,8 @@ public class EventResourceIntTest {
             .eventCoordinates(DEFAULT_EVENT_COORDINATES)
             .eventImage(DEFAULT_EVENT_IMAGE)
             .eventImageContentType(DEFAULT_EVENT_IMAGE_CONTENT_TYPE)
-            .eventSymbol(DEFAULT_EVENT_SYMBOL);
+            .eventSymbol(DEFAULT_EVENT_SYMBOL)
+            .externalId(DEFAULT_EXTERNAL_ID);
         return event;
     }
 
@@ -167,6 +171,7 @@ public class EventResourceIntTest {
         assertThat(testEvent.getEventImage()).isEqualTo(DEFAULT_EVENT_IMAGE);
         assertThat(testEvent.getEventImageContentType()).isEqualTo(DEFAULT_EVENT_IMAGE_CONTENT_TYPE);
         assertThat(testEvent.getEventSymbol()).isEqualTo(DEFAULT_EVENT_SYMBOL);
+        assertThat(testEvent.getExternalId()).isEqualTo(DEFAULT_EXTERNAL_ID);
 
         // Validate the Event in Elasticsearch
         verify(mockEventSearchRepository, times(1)).save(testEvent);
@@ -229,7 +234,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES.toString())))
             .andExpect(jsonPath("$.[*].eventImageContentType").value(hasItem(DEFAULT_EVENT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].eventImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EVENT_IMAGE))))
-            .andExpect(jsonPath("$.[*].eventSymbol").value(hasItem(DEFAULT_EVENT_SYMBOL.toString())));
+            .andExpect(jsonPath("$.[*].eventSymbol").value(hasItem(DEFAULT_EVENT_SYMBOL.toString())))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())));
     }
     
     @Test
@@ -249,7 +255,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.eventCoordinates").value(DEFAULT_EVENT_COORDINATES.toString()))
             .andExpect(jsonPath("$.eventImageContentType").value(DEFAULT_EVENT_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.eventImage").value(Base64Utils.encodeToString(DEFAULT_EVENT_IMAGE)))
-            .andExpect(jsonPath("$.eventSymbol").value(DEFAULT_EVENT_SYMBOL.toString()));
+            .andExpect(jsonPath("$.eventSymbol").value(DEFAULT_EVENT_SYMBOL.toString()))
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()));
     }
 
     @Test
@@ -276,7 +283,8 @@ public class EventResourceIntTest {
             .eventCoordinates(UPDATED_EVENT_COORDINATES)
             .eventImage(UPDATED_EVENT_IMAGE)
             .eventImageContentType(UPDATED_EVENT_IMAGE_CONTENT_TYPE)
-            .eventSymbol(UPDATED_EVENT_SYMBOL);
+            .eventSymbol(UPDATED_EVENT_SYMBOL)
+            .externalId(UPDATED_EXTERNAL_ID);
         EventDTO eventDTO = eventMapper.toDto(updatedEvent);
 
         restEventMockMvc.perform(put("/api/events")
@@ -296,6 +304,7 @@ public class EventResourceIntTest {
         assertThat(testEvent.getEventImage()).isEqualTo(UPDATED_EVENT_IMAGE);
         assertThat(testEvent.getEventImageContentType()).isEqualTo(UPDATED_EVENT_IMAGE_CONTENT_TYPE);
         assertThat(testEvent.getEventSymbol()).isEqualTo(UPDATED_EVENT_SYMBOL);
+        assertThat(testEvent.getExternalId()).isEqualTo(UPDATED_EXTERNAL_ID);
 
         // Validate the Event in Elasticsearch
         verify(mockEventSearchRepository, times(1)).save(testEvent);
@@ -360,7 +369,8 @@ public class EventResourceIntTest {
             .andExpect(jsonPath("$.[*].eventCoordinates").value(hasItem(DEFAULT_EVENT_COORDINATES)))
             .andExpect(jsonPath("$.[*].eventImageContentType").value(hasItem(DEFAULT_EVENT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].eventImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_EVENT_IMAGE))))
-            .andExpect(jsonPath("$.[*].eventSymbol").value(hasItem(DEFAULT_EVENT_SYMBOL)));
+            .andExpect(jsonPath("$.[*].eventSymbol").value(hasItem(DEFAULT_EVENT_SYMBOL)))
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)));
     }
 
     @Test

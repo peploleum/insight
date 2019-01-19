@@ -49,7 +49,6 @@ public class RawData implements Serializable {
     private String rawDataContent;
 
     @Field("raw_data_creation_date")
-    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Date)
     private Instant rawDataCreationDate;
 
     @Field("raw_data_extracted_date")
@@ -65,11 +64,13 @@ public class RawData implements Serializable {
     private String rawDataDataContentType;
 
     @Field("raw_data_coordinates")
-    @GeoPointField
     private String rawDataCoordinates;
 
     @Field("raw_data_annotations")
     private String rawDataAnnotations;
+
+    @Field("external_id")
+    private String externalId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -261,6 +262,19 @@ public class RawData implements Serializable {
     public void setRawDataAnnotations(String rawDataAnnotations) {
         this.rawDataAnnotations = rawDataAnnotations;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public RawData externalId(String externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -301,6 +315,7 @@ public class RawData implements Serializable {
             ", rawDataDataContentType='" + getRawDataDataContentType() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
             ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

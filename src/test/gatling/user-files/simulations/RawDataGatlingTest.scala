@@ -89,6 +89,7 @@ class RawDataGatlingTest extends Simulation {
                 , "rawDataData":null
                 , "rawDataCoordinates":"SAMPLE_TEXT"
                 , "rawDataAnnotations":"SAMPLE_TEXT"
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_rawData_url"))).exitHereIfFailed

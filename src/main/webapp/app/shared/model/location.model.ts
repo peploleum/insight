@@ -14,6 +14,7 @@ export interface ILocation {
     locationImageContentType?: string;
     locationImage?: any;
     locationSymbol?: string;
+    externalId?: string;
 }
 
 export class Location implements ILocation {
@@ -24,6 +25,7 @@ export class Location implements ILocation {
         public locationCoordinates?: string,
         public locationImageContentType?: string,
         public locationImage?: any,
-        public locationSymbol?: string
+        public locationSymbol?: string,
+        public externalId?: string
     ) {}
 }

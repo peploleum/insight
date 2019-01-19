@@ -28,7 +28,8 @@
             "rawDataSymbol": "Raw Data Symbol",
             "rawDataData": "Raw Data Data",
             "rawDataCoordinates": "Raw Data Coordinates",
-            "rawDataAnnotations": "Raw Data Annotations"
+            "rawDataAnnotations": "Raw Data Annotations",
+            "externalId": "External Id"
         }
     }
 }

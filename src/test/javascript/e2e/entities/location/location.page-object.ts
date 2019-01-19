@@ -31,6 +31,7 @@ export class LocationUpdatePage {
     locationCoordinatesInput = element(by.id('field_locationCoordinates'));
     locationImageInput = element(by.id('file_locationImage'));
     locationSymbolInput = element(by.id('field_locationSymbol'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -81,6 +82,14 @@ export class LocationUpdatePage {
 
     async getLocationSymbolInput() {
         return this.locationSymbolInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

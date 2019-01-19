@@ -21,7 +21,8 @@
             "equipmentType": "Equipment Type",
             "equipmentCoordinates": "Equipment Coordinates",
             "equipmentSymbol": "Equipment Symbol",
-            "equipmentImage": "Equipment Image"
+            "equipmentImage": "Equipment Image",
+            "externalId": "External Id"
         }
     }
 }

@@ -13,6 +13,7 @@ export interface IOrganisation {
     organisationImageContentType?: string;
     organisationImage?: any;
     organisationSymbol?: string;
+    externalId?: string;
 }
 
 export class Organisation implements IOrganisation {
@@ -24,6 +25,7 @@ export class Organisation implements IOrganisation {
         public organisationCoordinates?: string,
         public organisationImageContentType?: string,
         public organisationImage?: any,
-        public organisationSymbol?: string
+        public organisationSymbol?: string,
+        public externalId?: string
     ) {}
 }

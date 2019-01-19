@@ -22,7 +22,8 @@
             "eventDate": "Event Date",
             "eventCoordinates": "Event Coordinates",
             "eventImage": "Event Image",
-            "eventSymbol": "Event Symbol"
+            "eventSymbol": "Event Symbol",
+            "externalId": "External Id"
         }
     }
 }

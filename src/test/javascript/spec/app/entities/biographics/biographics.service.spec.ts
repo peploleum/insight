@@ -21,7 +21,18 @@ describe('Service Tests', () => {
             service = injector.get(BiographicsService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Biographics('ID', 'AAAAAAA', 'AAAAAAA', 0, Gender.MALE, 'image/png', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+            elemDefault = new Biographics(
+                'ID',
+                'AAAAAAA',
+                'AAAAAAA',
+                0,
+                Gender.MALE,
+                'image/png',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA',
+                'AAAAAAA'
+            );
         });
 
         describe('Service methods', async () => {
@@ -61,7 +72,8 @@ describe('Service Tests', () => {
                         biographicsGender: 'BBBBBB',
                         biographicsImage: 'BBBBBB',
                         biographicsCoordinates: 'BBBBBB',
-                        biographicsSymbol: 'BBBBBB'
+                        biographicsSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -84,7 +96,8 @@ describe('Service Tests', () => {
                         biographicsGender: 'BBBBBB',
                         biographicsImage: 'BBBBBB',
                         biographicsCoordinates: 'BBBBBB',
-                        biographicsSymbol: 'BBBBBB'
+                        biographicsSymbol: 'BBBBBB',
+                        externalId: 'BBBBBB'
                     },
                     elemDefault
                 );

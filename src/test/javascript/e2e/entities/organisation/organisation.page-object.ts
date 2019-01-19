@@ -32,6 +32,7 @@ export class OrganisationUpdatePage {
     organisationCoordinatesInput = element(by.id('field_organisationCoordinates'));
     organisationImageInput = element(by.id('file_organisationImage'));
     organisationSymbolInput = element(by.id('field_organisationSymbol'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -90,6 +91,14 @@ export class OrganisationUpdatePage {
 
     async getOrganisationSymbolInput() {
         return this.organisationSymbolInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

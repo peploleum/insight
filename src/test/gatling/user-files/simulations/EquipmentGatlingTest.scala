@@ -82,6 +82,7 @@ class EquipmentGatlingTest extends Simulation {
                 , "equipmentCoordinates":"SAMPLE_TEXT"
                 , "equipmentSymbol":"SAMPLE_TEXT"
                 , "equipmentImage":null
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_equipment_url"))).exitHereIfFailed

@@ -82,6 +82,7 @@ class OrganisationGatlingTest extends Simulation {
                 , "organisationCoordinates":"SAMPLE_TEXT"
                 , "organisationImage":null
                 , "organisationSymbol":"SAMPLE_TEXT"
+                , "externalId":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_organisation_url"))).exitHereIfFailed

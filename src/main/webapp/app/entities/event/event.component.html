@@ -37,6 +37,7 @@
             <th jhiSortBy="eventCoordinates"><span jhiTranslate="insightApp.event.eventCoordinates">Event Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="eventImage"><span jhiTranslate="insightApp.event.eventImage">Event Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="eventSymbol"><span jhiTranslate="insightApp.event.eventSymbol">Event Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.event.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -55,6 +56,7 @@
                     <span *ngIf="event.eventImage">{{event.eventImageContentType}}, {{byteSize(event.eventImage)}}</span>
                 </td>
                 <td>{{event.eventSymbol}}</td>
+                <td>{{event.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

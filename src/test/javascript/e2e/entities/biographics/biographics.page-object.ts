@@ -33,6 +33,7 @@ export class BiographicsUpdatePage {
     biographicsImageInput = element(by.id('file_biographicsImage'));
     biographicsCoordinatesInput = element(by.id('field_biographicsCoordinates'));
     biographicsSymbolInput = element(by.id('field_biographicsSymbol'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -99,6 +100,14 @@ export class BiographicsUpdatePage {
 
     async getBiographicsSymbolInput() {
         return this.biographicsSymbolInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

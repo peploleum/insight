@@ -39,6 +39,7 @@ export class RawDataUpdatePage {
     rawDataDataInput = element(by.id('file_rawDataData'));
     rawDataCoordinatesInput = element(by.id('field_rawDataCoordinates'));
     rawDataAnnotationsInput = element(by.id('field_rawDataAnnotations'));
+    externalIdInput = element(by.id('field_externalId'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -146,6 +147,14 @@ export class RawDataUpdatePage {
 
     async getRawDataAnnotationsInput() {
         return this.rawDataAnnotationsInput.getAttribute('value');
+    }
+
+    async setExternalIdInput(externalId) {
+        await this.externalIdInput.sendKeys(externalId);
+    }
+
+    async getExternalIdInput() {
+        return this.externalIdInput.getAttribute('value');
     }
 
     async save() {

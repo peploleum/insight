@@ -35,6 +35,7 @@
             <th jhiSortBy="locationCoordinates"><span jhiTranslate="insightApp.location.locationCoordinates">Location Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="locationImage"><span jhiTranslate="insightApp.location.locationImage">Location Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="locationSymbol"><span jhiTranslate="insightApp.location.locationSymbol">Location Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="externalId"><span jhiTranslate="insightApp.location.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -51,6 +52,7 @@
                     <span *ngIf="location.locationImage">{{location.locationImageContentType}}, {{byteSize(location.locationImage)}}</span>
                 </td>
                 <td>{{location.locationSymbol}}</td>
+                <td>{{location.externalId}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

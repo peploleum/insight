@@ -49,6 +49,9 @@ public class Equipment implements Serializable {
     @Field("equipment_image_content_type")
     private String equipmentImageContentType;
 
+    @Field("external_id")
+    private String externalId;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
         return id;
@@ -148,6 +151,19 @@ public class Equipment implements Serializable {
     public void setEquipmentImageContentType(String equipmentImageContentType) {
         this.equipmentImageContentType = equipmentImageContentType;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public Equipment externalId(String externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -181,6 +197,7 @@ public class Equipment implements Serializable {
             ", equipmentSymbol='" + getEquipmentSymbol() + "'" +
             ", equipmentImage='" + getEquipmentImage() + "'" +
             ", equipmentImageContentType='" + getEquipmentImageContentType() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }
