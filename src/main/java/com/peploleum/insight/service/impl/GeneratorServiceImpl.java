@@ -1,6 +1,8 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.service.BiographicsService;
 import com.peploleum.insight.service.GeneratorService;
+import com.peploleum.insight.service.LocationService;
 import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import org.slf4j.Logger;
@@ -11,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -25,12 +25,16 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final Logger log = LoggerFactory.getLogger(GeneratorServiceImpl.class);
 
     private RawDataService rawDataService;
+    private final BiographicsService biographicsService;
+    private final LocationService locationService;
 
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(RawDataService rawDataService) {
+    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService) {
         this.rawDataService = rawDataService;
+        this.biographicsService = biographicsService;
+        this.locationService = locationService;
     }
 
     @Override
@@ -48,13 +52,12 @@ public class GeneratorServiceImpl implements GeneratorService {
     private RawDataDTO generateRawDataDTO() {
         final String type = generateRandomType();
         final String name = UUID.randomUUID().toString();
-        final ZonedDateTime debut = generateRandomDateTime();
 
         final RawDataDTO rawDataDTO = new RawDataDTO();
         rawDataDTO.setRawDataContent(UUID.randomUUID().toString() + " " + UUID.randomUUID().toString() + " " + UUID.randomUUID().toString());
         rawDataDTO.setRawDataName(name);
-        rawDataDTO.setRawDataCreationDate(Instant.now());
-        rawDataDTO.setRawDataExtractedDate(Instant.now());
+        rawDataDTO.setRawDataCreationDate(generateRandomDateTime().toInstant());
+        rawDataDTO.setRawDataExtractedDate(generateRandomDateTime().toInstant());
         rawDataDTO.setRawDataCoordinates(this.generateLatitude() + "," + this.generateLongitude());
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
         rawDataDTO.setRawDataSubType(type);
@@ -79,21 +82,6 @@ public class GeneratorServiceImpl implements GeneratorService {
         return ZonedDateTime.of(year, month, day, hour, minute, seconds, 0, ZoneId.systemDefault());
     }
 
-    /**
-     * Add duration between 0 and 61 days
-     *
-     * @param init the initial date
-     * @return the new date
-     */
-    private ZonedDateTime addRandomDuration(ZonedDateTime init) {
-        final int day = ThreadLocalRandom.current().nextInt(0, 60);
-        final int hour = ThreadLocalRandom.current().nextInt(0, 24);
-        final int minute = ThreadLocalRandom.current().nextInt(0, 60);
-        final int seconds = ThreadLocalRandom.current().nextInt(0, 60);
-
-        return init.plusDays(day).plusHours(hour).plusMinutes(minute).plusSeconds(seconds);
-    }
-
     private double generateLatitude() {
         return ThreadLocalRandom.current().nextDouble(41, 51);
     }
@@ -110,7 +98,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
         private String label;
 
-        private Type(String label) {
+        Type(String label) {
             this.label = label;
         }
 

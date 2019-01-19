@@ -48,8 +48,10 @@ Note: workbox creates the respective service worker and dynamically generate the
 
 ### Start Dependencies
 
-    docker-compose -f src/main/docker/mongodb.yml up -d
-    docker-compose -f src/main/docker/elasticsearch.yml up -d
+    docker network create insight
+    cd src/main/docker
+    docker-compose -f mongodb.yml up -d
+    docker-compose -f elasticsearch.yml up -d
 
 ### Using angular-cli
 
@@ -138,9 +140,9 @@ For more information, refer to the [Running tests page][].
 ### Docker-compose
 
 build image
-  
- custom_build.bat
-  
+
+custom_build.bat
+
 deploy components
 
     cd C:\dev\pipe\src\main\docker\compose
@@ -274,9 +276,6 @@ Tag and push
     sudo docker tag jhipster/jhipster-import-dashboards:v3.0.1 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
     sudo docker push 192.168.65.5:8093/jhipster/jhipster-import-dashboards:v3.0.1
 
-
-
-
 ## Janus graph settings
 
 ### Start the app
@@ -284,7 +283,7 @@ Tag and push
     cd PROJECT_ROOT\src\main\docker\compose\graph
 
     docker-compose -f .\graph.yml -p janusgraph -d --build
-    
+
     java -cp target/insight.war com.peploleum.insight.service.impl.JanusClientImpl
 
 ### Create graph from the command line
@@ -296,7 +295,6 @@ Tag and push
     curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal();def v1 = g.addV(); def p1=v1.property('name', 'Nicolas')\"}" "http://localhost:8182"
     curl -X POST -d "{\"gremlin\":\"def g=ConfiguredGraphFactory.open('example').traversal();def nicolas=g.V().has('name', 'Nicolas').next()\"}" "http://localhost:8182"
 
-
 ### CRUD Vertices and Edges from java client
 
 ## Installation de kafkatool sur le noeud master de kubernetes
@@ -304,29 +302,28 @@ Tag and push
 ### Execute script kafkatool.sh
 
     cd /home/capgemini/insight/src/main/docker/kubernetes/new/messagebroker/kafkatool/
-    
+
     chmod 777 kafkatool.sh
-    
+
     ./kafkatool.sh
-    
-    L'installeur se lance, faite la config par défaut.
-    
-### Paramétrage IP, DNS
+
+    L'installeur se lance, faite la config par dï¿½faut.
+
+### Paramï¿½trage IP, DNS
 
     Ouvrir le fichier hosts dans /etc sur le noeud master de kubernetes
-    
+
       Exemple : 192.168.2.88  insight-kafka.insight.svc.cluster.local  insight-kafka
-      
+
+
 ### Lancer dans la VM ubuntu avec ihm l'outil kafkatool
 
-    Créer la connection avec les paramètres suivants :
-        
+    Crï¿½er la connection avec les paramï¿½tres suivants :
+
         Cluster name : kafka
-        
+
         Kafka Cluster Version : 1.0
-        
+
         ip : 192.168.2.89(IP de zookeeper)
-        
-        Port 2181 (Par défaut)
-        
-               
+
+        Port 2181 (Par dï¿½faut)
