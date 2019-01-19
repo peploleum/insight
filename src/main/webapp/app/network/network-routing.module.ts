@@ -3,24 +3,23 @@ import { ActivatedRouteSnapshot, Resolve, RouterModule, RouterStateSnapshot, Rou
 import { NetworkComponent } from 'app/network/network.component';
 import { NetworkService } from './network.service';
 import { Observable, of } from 'rxjs/index';
-import { IGraphyNodeDTO, GraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
-import { filter, map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
+import { RawData } from 'app/shared/model/raw-data.model';
 
 @Injectable({ providedIn: 'root' })
-export class NetworkResolve implements Resolve<NodeDTO> {
+export class NetworkResolve implements Resolve<RawData> {
     constructor(private service: NetworkService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<NodeDTO> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RawData> {
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.getNodeProperties(id).pipe(
-                filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
-                map((response: HttpResponse<IGraphyNodeDTO>) => {
-                    const rawData: IGraphyNodeDTO = response.body;
-                    return NetworkService.getNodeDto(rawData.label, rawData.type, rawData.id);
-                })
-            );
+            return this.service.getRawDataById(id);
+            // return this.service.getNodeProperties(id).pipe(
+            //     filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
+            //     map((response: HttpResponse<IGraphyNodeDTO>) => {
+            //         const rawData: IGraphyNodeDTO = response.body;
+            //         return NetworkService.getNodeDto(rawData.label, rawData.type, rawData.id);
+            //     })
+            // );
         } else {
             return of(null);
         }

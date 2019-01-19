@@ -6,15 +6,24 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
 import { IdType } from 'vis';
-import { map } from 'rxjs/internal/operators';
+import { filter, map } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, GraphyNodeDTO, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
 import { UUID } from '../shared/util/insight-util';
+import { RawDataService } from 'app/entities/raw-data';
+import { RawData } from 'app/shared/model/raw-data.model';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
     private resourceUrl;
 
-    public static getNodeDto(label: string, objectType?: string, id?: IdType, title?: string, imageUrl?: string): NodeDTO {
+    public static getNodeDto(
+        label: string,
+        objectType?: string,
+        id?: IdType,
+        mongoId?: string,
+        title?: string,
+        imageUrl?: string
+    ): NodeDTO {
         const image: string = imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType);
         const color = {
             border: NetworkService.getNodeColor(objectType)
@@ -22,7 +31,7 @@ export class NetworkService {
         const font = {
             color: 'white'
         };
-        return new NodeDTO(label, id, title, image, color, 3, font);
+        return new NodeDTO(label, id, mongoId, title, image, color, 3, font);
     }
 
     public static getEdgeCollection(idOrigin: IdType, nodes: NodeDTO[]): EdgeDTO[] {
@@ -74,7 +83,7 @@ export class NetworkService {
         }
     }
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private rawDataService: RawDataService) {
         if (DEBUG_INFO_ENABLED) {
             this.resourceUrl = 'http://' + window.location.hostname + ':8090/';
         } else {
@@ -97,7 +106,8 @@ export class NetworkService {
 
     getGraphData(idOrigin: IdType): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
+        // const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/' : 'api/traversal/';
         return this.http.get(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
@@ -109,18 +119,25 @@ export class NetworkService {
         );
     }
 
+    getRawDataById(idOrigin: string): Observable<RawData> {
+        return this.rawDataService.find(<string>idOrigin).pipe(
+            filter((response: HttpResponse<RawData>) => response.ok),
+            map((rawData: HttpResponse<RawData>) => rawData.body)
+        );
+    }
+
     getNodeProperties(idOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
-        if (DEBUG_INFO_ENABLED) {
-            /** Tant que l'endpoint de graphy n'est pas dispo */
-            const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse({
-                body: new GraphyNodeDTO(UUID(), 'Personne Origine', 'Biographics'),
-                headers: new HttpHeaders(),
-                status: 200
-            });
-            return of(fakeResponse);
-        }
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/properties/' : 'api/traversal/properties/';
+        // if (DEBUG_INFO_ENABLED) {
+        //     /** Tant que l'endpoint de graphy n'est pas dispo */
+        //     const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse({
+        //         body: new GraphyNodeDTO(UUID(), 'Personne Origine', 'Biographics'),
+        //         headers: new HttpHeaders(),
+        //         status: 200
+        //     });
+        //     return of(fakeResponse);
+        // }
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/properties/';
         return this.http.get<IGraphyNodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, {
             headers,
             observe: 'response'

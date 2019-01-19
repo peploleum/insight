@@ -3,7 +3,10 @@ import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
-import { GraphDataCollection, GraphDataSet, NodeDTO } from 'app/shared/model/node.model';
+import { GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
+import { RawData } from 'app/shared/model/raw-data.model';
+import { filter, map } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'ins-network',
@@ -27,9 +30,27 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.initNetworkEventListener();
         this.activatedRoute.data.subscribe(({ originNode }) => {
             if (originNode) {
-                const theNode: NodeDTO = <NodeDTO>originNode;
-                this.addNodes([theNode], []);
-                this.getNodesNeighbours([theNode.id]);
+                console.log('ROUTING DONE');
+                const theRawData: RawData = <RawData>originNode;
+                console.log(theRawData);
+                if (theRawData.externalId != null) {
+                    console.log('ROUTING DONE ' + theRawData.externalId);
+                    this._ns
+                        .getNodeProperties(theRawData.externalId)
+                        .pipe(
+                            filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
+                            map((response: HttpResponse<IGraphyNodeDTO>) => {
+                                const rawData: IGraphyNodeDTO = response.body;
+                                return NetworkService.getNodeDto(rawData.label, rawData.type, rawData.id, rawData.mongoId);
+                            })
+                        )
+                        .subscribe((nodeDTO: NodeDTO) => {
+                            console.log('ROUTING DONE ' + nodeDTO);
+                            console.log(nodeDTO);
+                            this.addNodes([nodeDTO], []);
+                            this.getNodesNeighbours([nodeDTO.id]);
+                        });
+                }
             } else {
                 this.getMockData();
             }

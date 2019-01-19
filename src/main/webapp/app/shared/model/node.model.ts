@@ -1,19 +1,21 @@
 import { DataSet, Edge, IdType, Node } from 'vis';
 export interface IGraphyNodeDTO {
     id?: string;
+    mongoId?: string;
     label?: string;
     type?: string;
     title?: string;
 }
 
 export class GraphyNodeDTO implements IGraphyNodeDTO {
-    constructor(public id?: string, public label?: string, public type?: string, public title?: string) {}
+    constructor(public id?: string, mongoId?: string, public label?: string, public type?: string, public title?: string) {}
 }
 
 export class NodeDTO implements Node {
     constructor(
         public label?: string,
         public id?: IdType,
+        public mongoId?: string,
         public title?: string,
         public image?: string,
         public color?: any,
