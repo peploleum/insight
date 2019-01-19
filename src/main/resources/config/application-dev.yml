@@ -115,3 +115,4 @@ application:
     graph:
         host: localhost
         port: 8090
+        enabled: false

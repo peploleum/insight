@@ -27,14 +27,16 @@ public class GeneratorServiceImpl implements GeneratorService {
     private RawDataService rawDataService;
     private final BiographicsService biographicsService;
     private final LocationService locationService;
+    private final GraphyClientServiceImpl graphyClientService;
 
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService) {
+    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final GraphyClientServiceImpl graphyClientService) {
         this.rawDataService = rawDataService;
         this.biographicsService = biographicsService;
         this.locationService = locationService;
+        this.graphyClientService = graphyClientService;
     }
 
     @Override

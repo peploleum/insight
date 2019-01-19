@@ -42,6 +42,7 @@ public class ApplicationProperties {
     public static class Graph {
         private String host = "localhost";
         private String port = "8090";
+        private boolean enabled = false;
 
         public Graph() {
         }
@@ -56,6 +57,14 @@ public class ApplicationProperties {
 
         public String getPort() {
             return port;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
         }
 
         public void setPort(String port) {
