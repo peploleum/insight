@@ -83,10 +83,10 @@ public class GraphyClientServiceImpl implements GraphyClientService {
             if (graphyEnpointSuffix.isEmpty()) {
                 this.log.warn("Failed to find endpoint for entity");
                 return null;
-            } else {
-                this.log.debug("Sending " + dto.toString());
             }
-            tResponseEntity = rt.exchange(this.apiRootUrl + graphyEnpointSuffix, HttpMethod.POST,
+            final String url = this.apiRootUrl + graphyEnpointSuffix;
+            this.log.debug("Sending " + dto.toString() + " to " + url);
+            tResponseEntity = rt.exchange(url, HttpMethod.POST,
                 new HttpEntity<>(dto, headers), String.class);
             log.debug("Received " + tResponseEntity.getBody());
             return tResponseEntity.getBody();

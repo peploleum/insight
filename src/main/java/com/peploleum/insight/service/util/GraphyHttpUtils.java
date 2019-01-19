@@ -28,7 +28,7 @@ public class GraphyHttpUtils {
         } else if (o instanceof EquipmentDTO) {
             return "equipment";
         } else {
-            return "";
+            return null;
         }
     }
 }
