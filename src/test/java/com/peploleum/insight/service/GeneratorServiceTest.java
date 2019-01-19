@@ -25,7 +25,7 @@ public class GeneratorServiceTest {
     }
 
     @After
-    public void testSendEmailWithException() throws Exception {
+    public void cleanTest() {
         this.generatorService.clean();
     }
 
