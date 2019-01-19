@@ -22,7 +22,7 @@ public class GraphyHttpUtils {
         } else if (o instanceof OrganisationDTO) {
             return "organisations";
         } else if (o instanceof RawDataDTO) {
-            return "rawdata";
+            return "raw-data";
         } else if (o instanceof EventDTO) {
             return "event";
         } else if (o instanceof EquipmentDTO) {

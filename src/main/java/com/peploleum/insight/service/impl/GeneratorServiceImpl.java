@@ -1,12 +1,10 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.BiographicsService;
-import com.peploleum.insight.service.GeneratorService;
-import com.peploleum.insight.service.LocationService;
-import com.peploleum.insight.service.RawDataService;
+import com.peploleum.insight.service.*;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +25,20 @@ public class GeneratorServiceImpl implements GeneratorService {
     private RawDataService rawDataService;
     private final BiographicsService biographicsService;
     private final LocationService locationService;
-    private final GraphyClientServiceImpl graphyClientService;
+    private final GraphyClientService graphyClientService;
 
+    @Value("${application.graph.enabled}")
+    private boolean graphEnabled;
+
+    @Value("${application.graph.host}")
+    private String graphHost;
+
+    @Value("${application.graph.port}")
+    private int graphPort;
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final GraphyClientServiceImpl graphyClientService) {
+    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final GraphyClientService graphyClientService) {
         this.rawDataService = rawDataService;
         this.biographicsService = biographicsService;
         this.locationService = locationService;
@@ -40,15 +46,28 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public void feed() {
-        this.log.info("FEEDING x " + GEN_THRESHOLD);
+    public void feed(int threshold) {
+        this.log.info("FEEDING x " + threshold);
 
-        for (int i = 0; i < GEN_THRESHOLD; i++) {
+        for (int i = 0; i < threshold; i++) {
             final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
             for (int j = 0; j < randomThreshold; j++) {
-                this.rawDataService.save(generateRawDataDTO());
+                final RawDataDTO rawDataDTO = generateRawDataDTO();
+                if (this.graphEnabled) {
+                    try {
+                        this.graphyClientService.sendToGraphy(rawDataDTO);
+                    } catch (Exception e) {
+                        this.log.error("Failed to write entity to graphy: " + rawDataDTO.getId(), e);
+                    }
+                }
+                this.rawDataService.save(rawDataDTO);
             }
         }
+    }
+
+    @Override
+    public void feed() {
+        this.feed(GEN_THRESHOLD);
     }
 
     private RawDataDTO generateRawDataDTO() {
@@ -111,7 +130,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public void clean() {
-        this.log.info("deleting all oserved data");
+        this.log.info("deleting all raw data");
         Pageable page = PageRequest.of(0, 100);
         boolean last = false;
         while (!last) {

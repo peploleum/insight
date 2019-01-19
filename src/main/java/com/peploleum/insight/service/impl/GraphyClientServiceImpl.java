@@ -1,5 +1,6 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.service.GraphyClientService;
 import com.peploleum.insight.service.dto.RelationDTO;
 import com.peploleum.insight.service.util.GraphyHttpUtils;
 import org.slf4j.Logger;
@@ -13,38 +14,44 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
 
 @Service
-public class GraphyClientServiceImpl {
+public class GraphyClientServiceImpl implements GraphyClientService {
 
-    private final String apiRootUrl;
-    @Value("${graph.enabled}")
+    private String apiRootUrl;
+    @Value("${application.graph.enabled}")
     private boolean graphEnabled;
 
-    @Value("${graph.host}")
+    @Value("${application.graph.host}")
     private String graphHost;
 
-    @Value("${graph.port}")
+    @Value("${application.graph.port}")
     private int graphPort;
 
     private final Logger log = LoggerFactory.getLogger(GraphyClientServiceImpl.class);
 
     public GraphyClientServiceImpl() {
+    }
+
+    @PostConstruct
+    public void setup() {
         this.apiRootUrl = "http://" + this.graphHost + ":" + this.graphPort + "/api/";
     }
 
-    public String sendToGraphy(Object entity) throws IOException {
+    @Override
+    public String sendToGraphy(Object entity) throws RestClientException {
         this.log.debug("Sending Entity " + entity);
         return this.doSend(entity);
     }
 
-    public void sendRelationToGraphy(String idSource, String idTarget, String sourceType, String targetType) throws IOException {
+    @Override
+    public void sendRelationToGraphy(String idSource, String idTarget, String sourceType, String targetType) throws RestClientException {
         this.log.debug("Sending relation " + idSource + " to " + idTarget + " typeSource: " + sourceType + " typeTarget: " + targetType);
         this.doSendRelation(idSource, idTarget, sourceType, targetType);
     }
 
-    private String doSendRelation(String idSource, String idTarget, String sourceType, String targetType) {
+    private String doSendRelation(String idSource, String idTarget, String sourceType, String targetType) throws RestClientException {
         final RelationDTO relationDTO = new RelationDTO();
         relationDTO.setIdJanusSource(idSource);
         relationDTO.setIdJanusCible(idTarget);
