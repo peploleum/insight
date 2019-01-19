@@ -11,12 +11,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
     private final ApplicationProperties.Kibana kibana = new ApplicationProperties.Kibana();
+    private final ApplicationProperties.Graph graph = new ApplicationProperties.Graph();
 
     public ApplicationProperties() {
     }
 
     public ApplicationProperties.Kibana getKibana() {
         return this.kibana;
+    }
+
+    public ApplicationProperties.Graph getGraph() {
+        return this.graph;
     }
 
     public static class Kibana {
@@ -31,6 +36,30 @@ public class ApplicationProperties {
 
         public void setUri(String uri) {
             this.uri = uri;
+        }
+    }
+
+    public static class Graph {
+        private String host = "localhost";
+        private String port = "8090";
+
+        public Graph() {
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public void setPort(String port) {
+            this.port = port;
         }
     }
 }
