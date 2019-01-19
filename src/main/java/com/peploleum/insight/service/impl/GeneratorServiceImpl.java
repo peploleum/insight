@@ -1,7 +1,11 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.domain.enumeration.EquipmentType;
+import com.peploleum.insight.domain.enumeration.EventType;
+import com.peploleum.insight.domain.enumeration.LocationType;
+import com.peploleum.insight.domain.enumeration.Size;
 import com.peploleum.insight.service.*;
-import com.peploleum.insight.service.dto.RawDataDTO;
+import com.peploleum.insight.service.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +29,9 @@ public class GeneratorServiceImpl implements GeneratorService {
     private RawDataService rawDataService;
     private final BiographicsService biographicsService;
     private final LocationService locationService;
+    private final EventService eventService;
+    private final EquipmentService equipmentService;
+    private final OrganisationService organisationService;
     private final GraphyClientService graphyClientService;
 
     @Value("${application.graph.enabled}")
@@ -38,10 +45,13 @@ public class GeneratorServiceImpl implements GeneratorService {
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final GraphyClientService graphyClientService) {
+    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final EventService eventService, final EquipmentService equipmentService, final OrganisationService organisationService, final GraphyClientService graphyClientService) {
         this.rawDataService = rawDataService;
         this.biographicsService = biographicsService;
         this.locationService = locationService;
+        this.eventService = eventService;
+        this.equipmentService = equipmentService;
+        this.organisationService = organisationService;
         this.graphyClientService = graphyClientService;
     }
 
@@ -53,14 +63,41 @@ public class GeneratorServiceImpl implements GeneratorService {
             final int randomThreshold = ThreadLocalRandom.current().nextInt(0, SINGLE_GEN_THRESHOLD);
             for (int j = 0; j < randomThreshold; j++) {
                 final RawDataDTO rawDataDTO = generateRawDataDTO();
+                final BiographicsDTO biographicsDTO = generateBiographicsDTO();
+                final EventDTO eventDTO = generateEventDTO();
+                final EquipmentDTO equipmentDTO = generateEquipmentDTO();
+                final LocationDTO locationDTO = generateLocationDTO();
+                final OrganisationDTO organisationDTO = generateOrganisationDTO();
+                String rawDataExternalId;
+                String biographicsExternalId;
+                String eventExternalId;
+                String equipmentExternalId;
+                String locationExternalId;
+                String organisationExternalId;
                 if (this.graphEnabled) {
                     try {
-                        this.graphyClientService.sendToGraphy(rawDataDTO);
+                        rawDataExternalId = this.graphyClientService.sendToGraphy(rawDataDTO);
+                        rawDataDTO.setExternalId(rawDataExternalId);
+                        biographicsExternalId = this.graphyClientService.sendToGraphy(biographicsDTO);
+                        biographicsDTO.setExternalId(biographicsExternalId);
+                        eventExternalId = this.graphyClientService.sendToGraphy(eventDTO);
+                        eventDTO.setExternalId(eventExternalId);
+                        equipmentExternalId = this.graphyClientService.sendToGraphy(equipmentDTO);
+                        equipmentDTO.setExternalId(equipmentExternalId);
+                        locationExternalId = this.graphyClientService.sendToGraphy(locationDTO);
+                        locationDTO.setExternalId(locationExternalId);
+                        organisationExternalId = this.graphyClientService.sendToGraphy(organisationDTO);
+                        organisationDTO.setExternalId(organisationExternalId);
                     } catch (Exception e) {
-                        this.log.error("Failed to write entity to graphy: " + rawDataDTO.getId(), e);
+                        this.log.error("Failed to write entity to graphy", e);
                     }
                 }
                 this.rawDataService.save(rawDataDTO);
+                this.biographicsService.save(biographicsDTO);
+                this.equipmentService.save(equipmentDTO);
+                this.eventService.save(eventDTO);
+                this.organisationService.save(organisationDTO);
+                this.locationService.save(locationDTO);
             }
         }
     }
@@ -79,11 +116,55 @@ public class GeneratorServiceImpl implements GeneratorService {
         rawDataDTO.setRawDataName(name);
         rawDataDTO.setRawDataCreationDate(generateRandomDateTime().toInstant());
         rawDataDTO.setRawDataExtractedDate(generateRandomDateTime().toInstant());
-        rawDataDTO.setRawDataCoordinates(this.generateLatitude() + "," + this.generateLongitude());
+        rawDataDTO.setRawDataCoordinates(generateLocationAttribute());
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
         rawDataDTO.setRawDataSubType(type);
 
         return rawDataDTO;
+    }
+
+    private BiographicsDTO generateBiographicsDTO() {
+        final BiographicsDTO biographicsDTO = new BiographicsDTO();
+        biographicsDTO.setBiographicsAge(ThreadLocalRandom.current().nextInt(0, 120));
+        biographicsDTO.setBiographicsFirstname(UUID.randomUUID().toString());
+        biographicsDTO.setBiographicsName(UUID.randomUUID().toString());
+        biographicsDTO.setBiographicsCoordinates(generateLocationAttribute());
+        return biographicsDTO;
+    }
+
+    private LocationDTO generateLocationDTO() {
+        final LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setLocationCoordinates(generateLocationAttribute());
+        locationDTO.setLocationName(UUID.randomUUID().toString());
+        locationDTO.setLocationType(LocationType.CITY);
+        return locationDTO;
+    }
+
+    private EventDTO generateEventDTO() {
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.setEventName(UUID.randomUUID().toString());
+        eventDTO.setEventDate(generateRandomDateTime().toInstant());
+        eventDTO.setEventType(EventType.TERRORIST);
+        return eventDTO;
+    }
+
+    private EquipmentDTO generateEquipmentDTO() {
+        EquipmentDTO equipmentDTO = new EquipmentDTO();
+        equipmentDTO.setEquipmentName(UUID.randomUUID().toString());
+        equipmentDTO.setEquipmentType(EquipmentType.WEAPON);
+        return equipmentDTO;
+    }
+
+    private OrganisationDTO generateOrganisationDTO() {
+        final OrganisationDTO organisationDTO = new OrganisationDTO();
+        organisationDTO.setOrganisationCoordinates(generateLocationAttribute());
+        organisationDTO.setOrganisationName(UUID.randomUUID().toString());
+        organisationDTO.setOrganisationSize(Size.MEDIUM);
+        return organisationDTO;
+    }
+
+    private String generateLocationAttribute() {
+        return this.generateLatitude() + "," + this.generateLongitude();
     }
 
     private String generateRandomType() {

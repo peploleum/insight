@@ -24,7 +24,7 @@ public class GraphyHttpUtils {
         } else if (o instanceof RawDataDTO) {
             return "raw-data";
         } else if (o instanceof EventDTO) {
-            return "event";
+            return "events";
         } else if (o instanceof EquipmentDTO) {
             return "equipment";
         } else {

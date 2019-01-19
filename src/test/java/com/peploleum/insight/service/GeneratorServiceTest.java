@@ -22,11 +22,17 @@ public class GeneratorServiceTest {
     @Test
     public void generateOneTest() {
         this.generatorService.feed(1);
+        this.generatorService.clean();
+    }
+
+    @Test
+    public void generateMultipleTest() {
+        this.generatorService.feed(10);
     }
 
     @After
     public void cleanTest() {
-        this.generatorService.clean();
+
     }
 
 }
