@@ -32,7 +32,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final EventService eventService;
     private final EquipmentService equipmentService;
     private final OrganisationService organisationService;
-    private final GraphyClientService graphyClientService;
+    private final GraphyService graphyService;
 
     @Value("${application.graph.enabled}")
     private boolean graphEnabled;
@@ -45,14 +45,14 @@ public class GeneratorServiceImpl implements GeneratorService {
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
-    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final EventService eventService, final EquipmentService equipmentService, final OrganisationService organisationService, final GraphyClientService graphyClientService) {
+    public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService, final LocationService locationService, final EventService eventService, final EquipmentService equipmentService, final OrganisationService organisationService, final GraphyService graphyService) {
         this.rawDataService = rawDataService;
         this.biographicsService = biographicsService;
         this.locationService = locationService;
         this.eventService = eventService;
         this.equipmentService = equipmentService;
         this.organisationService = organisationService;
-        this.graphyClientService = graphyClientService;
+        this.graphyService = graphyService;
     }
 
     @Override
@@ -74,30 +74,42 @@ public class GeneratorServiceImpl implements GeneratorService {
                 String equipmentExternalId;
                 String locationExternalId;
                 String organisationExternalId;
+                final RawDataDTO savedRawDataDTO = this.rawDataService.save(rawDataDTO);
+                final BiographicsDTO savedBiographicsDTO = this.biographicsService.save(biographicsDTO);
+                final EquipmentDTO savedEquipmentDTO = this.equipmentService.save(equipmentDTO);
+                final EventDTO savedEventDTO = this.eventService.save(eventDTO);
+                final OrganisationDTO savedOrganisationDTO = this.organisationService.save(organisationDTO);
+                final LocationDTO savedLocationDTO = this.locationService.save(locationDTO);
                 if (this.graphEnabled) {
                     try {
-                        rawDataExternalId = this.graphyClientService.sendToGraphy(rawDataDTO);
-                        rawDataDTO.setExternalId(rawDataExternalId);
-                        biographicsExternalId = this.graphyClientService.sendToGraphy(biographicsDTO);
-                        biographicsDTO.setExternalId(biographicsExternalId);
-                        eventExternalId = this.graphyClientService.sendToGraphy(eventDTO);
-                        eventDTO.setExternalId(eventExternalId);
-                        equipmentExternalId = this.graphyClientService.sendToGraphy(equipmentDTO);
-                        equipmentDTO.setExternalId(equipmentExternalId);
-                        locationExternalId = this.graphyClientService.sendToGraphy(locationDTO);
-                        locationDTO.setExternalId(locationExternalId);
-                        organisationExternalId = this.graphyClientService.sendToGraphy(organisationDTO);
-                        organisationDTO.setExternalId(organisationExternalId);
+                        rawDataExternalId = this.graphyService.create(savedRawDataDTO);
+                        savedRawDataDTO.setExternalId(rawDataExternalId);
+                        biographicsExternalId = this.graphyService.create(savedBiographicsDTO);
+                        savedBiographicsDTO.setExternalId(biographicsExternalId);
+                        eventExternalId = this.graphyService.create(savedEventDTO);
+                        savedEventDTO.setExternalId(eventExternalId);
+                        equipmentExternalId = this.graphyService.create(savedEquipmentDTO);
+                        savedEquipmentDTO.setExternalId(equipmentExternalId);
+                        locationExternalId = this.graphyService.create(savedLocationDTO);
+                        savedLocationDTO.setExternalId(locationExternalId);
+                        organisationExternalId = this.graphyService.create(savedOrganisationDTO);
+                        savedOrganisationDTO.setExternalId(organisationExternalId);
+
+                        this.graphyService.createRelation(savedRawDataDTO, savedBiographicsDTO);
+                        this.graphyService.createRelation(savedRawDataDTO, savedEventDTO);
+                        this.graphyService.createRelation(savedRawDataDTO, savedEquipmentDTO);
+                        this.graphyService.createRelation(savedRawDataDTO, savedLocationDTO);
+                        this.graphyService.createRelation(savedRawDataDTO, savedOrganisationDTO);
                     } catch (Exception e) {
                         this.log.error("Failed to write entity to graphy", e);
                     }
                 }
-                this.rawDataService.save(rawDataDTO);
-                this.biographicsService.save(biographicsDTO);
-                this.equipmentService.save(equipmentDTO);
-                this.eventService.save(eventDTO);
-                this.organisationService.save(organisationDTO);
-                this.locationService.save(locationDTO);
+                this.rawDataService.save(savedRawDataDTO);
+                this.biographicsService.save(savedBiographicsDTO);
+                this.equipmentService.save(savedEquipmentDTO);
+                this.eventService.save(savedEventDTO);
+                this.organisationService.save(savedOrganisationDTO);
+                this.locationService.save(savedLocationDTO);
             }
         }
     }

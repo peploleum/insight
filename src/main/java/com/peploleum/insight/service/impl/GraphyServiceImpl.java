@@ -1,6 +1,6 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.GraphyClientService;
+import com.peploleum.insight.service.GraphyService;
 import com.peploleum.insight.service.dto.RelationDTO;
 import com.peploleum.insight.service.util.GraphyHttpUtils;
 import org.slf4j.Logger;
@@ -15,9 +15,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 
 @Service
-public class GraphyClientServiceImpl implements GraphyClientService {
+public class GraphyServiceImpl implements GraphyService {
 
     private String apiRootUrl;
     @Value("${application.graph.enabled}")
@@ -29,9 +30,9 @@ public class GraphyClientServiceImpl implements GraphyClientService {
     @Value("${application.graph.port}")
     private int graphPort;
 
-    private final Logger log = LoggerFactory.getLogger(GraphyClientServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(GraphyServiceImpl.class);
 
-    public GraphyClientServiceImpl() {
+    public GraphyServiceImpl() {
     }
 
     @PostConstruct
@@ -40,7 +41,7 @@ public class GraphyClientServiceImpl implements GraphyClientService {
     }
 
     @Override
-    public String sendToGraphy(Object entity) throws RestClientException {
+    public String create(Object entity) throws RestClientException {
         this.log.debug("Sending Entity " + entity);
         return this.doSend(entity);
     }
@@ -51,7 +52,27 @@ public class GraphyClientServiceImpl implements GraphyClientService {
         this.doSendRelation(idSource, idTarget, sourceType, targetType);
     }
 
+
+    @Override
+    public void createRelation(Object sourceDTO, Object targetDTO) throws Exception {
+        try {
+            final Object sourceExternalIdValue = extractFieldValue(sourceDTO);
+            final Object targetExternalIdValue = extractFieldValue(targetDTO);
+            this.doSendRelation(sourceExternalIdValue.toString(), targetExternalIdValue.toString(), TypeResolver.resolve(sourceDTO), TypeResolver.resolve(targetDTO));
+        } catch (Exception e) {
+            this.log.error(e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    private Object extractFieldValue(Object dto) throws IllegalAccessException {
+        Field sourceExternalIdField = org.springframework.util.ReflectionUtils.findField(dto.getClass(), "externalId");
+        org.springframework.util.ReflectionUtils.makeAccessible(sourceExternalIdField);
+        return sourceExternalIdField.get(dto);
+    }
+
     private String doSendRelation(String idSource, String idTarget, String sourceType, String targetType) throws RestClientException {
+        this.log.info("Creating relation between " + idSource + "/" + sourceType + " and " + idTarget + "/" + targetType);
         final RelationDTO relationDTO = new RelationDTO();
         relationDTO.setIdJanusSource(idSource);
         relationDTO.setIdJanusCible(idTarget);
@@ -95,5 +116,11 @@ public class GraphyClientServiceImpl implements GraphyClientService {
             this.log.debug(e.getMessage(), e);
             throw e;
         }
+    }
+}
+
+class TypeResolver {
+    public static String resolve(Object object) {
+        return object.getClass().getSimpleName().substring(0, object.getClass().getSimpleName().length() - 3);
     }
 }
