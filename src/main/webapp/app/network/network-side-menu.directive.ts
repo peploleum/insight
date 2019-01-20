@@ -37,7 +37,7 @@ export class NetworkSideMenuDirective implements OnChanges {
         }
     }
 
-    @HostListener('click', ['$event'])
+    @HostListener('click')
     onMouseClicked() {
         if (this.sideMenu) {
             this.hide();
