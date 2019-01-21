@@ -7,4 +7,4 @@ mkdir -p /home/capgemini/binding/INSIGHT/logstash/
 cp ./logstash/* /home/capgemini/binding/INSIGHT/logstash/
 mkdir -p /home/capgemini/binding/INSIGHT/mongodb/
 mkdir -p /home/capgemini/binding/INSIGHT/graph
-cp ../graph/* /home/capgemini/binding/INSIGHT/graph/
+cp ../graph/conf/* /home/capgemini/binding/INSIGHT/graph/
