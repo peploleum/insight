@@ -137,7 +137,7 @@ export class NetworkService {
         //     });
         //     return of(fakeResponse);
         // }
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/properties/';
+        const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/janus/';
         return this.http.get<IGraphyNodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, {
             headers,
             observe: 'response'
