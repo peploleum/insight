@@ -50,7 +50,7 @@ spec:
               - name: APPLICATION_GRAPH_HOST
                 value: insight-graphy
               - name: APPLICATION_GRAPH_PORT
-                value: 8090
+                value: "8090"
               - name: JHIPSTER_METRICS_LOGS_ENABLED
                 value: 'true'
               - name: JHIPSTER_LOGGING_LOGSTASH_ENABLED
