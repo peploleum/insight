@@ -1,13 +1,19 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { Feature } from 'ol/Feature';
-import { OSM, Vector as VectorSource } from 'ol/source';
-import { GeoJSON } from 'ol/format';
-import { defaults as defaultControls } from 'ol/control.js';
-import Map from 'ol/Map';
-import View from 'ol/View';
 import { GEO_JSON_OBJECT, MapService } from './map.service';
+import Map from 'ol/map';
+import View from 'ol/view';
+import VectorSource from 'ol/source/vector';
+import VectorLayer from 'ol/layer/vector';
+import TileLayer from 'ol/layer/tile';
+import OSM from 'ol/source/osm';
+import control from 'ol/control';
+import GeoJSON from 'ol/format/geojson';
+import Feature from 'ol/feature';
+
+import Stroke from 'ol/style/stroke';
+import Circle from 'ol/style/circle';
+import Style from 'ol/style/style';
+import Fill from 'ol/style/fill';
 
 @Component({
     selector: 'jhi-map',
@@ -16,12 +22,12 @@ import { GEO_JSON_OBJECT, MapService } from './map.service';
 })
 export class MapComponent implements OnInit, AfterViewInit {
     rawDataSource: VectorSource = new VectorSource();
-    vectorLayer: VectorLayer = new VectorLayer();
+    vectorLayer: VectorLayer;
 
-    private circleImage = new CircleStyle({
+    private circleImage = new Circle({
         radius: 5,
         fill: null,
-        stroke: new Stroke({ color: 'red', width: 1 })
+        stroke: new Stroke({ color: 'red', width: 2 })
     });
     private styles = {
         Point: new Style({
@@ -69,7 +75,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             fill: new Fill({
                 color: 'magenta'
             }),
-            image: new CircleStyle({
+            image: new Circle({
                 radius: 10,
                 fill: null,
                 stroke: new Stroke({
@@ -98,7 +104,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
         this.vectorLayer = new VectorLayer({
             source: this.rawDataSource,
-            style: feature => this.styleFunction(feature)
+            style: (feature: Feature) => this.styleFunction(feature)
         });
     }
 
@@ -109,10 +115,16 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        // this.ms.generateChose().subscribe(res => {});
+    }
 
     ngAfterViewInit(): void {
         this.initMap();
+        this.getFeatureForId([]);
+    }
+
+    getFeatureForId(ids: string[]) {
         this.ms.getFeaturesForIds([]).subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
@@ -129,7 +141,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 this.vectorLayer
             ],
             target: 'map',
-            controls: defaultControls({
+            controls: control.defaults({
                 attributionOptions: {
                     collapsible: false
                 }

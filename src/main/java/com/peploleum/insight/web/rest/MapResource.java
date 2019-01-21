@@ -49,12 +49,15 @@ public class MapResource {
             data.setDescription(dto.getRawDataContent());
             data.setObjectType("RawData");
 
-            String[] doubleAsText = dto.getRawDataCoordinates().split(",");
-            List<Double> results = new ArrayList<>();
-            for (String textValue : doubleAsText) {
-                results.add(Double.parseDouble(textValue));
+            String rawDataCoordinates = dto.getRawDataCoordinates();
+            if(rawDataCoordinates != null){
+                String[] doubleAsText = rawDataCoordinates.split(",");
+                List<Double> results = new ArrayList<>();
+                for (String textValue : doubleAsText) {
+                    results.add(Double.parseDouble(textValue));
+                }
+                data.setCoordinate(results);
             }
-            data.setCoordinate(results);
             return data;
         }).collect(Collectors.toList());
         return new ResponseEntity<>(rawData, new HttpHeaders(), HttpStatus.OK);

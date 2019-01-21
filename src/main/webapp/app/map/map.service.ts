@@ -5,11 +5,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { Observable } from 'rxjs';
-import { IMapDataDTO } from '../shared/model/map.model';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import { GeoJSON } from 'ol/format';
 import { filter, map } from 'rxjs/internal/operators';
+import { IMapDataDTO } from '../shared/model/map.model';
+
+import Feature from 'ol/feature';
+import Point from 'ol/geom/point';
+import WKT from 'ol/format/wkt';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -22,7 +23,7 @@ export class MapService {
             filter((res: HttpResponse<IMapDataDTO[]>) => res.ok),
             map(res => {
                 const data: IMapDataDTO[] = <IMapDataDTO[]>res.body;
-                return data.map(dto => this.getGeoJsonFromDto(dto));
+                return data.map(dto => this.getGeoJsonFromDto(dto)).filter(dto => dto !== null);
             })
         );
     }
@@ -46,23 +47,27 @@ export class MapService {
         });
     }
 
-    getGeoJsonFromDto(dto: IMapDataDTO): any {
-        const feature = {
-            geometry: {
-                type: 'Point',
-                coordinates: dto.coordinate
-            },
-            name: dto.label,
-            properties: {
-                id: dto.id,
-                description: dto.description,
-                objectType: dto.objectType
-            }
-        };
-        // feature.set('id', dto.id);
-        // feature.set('description', dto.description);
-        // feature.set('objectType', dto.objectType);
-        return feature;
+    generateChose() {
+        return this.http.get(`${SERVER_API_URL}api/generator/bulk`, {
+            observe: 'response'
+        });
+    }
+
+    getGeoJsonFromDto(dto: IMapDataDTO): Feature {
+        if (dto.coordinate) {
+            const format = new WKT();
+            const feature: Feature = new Feature(new Point([dto.coordinate[1], dto.coordinate[0]]));
+            format.readFeature(feature.getGeometry(), {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            });
+            feature.setId(dto.id);
+            feature.set('description', dto.description);
+            feature.set('objectType', dto.objectType);
+            feature.set('label', dto.label);
+            return feature;
+        }
+        return null;
     }
 }
 
