@@ -60,3 +60,18 @@ spec:
   - port: 9300
     name: transport
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-node-elasticsearch
+  namespace: insight
+spec:
+  selector:
+    app: insight-elasticsearch
+  ports:
+  - port: 9200
+    name: http
+    protocol: TCP
+    nodePort: 30201
+  type: NodePort
