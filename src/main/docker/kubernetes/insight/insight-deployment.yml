@@ -1,84 +1,85 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: insight
-  namespace: insight
+    name: insight
+    namespace: insight
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: insight
-      version: "1.0"
-  template:
-    metadata:
-      labels:
-        app: insight
-        version: "1.0"
-    spec:
-      initContainers:
-        - name: init-ds
-          image: busybox
-          command:
-            - '/bin/sh'
-            - '-c'
-            - |
-                while true
-                do
-                  rt=$(nc -z -w 1 insight-mongodb 27017)
-                  if [ $? -eq 0 ]; then
-                    echo "DB is UP"
-                    break
-                  fi
-                  echo "DB is not yet reachable;sleep for 10s before retry"
-                  sleep 10
-                done
-      containers:
-      - name: insight-app
-        image: peploleum/insight:1.0.0
-        imagePullPolicy: Always
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: prod,swagger
-        - name: SPRING_DATA_MONGODB_DATABASE
-          value: insight
-        - name: SPRING_DATA_MONGODB_URI
-          value: "mongodb://insight-mongodb-0.insight-mongodb.insight:27017,insight-mongodb-1.insight-mongodb.insight:27017,insight-mongodb-2.insight-mongodb.insight:27017"
-        - name: SPRING_DATA_JEST_URI
-#          value: http://insight-elasticsearch.insight.corp.capgemini.com:9200
-          value: http://insight-elasticsearch.insight.svc.cluster.local:9200
-#        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES
-#          value: insight-elasticsearch.insight.svc.cluster.local:9300
-#        - name: SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME
-#          value: insight
-        - name: JHIPSTER_METRICS_LOGS_ENABLED
-          value: 'true'
-        - name: JHIPSTER_LOGGING_LOGSTASH_ENABLED
-          value: 'true'
-        - name: JHIPSTER_LOGGING_LOGSTASH_HOST
-          value: jhipster-logstash
-        - name: APPLICATION_KIBANA_URI
-          value: http://insight-kibana.insight.svc.cluster.local:5601
-        - name: JAVA_OPTS
-          value: " -Xmx2048m -Xms256m"
-        resources:
-          requests:
-            memory: "2048Mi"
-            cpu: "500m"
-          limits:
-            memory: "2048Mi"
-            cpu: "1"
-        ports:
-        - name: http
-          containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /management/health
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 15
-          failureThreshold: 6
-        livenessProbe:
-          httpGet:
-            path: /management/health
-            port: http
-          initialDelaySeconds: 120
+    replicas: 1
+    selector:
+        matchLabels:
+            app: insight
+            version: "1.0"
+    template:
+        metadata:
+            labels:
+                app: insight
+                version: "1.0"
+        spec:
+            initContainers:
+            - name: init-ds
+              image: busybox
+              command:
+              - '/bin/sh'
+              - '-c'
+              - |
+                  while true
+                  do
+                    rt=$(nc -z -w 1 insight-mongodb 27017)
+                    if [ $? -eq 0 ]; then
+                      echo "DB is UP"
+                      break
+                    fi
+                    echo "DB is not yet reachable;sleep for 10s before retry"
+                    sleep 10
+                  done
+            containers:
+            - name: insight-app
+              image: peploleum/insight:1.0.0
+              imagePullPolicy: Always
+              env:
+              - name: SPRING_PROFILES_ACTIVE
+                value: prod,swagger
+              - name: SPRING_DATA_MONGODB_DATABASE
+                value: insight
+              - name: SPRING_DATA_MONGODB_URI
+                value: "mongodb://insight-mongodb-0.insight-mongodb.insight:27017,insight-mongodb-1.insight-mongodb.insight:27017,insight-mongodb-2.insight-mongodb.insight:27017"
+              - name: SPRING_DATA_JEST_URI
+                value: http://insight-elasticsearch.insight.svc.cluster.local:9200
+              - name: APPLICTION_GRAPH_ENABLED
+                value: 'true'
+              - name: APPLICATION_GRAPH_HOST
+                value: insight-graphy
+              - name: APPLICATION_GRAPH_PORT
+                value: 8090
+              - name: JHIPSTER_METRICS_LOGS_ENABLED
+                value: 'true'
+              - name: JHIPSTER_LOGGING_LOGSTASH_ENABLED
+                value: 'true'
+              - name: JHIPSTER_LOGGING_LOGSTASH_HOST
+                value: jhipster-logstash
+              - name: APPLICATION_KIBANA_URI
+                value: http://insight-kibana.insight.svc.cluster.local:5601
+              - name: JAVA_OPTS
+                value: " -Xmx2048m -Xms256m"
+              resources:
+                  requests:
+                      memory: "2048Mi"
+                      cpu: "500m"
+                  limits:
+                      memory: "2048Mi"
+                      cpu: "1"
+              ports:
+              - name: http
+                containerPort: 8080
+              readinessProbe:
+                  httpGet:
+                      path: /management/health
+                      port: http
+                  initialDelaySeconds: 60
+                  periodSeconds: 15
+                  failureThreshold: 6
+              livenessProbe:
+                  httpGet:
+                      path: /management/health
+                      port: http
+                  initialDelaySeconds: 120
