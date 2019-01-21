@@ -71,7 +71,7 @@ spec:
            value: "insight-graphy"
          - name: ELASTICSEARCH_INDEX_NAME
            value: "gazetter"
-          - name: ELASTICSEARCH_HOST
+         - name: ELASTICSEARCH_HOST
            value: 'refgeo-elasticsearch'
          - name: ELASTICSEARCH_PORT
            value: "9200"
