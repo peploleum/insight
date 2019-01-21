@@ -19,7 +19,7 @@ spec:
          - name: server.host
            value: "0"
          - name: ELASTICSEARCH_URL
-           value: http://refgeo-elasticsearch.refgeo:9200
+           value: http://refgeo-elasticsearch.insight:9200
         ports:
         - containerPort: 5601
       restartPolicy: Always
