@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { Subscription } from 'rxjs';
 import { RawDataService } from 'app/entities/raw-data';
@@ -28,6 +28,10 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: true;
+
+    startIndex = 0;
+    endIndex = 5;
+    lastScrollTop = 0;
 
     constructor(
         protected rawDataService: RawDataService,
@@ -66,7 +70,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
                 page: this.page - 1,
                 size: this.itemsPerPage,
                 sort: this.sort(),
-                filter: 'all' // out of 'all', 'locations', 'images', no filter in options means retrieving all data
+                filter: null // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
             .subscribe(
                 (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
@@ -169,5 +173,14 @@ export class EventThreadComponent implements OnInit, OnDestroy {
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    @HostListener('window:scroll', ['$event'])
+    onScroll($event) {
+        const newScrolltop: number = window.scrollY;
+        const dir = this.lastScrollTop - newScrolltop;
+        this.startIndex = dir > 0 ? Math.max(0, this.startIndex - 1) : this.startIndex + 1;
+        this.endIndex = dir > 0 ? Math.max(0, this.endIndex - 1) : this.endIndex + 1;
+        this.lastScrollTop = newScrolltop;
     }
 }
