@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {IRawData} from 'app/shared/model/raw-data.model';
-import {Subscription} from 'rxjs';
-import {RawDataService} from 'app/entities/raw-data';
-import {JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
-import {AccountService} from 'app/core';
-import {Router} from '@angular/router';
-import {ITEMS_PER_PAGE} from 'app/shared';
-import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IRawData } from 'app/shared/model/raw-data.model';
+import { Subscription } from 'rxjs';
+import { RawDataService } from 'app/entities/raw-data';
+import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import { AccountService } from 'app/core';
+import { Router } from '@angular/router';
+import { ITEMS_PER_PAGE } from 'app/shared';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'ins-event-thread',
@@ -14,7 +14,6 @@ import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http
     styles: []
 })
 export class EventThreadComponent implements OnInit, OnDestroy {
-
     currentAccount: any;
     rawData: IRawData[];
     error: any;
@@ -66,7 +65,8 @@ export class EventThreadComponent implements OnInit, OnDestroy {
             .query({
                 page: this.page - 1,
                 size: this.itemsPerPage,
-                sort: this.sort()
+                sort: this.sort(),
+                filter: 'all' // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
             .subscribe(
                 (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
@@ -170,5 +170,4 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
-
 }
