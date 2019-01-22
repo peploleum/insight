@@ -15,7 +15,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     loadChildren: './admin/admin.module#InsightAdminModule'
                 }
             ],
-            { useHash: true, enableTracing: DEBUG_INFO_ENABLED }
+            { useHash: true, enableTracing: false }
         )
     ],
     exports: [RouterModule]

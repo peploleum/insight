@@ -7,8 +7,7 @@ import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of } from 'rxjs';
 import { IdType } from 'vis';
 import { filter, map } from 'rxjs/internal/operators';
-import { EdgeDTO, GraphDataCollection, GraphyNodeDTO, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
-import { UUID } from '../shared/util/insight-util';
+import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { RawData } from 'app/shared/model/raw-data.model';
 
@@ -145,13 +144,11 @@ export class NetworkService {
     }
 }
 
-export const IMAGE_URL_BIO = 'https://img.icons8.com/color/1600/person-male.png';
-export const IMAGE_URL_EVENT =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Explosion-155624_icon.svg/2000px-Explosion-155624_icon.svg.png';
-export const IMAGE_URL_EQUIP = 'http://cdn.onlinewebfonts.com/svg/img_236380.png';
-export const IMAGE_URL_RAW = 'https://cdn3.iconfinder.com/data/icons/analytics-4/500/Analytic-49-512.png';
-export const IMAGE_URL_DEFAULT =
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Information_icon_with_gradient_background.svg/1024px-Information_icon_with_gradient_background.svg.png';
+export const IMAGE_URL_BIO = '../../../content/images/biographics.png';
+export const IMAGE_URL_EVENT = '../../../content/images/event.png';
+export const IMAGE_URL_EQUIP = '../../../content/images/equipement.png';
+export const IMAGE_URL_RAW = '../../../content/images/raw_data.png';
+export const IMAGE_URL_DEFAULT = '../../../content/images/default.png';
 export const MOCK_GRAPH_DATA = {
     nodes: [
         { id: 1, label: 'Bobby', title: 'Personne', type: 'Biographics' },

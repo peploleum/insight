@@ -10,7 +10,7 @@ import { IMapDataDTO } from '../shared/model/map.model';
 
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
-import WKT from 'ol/format/wkt';
+import proj from 'ol/proj';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -47,7 +47,8 @@ export class MapService {
         });
     }
 
-    generateChose() {
+    /** Temporaire: Remplace swagger */
+    generateRawData() {
         return this.http.get(`${SERVER_API_URL}api/generator/bulk`, {
             observe: 'response'
         });
@@ -55,19 +56,35 @@ export class MapService {
 
     getGeoJsonFromDto(dto: IMapDataDTO): Feature {
         if (dto.coordinate) {
-            const format = new WKT();
-            const feature: Feature = new Feature(new Point([dto.coordinate[1], dto.coordinate[0]]));
-            format.readFeature(feature.getGeometry(), {
-                dataProjection: 'EPSG:4326',
-                featureProjection: 'EPSG:3857'
-            });
+            const correctCoord = proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]);
+            const feature: Feature = new Feature(new Point(correctCoord));
             feature.setId(dto.id);
             feature.set('description', dto.description);
             feature.set('objectType', dto.objectType);
-            feature.set('label', dto.label);
+            feature.set('label', dto.objectType);
             return feature;
         }
         return null;
+    }
+
+    //  getIconImage(uri: string, id: string): string {
+    //      const svg = '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">'
+    //          + '<circle cx="60" cy="60" r="60"/>'
+    //          + '</svg>';
+    //      return svg;
+    //  }
+
+    getIconImage(uri: string, id: string): string {
+        const svg =
+            '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+            '<defs>' +
+            `<clipPath id="${id}">` +
+            '<circle cx="60" cy="60" r="60" fill="red" />' +
+            '</clipPath>' +
+            '</defs>' +
+            `<image width="100%" height="100%" xlink:href="${uri}" clip-path="url(%23${id})" />` +
+            '</svg>';
+        return svg;
     }
 }
 
