@@ -1,21 +1,26 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.domain.RawData;
 import com.peploleum.insight.repository.RawDataRepository;
 import com.peploleum.insight.repository.search.RawDataSearchRepository;
+import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.service.mapper.RawDataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.LongSupplier;
+import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing RawData.
@@ -31,10 +36,13 @@ public class RawDataServiceImpl implements RawDataService {
 
     private final RawDataSearchRepository rawDataSearchRepository;
 
-    public RawDataServiceImpl(RawDataRepository rawDataRepository, RawDataMapper rawDataMapper, RawDataSearchRepository rawDataSearchRepository) {
+    private final MongoTemplate mongoTemplate;
+
+    public RawDataServiceImpl(RawDataRepository rawDataRepository, RawDataMapper rawDataMapper, RawDataSearchRepository rawDataSearchRepository, MongoTemplate mongoTemplate) {
         this.rawDataRepository = rawDataRepository;
         this.rawDataMapper = rawDataMapper;
         this.rawDataSearchRepository = rawDataSearchRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     /**
@@ -96,7 +104,7 @@ public class RawDataServiceImpl implements RawDataService {
     /**
      * Search for the rawData corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */
@@ -105,5 +113,24 @@ public class RawDataServiceImpl implements RawDataService {
         log.debug("Request to search for a page of RawData for query {}", query);
         return rawDataSearchRepository.search(queryStringQuery(query), pageable)
             .map(rawDataMapper::toDto);
+    }
+
+    /**
+     * Queries via a specific {@link Query}
+     *
+     * @param query the query of the search
+     * @return list of matching entities
+     */
+    @Override
+    public List<RawDataDTO> searchByCriteria(Query query) {
+        return this.mongoTemplate.find(query, RawData.class).stream().map(rawDataMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<RawDataDTO> searchByCriteria(Query query, Pageable pageable) {
+        query.with(pageable);
+        final List<RawDataDTO> resultList = this.mongoTemplate.find(query, RawData.class).stream().map(rawDataMapper::toDto).collect(Collectors.toList());
+        final Page<RawDataDTO> page = PageableExecutionUtils.getPage(resultList, pageable, () -> resultList.size());
+        return page;
     }
 }

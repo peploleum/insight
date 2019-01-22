@@ -2,8 +2,9 @@ package com.peploleum.insight.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.GeoPointField;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -49,8 +50,10 @@ public class RawData implements Serializable {
     private String rawDataContent;
 
     @Field("raw_data_creation_date")
+    @Indexed(direction = IndexDirection.ASCENDING)
     private Instant rawDataCreationDate;
 
+    @Indexed(direction = IndexDirection.ASCENDING)
     @Field("raw_data_extracted_date")
     private Instant rawDataExtractedDate;
 

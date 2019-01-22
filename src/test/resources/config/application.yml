@@ -89,4 +89,4 @@ application:
     graph:
         host: localhost
         port: 8090
-        enabled: true
+        enabled: false
