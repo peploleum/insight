@@ -2,15 +2,18 @@ package com.peploleum.insight.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.peploleum.insight.service.RawDataService;
+import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
 import com.peploleum.insight.web.rest.util.PaginationUtil;
-import com.peploleum.insight.service.dto.RawDataDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing RawData.
@@ -132,7 +131,7 @@ public class RawDataResource {
      * SEARCH  /_search/raw-data?query=:query : search for the rawData corresponding
      * to the query.
      *
-     * @param query the query of the rawData search
+     * @param query    the query of the rawData search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -145,4 +144,34 @@ public class RawDataResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    /**
+     * GET  /raw-data/filter : get all the rawData with specific business filters.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of rawData in body
+     */
+    @GetMapping("/raw-data/filter")
+    @Timed
+    public ResponseEntity<List<RawDataDTO>> getAllRawDataByCustomCriteria(@RequestParam String filter, Pageable pageable) {
+        log.debug("REST request to get a page of RawData with filters");
+        final Query query = new Query();
+        switch (filter) {
+            case "all":
+                query.addCriteria(Criteria.where("rawDataData").exists(true));
+                query.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+                break;
+            case "locations":
+                query.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+                break;
+            case "images":
+                query.addCriteria(Criteria.where("rawDataData").exists(true));
+                break;
+            default:
+                break;
+        }
+        query.with(new Sort(Sort.Direction.DESC, "rawDataCreationDate"));
+        final Page<RawDataDTO> page = rawDataService.searchByCriteria(query, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/raw-data/filter");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 }

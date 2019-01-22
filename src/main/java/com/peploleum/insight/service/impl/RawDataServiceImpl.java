@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -126,6 +125,13 @@ public class RawDataServiceImpl implements RawDataService {
         return this.mongoTemplate.find(query, RawData.class).stream().map(rawDataMapper::toDto).collect(Collectors.toList());
     }
 
+    /**
+     * Queries via specific {@link Query}
+     *
+     * @param query    the query of the search
+     * @param pageable the pagination information
+     * @return a {@link Page} with the result
+     */
     @Override
     public Page<RawDataDTO> searchByCriteria(Query query, Pageable pageable) {
         query.with(pageable);
