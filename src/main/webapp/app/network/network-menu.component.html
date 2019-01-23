@@ -1,4 +1,4 @@
-<div class="popover-menu shadow rounded">
+<div class="popover-menu shadow rounded" [style.right]="right" [style.top]="top">
     <ul class="list-group">
         <li class="list-group-item popover-menu-item" [ngClass]="{'selected': networkStates['ADD_NEIGHBOURS']}"
             (click)="sendAction('ADD_NEIGHBOURS')" title="Ajouter des Voisins">

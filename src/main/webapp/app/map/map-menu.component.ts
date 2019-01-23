@@ -4,10 +4,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'ins-network-menu',
-    templateUrl: './network-menu.component.html'
+    selector: 'ins-map-menu',
+    templateUrl: './map-menu.component.html'
 })
-export class NetworkMenuComponent implements OnInit {
+export class MapMenuComponent implements OnInit {
     @Input()
     networkStates;
     @Input()

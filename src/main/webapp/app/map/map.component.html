@@ -1,6 +1,5 @@
 <div [style.height.%]="'100'" class="flex-container-container" [style.overflow]="'hidden'">
     <div id="map" [style.height.px]="computedHeight" [style.overflow]="'hidden'" class="col-9">
     </div>
-    <ins-event-thread [style.overflow]="'auto'" class="col-3">
-    </ins-event-thread>
+    <ins-event-thread class="col-3 event-thread-container" (selectOnMapEmitter)="selectAndGoTo($event)" ></ins-event-thread>
 </div>

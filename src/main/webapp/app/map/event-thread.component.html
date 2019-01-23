@@ -1,15 +1,22 @@
-<div *ngFor="let rawData of rawData;trackBy: trackId">
-    <p><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.rawDataName}}</a></p>
-    <p><a [routerLink]="['/network', rawData.id]">
-        <fa-icon [icon]="'sitemap'"></fa-icon>
-        Network</a></p>
-    <p>
-        <fa-icon [icon]="'rss-square'"></fa-icon>
-        <span [style.fontWeight]="'bold'">{{rawData.rawDataSourceName}}</span> {{rawData.rawDataType}}
-        {{rawData.rawDataSubType}} <span
-        [style.font-size.px]="14">{{rawData.rawDataCreationDate |
-        date:'short'}}</span>
-    </p>
-    <p>{{rawData.rawDataContent}}</p>
-    <p>{{rawData.rawDataSourceUri}}</p>
+<div insPaginationDirective [dataList]="rawDataList" (pageEmitter)="onNewPage($event)" [numberOfItemPerScroll]="1"
+     [numberOfItemPerPage]="5" class="event-thread-subcontainer">
+    <div class="card event-thread-card"
+         *ngFor="let rawData of rawDataList | slice:startIndex:lastIndex;trackBy: trackId">
+        <div class="card-img-top event-thread-top"><img
+            *ngIf="rawData.rawDataData" class="event-thread-image" [src]="getImageBase64Src(rawData.rawDataData)"></div>
+        <div class="card-body" style="cursor: pointer;">
+            <h6 class="card-title d-flex align-items-center" (click)="selectOnMap(rawData.id)"><img [src]="getImageIconSrc()" class="event-thread-icon">
+                {{rawData.rawDataName}}</h6>
+            <p class="card-text">
+                <small>{{rawData.rawDataContent}}</small>
+            </p>
+            <a class="card-link" [routerLink]="['/network', rawData.id]">
+                <fa-icon [icon]="'sitemap'"></fa-icon>
+            </a>
+            <a class="card-link" [routerLink]="['/raw-data', rawData.id, 'view' ]">
+                <fa-icon [icon]="'rss-square'"></fa-icon>
+                <span>{{rawData.rawDataCreationDate | date:'short'}}</span>
+            </a>
+        </div>
+    </div>
 </div>

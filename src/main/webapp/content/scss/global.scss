@@ -313,8 +313,6 @@ Custom network css
     min-width: 30px;
     max-height: 30vh;
     position: absolute;
-    right: 2vw;
-    top: 100px;
     background-color: white;
     align-items: stretch;
 }
@@ -351,4 +349,40 @@ Custom network css
 
 .selected:hover {
     background-color: #4dff4d !important;
+}
+
+/* ==========================================================================
+Custom map css
+========================================================================== */
+
+.event-thread-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.event-thread-subcontainer {
+    width: 100%;
+    max-height: inherit;
+    overflow: auto;
+}
+
+.event-thread-card {
+    max-height: 50%;
+    width: inherit;
+}
+
+.event-thread-top {
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+}
+
+.event-thread-image {
+    max-height: 7rem;
+}
+
+.event-thread-icon {
+    height: 2rem;
+    width: 2rem;
 }

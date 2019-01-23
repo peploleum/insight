@@ -50,6 +50,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                             this.addNodes([nodeDTO], []);
                             this.getNodesNeighbours([nodeDTO.id]);
                         });
+                } else {
+                    this.getMockData();
                 }
             } else {
                 this.getMockData();

@@ -1,12 +1,13 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { Subscription } from 'rxjs';
 import { RawDataService } from 'app/entities/raw-data';
 import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { AccountService } from 'app/core';
 import { Router } from '@angular/router';
-import { ITEMS_PER_PAGE } from 'app/shared';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { PageInfo } from '../shared/util/pagination.directive';
+import { MapService } from './map.service';
 
 @Component({
     selector: 'ins-event-thread',
@@ -15,7 +16,7 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 })
 export class EventThreadComponent implements OnInit, OnDestroy {
     currentAccount: any;
-    rawData: IRawData[];
+    rawDataList: IRawData[];
     error: any;
     success: any;
     eventSubscriber: Subscription;
@@ -30,8 +31,10 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     reverse: true;
 
     startIndex = 0;
-    endIndex = 5;
-    lastScrollTop = 0;
+    lastIndex = 5;
+
+    @Output()
+    selectOnMapEmitter: EventEmitter<string> = new EventEmitter();
 
     constructor(
         protected rawDataService: RawDataService,
@@ -42,7 +45,8 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         protected router: Router,
         protected eventManager: JhiEventManager
     ) {
-        this.itemsPerPage = ITEMS_PER_PAGE;
+        // this.itemsPerPage = ITEMS_PER_PAGE;
+        this.itemsPerPage = 40;
         this.currentSearch = '';
         this.predicate = 'rawDataCreationDate';
         this.page = 1;
@@ -168,19 +172,27 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
-        this.rawData = data;
+        this.rawDataList = data;
     }
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
 
-    @HostListener('window:scroll', ['$event'])
-    onScroll($event) {
-        const newScrolltop: number = window.scrollY;
-        const dir = this.lastScrollTop - newScrolltop;
-        this.startIndex = dir > 0 ? Math.max(0, this.startIndex - 1) : this.startIndex + 1;
-        this.endIndex = dir > 0 ? Math.max(0, this.endIndex - 1) : this.endIndex + 1;
-        this.lastScrollTop = newScrolltop;
+    getImageIconSrc(objectType: string): string {
+        return MapService.getImageIconUrl(objectType);
+    }
+
+    getImageBase64Src(content: string): string {
+        return `data:image/png;base64,${content}`;
+    }
+
+    onNewPage(newPage: PageInfo) {
+        this.startIndex = newPage.startIndex;
+        this.lastIndex = newPage.lastIndex;
+    }
+
+    selectOnMap(itemId: string) {
+        this.selectOnMapEmitter.emit(itemId);
     }
 }

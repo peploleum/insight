@@ -17,7 +17,6 @@ import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { MapState } from '../shared/util/map-utils';
-import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
 
 @Component({
     selector: 'jhi-map',
@@ -102,13 +101,24 @@ export class MapComponent implements OnInit, AfterViewInit {
             }),
             view: new View({
                 center: [0, 0],
-                zoom: 2
+                zoom: 2,
+                minZoom: 1,
+                maxZoom: 20
             })
         });
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         });
         this._map.addInteraction(this.selectInteraction);
+    }
+
+    selectAndGoTo(objectId: string) {
+        this.selectInteraction.getFeatures().clear();
+        const selectedFeat: Feature = this.rawDataSource.getFeatureById(objectId);
+        if (selectedFeat) {
+            this.selectInteraction.getFeatures().push(selectedFeat);
+            this._map.getView().fit(selectedFeat.getGeometry().getExtent(), { duration: 1500 });
+        }
     }
 
     styleFunction(feature: Feature, isSelected: boolean) {
@@ -131,30 +141,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     getIconStyle(feature: Feature): Style {
         const objectType = feature.get('objectType');
-        let src: string;
-        switch (objectType) {
-            case 'RawData':
-                src = IMAGE_URL_RAW;
-                break;
-            case 'Equipement':
-                src = IMAGE_URL_EQUIP;
-                break;
-            case 'Location':
-                src = IMAGE_URL_RAW;
-                break;
-            case 'Biographics':
-                src = IMAGE_URL_BIO;
-                break;
-            case 'Organisation':
-                src = IMAGE_URL_DEFAULT;
-                break;
-            case 'Event':
-                src = IMAGE_URL_DEFAULT;
-                break;
-            default:
-                src = IMAGE_URL_DEFAULT;
-                break;
-        }
+        const src: string = MapService.getImageIconUrl(objectType);
         return new Style({
             image: new Icon({
                 anchor: [0.5, 0.5],

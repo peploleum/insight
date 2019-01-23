@@ -11,10 +11,30 @@ import { IMapDataDTO } from '../shared/model/map.model';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
+import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
+
+    static getImageIconUrl(objectType: string): string {
+        switch (objectType) {
+            case 'RawData':
+                return IMAGE_URL_RAW;
+            case 'Equipement':
+                return IMAGE_URL_EQUIP;
+            case 'Location':
+                return IMAGE_URL_RAW;
+            case 'Biographics':
+                return IMAGE_URL_BIO;
+            case 'Organisation':
+                return IMAGE_URL_DEFAULT;
+            case 'Event':
+                return IMAGE_URL_DEFAULT;
+            default:
+                return IMAGE_URL_DEFAULT;
+        }
+    }
 
     constructor(private http: HttpClient) {}
 
