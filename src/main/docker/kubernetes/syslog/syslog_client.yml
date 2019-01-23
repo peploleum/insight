@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: rsyslogclient
-        image: 192.168.65.5:8093/rsyslog/client:latest
+        image: peploleum/rsyslog-server:1.0.0
         ports:
         - containerPort: 23
           name: tcp
@@ -28,10 +28,20 @@ spec:
         - name: rsyslogclient-storage-conf
           mountPath: /etc/rsyslog.conf
           subPath: rsyslog.conf
+        - name: rsyslogclient-storage-boucle
+          mountPath: /tmp/boucle.sh
+          subPath: boucle.sh
+        command:
+            - '/bin/sh'
+            - '-c'
+            - 'service rsyslog start && cp /tmp/boucle.sh /home/boucle.sh && chmod +x /home/boucle.sh && /home/boucle.sh && /usr/sbin/sshd -D'
       volumes:
       - name: rsyslogclient-storage-conf
         configMap:
           name: insight-rsyslogclient-conf
+      - name: rsyslogclient-storage-boucle
+        configMap:
+          name: insight-rsyslogclient-boucle
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -42,13 +52,13 @@ data:
   rsyslog.conf: |
     #  /etc/rsyslog.conf	Configuration file for rsyslog.
     #
-    # 			For more information see
-    #			/usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
+    #      For more information see
+    #      /usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
     #
     #   Default logging rules can be found in /etc/rsyslog.d/50-default.conf
     
     
-    *.*  		@@insight-rsyslog-server.insight:514
+    *.*    @@insight-rsyslog-server.insight:514
   
     #################
     #### MODULES ####
@@ -96,6 +106,37 @@ data:
     #
     $IncludeConfig /etc/rsyslog.d/*.conf
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-rsyslogclient-boucle
+  namespace: insight
+data:
+  boucle.sh: |
+    #!/bin/bash
+    compteur=0
+    nbrboucles=0
+    if test -Z $1
+          then nbrboucles=1000
+          else nbrboucles=$1
+    fi
+
+    echo "nombre boucles " $nbrboucles
+    tableau_type=( "EMERG" "ALERT" "CRIT" "ERROR" "WARNING" "NOTICE" "INFO" "DEBUG" )
+    ECHELLE=8
+
+    while (($compteur < $nbrboucles ))
+    do
+          #echo "objet observe " $compteur
+          nombre=$RANDOM
+          let "nombre %= $ECHELLE"
+          #echo "Nombre aleatoire inferieur à $ECHELLE  ---  $nombre"
+          #echo "objet observe " ${tableau_type[$nombre]} TestBoucle$compteur 
+          logger -p ${tableau_type[$nombre]} TestBoucle$compteur 
+         ((compteur+=1))
+    done
+    exit 0
 ---
 apiVersion: v1
 kind: Service

@@ -12,7 +12,7 @@ spec:
     spec:
       initContainers:
         - name: config
-          image: 192.168.65.5:8093/busybox:latest
+          image: busybox
           command:
             - "sh"
           args:
@@ -28,7 +28,7 @@ spec:
               mountPath: /opt/nifi/nifi-current/conf/
       containers:
       - name: nifi 
-        image: 192.168.65.5:8093/apache/nifi:latest
+        image: apache/nifi:latest
         ports:
         - containerPort: 8080
           name: front

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: rsyslogserver
-        image: 192.168.65.5:8093/rsyslog/server:latest
+        image: peploleum/rsyslog-server:1.0.0
         ports:
         - containerPort: 22 
           name: ssh
