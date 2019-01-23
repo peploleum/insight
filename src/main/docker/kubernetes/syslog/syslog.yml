@@ -1,0 +1,132 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-rsyslog-server
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-rsyslog-server
+    spec:
+      containers:
+      - name: rsyslogserver
+        image: 192.168.65.5:8093/rsyslog/server:latest
+        ports:
+        - containerPort: 22 
+          name: ssh
+          protocol: TCP 
+        - containerPort: 514
+          name: tcp
+          protocol: TCP 
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "256Mi"
+            cpu: "1"
+        volumeMounts:
+        - name: rsyslogserver-storage-conf
+          mountPath: /etc/rsyslog.conf
+          subPath: rsyslog.conf
+      volumes:
+      - name: rsyslogserver-storage-conf
+        configMap:
+          name: insight-rsyslogserver-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-rsyslogserver-conf
+  namespace: insight
+data:
+  rsyslog.conf: |
+    #  /etc/rsyslog.conf	Configuration file for rsyslog.
+    #
+    #   		For more information see
+    #			/usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
+    #
+    #  Default logging rules can be found in /etc/rsyslog.d/50-default.conf
+      
+      
+    *.*       @@insight-nifi.insight:10514
+    
+    #################
+    #### MODULES ####
+    #################
+      
+    module(load="imuxsock") # provides support for local system logging
+    #module(load="imklog")   # provides kernel logging support
+    #module(load="immark")  # provides --MARK-- message capability
+      
+    # provides UDP syslog reception
+    #module(load="imudp")
+    #input(type="imudp" port="514")
+      
+    # provides TCP syslog reception
+    #module(load="imtcp")
+    #input(type="imtcp" port="514")
+    
+    # Enable non-kernel facility klog messages
+    #$KLogPermitNonKernelFacility on
+    
+    ###########################
+    #### GLOBAL DIRECTIVES ####
+    ###########################
+      
+    $template remote-incoming-logs,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log" 
+    *.* ?remote-incoming-logs
+    & ~
+    
+    #
+    # Use traditional timestamp format.
+    # To enable high precision timestamps, comment out the following line.
+    #
+    $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+    
+    # Filter duplicated messages
+    $RepeatedMsgReduction on
+    
+    #
+    #  Set the default permissions for all log files.
+    #
+    $FileOwner syslog
+    $FileGroup adm
+    $FileCreateMode 0640
+    $DirCreateMode 0755
+    $Umask 0022
+    $PrivDropToUser syslog
+    $PrivDropToGroup syslog
+    
+    #
+    # Where to place spool and state files
+    #
+    $WorkDirectory /var/spool/rsyslog
+    
+    #
+    # Include all config files in /etc/rsyslog.d/
+    #
+    $IncludeConfig /etc/rsyslog.d/*.conf
+    
+    
+    $ModLoad imtcp
+    $InputTCPServerRun 514
+    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-rsyslog-server
+  namespace: insight
+spec:
+  selector:
+    app: insight-rsyslog-server
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 22
+  - name: tcp 
+    port: 514
+    targetPort: 514

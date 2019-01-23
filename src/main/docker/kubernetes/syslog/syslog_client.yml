@@ -1,0 +1,110 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-rsyslog-client
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-rsyslog-client
+    spec:
+      containers:
+      - name: rsyslogclient
+        image: 192.168.65.5:8093/rsyslog/client:latest
+        ports:
+        - containerPort: 23
+          name: tcp
+          protocol: TCP
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "256Mi"
+            cpu: "1"
+        volumeMounts:
+        - name: rsyslogclient-storage-conf
+          mountPath: /etc/rsyslog.conf
+          subPath: rsyslog.conf
+      volumes:
+      - name: rsyslogclient-storage-conf
+        configMap:
+          name: insight-rsyslogclient-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-rsyslogclient-conf
+  namespace: insight
+data:
+  rsyslog.conf: |
+    #  /etc/rsyslog.conf	Configuration file for rsyslog.
+    #
+    # 			For more information see
+    #			/usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
+    #
+    #   Default logging rules can be found in /etc/rsyslog.d/50-default.conf
+    
+    
+    *.*  		@@insight-rsyslog-server.insight:514
+  
+    #################
+    #### MODULES ####
+    #################
+  
+    module(load="imuxsock") # provides support for local system logging
+    #module(load="imklog")   # provides kernel logging support
+    #module(load="immark")  # provides --MARK-- message capability
+    
+    
+    # Enable non-kernel facility klog messages
+    #$KLogPermitNonKernelFacility on
+    
+    ###########################
+    #### GLOBAL DIRECTIVES ####
+    ###########################
+    
+    #
+    # Use traditional timestamp format.
+    # To enable high precision timestamps, comment out the following line.
+    #
+    $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+    
+    # Filter duplicated messages
+    $RepeatedMsgReduction on
+    
+    #
+    # Set the default permissions for all log files.
+    #
+    $FileOwner syslog
+    $FileGroup adm
+    $FileCreateMode 0640
+    $DirCreateMode 0755
+    $Umask 0022
+    $PrivDropToUser syslog
+    $PrivDropToGroup syslog
+    
+    #
+    # Where to place spool and state files
+    #
+    $WorkDirectory /var/spool/rsyslog
+    
+    #
+    # Include all config files in /etc/rsyslog.d/
+    #
+    $IncludeConfig /etc/rsyslog.d/*.conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-rsyslog-client
+  namespace: insight
+spec:
+  selector:
+    app: insight-rsyslog-client
+  ports:
+  - name: tcp 
+    port: 23
