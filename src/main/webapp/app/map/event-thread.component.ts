@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { PageInfo } from '../shared/util/pagination.directive';
 import { MapService } from './map.service';
+import { tap } from 'rxjs/internal/operators';
 
 @Component({
     selector: 'ins-event-thread',
@@ -43,7 +44,8 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         protected accountService: AccountService,
         protected dataUtils: JhiDataUtils,
         protected router: Router,
-        protected eventManager: JhiEventManager
+        protected eventManager: JhiEventManager,
+        protected ms: MapService
     ) {
         // this.itemsPerPage = ITEMS_PER_PAGE;
         this.itemsPerPage = 40;
@@ -74,8 +76,9 @@ export class EventThreadComponent implements OnInit, OnDestroy {
                 page: this.page - 1,
                 size: this.itemsPerPage,
                 sort: this.sort(),
-                filter: null // out of 'all', 'locations', 'images', no filter in options means retrieving all data
+                filter: 'all' // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
+            .pipe(tap())
             .subscribe(
                 (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)

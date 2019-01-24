@@ -48,10 +48,6 @@ export class MapService {
         );
     }
 
-    getRelationIds(idOrigin: string): Observable<HttpResponse<string[]>> {
-        return this.http.get<string[]>(`${this.resourceUrl}` + `${idOrigin}`, { observe: 'response' });
-    }
-
     getData(ids: string[]): Observable<HttpResponse<IMapDataDTO[]>> {
         if (DEBUG_INFO_ENABLED) {
             return this.getAllData();
@@ -66,6 +62,16 @@ export class MapService {
             observe: 'response'
         });
     }
+
+    sendToMap(source: Observable<IMapDataDTO[]>): Observable<Feature[]> {
+        return source.pipe(
+            map((data: IMapDataDTO[]) => {
+                return data.map(dto => this.getGeoJsonFromDto(dto)).filter(dto => dto !== null);
+            })
+        );
+    }
+
+    rawDataToMapDataDTO() {}
 
     /** Temporaire: Remplace swagger */
     generateRawData() {
@@ -86,13 +92,6 @@ export class MapService {
         }
         return null;
     }
-
-    //  getIconImage(uri: string, id: string): string {
-    //      const svg = '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">'
-    //          + '<circle cx="60" cy="60" r="60"/>'
-    //          + '</svg>';
-    //      return svg;
-    //  }
 
     getIconImage(uri: string, id: string): string {
         const svg =
