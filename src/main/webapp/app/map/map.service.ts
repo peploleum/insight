@@ -3,19 +3,21 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
-import { Observable } from 'rxjs';
+import { SERVER_API_URL } from 'app/app.constants';
+import { Subject } from 'rxjs';
 import { filter, map } from 'rxjs/internal/operators';
-import { IMapDataDTO } from '../shared/model/map.model';
+import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
 import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
+import { IRawData, RawData } from '../shared/model/raw-data.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
+    featureSource: Subject<Feature[]> = new Subject();
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {
@@ -36,51 +38,13 @@ export class MapService {
         }
     }
 
-    constructor(private http: HttpClient) {}
-
-    getFeaturesForIds(ids: string[]): Observable<Feature[]> {
-        return this.getData(ids).pipe(
-            filter((res: HttpResponse<IMapDataDTO[]>) => res.ok),
-            map(res => {
-                const data: IMapDataDTO[] = <IMapDataDTO[]>res.body;
-                return data.map(dto => this.getGeoJsonFromDto(dto)).filter(dto => dto !== null);
-            })
-        );
+    static getMapDataFromRaw(raw: IRawData): IMapDataDTO {
+        const str: string[] = raw.rawDataCoordinates.split(',');
+        const coord: number[] = str.map(i => parseFloat(i));
+        return new MapDataDTO(raw.id, raw.rawDataName, 'RawData', raw.rawDataContent, coord);
     }
 
-    getData(ids: string[]): Observable<HttpResponse<IMapDataDTO[]>> {
-        if (DEBUG_INFO_ENABLED) {
-            return this.getAllData();
-        }
-        return this.http.post<IMapDataDTO[]>(`${this.resourceUrl}`, ids, {
-            observe: 'response'
-        });
-    }
-
-    getAllData(): Observable<HttpResponse<IMapDataDTO[]>> {
-        return this.http.get<IMapDataDTO[]>(`${this.resourceUrl}` + `/get-all-data`, {
-            observe: 'response'
-        });
-    }
-
-    sendToMap(source: Observable<IMapDataDTO[]>): Observable<Feature[]> {
-        return source.pipe(
-            map((data: IMapDataDTO[]) => {
-                return data.map(dto => this.getGeoJsonFromDto(dto)).filter(dto => dto !== null);
-            })
-        );
-    }
-
-    rawDataToMapDataDTO() {}
-
-    /** Temporaire: Remplace swagger */
-    generateRawData() {
-        return this.http.get(`${SERVER_API_URL}api/generator/bulk`, {
-            observe: 'response'
-        });
-    }
-
-    getGeoJsonFromDto(dto: IMapDataDTO): Feature {
+    static getGeoJsonFromDto(dto: IMapDataDTO): Feature {
         if (dto.coordinate) {
             const correctCoord = proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]);
             const feature: Feature = new Feature(new Point(correctCoord));
@@ -91,6 +55,37 @@ export class MapService {
             return feature;
         }
         return null;
+    }
+
+    constructor(private http: HttpClient) {}
+
+    getFeaturesFromIds(ids: string[]): void {
+        this.http
+            .post<IMapDataDTO[]>(`${this.resourceUrl}`, ids, {
+                observe: 'response'
+            })
+            .pipe(
+                filter((res: HttpResponse<IMapDataDTO[]>) => res.ok),
+                map(res => {
+                    return <IMapDataDTO[]>res.body;
+                })
+            )
+            .subscribe((data: IMapDataDTO[]) => {
+                this.sendToMap(data);
+            });
+    }
+
+    /**
+     * Transforme les RawData et les envoie dans featureSource
+     * */
+    getFeaturesFromRawData(source: IRawData[]): void {
+        if (source && source.length) {
+            this.sendToMap(source.map(item => MapService.getMapDataFromRaw(item)));
+        }
+    }
+
+    sendToMap(source: IMapDataDTO[]): void {
+        this.featureSource.next(source.map(item => MapService.getGeoJsonFromDto(item)).filter(dto => dto !== null));
     }
 
     getIconImage(uri: string, id: string): string {
@@ -104,6 +99,13 @@ export class MapService {
             `<image width="100%" height="100%" xlink:href="${uri}" clip-path="url(%23${id})" />` +
             '</svg>';
         return svg;
+    }
+
+    /** Temporaire: Remplace swagger */
+    generateRawData() {
+        return this.http.get(`${SERVER_API_URL}api/generator/bulk`, {
+            observe: 'response'
+        });
     }
 }
 

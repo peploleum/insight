@@ -78,7 +78,14 @@ export class EventThreadComponent implements OnInit, OnDestroy {
                 sort: this.sort(),
                 filter: 'all' // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
-            .pipe(tap())
+            .pipe(
+                tap((res: HttpResponse<IRawData[]>) => {
+                    if (res.ok) {
+                        // Envoi en carto
+                        this.ms.getFeaturesFromRawData(res.body);
+                    }
+                })
+            )
             .subscribe(
                 (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)

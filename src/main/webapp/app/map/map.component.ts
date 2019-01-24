@@ -75,11 +75,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.initMap();
-        this.getFeatureForId([]);
-    }
-
-    getFeatureForId(ids: string[]) {
-        this.ms.getFeaturesForIds([]).subscribe((features: Feature[]) => {
+        this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
     }

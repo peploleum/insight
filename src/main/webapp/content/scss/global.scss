@@ -13,12 +13,14 @@ h4 {
 }
 
 a {
-    color: #533f03;
+    // color: #533f03;
+    color: #0056b3;
     font-weight: bold;
 }
 
 a:hover {
-    color: #533f03;
+    // color: #533f03;
+    color: #003e80;
     font-weight: bold;
     /* make sure browsers use the pointer cursor for anchors, even with no href */
     cursor: pointer;
