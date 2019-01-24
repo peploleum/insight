@@ -6,9 +6,9 @@ import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'n
 import { AccountService } from 'app/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { PageInfo } from '../shared/util/pagination.directive';
 import { MapService } from './map.service';
 import { tap } from 'rxjs/internal/operators';
+import { EventThreadResultSet } from '../shared/util/map-utils';
 
 @Component({
     selector: 'ins-event-thread',
@@ -17,7 +17,7 @@ import { tap } from 'rxjs/internal/operators';
 })
 export class EventThreadComponent implements OnInit, OnDestroy {
     currentAccount: any;
-    rawDataList: IRawData[];
+    rawDataList: EventThreadResultSet = new EventThreadResultSet([], []);
     error: any;
     success: any;
     eventSubscriber: Subscription;
@@ -31,8 +31,12 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     previousPage: any;
     reverse: true;
 
-    startIndex = 0;
-    lastIndex = 5;
+    firstId: string;
+    lastId: string;
+    numberOfItemPerDomPage = 5;
+
+    firstIndex: string;
+    lastIndex: string;
 
     @Output()
     selectOnMapEmitter: EventEmitter<string> = new EventEmitter();
@@ -47,11 +51,40 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         protected eventManager: JhiEventManager,
         protected ms: MapService
     ) {
-        // this.itemsPerPage = ITEMS_PER_PAGE;
         this.itemsPerPage = 40;
         this.currentSearch = '';
         this.predicate = 'rawDataCreationDate';
         this.page = 1;
+    }
+
+    getFirstIndex() {
+        let firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);
+        if (firstIndex === -1 && this.rawDataList.dataIds.length > 0) {
+            this.firstId = this.rawDataList.dataIds[0];
+            firstIndex = 0;
+        }
+        return firstIndex;
+    }
+
+    getLastIndex() {
+        let lastIndex = this.rawDataList.dataIds.indexOf(this.lastId);
+        if (lastIndex === -1 && this.rawDataList.dataIds.length > 0) {
+            this.lastId = this.rawDataList.dataIds[
+                Math.max(
+                    this.numberOfItemPerDomPage < this.rawDataList.dataIds.length - 1
+                        ? this.numberOfItemPerDomPage
+                        : this.rawDataList.dataIds.length - 1,
+                    this.rawDataList.dataIds.indexOf(this.lastId) - 1
+                )
+            ];
+            lastIndex = this.rawDataList.dataIds.indexOf(this.lastId);
+        }
+        return lastIndex;
+    }
+
+    updateIdStore(isFirst: boolean, isLast: boolean, id: string) {
+        this.firstId = isFirst ? id : this.firstId;
+        this.lastId = isLast ? id : this.lastId;
     }
 
     loadAll() {
@@ -76,7 +109,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
                 page: this.page - 1,
                 size: this.itemsPerPage,
                 sort: this.sort(),
-                filter: 'all' // out of 'all', 'locations', 'images', no filter in options means retrieving all data
+                filter: null // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
             .pipe(
                 tap((res: HttpResponse<IRawData[]>) => {
@@ -95,7 +128,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
-            this.transition();
+            this.loadAll();
         }
     }
 
@@ -182,7 +215,8 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
-        this.rawDataList = data;
+        this.rawDataList.data = this.rawDataList.data.concat(data);
+        this.rawDataList.dataIds = this.rawDataList.dataIds.concat(data.map(item => item.id));
     }
 
     protected onError(errorMessage: string) {
@@ -197,9 +231,33 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         return `data:image/png;base64,${content}`;
     }
 
-    onNewPage(newPage: PageInfo) {
-        this.startIndex = newPage.startIndex;
-        this.lastIndex = newPage.lastIndex;
+    onNewPage(dir: number) {
+        this.firstId =
+            dir < 0
+                ? this.rawDataList.dataIds[Math.max(0, this.rawDataList.dataIds.indexOf(this.firstId) - 1)]
+                : this.rawDataList.dataIds[
+                      Math.min(
+                          this.rawDataList.dataIds.length - this.numberOfItemPerDomPage,
+                          this.rawDataList.dataIds.indexOf(this.firstId) + 1
+                      )
+                  ];
+        this.lastId =
+            dir < 0
+                ? this.rawDataList.dataIds[
+                      Math.max(
+                          this.numberOfItemPerDomPage < this.rawDataList.dataIds.length - 1
+                              ? this.numberOfItemPerDomPage
+                              : this.rawDataList.dataIds.length - 1,
+                          this.rawDataList.dataIds.indexOf(this.lastId) - 1
+                      )
+                  ]
+                : this.rawDataList.dataIds[
+                      Math.min(this.rawDataList.dataIds.length - 1, this.rawDataList.dataIds.indexOf(this.lastId) + 1)
+                  ];
+    }
+
+    onBottomPage(event) {
+        this.loadPage(this.previousPage + 1);
     }
 
     selectOnMap(itemId: string) {

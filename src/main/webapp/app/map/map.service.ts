@@ -39,8 +39,11 @@ export class MapService {
     }
 
     static getMapDataFromRaw(raw: IRawData): IMapDataDTO {
-        const str: string[] = raw.rawDataCoordinates.split(',');
-        const coord: number[] = str.map(i => parseFloat(i));
+        let coord: number[] = null;
+        if (raw.rawDataCoordinates) {
+            const str: string[] = raw.rawDataCoordinates.split(',');
+            coord = str.map(i => parseFloat(i));
+        }
         return new MapDataDTO(raw.id, raw.rawDataName, 'RawData', raw.rawDataContent, coord);
     }
 

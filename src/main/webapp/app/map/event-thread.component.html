@@ -1,10 +1,10 @@
-<div insPaginationDirective [dataList]="rawDataList" (pageEmitter)="onNewPage($event)" [numberOfItemPerScroll]="1"
-     [numberOfItemPerPage]="5" class="event-thread-subcontainer">
+<div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data" (wheelEmitter)="onNewPage($event)"
+     (bottomScrollEmitter)="onBottomPage($event)" class="event-thread-subcontainer">
     <div class="card event-thread-card"
-         *ngFor="let rawData of rawDataList | slice:startIndex:lastIndex;trackBy: trackId">
+         *ngFor="let rawData of rawDataList.data | slice:firstIndex:lastIndex; trackBy:trackId; first as isFirst; last as isLast">
         <div class="card-img-top event-thread-top"><img
             *ngIf="rawData.rawDataData" class="event-thread-image" [src]="getImageBase64Src(rawData.rawDataData)"></div>
-        <div class="card-body" style="cursor: pointer;">
+        <div class="card-body" style="cursor: pointer;" *ngIf="updateIdStore(isFirst, isLast, rawData.id)">
             <h6 class="card-title d-flex align-items-center" (click)="selectOnMap(rawData.id)"><img [src]="getImageIconSrc()" class="event-thread-icon">
                 {{rawData.rawDataName}}</h6>
             <p class="card-text">
