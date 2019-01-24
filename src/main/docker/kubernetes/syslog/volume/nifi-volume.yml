@@ -15,7 +15,7 @@ spec:
     - ReadWriteOnce
   storageClassName: local-storage 
   local:
-    path: /home/capgemini/yaml/rsyslog/nifi
+    path: /home/capgemini/binding/INSIGHT/nifi
   nodeAffinity:
     required:
       nodeSelectorTerms:

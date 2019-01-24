@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.2">
-    <description>listen syslog (UDP) publish kafka</description>
-    <groupId>7a4162ff-0167-1000-0cad-fc2da6d5cfa2</groupId>
-    <name>syslog_to_kafka</name>
+    <description>Listen Rsyslog server via TCP to publish kafka</description>
+    <groupId>7b013c50-0168-1000-8ab8-f5010aa01aef</groupId>
+    <name>Syslog_kafka_tcp</name>
     <snippet>
         <processGroups>
-            <id>f4ff1aad-939f-3ce5-0000-000000000000</id>
-            <parentGroupId>fc8527cc-212e-34a4-0000-000000000000</parentGroupId>
+            <id>c961cdef-b82b-39b4-0000-000000000000</id>
+            <parentGroupId>51140a13-55c6-3ef1-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
                 <y>0.0</y>
@@ -14,38 +14,41 @@
             <comments></comments>
             <contents>
                 <connections>
-                    <id>29a7328e-5349-3cee-0000-000000000000</id>
-                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <id>2c416631-5838-3708-0000-000000000000</id>
+                    <parentGroupId>c961cdef-b82b-39b4-0000-000000000000</parentGroupId>
                     <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
                     <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>f4ff1aad-939f-3ce5-0000-000000000000</groupId>
-                        <id>89a59f2c-a6fc-32d4-0000-000000000000</id>
+                        <groupId>c961cdef-b82b-39b4-0000-000000000000</groupId>
+                        <id>21db20fe-bb7f-3db3-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
                     <labelIndex>1</labelIndex>
+                    <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+                    <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+                    <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
                     <name></name>
                     <selectedRelationships>invalid</selectedRelationships>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>f4ff1aad-939f-3ce5-0000-000000000000</groupId>
-                        <id>62e7ca97-5c4d-3b82-0000-000000000000</id>
+                        <groupId>c961cdef-b82b-39b4-0000-000000000000</groupId>
+                        <id>0ef64f7f-aa6f-388f-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <processors>
-                    <id>62e7ca97-5c4d-3b82-0000-000000000000</id>
-                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <id>0ef64f7f-aa6f-388f-0000-000000000000</id>
+                    <parentGroupId>c961cdef-b82b-39b4-0000-000000000000</parentGroupId>
                     <position>
-                        <x>46.0</x>
-                        <y>-151.0</y>
+                        <x>710.0</x>
+                        <y>16.015625</y>
                     </position>
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.7.1</version>
+                        <version>1.8.0</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
@@ -138,7 +141,7 @@
                         <properties>
                             <entry>
 <key>Protocol</key>
-<value>UDP</value>
+<value>TCP</value>
                             </entry>
                             <entry>
 <key>Port</key>
@@ -208,16 +211,16 @@
                     <type>org.apache.nifi.processors.standard.ListenSyslog</type>
                 </processors>
                 <processors>
-                    <id>89a59f2c-a6fc-32d4-0000-000000000000</id>
-                    <parentGroupId>f4ff1aad-939f-3ce5-0000-000000000000</parentGroupId>
+                    <id>21db20fe-bb7f-3db3-0000-000000000000</id>
+                    <parentGroupId>c961cdef-b82b-39b4-0000-000000000000</parentGroupId>
                     <position>
-                        <x>339.0000305175781</x>
-                        <y>98.0</y>
+                        <x>889.0000305175781</x>
+                        <y>437.015625</y>
                     </position>
                     <bundle>
                         <artifact>nifi-kafka-0-9-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.7.1</version>
+                        <version>1.8.0</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
@@ -387,9 +390,9 @@
                     <type>org.apache.nifi.processors.kafka.pubsub.PublishKafka</type>
                 </processors>
             </contents>
-            <name>SyslogToKafka</name>
+            <name>Syslog_kafka_tcp</name>
             <variables/>
         </processGroups>
     </snippet>
-    <timestamp>12/04/2018 17:29:35 UTC</timestamp>
+    <timestamp>01/24/2019 09:22:45 UTC</timestamp>
 </template>
