@@ -2,6 +2,7 @@
  * Created by gFolgoas on 14/01/2019.
  */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MapState } from '../shared/util/map-utils';
 
 @Component({
     selector: 'ins-map-menu',
@@ -9,9 +10,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MapMenuComponent implements OnInit {
     @Input()
-    networkStates;
+    mapStates: MapState;
     @Input()
-    right: string;
+    left: string;
     @Input()
     top: string;
 

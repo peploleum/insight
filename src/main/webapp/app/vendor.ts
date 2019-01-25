@@ -14,6 +14,7 @@ import {
     faBars,
     faBell,
     faBook,
+    faBullseye,
     faCalendarAlt,
     faChartArea,
     faClock,
@@ -27,6 +28,7 @@ import {
     faHdd,
     faHeart,
     faHome,
+    faImage,
     faList,
     faPencilAlt,
     faPlug,
@@ -48,6 +50,7 @@ import {
     faTimes,
     faTrashAlt,
     faUser,
+    faUserCircle,
     faUserPlus,
     faWrench
 } from '@fortawesome/free-solid-svg-icons';
@@ -105,5 +108,8 @@ library.add(faArrowCircleUp);
 library.add(faArrowCircleRight);
 library.add(faArrowCircleLeft);
 library.add(faHandPaper);
+library.add(faBullseye);
+library.add(faImage);
+library.add(faUserCircle);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

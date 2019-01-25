@@ -5,10 +5,12 @@ import { IRawData } from '../model/raw-data.model';
 export class MapState {
     DISPLAY_LABEL: boolean;
     DISPLAY_CONTENT_ON_HOVER: boolean;
+    FILTER_TYPE: string;
 
-    constructor(DISPLAY_LABEL: boolean, DISPLAY_CONTENT_ON_HOVER: boolean) {
+    constructor(DISPLAY_LABEL: boolean, DISPLAY_CONTENT_ON_HOVER: boolean, FILTER_TYPE: string) {
         this.DISPLAY_LABEL = DISPLAY_LABEL;
         this.DISPLAY_CONTENT_ON_HOVER = DISPLAY_CONTENT_ON_HOVER;
+        this.FILTER_TYPE = FILTER_TYPE;
     }
 }
 
@@ -19,5 +21,10 @@ export class EventThreadResultSet {
     constructor(data: IRawData[], dataIds: string[]) {
         this.data = data;
         this.dataIds = dataIds;
+    }
+
+    clearAll() {
+        this.data = [];
+        this.dataIds = [];
     }
 }

@@ -1,1 +1,28 @@
-<div></div>
+<div class="popover-menu shadow rounded" [style.left]="left" [style.top]="top">
+    <ul class="list-group">
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': mapStates.FILTER_TYPE === 'all'}"
+            (click)="sendAction('F_ALL_DATA')" title="Voir toutes les données localisées">
+            <p>
+                <fa-icon [icon]="'user-circle'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': mapStates.FILTER_TYPE === 'locations'}"
+            (click)="sendAction('F_LOCATIONS_ONLY')" title="Voir les localités uniquement">
+            <p>
+                <fa-icon [icon]="'bullseye'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': mapStates.FILTER_TYPE === 'images'}"
+            (click)="sendAction('F_IMAGES_ONLY')" title="Voir les données avec images uniquement">
+            <p>
+                <fa-icon [icon]="'image'"></fa-icon>
+            </p>
+        </li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (!mapStates.FILTER_TYPE)}"
+            (click)="sendAction('F_NO_FILTER')" title="Voir toutes les données (Aucun filtre)">
+            <p>
+                <fa-icon [icon]="'ban'"></fa-icon>
+            </p>
+        </li>
+    </ul>
+</div>

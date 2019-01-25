@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MapService } from './map.service';
 import Map from 'ol/map';
 import View from 'ol/view';
@@ -17,6 +17,7 @@ import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { MapState } from '../shared/util/map-utils';
+import { EventThreadComponent } from './event-thread.component';
 
 @Component({
     selector: 'jhi-map',
@@ -28,8 +29,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     vectorLayer: VectorLayer;
     _map: Map;
     selectInteraction: SelectInteration;
+    mapStates: MapState = new MapState(true, true, 'all');
 
-    mapStates: MapState = new MapState(true, true);
+    @ViewChild(EventThreadComponent) eventThread: EventThreadComponent;
 
     private circleImage = new Circle({
         radius: 13,
@@ -236,6 +238,45 @@ export class MapComponent implements OnInit, AfterViewInit {
                     })
                 });
                 break;
+        }
+    }
+
+    onActionReceived(action: string) {
+        switch (action) {
+            case 'F_ALL_DATA':
+                if (this.mapStates.FILTER_TYPE !== 'all') {
+                    this.mapStates.FILTER_TYPE = 'all';
+                    this.onFilterChanged();
+                }
+                break;
+            case 'F_LOCATIONS_ONLY':
+                if (this.mapStates.FILTER_TYPE !== 'locations') {
+                    this.mapStates.FILTER_TYPE = 'locations';
+                    this.onFilterChanged();
+                }
+                break;
+            case 'F_IMAGES_ONLY':
+                if (this.mapStates.FILTER_TYPE !== 'images') {
+                    this.mapStates.FILTER_TYPE = 'images';
+                    this.onFilterChanged();
+                }
+                break;
+            case 'F_NO_FILTER':
+                if (this.mapStates.FILTER_TYPE) {
+                    this.mapStates.FILTER_TYPE = null;
+                    this.onFilterChanged();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    onFilterChanged() {
+        this.rawDataSource.clear();
+        if (this.eventThread) {
+            this.eventThread.clear();
+            this.eventThread.loadAll();
         }
     }
 }

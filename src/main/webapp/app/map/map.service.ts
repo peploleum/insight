@@ -13,6 +13,7 @@ import Point from 'ol/geom/point';
 import proj from 'ol/proj';
 import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
+import { MapState } from '../shared/util/map-utils';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {

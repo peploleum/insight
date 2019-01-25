@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { Subscription } from 'rxjs';
 import { RawDataService } from 'app/entities/raw-data';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { MapService } from './map.service';
 import { tap } from 'rxjs/internal/operators';
-import { EventThreadResultSet } from '../shared/util/map-utils';
+import { EventThreadResultSet, MapState } from '../shared/util/map-utils';
 
 @Component({
     selector: 'ins-event-thread',
@@ -21,7 +21,6 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     error: any;
     success: any;
     eventSubscriber: Subscription;
-    currentSearch: string;
     links: any;
     totalItems: any;
     queryCount: any;
@@ -38,6 +37,8 @@ export class EventThreadComponent implements OnInit, OnDestroy {
 
     @Output()
     selectOnMapEmitter: EventEmitter<string> = new EventEmitter();
+    @Input()
+    mapStates: MapState;
 
     constructor(
         protected rawDataService: RawDataService,
@@ -50,7 +51,6 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         protected ms: MapService
     ) {
         this.itemsPerPage = 20;
-        this.currentSearch = '';
         this.predicate = 'rawDataCreationDate';
         this.page = 1;
     }
@@ -62,27 +62,13 @@ export class EventThreadComponent implements OnInit, OnDestroy {
 
     loadAll() {
         console.log('loading');
-        if (this.currentSearch) {
-            this.rawDataService
-                .search({
-                    page: this.page - 1,
-                    query: this.currentSearch,
-                    size: this.itemsPerPage,
-                    sort: this.sort()
-                })
-                .subscribe(
-                    (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
-            return;
-        }
         console.log('param ' + (this.page - 1) + ' ' + this.itemsPerPage + ' ' + this.sort());
         this.rawDataService
             .query({
                 page: this.page - 1,
                 size: this.itemsPerPage,
                 sort: this.sort(),
-                filter: null // out of 'all', 'locations', 'images', no filter in options means retrieving all data
+                filter: this.mapStates.FILTER_TYPE // out of 'all', 'locations', 'images', no filter in options means retrieving all data
             })
             .pipe(
                 tap((res: HttpResponse<IRawData[]>) => {
@@ -104,33 +90,11 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     clear() {
-        this.page = 0;
-        this.currentSearch = '';
-        this.router.navigate([
-            '/raw-data',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
-    }
-
-    search(query) {
-        if (!query) {
-            return this.clear();
-        }
-        this.page = 0;
-        this.currentSearch = query;
-        this.router.navigate([
-            '/raw-data',
-            {
-                search: this.currentSearch,
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
+        this.page = 1;
+        this.rawDataList.clearAll();
+        this.firstId = null;
+        this.firstIndex = 0;
+        this.lastIndex = this.numberOfItemPerDomPage;
     }
 
     ngOnInit() {
@@ -158,7 +122,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInRawData() {
-        this.eventSubscriber = this.eventManager.subscribe('rawDataListModification', response => this.loadAll());
+        // this.eventSubscriber = this.eventManager.subscribe('rawDataListModification', response => this.loadAll());
     }
 
     sort() {
@@ -174,8 +138,11 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
-        this.rawDataList.data = this.rawDataList.data.concat(data);
-        this.rawDataList.dataIds = this.rawDataList.dataIds.concat(data.map(item => item.id));
+        const newDataList: EventThreadResultSet = new EventThreadResultSet(
+            this.rawDataList.data.concat(data),
+            this.rawDataList.dataIds.concat(data.map(item => item.id))
+        );
+        this.rawDataList = newDataList;
         if (this.firstId) {
             this.firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);
         }
