@@ -1,7 +1,7 @@
 <div [style.height.%]="'100'" class="flex-container-container" [style.overflow]="'hidden'">
     <div id="map" [style.height.px]="computedHeight" [style.overflow]="'hidden'" class="col-9">
     </div>
-    <ins-map-menu (actionEmitter)="onActionReceived($event)" [mapStates]="mapStates" [left]="'2vw'" [top]="'100px'"></ins-map-menu>
+    <ins-map-menu (actionEmitter)="onActionReceived($event)" [mapStates]="mapStates" [left]="'1vw'" [top]="'100px'"></ins-map-menu>
     <ins-event-thread class="col-3 event-thread-container"
                       (selectOnMapEmitter)="selectAndGoTo($event)" [mapStates]="mapStates"></ins-event-thread>
 </div>

@@ -356,7 +356,6 @@ Custom network css
 /* ==========================================================================
 Custom map css
 ========================================================================== */
-
 .event-thread-container {
     display: flex;
     flex-direction: column;
@@ -371,7 +370,7 @@ Custom map css
 
 .event-thread-card {
     max-height: 50%;
-    width: inherit;
+    width: 100% !important;
 }
 
 .event-thread-top {
@@ -382,6 +381,37 @@ Custom map css
 
 .event-thread-image {
     max-height: 7rem;
+}
+
+.event-thread-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-height: 20%;
+}
+
+.event-thread-title > img {
+    width: 11%;
+    vertical-align: middle;
+}
+
+.event-thread-title > h6 {
+    margin: 0 0 0 0.5rem !important;
+    vertical-align: middle;
+    padding: 0 !important;
+}
+
+@media (max-width: 1000px) {
+    .event-thread-title > img {
+        width: 40%;
+    }
+}
+
+@media (max-width: 600px) {
+    .event-thread-title > img {
+        width: 60%;
+    }
 }
 
 .event-thread-icon {

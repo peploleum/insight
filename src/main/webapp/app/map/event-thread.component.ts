@@ -106,7 +106,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
+        // this.eventManager.destroy(this.eventSubscriber);
     }
 
     trackId(index: number, item: IRawData) {
@@ -158,6 +158,17 @@ export class EventThreadComponent implements OnInit, OnDestroy {
 
     getImageBase64Src(content: string): string {
         return `data:image/png;base64,${content}`;
+    }
+
+    getSourceTypeIcon(sourceType: string): string {
+        switch (sourceType) {
+            case 'TWITTER':
+                return 'rss-square';
+            case 'RSS':
+                return 'rss-square';
+            default:
+                return 'rss-square';
+        }
     }
 
     onNewPage(dir: number) {
