@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MapComponent } from './map.component';
+import { EventThreadComponent } from './event-thread.component';
 
 const routes: Routes = [
     {
@@ -8,7 +9,14 @@ const routes: Routes = [
         component: MapComponent,
         data: {
             pageTitle: 'map.title'
-        }
+        },
+        children: [
+            {
+                path: 'ins-map-side-panel',
+                component: EventThreadComponent,
+                outlet: 'side'
+            }
+        ]
     }
 ];
 

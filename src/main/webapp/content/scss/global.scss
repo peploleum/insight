@@ -362,9 +362,15 @@ Custom map css
     height: 100%;
 }
 
+// .event-thread-subcontainer {
+//     width: 100%;
+//     max-height: inherit;
+//     overflow: auto;
+// }
+
 .event-thread-subcontainer {
     width: 100%;
-    max-height: inherit;
+    height: 100%;
     overflow: auto;
 }
 
@@ -417,4 +423,16 @@ Custom map css
 .event-thread-icon {
     height: 2rem;
     width: 2rem;
+}
+
+/* ==========================================================================
+SidePannel custom CSS
+========================================================================== */
+
+.side {
+    width: 408px;
+    position: absolute;
+    height: 100vh;
+    right: 0;
+    z-index: 100;
 }

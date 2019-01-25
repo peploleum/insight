@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { SERVER_API_URL } from 'app/app.constants';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/internal/operators';
 import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 
@@ -19,6 +19,8 @@ import { MapState } from '../shared/util/map-utils';
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
     featureSource: Subject<Feature[]> = new Subject();
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all'));
+    outsideFeatureSelector: Subject<string[]> = new Subject();
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {
@@ -62,6 +64,10 @@ export class MapService {
     }
 
     constructor(private http: HttpClient) {}
+
+    selectOnMap(ids: string[]) {
+        this.outsideFeatureSelector.next(ids);
+    }
 
     getFeaturesFromIds(ids: string[]): void {
         this.http

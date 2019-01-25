@@ -20,7 +20,6 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     rawDataList: EventThreadResultSet = new EventThreadResultSet([], []);
     error: any;
     success: any;
-    eventSubscriber: Subscription;
     links: any;
     totalItems: any;
     queryCount: any;
@@ -35,9 +34,6 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     firstIndex: number;
     lastIndex: number;
 
-    @Output()
-    selectOnMapEmitter: EventEmitter<string> = new EventEmitter();
-    @Input()
     mapStates: MapState;
 
     constructor(
@@ -98,6 +94,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.ms.mapStates.subscribe(newState => (this.mapStates = newState));
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
@@ -105,9 +102,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         this.registerChangeInRawData();
     }
 
-    ngOnDestroy() {
-        // this.eventManager.destroy(this.eventSubscriber);
-    }
+    ngOnDestroy() {}
 
     trackId(index: number, item: IRawData) {
         return item.id;
@@ -121,9 +116,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         return this.dataUtils.openFile(contentType, field);
     }
 
-    registerChangeInRawData() {
-        // this.eventSubscriber = this.eventManager.subscribe('rawDataListModification', response => this.loadAll());
-    }
+    registerChangeInRawData() {}
 
     sort() {
         const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
@@ -183,6 +176,6 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     selectOnMap(itemId: string) {
-        this.selectOnMapEmitter.emit(itemId);
+        this.ms.selectOnMap([itemId]);
     }
 }

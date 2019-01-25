@@ -29,7 +29,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     vectorLayer: VectorLayer;
     _map: Map;
     selectInteraction: SelectInteration;
-    mapStates: MapState = new MapState(true, true, 'all');
 
     @ViewChild(EventThreadComponent) eventThread: EventThreadComponent;
 
@@ -80,6 +79,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
+        this.ms.outsideFeatureSelector.subscribe((ids: string[]) => {
+            if (ids && ids.length) {
+                this.selectAndGoTo(ids[0]);
+            }
+        });
     }
 
     private initMap() {
@@ -119,6 +123,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
     }
 
+    getMapStates(): MapState {
+        return this.ms.mapStates.getValue();
+    }
+
     styleFunction(feature: Feature, isSelected: boolean) {
         const mainStyle: Style = this.getStyle(feature.getGeometry().getType());
         if (isSelected) {
@@ -127,7 +135,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         if (feature.getGeometry().getType() === 'Point') {
             const iconStyle: Style = this.getIconStyle(feature);
             const zoom = this._map.getView().getZoom();
-            if (zoom > 5 && this.mapStates.DISPLAY_LABEL && feature.get('label')) {
+            if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
                 mainStyle.getText().setText(feature.get('label'));
             } else {
                 mainStyle.getText().setText('');
@@ -242,29 +250,30 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     onActionReceived(action: string) {
+        const mapState = this.getMapStates();
         switch (action) {
             case 'F_ALL_DATA':
-                if (this.mapStates.FILTER_TYPE !== 'all') {
-                    this.mapStates.FILTER_TYPE = 'all';
-                    this.onFilterChanged();
+                if (mapState.FILTER_TYPE !== 'all') {
+                    mapState.FILTER_TYPE = 'all';
+                    this.onFilterChanged(mapState);
                 }
                 break;
             case 'F_LOCATIONS_ONLY':
-                if (this.mapStates.FILTER_TYPE !== 'locations') {
-                    this.mapStates.FILTER_TYPE = 'locations';
-                    this.onFilterChanged();
+                if (mapState.FILTER_TYPE !== 'locations') {
+                    mapState.FILTER_TYPE = 'locations';
+                    this.onFilterChanged(mapState);
                 }
                 break;
             case 'F_IMAGES_ONLY':
-                if (this.mapStates.FILTER_TYPE !== 'images') {
-                    this.mapStates.FILTER_TYPE = 'images';
-                    this.onFilterChanged();
+                if (mapState.FILTER_TYPE !== 'images') {
+                    mapState.FILTER_TYPE = 'images';
+                    this.onFilterChanged(mapState);
                 }
                 break;
             case 'F_NO_FILTER':
-                if (this.mapStates.FILTER_TYPE) {
-                    this.mapStates.FILTER_TYPE = null;
-                    this.onFilterChanged();
+                if (mapState.FILTER_TYPE) {
+                    mapState.FILTER_TYPE = null;
+                    this.onFilterChanged(mapState);
                 }
                 break;
             default:
@@ -272,7 +281,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onFilterChanged() {
+    onFilterChanged(newMapState: MapState) {
+        this.ms.mapStates.next(newMapState);
         this.rawDataSource.clear();
         if (this.eventThread) {
             this.eventThread.clear();
