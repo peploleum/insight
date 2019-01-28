@@ -159,10 +159,6 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.jhiAlertService.error(errorMessage, null, null);
     }
 
-    getImageIconSrc(objectType: string): string {
-        return MapService.getImageIconUrl(objectType);
-    }
-
     getImageBase64Src(content: string): string {
         return `data:image/png;base64,${content}`;
     }
@@ -170,9 +166,22 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     getSourceTypeIcon(sourceType: string): string {
         switch (sourceType) {
             case 'TWITTER':
-                return 'rss-square';
+                return 'apple-alt';
             case 'RSS':
                 return 'rss-square';
+            case 'SYSLOG':
+                return 'shield-alt';
+            default:
+                return 'rss-square';
+        }
+    }
+
+    getDataTypeIcon(dataType: string): string {
+        switch (dataType) {
+            case 'CYBER':
+                return 'user-secret';
+            case 'OSINT ':
+                return 'wifi';
             default:
                 return 'rss-square';
         }

@@ -360,11 +360,12 @@ Custom map css
 .event-thread-container {
     overflow: auto;
     background-color: #ffffff;
+    height: 100%;
 }
 
 .event-thread-card {
-    max-height: 50%;
-    width: 100% !important;
+    // max-height: 50%;
+    width: 100%;
 }
 
 .event-thread-top {
@@ -378,27 +379,8 @@ Custom map css
 }
 
 .event-thread-title {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    max-height: 20%;
-}
-
-.event-thread-title > img {
-    width: 11%;
-    vertical-align: middle;
-}
-
-.event-thread-title > h6 {
-    margin: 0 0 0 0.5rem !important;
-    vertical-align: middle;
-    padding: 0 !important;
-}
-
-.event-thread-icon {
-    height: 2rem;
-    width: 2rem;
+    color: #0056b3 !important;
+    font-size: 1.05rem;
 }
 
 /* ==========================================================================

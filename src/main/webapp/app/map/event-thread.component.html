@@ -7,10 +7,11 @@
             <div class="card-img-top event-thread-top"><img
                 *ngIf="rawData.rawDataData" class="event-thread-image" [src]="getImageBase64Src(rawData.rawDataData)">
             </div>
-            <div class="card-body" style="cursor: pointer;" *ngIf="isFirst ? updateIdStore(isFirst, rawData.id) : true">
-                <div class="card-title event-thread-title" (click)="selectOnMap(rawData.id)"><img
-                    [src]="getImageIconSrc('RawData')">
-                    <h6>{{rawData.rawDataName}}</h6></div>
+            <div class="card-body" *ngIf="isFirst ? updateIdStore(isFirst, rawData.id) : true">
+                <a class="card-title event-thread-title" (click)="selectOnMap(rawData.id)">
+                    <fa-icon [icon]="getDataTypeIcon(rawData.rawDataType)"></fa-icon>
+                    {{rawData.rawDataName}}</a>
+                <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>
                 <p class="card-text">
                     <small>{{rawData.rawDataContent}}</small>
                 </p>
