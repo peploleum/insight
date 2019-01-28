@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { Subscription } from 'rxjs';
 import { RawDataService } from 'app/entities/raw-data';
@@ -9,13 +9,14 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 import { MapService } from './map.service';
 import { tap } from 'rxjs/internal/operators';
 import { EventThreadResultSet, MapState } from '../shared/util/map-utils';
+import { SideInterface } from '../shared/side/side.abstract';
 
 @Component({
     selector: 'ins-event-thread',
     templateUrl: './event-thread.component.html',
     styles: []
 })
-export class EventThreadComponent implements OnInit, OnDestroy {
+export class EventThreadComponent extends SideInterface implements OnInit, OnDestroy {
     currentAccount: any;
     rawDataList: EventThreadResultSet = new EventThreadResultSet([], []);
     error: any;
@@ -35,6 +36,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     lastIndex: number;
 
     mapStates: MapState;
+    mapStatesSubs: Subscription;
 
     constructor(
         protected rawDataService: RawDataService,
@@ -46,6 +48,7 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         protected eventManager: JhiEventManager,
         protected ms: MapService
     ) {
+        super();
         this.itemsPerPage = 20;
         this.predicate = 'rawDataCreationDate';
         this.page = 1;
@@ -94,7 +97,14 @@ export class EventThreadComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.ms.mapStates.subscribe(newState => (this.mapStates = newState));
+        this.mapStatesSubs = this.ms.mapStates.subscribe((newState: MapState) => {
+            const needReload: boolean = this.mapStates !== null && typeof this.mapStates !== 'undefined';
+            this.mapStates = newState;
+            if (needReload) {
+                this.clear();
+                this.loadAll();
+            }
+        });
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
@@ -102,7 +112,11 @@ export class EventThreadComponent implements OnInit, OnDestroy {
         this.registerChangeInRawData();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        if (this.mapStatesSubs) {
+            this.mapStatesSubs.unsubscribe();
+        }
+    }
 
     trackId(index: number, item: IRawData) {
         return item.id;

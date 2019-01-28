@@ -18,6 +18,8 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { MapState } from '../shared/util/map-utils';
 import { EventThreadComponent } from './event-thread.component';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Subscription } from 'rxjs/index';
 
 @Component({
     selector: 'jhi-map',
@@ -29,8 +31,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     vectorLayer: VectorLayer;
     _map: Map;
     selectInteraction: SelectInteration;
-
-    @ViewChild(EventThreadComponent) eventThread: EventThreadComponent;
 
     private circleImage = new Circle({
         radius: 13,
@@ -49,12 +49,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     computedHeight = 0;
 
+    featureSourceSubs: Subscription;
+    featureSelectorSubs: Subscription;
+
     @HostListener('window:resize')
     onResize() {
         this.internalOnResize();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService, private router: Router) {
         this.vectorLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.styleFunction(feature, false)
@@ -63,6 +66,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             style: (feature: Feature) => this.styleFunction(feature, true),
             multi: true
         });
+        this.router.navigateByUrl('/map(side:ins-map-side-panel)');
     }
 
     internalOnResize() {
@@ -76,10 +80,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.initMap();
-        this.ms.featureSource.subscribe((features: Feature[]) => {
+        this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
-        this.ms.outsideFeatureSelector.subscribe((ids: string[]) => {
+        this.featureSelectorSubs = this.ms.outsideFeatureSelector.subscribe((ids: string[]) => {
             if (ids && ids.length) {
                 this.selectAndGoTo(ids[0]);
             }
@@ -282,11 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     onFilterChanged(newMapState: MapState) {
-        this.ms.mapStates.next(newMapState);
         this.rawDataSource.clear();
-        if (this.eventThread) {
-            this.eventThread.clear();
-            this.eventThread.loadAll();
-        }
+        this.ms.mapStates.next(newMapState);
     }
 }

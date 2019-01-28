@@ -3,6 +3,8 @@
 import '../content/scss/vendor.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+    faAngleLeft,
+    faAngleRight,
     faArrowCircleLeft,
     faArrowCircleRight,
     faArrowCircleUp,
@@ -111,5 +113,7 @@ library.add(faHandPaper);
 library.add(faBullseye);
 library.add(faImage);
 library.add(faUserCircle);
+library.add(faAngleRight);
+library.add(faAngleLeft);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

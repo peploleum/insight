@@ -50,7 +50,8 @@
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" [routerLink]="['/map', {outlets: {'side': ['ins-map-side-panel']}}]" (click)="collapseNavbar()">
+                <a class="nav-link" [routerLink]="['/map']"
+                   (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'globe'"></fa-icon>
                         <span jhiTranslate="global.menu.map">Dashboards</span>
