@@ -20,11 +20,13 @@ import {
     faBullseye,
     faCalendarAlt,
     faChartArea,
+    faCheck,
     faClock,
     faCloud,
     faCodeBranch,
     faDotCircle,
     faEye,
+    faFileImport,
     faFlag,
     faGlobe,
     faHandPaper,
@@ -123,5 +125,7 @@ library.add(faShieldAlt);
 library.add(faAppleAlt);
 library.add(faUserSecret);
 library.add(faWifi);
+library.add(faFileImport);
+library.add(faCheck);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

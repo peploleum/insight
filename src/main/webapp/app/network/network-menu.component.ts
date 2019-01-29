@@ -11,7 +11,7 @@ export class NetworkMenuComponent implements OnInit {
     @Input()
     networkStates;
     @Input()
-    right: string;
+    left: string;
     @Input()
     top: string;
 

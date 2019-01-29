@@ -319,10 +319,13 @@ Custom network css
     align-items: stretch;
 }
 
-.popover-side-menu {
+.popover-side-menu-container {
     z-index: 3;
     position: absolute;
     background-color: white;
+}
+
+.popover-side-menu {
     align-items: stretch;
     flex-direction: row !important;
 }
@@ -330,19 +333,17 @@ Custom network css
 .popover-menu-item {
     cursor: pointer;
     font-size: larger;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     margin: 0 !important;
-}
-
-.popover-menu-item > p {
-    width: 100%;
+    padding: 0.5rem 1.25rem !important;
 }
 
 .popover-menu-item:hover {
     background-color: #f2f2f2;
+}
+
+.popover-menu-item > p {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .selected {

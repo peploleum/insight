@@ -7,6 +7,7 @@ import { GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/
 import { RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
+import { FileReaderEvent, FileReaderEventTarget } from '../shared/util/insight-util';
 
 @Component({
     selector: 'ins-network',
@@ -23,7 +24,17 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this._ns.JSONFileSelected.subscribe(
+            (file: File) => {
+                this.addJSONFileElements(file);
+                console.log('JSON File Import Successful');
+            },
+            error => {
+                console.log("Erreur lors de l'import de fichier JSON");
+            }
+        );
+    }
 
     ngAfterViewInit() {
         this.initNetwork();
@@ -46,7 +57,6 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                         )
                         .subscribe((nodeDTO: NodeDTO) => {
                             console.log('ROUTING DONE ' + nodeDTO);
-                            console.log(nodeDTO);
                             this.addNodes([nodeDTO], []);
                             this.getNodesNeighbours([nodeDTO.id]);
                         });
@@ -138,6 +148,20 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.network.storePositions();
         this.networkData.nodes.remove(idNodes);
         this.networkData.edges.remove(idEdges);
+    }
+
+    addJSONFileElements(json: File) {
+        const reader: FileReader = new FileReader();
+        let jsonString: string;
+        reader.onload = (event: Event) => {
+            jsonString = (<FileReaderEventTarget>event.target).result;
+            const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
+            const data = new GraphDataCollection([], []);
+            data.nodes = graphyDatas.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
+            data.edges = NetworkService.getEdgeCollection(data.nodes[0].id, data.nodes);
+            this.addNodes(data.nodes, data.edges);
+        };
+        reader.readAsText(json);
     }
 
     clusterNodes() {

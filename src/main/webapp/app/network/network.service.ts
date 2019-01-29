@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { IdType } from 'vis';
 import { filter, map } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
@@ -14,6 +14,7 @@ import { RawData } from 'app/shared/model/raw-data.model';
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
     private resourceUrl;
+    JSONFileSelected: Subject<File> = new Subject();
 
     public static getNodeDto(
         label: string,

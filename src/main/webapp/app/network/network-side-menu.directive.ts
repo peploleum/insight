@@ -24,6 +24,8 @@ import { NetworkSideMenuComponent } from './network-side-menu.component';
 export class NetworkSideMenuDirective implements OnChanges {
     @Input()
     networkStates;
+    @Input()
+    elementName: string;
     sideMenu: ComponentRef<NetworkSideMenuComponent>;
 
     @Output()
@@ -58,9 +60,10 @@ export class NetworkSideMenuDirective implements OnChanges {
         });
         this.sideMenu = this.vcr.createComponent(factory, 0, injector);
         this.sideMenu.instance.networkStates = this.networkStates;
+        this.sideMenu.instance.elementName = this.elementName;
         const rect: ClientRect = this._el.nativeElement.getBoundingClientRect();
         this.sideMenu.instance.dimension.top = this._el.nativeElement.offsetTop;
-        this.sideMenu.instance.dimension.right = rect.right - rect.left;
+        this.sideMenu.instance.dimension.left = rect.right - rect.left;
         this.sideMenu.instance.dimension.height = rect.height;
     }
 

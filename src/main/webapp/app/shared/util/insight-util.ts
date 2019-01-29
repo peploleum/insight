@@ -10,3 +10,12 @@ export const UUID = (): string => {
     });
 };
 /* tslint:enable:no-bitwise */
+
+export interface FileReaderEventTarget extends EventTarget {
+    result: string;
+}
+
+export interface FileReaderEvent extends Event {
+    target: FileReaderEventTarget;
+    getMessage(): string;
+}
