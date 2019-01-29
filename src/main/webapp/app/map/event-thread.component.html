@@ -10,10 +10,10 @@
             <div class="card-body" *ngIf="isFirst ? updateIdStore(isFirst, rawData.id) : true">
                 <a class="card-title event-thread-title" (click)="selectOnMap(rawData.id)">
                     <fa-icon [icon]="getDataTypeIcon(rawData.rawDataType)"></fa-icon>
-                    {{rawData.rawDataName}}</a>
+                    {{rawData.rawDataName | stringTruncate : 30}}</a>
                 <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>
                 <p class="card-text">
-                    <small>{{rawData.rawDataContent}}</small>
+                    <small>{{rawData.rawDataContent | stringTruncate : 140}}</small>
                 </p>
                 <a class="card-link" [routerLink]="['/network', rawData.id]">
                     <fa-icon [icon]="'sitemap'"></fa-icon>
