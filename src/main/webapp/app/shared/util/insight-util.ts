@@ -11,11 +11,9 @@ export const UUID = (): string => {
 };
 /* tslint:enable:no-bitwise */
 
+/**
+ * Fix pour une erreur de typescript sur EventTarget (property result manquante)
+ * */
 export interface FileReaderEventTarget extends EventTarget {
     result: string;
-}
-
-export interface FileReaderEvent extends Event {
-    target: FileReaderEventTarget;
-    getMessage(): string;
 }

@@ -1,12 +1,134 @@
 [
-    { "id": "1", "mongoId": "id1", "label": "Bobby", "type": "Biographics", "title": "Personne" },
-    { "id": "2", "mongoId": "id2", "label": "Explosion", "type": "Event", "title": "Evenement" },
-    { "id": "3", "mongoId": "id3", "label": "Voiture", "type": "Equipment", "title": "Equipement" },
-    { "id": "4", "mongoId": "id4", "label": "Brian", "type": "Biographics", "title": "Personne" },
-    { "id": "5", "mongoId": "id5", "label": "AK-47", "type": "Equipment", "title": "Equipement" },
-    { "id": "6", "mongoId": "id6", "label": "Attentat", "type": "Event", "title": "Evenement" },
-    { "id": "7", "mongoId": "id7", "label": "Raoul", "type": "Biographics", "title": "Personne" },
-    { "id": "8", "mongoId": "id8", "label": "RawData", "type": "RawData", "title": "Donnee brute" },
-    { "id": "9", "mongoId": "id9", "label": "Rencontre", "type": "Event", "title": "Evenement" },
-    { "id": "10", "mongoId": "id10", "label": "RawData", "type": "RawData", "title": "Donnee brute" }
+    {
+        "id": "1",
+        "mongoId": "id1",
+        "label": "Bobby",
+        "type": "Biographics",
+        "title": "Personne",
+        "to": [
+            {
+                "id": "2"
+            },
+            {
+                "id": "3"
+            },
+            {
+                "id": "1"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "mongoId": "id2",
+        "label": "Explosion",
+        "type": "Event",
+        "title": "Evenement",
+        "to": [
+            {
+                "id": "3"
+            },
+            {
+                "id": "4"
+            }
+        ]
+    },
+    {
+        "id": "3",
+        "mongoId": "id3",
+        "label": "Voiture",
+        "type": "Equipment",
+        "title": "Equipement",
+        "to": []
+    },
+    {
+        "id": "4",
+        "mongoId": "id4",
+        "label": "Brian",
+        "type": "Biographics",
+        "title": "Personne",
+        "to": [
+            {
+                "id": "5"
+            },
+            {
+                "id": "6"
+            }
+        ]
+    },
+    {
+        "id": "5",
+        "mongoId": "id5",
+        "label": "AK-47",
+        "type": "Equipment",
+        "title": "Equipement",
+        "to": [
+            {
+                "id": "8"
+            },
+            {
+                "id": "10"
+            }
+        ]
+    },
+    {
+        "id": "6",
+        "mongoId": "id6",
+        "label": "Attentat",
+        "type": "Event",
+        "title": "Evenement",
+        "to": [
+            {
+                "id": "7"
+            },
+            {
+                "id": "9"
+            }
+        ]
+    },
+    {
+        "id": "7",
+        "mongoId": "id7",
+        "label": "Raoul",
+        "type": "Biographics",
+        "title": "Personne",
+        "to": []
+    },
+    {
+        "id": "8",
+        "mongoId": "id8",
+        "label": "RawData",
+        "type": "RawData",
+        "title": "Donnee brute",
+        "to": [
+            {
+                "id": "10"
+            },
+            {
+                "id": "1"
+            }
+        ]
+    },
+    {
+        "id": "9",
+        "mongoId": "id9",
+        "label": "Rencontre",
+        "type": "Event",
+        "title": "Evenement",
+        "to": []
+    },
+    {
+        "id": "10",
+        "mongoId": "id10",
+        "label": "RawData",
+        "type": "RawData",
+        "title": "Donnee brute",
+        "to": [
+            {
+                "id": "9"
+            },
+            {
+                "id": "5"
+            }
+        ]
+    }
 ]

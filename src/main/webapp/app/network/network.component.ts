@@ -7,7 +7,7 @@ import { GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/
 import { RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { FileReaderEvent, FileReaderEventTarget } from '../shared/util/insight-util';
+import { FileReaderEventTarget } from '../shared/util/insight-util';
 
 @Component({
     selector: 'ins-network',
@@ -18,7 +18,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
-    networkStates = { LAYOUT_DIR: 'UD', LAYOUT_FREE: false };
+    networkStates = { LAYOUT_DIR: 'UD', LAYOUT_FREE: false, PHYSICS_ENABLED: false };
 
     graphDataSubscription: Subscription;
 
@@ -77,18 +77,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     ngAfterContentInit() {}
 
-    getNetworkOption(): Options {
+    getInitialNetworkOption(): Options {
         return {
-            layout: {
-                hierarchical: {
-                    enabled: !this.networkStates['LAYOUT_FREE'],
-                    levelSeparation: 100,
-                    direction: this.networkStates['LAYOUT_DIR']
-                }
-            },
-            physics: {
-                enabled: false
-            },
+            layout: this.getLayoutOption(),
+            physics: this.getPhysicsOption(),
             interaction: {
                 hideEdgesOnDrag: true,
                 hover: true,
@@ -105,10 +97,27 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         };
     }
 
+    getPhysicsOption(): any {
+        return {
+            enabled: this.networkStates['PHYSICS_ENABLED'],
+            solver: 'repulsion'
+        };
+    }
+
+    getLayoutOption(): any {
+        return {
+            hierarchical: {
+                enabled: !this.networkStates['LAYOUT_FREE'],
+                levelSeparation: 100,
+                direction: this.networkStates['LAYOUT_DIR']
+            }
+        };
+    }
+
     initNetwork() {
         this.networkData = new GraphDataSet(new DataSet(), new DataSet());
         if (this._networkRef && !this.network) {
-            this.network = new Network(this._networkRef.nativeElement, this.networkData, this.getNetworkOption());
+            this.network = new Network(this._networkRef.nativeElement, this.networkData, this.getInitialNetworkOption());
         }
     }
 
@@ -158,7 +167,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
             const data = new GraphDataCollection([], []);
             data.nodes = graphyDatas.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
-            data.edges = NetworkService.getEdgeCollection(data.nodes[0].id, data.nodes);
+            data.edges = graphyDatas
+                .map(item => NetworkService.getEdgeCollection(item.id, item.to))
+                .reduce((acc, currentValue) => acc.concat(currentValue), []);
             this.addNodes(data.nodes, data.edges);
         };
         reader.readAsText(json);
@@ -202,25 +213,35 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                     this.clusterNodes();
                 }
                 break;
+            case 'PHYSICS_ENABLED':
+                this.networkStates['PHYSICS_ENABLED'] = !this.networkStates['PHYSICS_ENABLED'];
+                this.network.setOptions({ physics: this.getPhysicsOption() });
+                break;
             case 'LAYOUT_FREE':
                 this.networkStates['LAYOUT_FREE'] = !this.networkStates['LAYOUT_FREE'];
-                this.network.setOptions(this.getNetworkOption());
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                // Obliger de remettre l'option physic sinon elle est écrasée avec le changement de layout
+                this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_UD':
                 this.networkStates['LAYOUT_DIR'] = 'UD';
-                this.network.setOptions(this.getNetworkOption());
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_DU':
                 this.networkStates['LAYOUT_DIR'] = 'DU';
-                this.network.setOptions(this.getNetworkOption());
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_LR':
                 this.networkStates['LAYOUT_DIR'] = 'LR';
-                this.network.setOptions(this.getNetworkOption());
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_RL':
                 this.networkStates['LAYOUT_DIR'] = 'RL';
-                this.network.setOptions(this.getNetworkOption());
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             default:
                 break;

@@ -35,6 +35,7 @@ import {
     faHome,
     faImage,
     faList,
+    faMagic,
     faPencilAlt,
     faPlug,
     faPlus,
@@ -127,5 +128,6 @@ library.add(faUserSecret);
 library.add(faWifi);
 library.add(faFileImport);
 library.add(faCheck);
+library.add(faMagic);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

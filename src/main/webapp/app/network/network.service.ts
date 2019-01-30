@@ -7,7 +7,7 @@ import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Observable, of, Subject } from 'rxjs';
 import { IdType } from 'vis';
 import { filter, map } from 'rxjs/internal/operators';
-import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
+import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { RawData } from 'app/shared/model/raw-data.model';
 
@@ -34,7 +34,11 @@ export class NetworkService {
         return new NodeDTO(label, id, mongoId, title, image, color, 3, font);
     }
 
-    public static getEdgeCollection(idOrigin: IdType, nodes: NodeDTO[]): EdgeDTO[] {
+    public static getEdgeCollection(idOrigin: IdType, relations: IGraphyRelationDTO[]): EdgeDTO[] {
+        return relations.map(rel => NetworkService.getEdgeDto(idOrigin, rel.id));
+    }
+
+    public static getDirectNeighboursEdgeCollection(idOrigin: IdType, nodes: NodeDTO[]): EdgeDTO[] {
         return nodes.map(node => NetworkService.getEdgeDto(idOrigin, node.id));
     }
 
@@ -113,7 +117,9 @@ export class NetworkService {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
                 data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
-                data.edges = NetworkService.getEdgeCollection(idOrigin, data.nodes);
+                /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
+                 *  lorsque les relations seront ajoutées au IGraphyNodeDTO depuis le serveur */
+                data.edges = NetworkService.getDirectNeighboursEdgeCollection(idOrigin, data.nodes);
                 return data;
             })
         );
