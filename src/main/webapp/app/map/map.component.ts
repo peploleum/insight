@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MapService } from './map.service';
 import Map from 'ol/map';
 import View from 'ol/view';
@@ -17,8 +17,6 @@ import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { MapState } from '../shared/util/map-utils';
-import { EventThreadComponent } from './event-thread.component';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Subscription } from 'rxjs/index';
 
 @Component({
@@ -26,7 +24,7 @@ import { Subscription } from 'rxjs/index';
     templateUrl: './map.component.html',
     styles: [':host { flex-grow: 1 }']
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource();
     vectorLayer: VectorLayer;
     _map: Map;
@@ -57,7 +55,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.internalOnResize();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService, private router: Router) {
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
         this.vectorLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.styleFunction(feature, false)
@@ -66,7 +64,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             style: (feature: Feature) => this.styleFunction(feature, true),
             multi: true
         });
-        this.router.navigateByUrl('/map(side:ins-map-side-panel)');
     }
 
     internalOnResize() {
@@ -88,6 +85,15 @@ export class MapComponent implements OnInit, AfterViewInit {
                 this.selectAndGoTo(ids[0]);
             }
         });
+    }
+
+    ngOnDestroy() {
+        if (this.featureSourceSubs) {
+            this.featureSourceSubs.unsubscribe();
+        }
+        if (this.featureSelectorSubs) {
+            this.featureSelectorSubs.unsubscribe();
+        }
     }
 
     private initMap() {

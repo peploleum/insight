@@ -30,7 +30,8 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     reverse: true;
 
     firstId: string;
-    numberOfItemPerDomPage = 5;
+    lastId: string;
+    numberOfItemPerDomPage = 10;
 
     firstIndex: number;
     lastIndex: number;
@@ -54,8 +55,9 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.page = 1;
     }
 
-    updateIdStore(isFirst: boolean, id: string) {
+    updateIdStore(isFirst: boolean, isLast: boolean, id: string): boolean {
         this.firstId = isFirst ? id : this.firstId;
+        this.lastId = isLast ? id : this.lastId;
         return true;
     }
 
@@ -145,13 +147,15 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
-        const newDataList: EventThreadResultSet = new EventThreadResultSet(
-            this.rawDataList.data.concat(data),
-            this.rawDataList.dataIds.concat(data.map(item => item.id))
-        );
-        this.rawDataList = newDataList;
-        if (this.firstId) {
-            this.firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);
+        if (data && data.length > 0) {
+            const newDataList: EventThreadResultSet = new EventThreadResultSet(
+                this.rawDataList.data.concat(data),
+                this.rawDataList.dataIds.concat(data.map(item => item.id))
+            );
+            this.rawDataList = newDataList;
+            if (this.firstId) {
+                this.firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);
+            }
         }
     }
 
@@ -190,10 +194,21 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     onNewPage(dir: number) {
         const currentIndex: number = this.rawDataList.dataIds.indexOf(this.firstId);
         const nextId: string = dir > 0 ? this.rawDataList.dataIds[currentIndex + 1] : this.rawDataList.dataIds[currentIndex - 1];
-        this.firstIndex = nextId ? this.rawDataList.dataIds.indexOf(nextId) : currentIndex;
+        this.firstIndex = nextId
+            ? this.rawDataList.dataIds.length > this.numberOfItemPerDomPage
+                ? Math.min(this.rawDataList.dataIds.length - this.numberOfItemPerDomPage, this.rawDataList.dataIds.indexOf(nextId))
+                : this.rawDataList.dataIds.indexOf(nextId)
+            : currentIndex;
         this.lastIndex = this.firstIndex + this.numberOfItemPerDomPage;
-        // Si le dernier élément de la liste est le firstId, charge la page suivante.
-        if (this.firstIndex === this.rawDataList.dataIds.length - 1) {
+
+        // Si la taille de la liste est inférieure à la taille d'une page, aucun chargement n'est nécessaire.
+        if (this.rawDataList.dataIds.length < this.itemsPerPage) {
+            return;
+        }
+
+        // Si le dernier id de la liste au dernier élément (affiché dans le DOM), charge la page suivante.
+        const lastIdIndex: number = this.rawDataList.dataIds.indexOf(this.lastId);
+        if (lastIdIndex === this.rawDataList.dataIds.length - 1) {
             this.loadPage(this.page + 1);
         }
     }
