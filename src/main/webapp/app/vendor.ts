@@ -21,14 +21,18 @@ import {
     faCalendarAlt,
     faChartArea,
     faCheck,
+    faCheckCircle,
+    faCircle,
     faClock,
     faCloud,
     faCodeBranch,
     faDotCircle,
+    faDrawPolygon,
     faEye,
     faFileImport,
     faFlag,
     faGlobe,
+    faGripVertical,
     faHandPaper,
     faHdd,
     faHeart,
@@ -50,6 +54,7 @@ import {
     faSort,
     faSortDown,
     faSortUp,
+    faSquare,
     faSync,
     faTachometerAlt,
     faTasks,
@@ -129,5 +134,11 @@ library.add(faWifi);
 library.add(faFileImport);
 library.add(faCheck);
 library.add(faMagic);
+library.add(faCircle);
+library.add(faCheckCircle);
+library.add(faSquare);
+library.add(faDrawPolygon);
+library.add(faGripVertical);
+library.add(faHandPaper);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
