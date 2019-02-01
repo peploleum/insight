@@ -4,10 +4,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'ins-side-close',
-    templateUrl: './side-close.component.html'
+    selector: 'ins-side-buttons',
+    templateUrl: './side-buttons.component.html'
 })
-export class SideCloseComponent implements OnInit {
+export class SideButtonsComponent implements OnInit {
     @Input()
     isClosed: boolean;
     @Input()

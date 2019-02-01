@@ -23,6 +23,9 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
 
     dessinForm: FormGroup;
 
+    strokeColor = 'red';
+    fillColor = 'blue';
+
     constructor(private formBuilder: FormBuilder) {
         super();
         this.dessinForm = this.formBuilder.group({
@@ -55,6 +58,14 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
 
     sendAction(action: string) {
         this.actionEmitter.emit(action);
+    }
+
+    colorChanged($event, type: string) {
+        if (type === 'StrokeColor') {
+            this.f.strokeColor.setValue(this.strokeColor);
+        } else {
+            this.f.fillColor.setValue(this.fillColor);
+        }
     }
 }
 

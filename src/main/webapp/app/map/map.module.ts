@@ -9,9 +9,10 @@ import { MapMenuComponent } from './map-menu.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SideComponent } from './side/side.component';
 import { DessinComponent } from './side/dessin.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
-    imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule],
+    imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
     declarations: [MapComponent, SideComponent, EventThreadComponent, MapMenuComponent, DessinComponent]
 })
 export class MapModule {}

@@ -470,7 +470,7 @@ Dessin custom CSS
 }
 
 .drawing-layers {
-    flex-grow: 1.5;
+    flex-grow: 1.8;
 }
 
 #layers-list {
@@ -487,7 +487,6 @@ Dessin custom CSS
 
 #layers-list > span {
     padding: 0.4rem;
-    // border: 1px solid red;
     cursor: pointer;
     background-color: #7e899a;
 }
@@ -502,7 +501,6 @@ Dessin custom CSS
     align-items: center;
     justify-content: space-around;
 
-    color: white;
     padding-bottom: 0.2rem;
 }
 
@@ -531,11 +529,28 @@ Dessin custom CSS
 }
 
 .drawing-forms {
-    flex-grow: 0.3;
+    flex-grow: 0.6;
 }
 
 .drawing-colors {
-    flex-grow: 1.7;
+    flex-grow: 0.6;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.drawing-input-container {
+    width: 90%;
+    margin-bottom: 2px;
+}
+
+.drawing-input-container > input {
+    width: 100%;
+}
+
+.drawing-input-container > label {
+    margin-bottom: 0 !important;
 }
 
 .drawing-element {

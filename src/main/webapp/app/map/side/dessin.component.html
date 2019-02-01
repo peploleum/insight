@@ -1,7 +1,7 @@
 <div class="h-100 w-100 dessin" [formGroup]="dessinForm">
     <div class="side-title">
         <h4>
-            <fa-icon [icon]="'wifi'"></fa-icon>
+            <fa-icon [icon]="'pencil-alt'"></fa-icon>
             <b> Dessin</b>
         </h4>
     </div>
@@ -27,11 +27,29 @@
             <span title="Polygon" (click)="onFormSelected('')"><fa-icon [icon]="'draw-polygon'"></fa-icon></span>
         </div>
         <div id="drawing-style">
-            <input type="number" formControlName="type" class="form-control-sm" id="drawing-type"
-                   placeholder="Line dash"/>
-            <input type="number" formControlName="size" class="form-control-sm" id="drawing-size"
-                   placeholder="Line size"/>
+            <div class="drawing-input-container">
+                <label class="col-form-label-sm" for="drawing-type">Espacement des pointillés (0 ligne continue)</label>
+                <input type="number" formControlName="type" class="form-control-sm" id="drawing-type"
+                       placeholder="Line dash"/>
+            </div>
+            <div class="drawing-input-container">
+                <label class="col-form-label-sm" for="drawing-size">Largeur du trait</label>
+                <input type="number" formControlName="size" class="form-control-sm" id="drawing-size"
+                       placeholder="Line size"/>
+            </div>
         </div>
     </div>
-    <div class="drawing-colors drawing-element"></div>
+    <div class="drawing-colors drawing-element">
+        <div class="drawing-input-container">
+            <label class="col-form-label-sm" for="stroke-color">Couleur du trait</label>
+            <input title="Stroke Color" formControlName="strokeColor" [cpPosition]="'top'"
+                   [(colorPicker)]="strokeColor" [style.background]="strokeColor" id="stroke-color" (change)="colorChanged($event, 'StrokeColor')"/>
+        </div>
+        <div class="drawing-input-container">
+            <label class="col-form-label-sm" for="fill-color">Couleur de remplissage</label>
+            <input title="Fill Color" formControlName="fillColor" [cpPosition]="'top'"
+                   [(colorPicker)]="fillColor"
+                   [style.background]="fillColor" id="fill-color" (change)="colorChanged($event, 'FillColor')"/>
+        </div>
+    </div>
 </div>
