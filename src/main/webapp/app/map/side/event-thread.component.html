@@ -1,6 +1,8 @@
-<div [hidden]="isHidden" class="side">
+<div class="h-100 w-100">
     <div class="side-title">
-        <h4><fa-icon [icon]="'wifi'"></fa-icon><b> Flux d'événements</b></h4>
+        <h4>
+            <fa-icon [icon]="'wifi'"></fa-icon>
+            <b> Flux d'événements</b></h4>
     </div>
     <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"
          (wheelEmitter)="onNewPage($event)"
@@ -29,4 +31,3 @@
         </div>
     </div>
 </div>
-<ins-side-close [isClosed]="isHidden" (closeEmitter)="displaySidePannel($event)"></ins-side-close>

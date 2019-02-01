@@ -6,10 +6,10 @@ import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'n
 import { AccountService } from 'app/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { MapService } from './map.service';
+import { MapService } from '../map.service';
 import { tap } from 'rxjs/internal/operators';
-import { EventThreadResultSet, MapState } from '../shared/util/map-utils';
-import { SideInterface } from '../shared/side/side.abstract';
+import { EventThreadResultSet, MapState } from '../../shared/util/map-utils';
+import { SideInterface } from '../../shared/side/side.abstract';
 
 @Component({
     selector: 'ins-event-thread',

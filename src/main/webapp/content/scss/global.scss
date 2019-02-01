@@ -422,20 +422,39 @@ SidePannel custom CSS
     justify-content: center;
 }
 
-.side-close {
+.side-buttons {
     position: absolute;
     top: 100px;
     width: 23px;
-    height: 48px;
+    height: 192px;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    background-color: rgba(255, 255, 255, 0.55);
     z-index: 101;
+}
+
+.side-buttons > span {
     cursor: pointer;
+    height: 48px;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-buttons > span:first-child {
+    margin-bottom: 48px;
+    background-color: rgba(255, 255, 255, 0.55);
+}
+
+.isDisplayed {
+    border: 2px solid #003e80;
+    border-right: none;
 }
 
 /* ==========================================================================
@@ -443,20 +462,83 @@ Dessin custom CSS
 ========================================================================== */
 
 .dessin {
-    font-size: 1.2em;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    color: white;
 }
 
 .drawing-layers {
+    flex-grow: 1.5;
 }
 
-.layers-list {
+#layers-list {
+    font-size: 1rem;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: auto;
+    max-height: 75%;
+    padding: 0.5rem;
+    margin: auto;
 }
 
-.layers-tools {
+#layers-list > span {
+    padding: 0.4rem;
+    // border: 1px solid red;
+    cursor: pointer;
+    background-color: #7e899a;
+}
+
+#layers-list > span:hover {
+    background-color: #7b8c9d;
+}
+
+.tools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    color: white;
+    padding-bottom: 0.2rem;
+}
+
+.tools > span {
+    flex: 1;
+    padding: 0.6rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tools > span:hover {
+    background-color: #7b8c9d;
+}
+
+#drawing-style {
+    font-size: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#drawing-style > input {
+    width: 90%;
+    margin: 2px;
 }
 
 .drawing-forms {
+    flex-grow: 0.3;
 }
 
 .drawing-colors {
+    flex-grow: 1.7;
+}
+
+.drawing-element {
+    border-bottom: 1px solid;
+    padding-top: 0.3rem;
 }

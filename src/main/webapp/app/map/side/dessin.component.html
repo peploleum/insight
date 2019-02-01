@@ -1,24 +1,24 @@
-<div></div>
-<!--<div [hidden]="isHidden" class="side dessin" [formGroupName]="dessinForm">
+<div class="h-100 w-100 dessin" [formGroup]="dessinForm">
     <div class="side-title">
         <h4>
             <fa-icon [icon]="'wifi'"></fa-icon>
             <b> Dessin</b>
         </h4>
     </div>
-    <div class="drawing-layers">
-        <div class="layers-list" *ngFor="let layer of layerList">
-            <span><fa-icon [icon]="layer.selected ? 'check-circle' : 'circle'"></fa-icon> {{layer.layerName}}</span>
-        </div>
-        <div class="layers-tools">
+    <div class="drawing-layers drawing-element">
+        <div class="tools">
             <span title="Add layer"><fa-icon [icon]="'plus'"></fa-icon></span>
             <span title="Move layer up"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
             <span title="Move layer down"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
             <span title="Remove layer"><fa-icon [icon]="'times'"></fa-icon></span>
         </div>
+        <h6 class="ml-2">Layer List :</h6>
+        <div id="layers-list" *ngFor="let layer of layerList;">
+            <span><fa-icon [icon]="layer.selected ? 'check-circle' : 'circle'"></fa-icon> {{layer.layerName}}</span>
+        </div>
     </div>
-    <div class="drawing-forms">
-        <div id="forms-select">
+    <div class="drawing-forms drawing-element">
+        <div class="tools">
             <span title="Free drawing" (click)="onFormSelected('')"><fa-icon [icon]="'hand-paper'"></fa-icon></span>
             <span title="Line" (click)="onFormSelected('')"><fa-icon [icon]="'grip-vertical'"></fa-icon></span>
             <span title="Point" (click)="onFormSelected('')"><fa-icon [icon]="'circle'"></fa-icon></span>
@@ -33,5 +33,5 @@
                    placeholder="Line size"/>
         </div>
     </div>
-    <div class="drawing-colors"></div>
-</div>-->
+    <div class="drawing-colors drawing-element"></div>
+</div>

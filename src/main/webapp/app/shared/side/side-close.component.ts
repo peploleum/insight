@@ -10,9 +10,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class SideCloseComponent implements OnInit {
     @Input()
     isClosed: boolean;
+    @Input()
+    _showEventThread: boolean;
 
     @Output()
     closeEmitter: EventEmitter<boolean> = new EventEmitter();
+    @Output()
+    showEventThreadEmitter: EventEmitter<boolean> = new EventEmitter();
 
     constructor() {}
 
@@ -20,5 +24,9 @@ export class SideCloseComponent implements OnInit {
 
     closePanel(doClose: boolean) {
         this.closeEmitter.emit(doClose);
+    }
+
+    showEventThread(show: boolean) {
+        this.showEventThreadEmitter.emit(show);
     }
 }

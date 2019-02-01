@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MapComponent } from './map.component';
-import { EventThreadComponent } from './event-thread.component';
+import { EventThreadComponent } from './side/event-thread.component';
+import { SideComponent } from './side/side.component';
 
 const routes: Routes = [
     {
@@ -13,7 +14,7 @@ const routes: Routes = [
     },
     {
         path: 'ins-map-side-panel',
-        component: EventThreadComponent,
+        component: SideComponent,
         outlet: 'side'
     }
 ];

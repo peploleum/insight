@@ -12,9 +12,9 @@ import { SideInterface } from '../../shared/side/side.abstract';
 })
 export class DessinComponent extends SideInterface implements OnInit, OnDestroy {
     @Input()
-    layerList: DrawingLayer[] = [];
+    layerList: DrawingLayer[] = [new DrawingLayer('bidou', 'test', true)];
     @Input()
-    initialStyle: FigureStyle;
+    initialStyle: FigureStyle = new FigureStyle('Circle', 2, 10, 'red', 'blue');
 
     @Output()
     actionEmitter: EventEmitter<string> = new EventEmitter();
@@ -73,11 +73,11 @@ export class DrawingLayer {
 export class FigureStyle {
     form: string;
     size: number;
-    type: string;
+    type: number;
     strokeColor: string;
     fillColor?: string;
 
-    constructor(form: string, size: number, type: string, strokeColor: string, fillColor?: string) {
+    constructor(form: string, size: number, type: number, strokeColor: string, fillColor?: string) {
         this.form = form;
         this.size = size;
         this.type = type;
