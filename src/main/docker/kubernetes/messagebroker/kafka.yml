@@ -4,7 +4,7 @@ metadata:
   name: kafka-config
   namespace: insight
 data:
-    kafka.create.topics: topicrss:1:1,topicjson:1:1 
+    kafka.create.topics: topic:1:1,topicrss:1:1,topicjson:1:1 
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
