@@ -8,11 +8,11 @@ import { InsightSharedModule } from 'app/shared';
 import { MapMenuComponent } from './map-menu.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SideComponent } from './side/side.component';
-import { DessinComponent } from './side/dessin.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { DessinComponent } from './side/dessin.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
-    declarations: [MapComponent, SideComponent, EventThreadComponent, MapMenuComponent, DessinComponent]
+    declarations: [MapComponent, SideComponent, EventThreadComponent, DessinComponent, MapMenuComponent]
 })
 export class MapModule {}

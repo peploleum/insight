@@ -9,6 +9,9 @@ import OSM from 'ol/source/osm';
 import control from 'ol/control';
 import Feature from 'ol/feature';
 import SelectInteration from 'ol/interaction/select';
+import DrawInteraction from 'ol/interaction/draw';
+import SnapInteraction from 'ol/interaction/snap';
+import ModifyInteraction from 'ol/interaction/modify';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -16,8 +19,10 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
-import { MapState } from '../shared/util/map-utils';
+import { FigureStyle, MapState } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
+import { pairwise, startWith } from 'rxjs/internal/operators';
+import getOwnPropertyDescriptor = Reflect.getOwnPropertyDescriptor;
 
 @Component({
     selector: 'jhi-map',
@@ -26,9 +31,14 @@ import { Subscription } from 'rxjs/index';
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource();
+    dessinSource: VectorSource = new VectorSource();
     vectorLayer: VectorLayer;
     _map: Map;
+
     selectInteraction: SelectInteration;
+    drawInteraction: DrawInteraction;
+    snapInteraction: SnapInteraction;
+    modifyInteraction: ModifyInteraction;
 
     private circleImage = new Circle({
         radius: 13,
@@ -64,6 +74,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             style: (feature: Feature) => this.styleFunction(feature, true),
             multi: true
         });
+        this.modifyInteraction = new ModifyInteraction({
+            source: this.dessinSource
+        });
     }
 
     internalOnResize() {
@@ -85,6 +98,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectAndGoTo(ids[0]);
             }
         });
+        this.initDessinTools();
     }
 
     ngOnDestroy() {
@@ -122,6 +136,60 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             window.dispatchEvent(new Event('resize'));
         });
         this._map.addInteraction(this.selectInteraction);
+        this._map.addInteraction(this.modifyInteraction);
+    }
+
+    private initDessinTools() {
+        this.ms.dessinStates
+            .pipe(
+                startWith(null),
+                pairwise()
+            )
+            .subscribe((values: FigureStyle[]) => {
+                if (!this.getMapStates().DESSIN_ENABLED) {
+                    return;
+                }
+                if (values[0] == null || values[0].form !== values[1].form) {
+                    this.removeDrawInteraction();
+                    this.addDrawInteraction();
+                }
+            });
+    }
+
+    addDrawInteraction() {
+        this.drawInteraction = new DrawInteraction({
+            source: this.dessinSource,
+            type: this.getDessinStates().form === 'Rectangle' ? 'Circle' : this.getDessinStates().form,
+            style: this.getDessinStyle(),
+            geometryFunction: this.getDessinStates().form === 'Rectangle' ? DrawInteraction.createBox() : null
+        });
+        this._map.addInteraction(this.drawInteraction);
+        this.snapInteraction = new SnapInteraction({
+            source: this.dessinSource
+        });
+        this._map.addInteraction(this.snapInteraction);
+    }
+
+    removeDrawInteraction() {
+        this._map.removeInteraction(this.drawInteraction);
+        this._map.removeInteraction(this.snapInteraction);
+    }
+
+    getDessinStates(): FigureStyle {
+        return this.ms.dessinStates.getValue();
+    }
+
+    getDessinStyle(): Style {
+        return new Style({
+            stroke: new Stroke({
+                color: this.getDessinStates().strokeColor,
+                lineDash: [this.getDessinStates().type],
+                width: this.getDessinStates().size
+            }),
+            fill: new Fill({
+                color: this.getDessinStates().fillColor
+            })
+        });
     }
 
     selectAndGoTo(objectId: string) {
@@ -265,34 +333,44 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             case 'F_ALL_DATA':
                 if (mapState.FILTER_TYPE !== 'all') {
                     mapState.FILTER_TYPE = 'all';
-                    this.onFilterChanged(mapState);
+                    this.onFilterChanged();
                 }
                 break;
             case 'F_LOCATIONS_ONLY':
                 if (mapState.FILTER_TYPE !== 'locations') {
                     mapState.FILTER_TYPE = 'locations';
-                    this.onFilterChanged(mapState);
+                    this.onFilterChanged();
                 }
                 break;
             case 'F_IMAGES_ONLY':
                 if (mapState.FILTER_TYPE !== 'images') {
                     mapState.FILTER_TYPE = 'images';
-                    this.onFilterChanged(mapState);
+                    this.onFilterChanged();
                 }
                 break;
             case 'F_NO_FILTER':
                 if (mapState.FILTER_TYPE) {
                     mapState.FILTER_TYPE = null;
-                    this.onFilterChanged(mapState);
+                    this.onFilterChanged();
+                }
+                break;
+            case 'DESSIN_ENABLED':
+                mapState.DESSIN_ENABLED = !mapState.DESSIN_ENABLED;
+                if (!mapState.DESSIN_ENABLED && this.drawInteraction) {
+                    this.removeDrawInteraction();
+                    this._map.addInteraction(this.selectInteraction);
+                } else if (mapState.DESSIN_ENABLED) {
+                    this._map.removeInteraction(this.selectInteraction);
+                    this.addDrawInteraction();
                 }
                 break;
             default:
                 break;
         }
+        this.ms.mapStates.next(mapState);
     }
 
-    onFilterChanged(newMapState: MapState) {
+    onFilterChanged() {
         this.rawDataSource.clear();
-        this.ms.mapStates.next(newMapState);
     }
 }

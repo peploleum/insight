@@ -13,13 +13,14 @@ import Point from 'ol/geom/point';
 import proj from 'ol/proj';
 import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
-import { MapState } from '../shared/util/map-utils';
+import { FigureStyle, MapState } from '../shared/util/map-utils';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
     featureSource: Subject<Feature[]> = new Subject();
-    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all'));
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
+    dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(new FigureStyle('Circle', 2, 10, 'red', 'blue'));
     outsideFeatureSelector: Subject<string[]> = new Subject();
 
     static getImageIconUrl(objectType: string): string {

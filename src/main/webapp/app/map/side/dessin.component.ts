@@ -5,6 +5,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
+import { MapService } from '../map.service';
+import { DrawingLayer, FigureStyle } from '../../shared/util/map-utils';
 
 @Component({
     selector: 'ins-dessin',
@@ -26,7 +28,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     strokeColor = 'red';
     fillColor = 'blue';
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(protected formBuilder: FormBuilder, protected ms: MapService) {
         super();
         this.dessinForm = this.formBuilder.group({
             form: [this.initialStyle.form, Validators.required],
@@ -37,7 +39,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
         });
         this.dessinForm.valueChanges.pipe(debounceTime(200)).subscribe(value => {
             if (this.dessinForm.valid) {
-                this.styleEmitter.emit(
+                this.ms.dessinStates.next(
                     new FigureStyle(value['form'], value['size'], value['type'], value['strokeColor'], value['fillColor'])
                 );
             }
@@ -66,33 +68,5 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
         } else {
             this.f.fillColor.setValue(this.fillColor);
         }
-    }
-}
-
-export class DrawingLayer {
-    layerId: string;
-    layerName: string;
-    selected: boolean;
-
-    constructor(layerId: string, layerName: string, selected: boolean) {
-        this.layerId = layerId;
-        this.layerName = layerName;
-        this.selected = selected;
-    }
-}
-
-export class FigureStyle {
-    form: string;
-    size: number;
-    type: number;
-    strokeColor: string;
-    fillColor?: string;
-
-    constructor(form: string, size: number, type: number, strokeColor: string, fillColor?: string) {
-        this.form = form;
-        this.size = size;
-        this.type = type;
-        this.strokeColor = strokeColor;
-        this.fillColor = fillColor;
     }
 }

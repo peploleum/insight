@@ -19,12 +19,11 @@
     </div>
     <div class="drawing-forms drawing-element">
         <div class="tools">
-            <span title="Free drawing" (click)="onFormSelected('')"><fa-icon [icon]="'hand-paper'"></fa-icon></span>
-            <span title="Line" (click)="onFormSelected('')"><fa-icon [icon]="'grip-vertical'"></fa-icon></span>
-            <span title="Point" (click)="onFormSelected('')"><fa-icon [icon]="'circle'"></fa-icon></span>
-            <span title="Circle" (click)="onFormSelected('')"><fa-icon [icon]="'circle'"></fa-icon></span>
-            <span title="Rectangle" (click)="onFormSelected('')"><fa-icon [icon]="'square'"></fa-icon></span>
-            <span title="Polygon" (click)="onFormSelected('')"><fa-icon [icon]="'draw-polygon'"></fa-icon></span>
+            <span title="Line" (click)="onFormSelected('LineString')"><fa-icon [icon]="'grip-vertical'"></fa-icon></span>
+            <span title="Point" (click)="onFormSelected('Point')"><fa-icon [icon]="'circle'"></fa-icon></span>
+            <span title="Circle" (click)="onFormSelected('Circle')"><fa-icon [icon]="'circle'"></fa-icon></span>
+            <span title="Rectangle" (click)="onFormSelected('Rectangle')"><fa-icon [icon]="'square'"></fa-icon></span>
+            <span title="Polygon" (click)="onFormSelected('Polygon')"><fa-icon [icon]="'draw-polygon'"></fa-icon></span>
         </div>
         <div id="drawing-style">
             <div class="drawing-input-container">

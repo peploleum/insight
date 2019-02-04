@@ -2,4 +2,5 @@
     <ins-event-thread [hidden]="!_showEventThread"></ins-event-thread>
     <ins-dessin [hidden]="_showEventThread"></ins-dessin>
 </div>
-<ins-side-buttons [isClosed]="isHidden" [_showEventThread]="_showEventThread" (closeEmitter)="displaySidePannel($event)" (showEventThreadEmitter)="showEventThread($event)"></ins-side-buttons>
+<ins-side-buttons [isClosed]="isHidden" [_showEventThread]="_showEventThread" (closeEmitter)="displaySidePannel($event)"
+                  (showEventThreadEmitter)="showEventThread($event)"></ins-side-buttons>

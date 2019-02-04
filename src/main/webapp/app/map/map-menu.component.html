@@ -24,5 +24,11 @@
                 <fa-icon [icon]="'ban'"></fa-icon>
             </p>
         </li>
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"
+            (click)="sendAction('DESSIN_ENABLED')" title="Activer les outils de dessin">
+            <p>
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>
+            </p>
+        </li>
     </ul>
 </div>
