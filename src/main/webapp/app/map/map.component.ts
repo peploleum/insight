@@ -33,6 +33,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource();
     dessinSource: VectorSource = new VectorSource();
     vectorLayer: VectorLayer;
+    dessinLayer: VectorLayer;
     _map: Map;
 
     selectInteraction: SelectInteration;
@@ -69,6 +70,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.vectorLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.styleFunction(feature, false)
+        });
+        this.dessinLayer = new VectorLayer({
+            source: this.dessinSource,
+            style: (feature: Feature) => this.getDessinStyle()
         });
         this.selectInteraction = new SelectInteration({
             style: (feature: Feature) => this.styleFunction(feature, true),
@@ -117,7 +122,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 new TileLayer({
                     source: new OSM()
                 }),
-                this.vectorLayer
+                this.vectorLayer,
+                this.dessinLayer
             ],
             target: 'map',
             controls: control.defaults({
@@ -160,7 +166,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.drawInteraction = new DrawInteraction({
             source: this.dessinSource,
             type: this.getDessinStates().form === 'Rectangle' ? 'Circle' : this.getDessinStates().form,
-            style: this.getDessinStyle(),
             geometryFunction: this.getDessinStates().form === 'Rectangle' ? DrawInteraction.createBox() : null
         });
         this._map.addInteraction(this.drawInteraction);
@@ -188,6 +193,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             }),
             fill: new Fill({
                 color: this.getDessinStates().fillColor
+            }),
+            image: new Circle({
+                radius: 10,
+                fill: new Fill({
+                    color: this.getDessinStates().fillColor
+                }),
+                stroke: new Stroke({
+                    color: this.getDessinStates().strokeColor,
+                    lineDash: [this.getDessinStates().type],
+                    width: this.getDessinStates().size
+                })
             })
         });
     }

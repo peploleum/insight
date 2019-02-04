@@ -19,11 +19,20 @@
     </div>
     <div class="drawing-forms drawing-element">
         <div class="tools">
-            <span title="Line" (click)="onFormSelected('LineString')"><fa-icon [icon]="'grip-vertical'"></fa-icon></span>
-            <span title="Point" (click)="onFormSelected('Point')"><fa-icon [icon]="'circle'"></fa-icon></span>
-            <span title="Circle" (click)="onFormSelected('Circle')"><fa-icon [icon]="'circle'"></fa-icon></span>
-            <span title="Rectangle" (click)="onFormSelected('Rectangle')"><fa-icon [icon]="'square'"></fa-icon></span>
-            <span title="Polygon" (click)="onFormSelected('Polygon')"><fa-icon [icon]="'draw-polygon'"></fa-icon></span>
+            <span title="Line" (click)="onFormSelected('LineString')"
+                  [ngClass]="{'selected': (currentStyle.form === 'LineString')}"><fa-icon
+                [icon]="'grip-vertical'"></fa-icon></span>
+            <span title="Point" (click)="onFormSelected('Point')"
+                  [ngClass]="{'selected': (currentStyle.form === 'Point')}"><fa-icon [icon]="'circle'"></fa-icon></span>
+            <span title="Circle" (click)="onFormSelected('Circle')"
+                  [ngClass]="{'selected': (currentStyle.form === 'Circle')}"><fa-icon
+                [icon]="'circle'"></fa-icon></span>
+            <span title="Rectangle" (click)="onFormSelected('Rectangle')"
+                  [ngClass]="{'selected': (currentStyle.form === 'Rectangle')}"><fa-icon
+                [icon]="'square'"></fa-icon></span>
+            <span title="Polygon" (click)="onFormSelected('Polygon')"
+                  [ngClass]="{'selected': (currentStyle.form === 'Polygon')}"><fa-icon
+                [icon]="'draw-polygon'"></fa-icon></span>
         </div>
         <div id="drawing-style">
             <div class="drawing-input-container">
@@ -41,14 +50,19 @@
     <div class="drawing-colors drawing-element">
         <div class="drawing-input-container">
             <label class="col-form-label-sm" for="stroke-color">Couleur du trait</label>
-            <input title="Stroke Color" formControlName="strokeColor" [cpPosition]="'top'"
-                   [(colorPicker)]="strokeColor" [style.background]="strokeColor" id="stroke-color" (change)="colorChanged($event, 'StrokeColor')"/>
+            <input title="Stroke Color" [cpPosition]="'top'" [cpOutputFormat]="'rgba'"
+                   [colorPicker]="f.strokeColor.value" [style.background]="f.strokeColor.value"
+                   id="stroke-color"
+                   (colorPickerChange)="f.strokeColor.setValue($event)"
+                   formControlName="strokeColor"/>
         </div>
         <div class="drawing-input-container">
             <label class="col-form-label-sm" for="fill-color">Couleur de remplissage</label>
-            <input title="Fill Color" formControlName="fillColor" [cpPosition]="'top'"
-                   [(colorPicker)]="fillColor"
-                   [style.background]="fillColor" id="fill-color" (change)="colorChanged($event, 'FillColor')"/>
+            <input title="Fill Color" [cpPosition]="'top'" [cpOutputFormat]="'rgba'"
+                   [colorPicker]="f.fillColor.value"
+                   [style.background]="f.fillColor.value" id="fill-color"
+                   (colorPickerChange)="f.fillColor.setValue($event)"
+                   formControlName="fillColor"/>
         </div>
     </div>
 </div>
