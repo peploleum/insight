@@ -4,8 +4,10 @@ import Map from 'ol/map';
 import View from 'ol/view';
 import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
+import LayerGroup from 'ol/layer/group';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
+import BingMaps from 'ol/source/bingmaps';
 import control from 'ol/control';
 import Feature from 'ol/feature';
 import SelectInteration from 'ol/interaction/select';
@@ -19,10 +21,9 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
-import { FigureStyle, MapState } from '../shared/util/map-utils';
+import { FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
-import getOwnPropertyDescriptor = Reflect.getOwnPropertyDescriptor;
 
 @Component({
     selector: 'jhi-map',
@@ -32,8 +33,8 @@ import getOwnPropertyDescriptor = Reflect.getOwnPropertyDescriptor;
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource();
     dessinSource: VectorSource = new VectorSource();
-    vectorLayer: VectorLayer;
-    dessinLayer: VectorLayer;
+    kmlSource: VectorSource = new VectorSource();
+    featureLayer: VectorLayer;
     _map: Map;
 
     selectInteraction: SelectInteration;
@@ -60,6 +61,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     featureSourceSubs: Subscription;
     featureSelectorSubs: Subscription;
+    layerSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
@@ -67,14 +69,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
-        this.vectorLayer = new VectorLayer({
+        this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.styleFunction(feature, false)
         });
-        this.dessinLayer = new VectorLayer({
-            source: this.dessinSource,
-            style: (feature: Feature) => this.getDessinStyle()
-        });
+
         this.selectInteraction = new SelectInteration({
             style: (feature: Feature) => this.styleFunction(feature, true),
             multi: true
@@ -95,6 +94,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.initMap();
+        this.initMapLayerListener();
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
@@ -113,18 +113,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.featureSelectorSubs) {
             this.featureSelectorSubs.unsubscribe();
         }
+        if (this.layerSubs) {
+            this.layerSubs.unsubscribe();
+        }
     }
 
     private initMap() {
         // const readFeatures = new GeoJSON().readFeatures(GEO_JSON_OBJECT);
         this._map = new Map({
-            layers: [
-                new TileLayer({
-                    source: new OSM()
-                }),
-                this.vectorLayer,
-                this.dessinLayer
-            ],
+            layers: [this.featureLayer],
             target: 'map',
             controls: control.defaults({
                 attributionOptions: {
@@ -145,7 +142,62 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._map.addInteraction(this.modifyInteraction);
     }
 
+    private initMapLayerListener() {
+        this.layerSubs = this.ms.mapLayers.subscribe((update: MapLayer[]) => {
+            this.updateLayers(update);
+        });
+    }
+
+    updateLayers(layers: MapLayer[]) {
+        const deleteLayerIds: string[] = layers.filter(layer => layer.layerStatus === 'DELETE').map(layer => layer.layerId);
+        const updateLayers = {};
+        layers.filter(layer => layer.layerStatus === 'UPDATE').forEach(layer => (updateLayers[layer.layerId] = layer));
+
+        const deleteLayer: VectorLayer[] = [];
+        this._map.getLayers().forEach(layer => {
+            const layerId: string = layer.get('id');
+            if (deleteLayerIds.indexOf(layerId) !== -1) {
+                deleteLayer.push(layer);
+            } else if (updateLayers[layerId]) {
+                layer.setVisible((<MapLayer>updateLayers[layerId]).selected);
+            }
+        });
+        deleteLayer.forEach(layer => this._map.removeLayer(layer));
+
+        const addLayers: MapLayer[] = layers.filter(layer => layer.layerStatus === 'NEW');
+        addLayers.forEach(newLayer => {
+            let newItem: VectorLayer = null;
+            if (newLayer.layerType === 'DESSIN') {
+                newItem = new VectorLayer({
+                    source: this.dessinSource,
+                    style: (feature: Feature) => this.getDessinStyle()
+                });
+            } else if (newLayer.layerType === 'KML') {
+                newItem = new VectorLayer({
+                    source: this.kmlSource
+                });
+            } else if (newLayer.layerType === 'SOURCE') {
+                if (newLayer.layerName === 'OSM') {
+                    newItem = new TileLayer({
+                        source: new OSM()
+                    });
+                } else if (newLayer.layerName === 'BingMaps') {
+                    newItem = new TileLayer({
+                        source: new BingMaps()
+                    });
+                }
+            }
+            if (newItem !== null) {
+                newItem.setVisible(newLayer.selected);
+                newItem.set('id', newLayer.layerId);
+                this._map.addLayer(newItem);
+            }
+        });
+    }
+
     private initDessinTools() {
+        // pairwise permet de recevoir les items sous la forme [oldValue, newValue],
+        // startWith initialise la premiere value
         this.ms.dessinStates
             .pipe(
                 startWith(null),

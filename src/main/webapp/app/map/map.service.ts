@@ -13,15 +13,19 @@ import Point from 'ol/geom/point';
 import proj from 'ol/proj';
 import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
-import { FigureStyle, MapState } from '../shared/util/map-utils';
+import { FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
+import { UUID } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
+
     featureSource: Subject<Feature[]> = new Subject();
+    outsideFeatureSelector: Subject<string[]> = new Subject();
+
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(new FigureStyle('Circle', 2, 10, 'red', 'blue'));
-    outsideFeatureSelector: Subject<string[]> = new Subject();
+    mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject([new MapLayer(UUID(), 'DrawingLayer1', 'DESSIN', true)]);
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {

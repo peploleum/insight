@@ -2,9 +2,6 @@
  * Created by gFolgoas on 22/01/2019.
  */
 import { IRawData } from '../model/raw-data.model';
-import Style from 'ol/style/style';
-import Stroke from 'ol/style/stroke';
-import Fill from 'ol/style/fill';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -35,28 +32,22 @@ export class EventThreadResultSet {
     }
 }
 
-export const dessinStyle = (strokeClr: string, fillClr: string, linedash: number, strokeWdth: number): Style => {
-    return new Style({
-        stroke: new Stroke({
-            color: strokeClr,
-            lineDash: [linedash],
-            width: strokeWdth
-        }),
-        fill: new Fill({
-            color: fillClr
-        })
-    });
-};
+export type MapLayerType = 'DESSIN' | 'KML' | 'SOURCE';
+export type MapLayerStatus = 'NEW' | 'UPDATE' | 'DELETE';
 
-export class DrawingLayer {
+export class MapLayer {
     layerId: string;
     layerName: string;
+    layerType: MapLayerType;
     selected: boolean;
+    layerStatus: MapLayerStatus;
 
-    constructor(layerId: string, layerName: string, selected: boolean) {
+    constructor(layerId: string, layerName: string, layerType: MapLayerType, selected: boolean) {
         this.layerId = layerId;
         this.layerName = layerName;
+        this.layerType = layerType;
         this.selected = selected;
+        this.layerStatus = 'NEW';
     }
 }
 

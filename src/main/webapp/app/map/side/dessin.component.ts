@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
-import { DrawingLayer, FigureStyle } from '../../shared/util/map-utils';
+import { MapLayer, FigureStyle } from '../../shared/util/map-utils';
 
 @Component({
     selector: 'ins-dessin',
@@ -14,7 +14,7 @@ import { DrawingLayer, FigureStyle } from '../../shared/util/map-utils';
 })
 export class DessinComponent extends SideInterface implements OnInit, OnDestroy {
     @Input()
-    layerList: DrawingLayer[] = [new DrawingLayer('bidou', 'test', true)];
+    layerList: MapLayer[] = [new MapLayer('bidou', 'test', true)];
 
     currentStyle: FigureStyle;
     dessinForm: FormGroup;
