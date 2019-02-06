@@ -7,17 +7,19 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
 import { MapLayer, FigureStyle } from '../../shared/util/map-utils';
+import { Subscription } from 'rxjs/index';
+import { UUID } from '../../shared/util/insight-util';
 
 @Component({
     selector: 'ins-dessin',
     templateUrl: './dessin.component.html'
 })
 export class DessinComponent extends SideInterface implements OnInit, OnDestroy {
-    @Input()
-    layerList: MapLayer[] = [new MapLayer('bidou', 'test', true)];
-
+    layerList: MapLayer[];
     currentStyle: FigureStyle;
     dessinForm: FormGroup;
+
+    layersSubs: Subscription;
 
     constructor(protected formBuilder: FormBuilder, protected ms: MapService) {
         super();
@@ -48,15 +50,66 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
             });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.layersSubs = this.ms.mapLayers.subscribe(layers => {
+            this.layerList = layers;
+        });
+    }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        if (this.layersSubs) {
+            this.layersSubs.unsubscribe();
+        }
+    }
 
     onFormSelected(form: string) {
         this.f.form.setValue(form);
     }
 
+    onLayerAction(action: string, targetLayer?: MapLayer) {
+        const currentLayerList: MapLayer[] = this.layers();
+        currentLayerList.forEach(layer => (layer.layerStatus = 'UPDATE'));
+        switch (action) {
+            case 'SELECTION_CHANGED':
+                if (targetLayer) {
+                    targetLayer.selected = !targetLayer.selected;
+                }
+                break;
+            case 'ADD_DESSIN_LAYER':
+                currentLayerList.push(new MapLayer(UUID(), 'LayerDessin', 'DESSIN', true));
+                break;
+            case 'REMOVE_DESSIN_LAYER':
+                if (targetLayer) {
+                    currentLayerList.splice(currentLayerList.indexOf(targetLayer), 1);
+                }
+                break;
+            case 'REMOVE_KML_LAYER':
+                if (targetLayer) {
+                    currentLayerList.splice(currentLayerList.indexOf(targetLayer), 1);
+                }
+                break;
+            default:
+                break;
+        }
+        this.ms.mapLayers.next(currentLayerList);
+    }
+
+    getLayerIcon(layerType: string): string {
+        switch (layerType) {
+            case 'DESSIN':
+                return 'pencil-alt';
+            case 'KML':
+                return 'map-marked-alt';
+            case 'SOURCE':
+                return 'globe';
+        }
+    }
+
     get f() {
         return this.dessinForm.controls;
+    }
+
+    layers() {
+        return this.ms.mapLayers.getValue();
     }
 }

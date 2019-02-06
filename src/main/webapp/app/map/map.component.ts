@@ -71,7 +71,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
         this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
-            style: (feature: Feature) => this.styleFunction(feature, false)
+            style: (feature: Feature) => this.styleFunction(feature, false),
+            zIndex: 1
         });
 
         this.selectInteraction = new SelectInteration({
@@ -144,6 +145,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private initMapLayerListener() {
         this.layerSubs = this.ms.mapLayers.subscribe((update: MapLayer[]) => {
+            if (this._map.getLayers().getLength() === 1) {
+                // Si aucun layer présent dans la map, alors tous les layers sont status NEW
+                update.forEach(layer => (layer.layerStatus = 'NEW'));
+            }
             this.updateLayers(update);
         });
     }
@@ -153,7 +158,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const updateLayers = {};
         layers.filter(layer => layer.layerStatus === 'UPDATE').forEach(layer => (updateLayers[layer.layerId] = layer));
 
-        const deleteLayer: VectorLayer[] = [];
+        const deleteLayer = [];
         this._map.getLayers().forEach(layer => {
             const layerId: string = layer.get('id');
             if (deleteLayerIds.indexOf(layerId) !== -1) {
@@ -166,24 +171,33 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const addLayers: MapLayer[] = layers.filter(layer => layer.layerStatus === 'NEW');
         addLayers.forEach(newLayer => {
-            let newItem: VectorLayer = null;
+            let newItem = null;
             if (newLayer.layerType === 'DESSIN') {
                 newItem = new VectorLayer({
                     source: this.dessinSource,
-                    style: (feature: Feature) => this.getDessinStyle()
+                    style: (feature: Feature) => this.getDessinStyle(),
+                    zIndex: 1
                 });
             } else if (newLayer.layerType === 'KML') {
                 newItem = new VectorLayer({
-                    source: this.kmlSource
+                    source: this.kmlSource,
+                    zIndex: 1
                 });
             } else if (newLayer.layerType === 'SOURCE') {
                 if (newLayer.layerName === 'OSM') {
                     newItem = new TileLayer({
-                        source: new OSM()
+                        source: new OSM(),
+                        zIndex: 0
                     });
                 } else if (newLayer.layerName === 'BingMaps') {
+                    // key associée à un compte microsoft perso
                     newItem = new TileLayer({
-                        source: new BingMaps()
+                        source: new BingMaps({
+                            key: 'AhZ8yD8nLNihhvRg-tAzuo49c2tqIkKLDKyYqCkMoQmniNx0ruDCDmq0kbR--sGl',
+                            imagerySet: 'Aerial',
+                            maxZoom: 19
+                        }),
+                        zIndex: 0
                     });
                 }
             }

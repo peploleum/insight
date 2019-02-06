@@ -40,6 +40,7 @@ import {
     faImage,
     faList,
     faMagic,
+    faMapMarkedAlt,
     faPencilAlt,
     faPlug,
     faPlus,
@@ -141,5 +142,6 @@ library.add(faDrawPolygon);
 library.add(faGripVertical);
 library.add(faHandPaper);
 library.add(faPencilAlt);
+library.add(faMapMarkedAlt);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

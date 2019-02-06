@@ -25,7 +25,7 @@ export class MapService {
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(new FigureStyle('Circle', 2, 10, 'red', 'blue'));
-    mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject([new MapLayer(UUID(), 'DrawingLayer1', 'DESSIN', true)]);
+    mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {
@@ -123,6 +123,30 @@ export class MapService {
         });
     }
 }
+
+export const DEFAULT_MAP_LAYERS: MapLayer[] = [
+    {
+        layerId: UUID(),
+        layerName: 'DrawingLayer1',
+        layerType: 'DESSIN',
+        selected: true,
+        layerStatus: 'NEW'
+    },
+    {
+        layerId: UUID(),
+        layerName: 'OSM',
+        layerType: 'SOURCE',
+        selected: true,
+        layerStatus: 'NEW'
+    },
+    {
+        layerId: UUID(),
+        layerName: 'BingMaps',
+        layerType: 'SOURCE',
+        selected: false,
+        layerStatus: 'NEW'
+    }
+];
 
 export const GEO_JSON_OBJECT = {
     type: 'FeatureCollection',

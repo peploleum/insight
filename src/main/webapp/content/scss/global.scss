@@ -470,29 +470,45 @@ Dessin custom CSS
 }
 
 .drawing-layers {
-    flex-grow: 1.8;
+    flex: 1;
 }
 
-#layers-list {
+.layers-list {
     font-size: 1rem;
-    width: 90%;
+    width: 100%;
+
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
     overflow: auto;
-    max-height: 75%;
     padding: 0.5rem;
-    margin: auto;
 }
 
-#layers-list > span {
+.layers-list > div {
     padding: 0.4rem;
-    cursor: pointer;
     background-color: #7e899a;
+
+    display: flex;
+    align-items: center;
+    margin-bottom: 1px;
 }
 
-#layers-list > span:hover {
+.layers-list > div:hover {
     background-color: #7b8c9d;
+}
+
+.layers-list > div > span {
+    padding: 0 0.2rem;
+}
+
+.layers-list > div > span:first-child {
+    flex: 1;
+}
+
+.layers-list > div > span:last-child,
+.layers-list > div > span:nth-child(2) {
+    cursor: pointer;
 }
 
 .tools {
@@ -505,8 +521,7 @@ Dessin custom CSS
 }
 
 .tools > span {
-    flex: 1;
-    padding: 0.6rem;
+    padding: 0.3rem 1.5rem;
     text-align: center;
     cursor: pointer;
 }
@@ -515,33 +530,21 @@ Dessin custom CSS
     background-color: #7b8c9d;
 }
 
-#drawing-style {
+.drawing-params {
+}
+
+.drawing-style {
     font-size: 1rem;
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-}
-
-#drawing-style > input {
-    width: 90%;
-    margin: 2px;
-}
-
-.drawing-forms {
-    flex-grow: 0.6;
-}
-
-.drawing-colors {
-    flex-grow: 0.6;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
 }
 
 .drawing-input-container {
-    width: 90%;
+    flex: 1 0 50%;
+    padding: 0.3rem;
     margin-bottom: 2px;
 }
 
