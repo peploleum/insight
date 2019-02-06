@@ -11,7 +11,6 @@
                 [icon]="'plus'"></fa-icon></span>
             <span title="Move layer up"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
             <span title="Move layer down"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
-            <span title="Remove layer"><fa-icon [icon]="'times'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
         <div class="layers-list">
@@ -19,7 +18,7 @@
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"></fa-icon> {{layer.layerName}}</span>
                 <span (click)="onLayerAction('SELECTION_CHANGED', layer)"><fa-icon
                     [icon]="layer.selected ? 'check-circle' : 'circle'"></fa-icon></span>
-                <span><fa-icon [icon]="'times'"></fa-icon></span>
+                <span *ngIf="layer.layerType !== 'SOURCE'" (click)="onLayerAction('REMOVE_DESSIN_LAYER', layer)"><fa-icon [icon]="'times'"></fa-icon></span>
             </div>
         </div>
     </div>

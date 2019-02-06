@@ -4,7 +4,6 @@ import Map from 'ol/map';
 import View from 'ol/view';
 import VectorSource from 'ol/source/vector';
 import VectorLayer from 'ol/layer/vector';
-import LayerGroup from 'ol/layer/group';
 import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
 import BingMaps from 'ol/source/bingmaps';
@@ -14,6 +13,8 @@ import SelectInteration from 'ol/interaction/select';
 import DrawInteraction from 'ol/interaction/draw';
 import SnapInteraction from 'ol/interaction/snap';
 import ModifyInteraction from 'ol/interaction/modify';
+import DragAndDropInteraction from 'ol/interaction/draganddrop';
+import KML from 'ol/format/kml';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -24,6 +25,7 @@ import Text from 'ol/style/text';
 import { FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
+import { UUID } from '../shared/util/insight-util';
 
 @Component({
     selector: 'jhi-map',
@@ -32,8 +34,6 @@ import { pairwise, startWith } from 'rxjs/internal/operators';
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource();
-    dessinSource: VectorSource = new VectorSource();
-    kmlSource: VectorSource = new VectorSource();
     featureLayer: VectorLayer;
     _map: Map;
 
@@ -41,6 +41,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     drawInteraction: DrawInteraction;
     snapInteraction: SnapInteraction;
     modifyInteraction: ModifyInteraction;
+    dragAndDropInteraction: DragAndDropInteraction;
 
     private circleImage = new Circle({
         radius: 13,
@@ -79,8 +80,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             style: (feature: Feature) => this.styleFunction(feature, true),
             multi: true
         });
-        this.modifyInteraction = new ModifyInteraction({
-            source: this.dessinSource
+        this.dragAndDropInteraction = new DragAndDropInteraction({
+            formatConstructors: [KML],
+            projection: 'EPSG:3857'
         });
     }
 
@@ -140,7 +142,23 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             window.dispatchEvent(new Event('resize'));
         });
         this._map.addInteraction(this.selectInteraction);
-        this._map.addInteraction(this.modifyInteraction);
+        this._map.addInteraction(this.dragAndDropInteraction);
+
+        this.dragAndDropInteraction.on('addfeatures', (event: DragAndDropInteraction.Event) => {
+            const newMapLayer: MapLayer = new MapLayer(UUID(), 'KML', 'KML', true);
+            newMapLayer.layerStatus = 'UPDATE'; // Pour éviter de l'ajouter une deuxième fois
+            const vectorSource = new VectorSource({
+                features: event.features
+            });
+            const newVectorLayer: VectorLayer = new VectorLayer({
+                source: vectorSource,
+                zIndex: 1
+            });
+            newVectorLayer.set('id', newMapLayer.layerId);
+            this._map.addLayer(newVectorLayer);
+            this._map.getView().fit(vectorSource.getExtent());
+            this.ms.mapLayers.next(this.ms.mapLayers.getValue().concat(newMapLayer));
+        });
     }
 
     private initMapLayerListener() {
@@ -173,14 +191,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         addLayers.forEach(newLayer => {
             let newItem = null;
             if (newLayer.layerType === 'DESSIN') {
+                const vectorSource = new VectorSource({});
                 newItem = new VectorLayer({
-                    source: this.dessinSource,
+                    source: vectorSource,
                     style: (feature: Feature) => this.getDessinStyle(),
-                    zIndex: 1
-                });
-            } else if (newLayer.layerType === 'KML') {
-                newItem = new VectorLayer({
-                    source: this.kmlSource,
                     zIndex: 1
                 });
             } else if (newLayer.layerType === 'SOURCE') {
@@ -228,22 +242,41 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
+    getSelectedDessinSource(): VectorSource {
+        const selectedSource: VectorSource[] = [];
+        const layerIds: string[] = this.ms.mapLayers
+            .getValue()
+            .filter(layer => layer.layerType === 'DESSIN')
+            .map(layer => layer.layerId);
+        this._map.getLayers().forEach(layer => {
+            if (layer instanceof VectorLayer && layerIds.indexOf(layer.get('id')) !== -1) {
+                selectedSource.push((<VectorLayer>layer).getSource());
+            }
+        });
+        return selectedSource[0];
+    }
+
     addDrawInteraction() {
         this.drawInteraction = new DrawInteraction({
-            source: this.dessinSource,
+            source: this.getSelectedDessinSource(),
             type: this.getDessinStates().form === 'Rectangle' ? 'Circle' : this.getDessinStates().form,
             geometryFunction: this.getDessinStates().form === 'Rectangle' ? DrawInteraction.createBox() : null
         });
         this._map.addInteraction(this.drawInteraction);
         this.snapInteraction = new SnapInteraction({
-            source: this.dessinSource
+            source: this.getSelectedDessinSource()
         });
         this._map.addInteraction(this.snapInteraction);
+        this.modifyInteraction = new ModifyInteraction({
+            source: this.getSelectedDessinSource()
+        });
+        this._map.addInteraction(this.modifyInteraction);
     }
 
     removeDrawInteraction() {
         this._map.removeInteraction(this.drawInteraction);
         this._map.removeInteraction(this.snapInteraction);
+        this._map.removeInteraction(this.modifyInteraction);
     }
 
     getDessinStates(): FigureStyle {
