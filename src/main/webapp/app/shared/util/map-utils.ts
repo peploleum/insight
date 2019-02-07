@@ -39,13 +39,15 @@ export class MapLayer {
     layerId: string;
     layerName: string;
     layerType: MapLayerType;
-    selected: boolean;
+    visible: boolean;
+    selected?: boolean;
     layerStatus: MapLayerStatus;
 
-    constructor(layerId: string, layerName: string, layerType: MapLayerType, selected: boolean) {
+    constructor(layerId: string, layerName: string, layerType: MapLayerType, visible: boolean, selected?: boolean) {
         this.layerId = layerId;
         this.layerName = layerName;
         this.layerType = layerType;
+        this.visible = visible;
         this.selected = selected;
         this.layerStatus = 'NEW';
     }

@@ -70,17 +70,40 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
         const currentLayerList: MapLayer[] = this.layers();
         currentLayerList.forEach(layer => (layer.layerStatus = 'UPDATE'));
         switch (action) {
-            case 'SELECTION_CHANGED':
+            case 'VISIBILITY_CHANGED':
                 if (targetLayer) {
-                    targetLayer.selected = !targetLayer.selected;
+                    targetLayer.visible = !targetLayer.visible;
                 }
                 break;
             case 'ADD_DESSIN_LAYER':
-                currentLayerList.push(new MapLayer(UUID(), 'LayerDessin', 'DESSIN', true));
+                currentLayerList.push(new MapLayer(UUID(), 'LayerDessin', 'DESSIN', true, false));
+                break;
+            case 'DESSIN_SELECTION_CHANGED':
+                if (targetLayer) {
+                    if (targetLayer.layerType !== 'DESSIN') {
+                        return;
+                    }
+                    // Réinitialise la liste à selected = false
+                    currentLayerList.filter(layer => layer.layerType === 'DESSIN').forEach(layer => (layer.selected = false));
+                    // Sélectionne le bon layer
+                    targetLayer.selected = true;
+                }
                 break;
             case 'REMOVE_DESSIN_LAYER':
                 if (targetLayer) {
+                    const length = currentLayerList.filter(layer => layer.layerType === 'DESSIN').length;
+                    // On empêche la suppression lorsqu'il ne reste que 1 layer
+                    if (length === 1) {
+                        return;
+                    }
+                    const isSelected = targetLayer.selected;
+                    if (isSelected) {
+                        currentLayerList.filter(layer => layer.layerType === 'DESSIN').forEach(layer => (layer.selected = false));
+                    }
                     currentLayerList.splice(currentLayerList.indexOf(targetLayer), 1);
+                    if (isSelected) {
+                        currentLayerList.find(layer => layer.layerType === 'DESSIN').selected = true;
+                    }
                 }
                 break;
             case 'REMOVE_KML_LAYER':

@@ -24,7 +24,9 @@ export class MapService {
     outsideFeatureSelector: Subject<string[]> = new Subject();
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
-    dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(new FigureStyle('Circle', 2, 10, 'red', 'blue'));
+    dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
+        new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
+    );
     mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
 
     static getImageIconUrl(objectType: string): string {
@@ -129,6 +131,7 @@ export const DEFAULT_MAP_LAYERS: MapLayer[] = [
         layerId: UUID(),
         layerName: 'DrawingLayer1',
         layerType: 'DESSIN',
+        visible: true,
         selected: true,
         layerStatus: 'NEW'
     },
@@ -136,14 +139,14 @@ export const DEFAULT_MAP_LAYERS: MapLayer[] = [
         layerId: UUID(),
         layerName: 'OSM',
         layerType: 'SOURCE',
-        selected: true,
+        visible: true,
         layerStatus: 'NEW'
     },
     {
         layerId: UUID(),
         layerName: 'BingMaps',
         layerType: 'SOURCE',
-        selected: false,
+        visible: false,
         layerStatus: 'NEW'
     }
 ];

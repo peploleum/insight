@@ -154,6 +154,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 source: vectorSource,
                 zIndex: 1
             });
+            vectorSource.set('id', newMapLayer.layerId);
             newVectorLayer.set('id', newMapLayer.layerId);
             this._map.addLayer(newVectorLayer);
             this._map.getView().fit(vectorSource.getExtent());
@@ -172,26 +173,43 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     updateLayers(layers: MapLayer[]) {
-        const deleteLayerIds: string[] = layers.filter(layer => layer.layerStatus === 'DELETE').map(layer => layer.layerId);
-        const updateLayers = {};
+        const layerIds: string[] = layers.map(layer => layer.layerId);
+        const updateLayers = {}; // Transformation en object pour permettre la recherche par key/value
         layers.filter(layer => layer.layerStatus === 'UPDATE').forEach(layer => (updateLayers[layer.layerId] = layer));
 
-        const deleteLayer = [];
+        // UPDATE
         this._map.getLayers().forEach(layer => {
             const layerId: string = layer.get('id');
-            if (deleteLayerIds.indexOf(layerId) !== -1) {
+            if (updateLayers[layerId]) {
+                const mapLayer: MapLayer = updateLayers[layerId];
+                layer.setVisible(mapLayer.visible);
+
+                // Si changement de sélection du layer de dessin
+                if (this.getMapStates().DESSIN_ENABLED && mapLayer.layerType === 'DESSIN' && mapLayer.selected) {
+                    if (this.drawInteraction.get('id') !== mapLayer.layerId) {
+                        this.removeDrawInteraction();
+                        this.addDrawInteraction();
+                    }
+                }
+            }
+        });
+
+        // DELETE
+        const deleteLayer = [];
+        this._map.getLayers().forEach(layer => {
+            if (layer.get('id') && layerIds.indexOf(layer.get('id')) === -1) {
                 deleteLayer.push(layer);
-            } else if (updateLayers[layerId]) {
-                layer.setVisible((<MapLayer>updateLayers[layerId]).selected);
             }
         });
         deleteLayer.forEach(layer => this._map.removeLayer(layer));
 
+        // NEW
         const addLayers: MapLayer[] = layers.filter(layer => layer.layerStatus === 'NEW');
         addLayers.forEach(newLayer => {
             let newItem = null;
             if (newLayer.layerType === 'DESSIN') {
-                const vectorSource = new VectorSource({});
+                const vectorSource = new VectorSource();
+                vectorSource.set('id', newLayer.layerId);
                 newItem = new VectorLayer({
                     source: vectorSource,
                     style: (feature: Feature) => this.getDessinStyle(),
@@ -216,7 +234,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
             if (newItem !== null) {
-                newItem.setVisible(newLayer.selected);
+                newItem.setVisible(newLayer.visible);
                 newItem.set('id', newLayer.layerId);
                 this._map.addLayer(newItem);
             }
@@ -243,32 +261,35 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getSelectedDessinSource(): VectorSource {
-        const selectedSource: VectorSource[] = [];
-        const layerIds: string[] = this.ms.mapLayers
-            .getValue()
-            .filter(layer => layer.layerType === 'DESSIN')
-            .map(layer => layer.layerId);
-        this._map.getLayers().forEach(layer => {
-            if (layer instanceof VectorLayer && layerIds.indexOf(layer.get('id')) !== -1) {
-                selectedSource.push((<VectorLayer>layer).getSource());
+        const selectedLayer: MapLayer = this.ms.mapLayers.getValue().find(layer => layer.layerType === 'DESSIN' && layer.selected);
+        if (selectedLayer == null || typeof selectedLayer === 'undefined') {
+            return null;
+        }
+        for (const layer of this._map.getLayers().getArray()) {
+            if (layer instanceof VectorLayer && layer.get('id') === selectedLayer.layerId) {
+                return (<VectorLayer>layer).getSource();
             }
-        });
-        return selectedSource[0];
+        }
     }
 
     addDrawInteraction() {
+        const currentDessinSrc: VectorSource = this.getSelectedDessinSource();
+        if (currentDessinSrc == null) {
+            return;
+        }
         this.drawInteraction = new DrawInteraction({
-            source: this.getSelectedDessinSource(),
+            source: currentDessinSrc,
             type: this.getDessinStates().form === 'Rectangle' ? 'Circle' : this.getDessinStates().form,
             geometryFunction: this.getDessinStates().form === 'Rectangle' ? DrawInteraction.createBox() : null
         });
+        this.drawInteraction.set('id', currentDessinSrc.get('id'));
         this._map.addInteraction(this.drawInteraction);
         this.snapInteraction = new SnapInteraction({
-            source: this.getSelectedDessinSource()
+            source: currentDessinSrc
         });
         this._map.addInteraction(this.snapInteraction);
         this.modifyInteraction = new ModifyInteraction({
-            source: this.getSelectedDessinSource()
+            source: currentDessinSrc
         });
         this._map.addInteraction(this.modifyInteraction);
     }
