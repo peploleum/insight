@@ -1,0 +1,22 @@
+<div>
+    <div class="jumbotron bg-light">
+        <h2 id="page-heading">
+            <span>Data Analysis</span>
+        </h2>
+    </div>
+    <jhi-alert></jhi-alert>
+    <div class="row bg-light m-lg-1" *ngIf="analysisState.isEditing && mappingInfo.length > 0">
+        <div class="col-sm-12">
+            <ins-dashboard-create [mappingInfo]="mappingInfo"
+                                  (dashboardEmitter)="postDashboard($event)"></ins-dashboard-create>
+        </div>
+    </div>
+    <div class="row bg-light m-lg-1" *ngIf="dashboardIds && !analysisState.isEditing">
+        <div class="col-sm-12">
+            <div *ngFor="let db of dashboardIds | listFilterPipe:'selected':true;" class="embed-responsive embed-responsive-21by9">
+                <iframe class="embed-responsive-item"
+                        [src]="db.dashboardSafeUrl"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

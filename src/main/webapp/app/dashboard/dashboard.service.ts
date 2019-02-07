@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
-import { IEntityMappingInfo, IKibanaDashboardGenerationParameters } from './kibana-object.model';
+import {
+    EntityMappingInfo,
+    IEntityMappingInfo,
+    IKibanaDashboardGenerationParameters,
+    KibanaDashboardReference
+} from './kibana-object.model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AnalysisState } from '../shared/model/analysis.model';
 
 type EntityResponseType = HttpResponse<string[]>;
 
@@ -17,7 +24,11 @@ export class DashboardService {
 
     kibanaUrl: string;
 
-    constructor(private http: HttpClient) {
+    dashboards: BehaviorSubject<KibanaDashboardReference[]> = new BehaviorSubject([]);
+    mappingInfos: BehaviorSubject<EntityMappingInfo[]> = new BehaviorSubject([]);
+    analysisState: BehaviorSubject<AnalysisState> = new BehaviorSubject(new AnalysisState(false));
+
+    constructor(private http: HttpClient, private ds: DomSanitizer) {
         if (DEBUG_INFO_ENABLED) {
             this.kibanaUrl = 'http://' + window.location.hostname + ':5601/';
         } else {
@@ -47,5 +58,14 @@ export class DashboardService {
      * */
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters): Observable<EntityResponseType> {
         return this.http.post<string[]>(this.resourceUrl + this._postDashboard, dashboardParam, { observe: 'response' });
+    }
+
+    onNewDashboardIdReceived(idList: string[]) {
+        const dashboardIds: KibanaDashboardReference[] = idList.map(id => {
+            const dbRef = new KibanaDashboardReference(id);
+            dbRef.dashboardSafeUrl = dbRef.getSafeResourceUrl(this.ds, this.kibanaUrl);
+            return dbRef;
+        });
+        this.dashboards.next(dashboardIds);
     }
 }

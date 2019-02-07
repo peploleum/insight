@@ -20,6 +20,7 @@ import {
     faBullseye,
     faCalendarAlt,
     faChartArea,
+    faChartPie,
     faCheck,
     faCheckCircle,
     faCircle,
@@ -143,5 +144,6 @@ library.add(faGripVertical);
 library.add(faHandPaper);
 library.add(faPencilAlt);
 library.add(faMapMarkedAlt);
+library.add(faChartPie);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

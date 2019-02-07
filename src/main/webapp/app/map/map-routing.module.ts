@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MapComponent } from './map.component';
-import { SideComponent } from './side/side.component';
 
 const routes: Routes = [
     {
@@ -10,11 +9,6 @@ const routes: Routes = [
         data: {
             pageTitle: 'map.title'
         }
-    },
-    {
-        path: 'ins-map-side-panel',
-        component: SideComponent,
-        outlet: 'side'
     }
 ];
 

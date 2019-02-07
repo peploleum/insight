@@ -23,6 +23,7 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { MapModule } from 'app/map/map.module';
 import { SourcesModule } from 'app/sources/sources.module';
 import { NetworkModule } from 'app/network/network.module';
+import { SideModule } from './side/side.module';
 
 @NgModule({
     imports: [
@@ -44,6 +45,7 @@ import { NetworkModule } from 'app/network/network.module';
         InsightEntityModule,
         DashboardModule,
         MapModule,
+        SideModule,
         SourcesModule,
         NetworkModule
     ],

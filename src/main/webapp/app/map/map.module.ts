@@ -7,12 +7,12 @@ import { EventThreadComponent } from './side/event-thread.component';
 import { InsightSharedModule } from 'app/shared';
 import { MapMenuComponent } from './map-menu.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SideComponent } from './side/side.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { DessinComponent } from './side/dessin.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
-    declarations: [MapComponent, SideComponent, EventThreadComponent, DessinComponent, MapMenuComponent]
+    declarations: [MapComponent, EventThreadComponent, DessinComponent, MapMenuComponent],
+    exports: [EventThreadComponent, DessinComponent]
 })
 export class MapModule {}

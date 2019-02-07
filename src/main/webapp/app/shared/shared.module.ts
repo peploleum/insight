@@ -6,10 +6,18 @@ import { HasAnyAuthorityDirective, InsightSharedCommonModule, InsightSharedLibsM
 import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
 import { SideButtonsComponent } from './side/side-buttons.component';
+import { ListFilterPipe } from './util/list-filter.pipe';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule],
-    declarations: [JhiLoginModalComponent, HasAnyAuthorityDirective, PaginationDirective, SideButtonsComponent, StringTruncatePipe],
+    declarations: [
+        JhiLoginModalComponent,
+        HasAnyAuthorityDirective,
+        PaginationDirective,
+        SideButtonsComponent,
+        StringTruncatePipe,
+        ListFilterPipe
+    ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent],
     exports: [
@@ -18,7 +26,8 @@ import { SideButtonsComponent } from './side/side-buttons.component';
         HasAnyAuthorityDirective,
         PaginationDirective,
         SideButtonsComponent,
-        StringTruncatePipe
+        StringTruncatePipe,
+        ListFilterPipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
