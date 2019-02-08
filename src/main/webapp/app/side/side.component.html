@@ -1,11 +1,11 @@
 <div [hidden]="isHidden" class="side">
-    <div *ngIf="target === 'map'">
+    <div *ngIf="target === 'map'" class="h-100">
         <ins-event-thread [hidden]="!_showEventThread"></ins-event-thread>
         <ins-dessin [hidden]="_showEventThread"></ins-dessin>
     </div>
-    <div *ngIf="target === 'dashboard'">
+    <div *ngIf="target === 'dashboard'" class="h-100">
         <ins-dashboard-manager></ins-dashboard-manager>
     </div>
 </div>
-<ins-side-buttons [isClosed]="isHidden" [_showEventThread]="_showEventThread" (closeEmitter)="displaySidePannel($event)"
+<ins-side-buttons [isClosed]="isHidden" [_showEventThread]="_showEventThread" [target]="target" (closeEmitter)="displaySidePannel($event)"
                   (showEventThreadEmitter)="showEventThread($event)"></ins-side-buttons>

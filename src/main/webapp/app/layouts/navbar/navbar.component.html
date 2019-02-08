@@ -43,7 +43,7 @@
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" [routerLink]="[{outlets: { primary: ['dashboard'], side: null }}]"
+                <a class="nav-link" [routerLink]="[{outlets: { primary: ['dashboard'], side: ['ins-dashboard-side-panel'] }}]"
                    (click)="collapseNavbar()">
                     <span>
                         <fa-icon [icon]="'chart-area'"></fa-icon>

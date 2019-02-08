@@ -12,6 +12,7 @@ import { DashboardContainerComponent } from './dashboard-container.component';
 @NgModule({
     declarations: [DashboardManagerComponent, DashboardCreateComponent, DashboardPanelCreateComponent, DashboardContainerComponent],
     imports: [InsightSharedModule, CommonModule, DashboardRoutingModule, ReactiveFormsModule],
+    exports: [DashboardManagerComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardModule {}

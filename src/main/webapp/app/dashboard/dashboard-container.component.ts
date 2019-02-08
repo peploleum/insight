@@ -38,7 +38,7 @@ export class DashboardContainerComponent implements OnInit {
                 this.dbs.onNewDashboardIdReceived(res.body);
             },
             error => {
-                this.onError('PostDefaultDashboard Failed');
+                console.log('PostDefaultDashboard Failed');
             }
         );
     }

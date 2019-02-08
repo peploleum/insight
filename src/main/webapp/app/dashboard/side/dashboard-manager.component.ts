@@ -3,6 +3,7 @@ import { EntityMappingInfo, IEntityMappingInfo, KibanaDashboardReference } from 
 import { JhiAlertService } from 'ng-jhipster';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
+import { AnalysisState } from '../../shared/model/analysis.model';
 
 @Component({
     selector: 'ins-dashboard-manager',
@@ -39,7 +40,11 @@ export class DashboardManagerComponent implements OnInit {
         this.dbs.dashboards.next(dbs);
     }
 
-    createDashboard() {}
+    createDashboard() {
+        const currentState: AnalysisState = this.dbs.analysisState.getValue();
+        currentState.isEditing = !currentState.isEditing;
+        this.dbs.analysisState.next(currentState);
+    }
 
     getDashboardIds() {
         this.dbs.getDashboardIds().subscribe(

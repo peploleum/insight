@@ -12,6 +12,8 @@ export class SideButtonsComponent implements OnInit {
     isClosed: boolean;
     @Input()
     _showEventThread: boolean;
+    @Input()
+    target: string;
 
     @Output()
     closeEmitter: EventEmitter<boolean> = new EventEmitter();
