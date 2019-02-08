@@ -307,23 +307,42 @@ Tag and push
 
     ./kafkatool.sh
 
-    L'installeur se lance, faite la config par d�faut.
+    Installer launches
 
-### Param�trage IP, DNS
+### Setting up IP, DNS
 
-    Ouvrir le fichier hosts dans /etc sur le noeud master de kubernetes
+    edit /etc/ sur le noeud master de kubernetes
 
-      Exemple : 192.168.2.88  insight-kafka.insight.svc.cluster.local  insight-kafka
+    example : 192.168.2.88  insight-kafka.insight.svc.cluster.local  insight-kafka
 
+### Lanching kafka tools
 
-### Lancer dans la VM ubuntu avec ihm l'outil kafkatool
-
-    Cr�er la connection avec les param�tres suivants :
+Create connection with parameters:
 
         Cluster name : kafka
 
         Kafka Cluster Version : 1.0
 
-        ip : 192.168.2.89(IP de zookeeper)
+        ip : 192.168.2.89(zookeeper)
 
-        Port 2181 (Par d�faut)
+        Port 2181 (default)
+
+## Links
+
+[Kubernetes dashboard](https://10.65.34.150:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/pod?namespace=insight)
+
+[Apache NiFi endpoint](http://10.65.34.149:32579/nifi/)
+
+[Insight endpoint](http://10.65.34.149:32539/#/)
+
+[Insight console](<http://10.65.34.149:32334/app/kibana#/dashboards?_g=()>)
+
+[Insight dashboards](<http://10.65.34.149:30100/app/kibana#/home?_g=()>)
+
+[Graphy endpoint](http://10.65.34.150:30200/api/traversal/mock/bidou)
+
+[ftp share](ftp://10.65.34.238/Partage/)
+
+[Georef endpoint](<http://10.65.34.149:31000/app/kibana#?_g=()>)
+
+[Insight index endpoint](http://10.65.34.149:30201/_cat/indices?v)
