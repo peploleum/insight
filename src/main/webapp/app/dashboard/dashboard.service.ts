@@ -11,7 +11,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalysisState } from '../shared/model/analysis.model';
 
-type EntityResponseType = HttpResponse<string[]>;
+type EntityResponseType = HttpResponse<KibanaDashboardReference[]>;
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
@@ -40,8 +40,8 @@ export class DashboardService {
         return this.http.get<IEntityMappingInfo[]>(`${this.resourceUrl + this._getEntitiesSchema}`, { observe: 'response' });
     }
 
-    getDashboardIds(): Observable<EntityResponseType> {
-        return this.http.get<string[]>(`${this.resourceUrl + this._getDashboardId}`, { observe: 'response' });
+    getDashboardRefs(): Observable<EntityResponseType> {
+        return this.http.get<KibanaDashboardReference[]>(`${this.resourceUrl + this._getDashboardId}`, { observe: 'response' });
     }
 
     regenerateDashboard(): Observable<HttpResponse<any>> {
@@ -57,18 +57,22 @@ export class DashboardService {
      * @Return Observable<EntityResponseType> contenant String[], l'id du dashboard créé
      * */
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters): Observable<EntityResponseType> {
-        return this.http.post<string[]>(this.resourceUrl + this._postDashboard, dashboardParam, { observe: 'response' });
+        return this.http.post<KibanaDashboardReference[]>(this.resourceUrl + this._postDashboard, dashboardParam, { observe: 'response' });
     }
 
-    onNewDashboardIdReceived(idList: string[]) {
-        const dashboardIds: KibanaDashboardReference[] = idList.map(id => {
-            const dbRef = new KibanaDashboardReference(id);
+    onNewDashboardIdReceived(kdr: KibanaDashboardReference[]) {
+        // EntityResponseType avec un dto comportant une fonction ne permet pas de mapper correctement
+        // Obliger de recréer les KibanaDashboardReference
+        const newRefs: KibanaDashboardReference[] = kdr.map(
+            (obj: KibanaDashboardReference) => new KibanaDashboardReference(obj.idObject, obj.title)
+        );
+        newRefs.forEach(dbRef => {
             dbRef.dashboardSafeUrl = dbRef.getSafeResourceUrl(this.ds, this.kibanaUrl);
             return dbRef;
         });
-        if (dashboardIds && dashboardIds.length) {
-            dashboardIds[0].selected = true;
+        if (newRefs && newRefs.length) {
+            newRefs[0].selected = true;
         }
-        this.dashboards.next(dashboardIds);
+        this.dashboards.next(newRefs);
     }
 }

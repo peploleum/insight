@@ -13,7 +13,7 @@
             <span title="Move layer down"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
-        <div class="layers-list">
+        <div class="side-list-container" style="height: 85%;">
             <div *ngFor="let layer of layerList;">
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"
                                [style.color]="layer.selected && layer.layerType === 'DESSIN' ? 'red' : 'inherit'"

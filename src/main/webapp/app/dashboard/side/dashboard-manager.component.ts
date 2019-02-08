@@ -5,6 +5,7 @@ import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
 import { AnalysisState } from '../../shared/model/analysis.model';
 import { Subscription } from 'rxjs/index';
+import { UUID } from '../../shared/util/insight-util';
 
 @Component({
     selector: 'ins-dashboard-manager',
@@ -31,7 +32,7 @@ export class DashboardManagerComponent implements OnInit, OnDestroy {
                 this.onError('PostDefaultDashboard Failed');
             }
         );
-        this.getDashboardIds();
+        this.getDashboardRefs();
     }
 
     ngOnDestroy() {
@@ -54,9 +55,9 @@ export class DashboardManagerComponent implements OnInit, OnDestroy {
         this.dbs.analysisState.next(currentState);
     }
 
-    getDashboardIds() {
-        this.dbs.getDashboardIds().subscribe(
-            (res: HttpResponse<string[]>) => {
+    getDashboardRefs() {
+        this.dbs.getDashboardRefs().subscribe(
+            (res: HttpResponse<KibanaDashboardReference[]>) => {
                 if (!res.body || res.body.length === 0) {
                     return;
                 }

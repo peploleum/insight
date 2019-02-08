@@ -1,41 +1,18 @@
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 export interface IKibanaObjectReference {
     idObject: string;
+    title: string;
 
     getSafeResourceUrl(ds: DomSanitizer, targetUrl: string): SafeResourceUrl;
 }
 
 export class KibanaDashboardReference implements IKibanaObjectReference {
-    private _filterParameters?: string[];
-    private _dashboardSafeUrl?: SafeResourceUrl;
-    private _selected?: boolean;
+    filterParameters?: string[];
+    dashboardSafeUrl?: SafeResourceUrl;
+    selected?: boolean;
 
-    constructor(public idObject: string) {}
-
-    get filterParameters(): string[] {
-        return this._filterParameters;
-    }
-
-    set filterParameters(value: string[]) {
-        this._filterParameters = value;
-    }
-
-    get dashboardSafeUrl(): SafeResourceUrl {
-        return this._dashboardSafeUrl;
-    }
-
-    set dashboardSafeUrl(value: SafeResourceUrl) {
-        this._dashboardSafeUrl = value;
-    }
-
-    get selected(): boolean {
-        return this._selected;
-    }
-
-    set selected(value: boolean) {
-        this._selected = value;
-    }
+    constructor(public idObject: string, public title: string) {}
 
     getSafeResourceUrl(ds: DomSanitizer, targetUrl: string): SafeResourceUrl {
         return ds.bypassSecurityTrustResourceUrl(targetUrl + 'app/kibana#/dashboard/' + this.idObject + '?embed=true&_g');

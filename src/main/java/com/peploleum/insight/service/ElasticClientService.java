@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peploleum.insight.domain.RawData;
 import com.peploleum.insight.domain.kibana.*;
+import com.peploleum.insight.service.dto.KibanaObjectReferenceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +43,13 @@ public class ElasticClientService {
     public ElasticClientService() {
     }
 
-    public List<String> getDashboardId() {
-        return this.kibanaDashboard.stream().map(ko -> ko.getId()).collect(Collectors.toList());
+    public List<KibanaObjectReferenceDTO> getDashboardRef() {
+        return this.kibanaDashboard.stream().map(ko -> {
+            KibanaObjectReferenceDTO dto = new KibanaObjectReferenceDTO();
+            dto.setIdObject(ko.getId());
+            dto.setTitle(ko.getAttributes().getTitle());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @EventListener(ApplicationReadyEvent.class)

@@ -3,6 +3,7 @@ package com.peploleum.insight.web.rest;
 import com.peploleum.insight.domain.kibana.EntityMappingInfo;
 import com.peploleum.insight.domain.kibana.KibanaDashboardGenerationParameters;
 import com.peploleum.insight.service.ElasticClientService;
+import com.peploleum.insight.service.dto.KibanaObjectReferenceDTO;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,13 @@ public class ElasticClientResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/post-dashboard")
-    public ResponseEntity<List<String>> createDashboard(@RequestBody KibanaDashboardGenerationParameters dashboardParameters) throws URISyntaxException {
+    public ResponseEntity<List<KibanaObjectReferenceDTO>> createDashboard(@RequestBody KibanaDashboardGenerationParameters dashboardParameters) throws URISyntaxException {
         log.debug("REST request to generate KibanaDashboardGenerationParameters : {}", dashboardParameters);
         this.esClientService.generateAndPostKibanaDashboard(dashboardParameters);
-        List<String> dashboardId = this.esClientService.getDashboardId();
+        List<KibanaObjectReferenceDTO> dashboardRefs = this.esClientService.getDashboardRef();
         return ResponseEntity.ok()
             .headers(HeaderUtil.createDashboardCreationAlert(dashboardParameters.getDashboardTitle()))
-            .body(dashboardId);
+            .body(dashboardRefs);
     }
 
     /**
@@ -53,14 +54,14 @@ public class ElasticClientResource {
     }
 
     /**
-     * GET getDashboardId
+     * GET getDashboardRef
      */
     @GetMapping("/get-dashboard-ids")
-    public ResponseEntity<List<String>> getDashboardId() {
-        log.debug("REST getDashboardId request");
+    public ResponseEntity<List<KibanaObjectReferenceDTO>> getDashboardRef() {
+        log.debug("REST getDashboardRef request");
         return ResponseEntity.ok()
             .headers(new HttpHeaders())
-            .body(this.esClientService.getDashboardId());
+            .body(this.esClientService.getDashboardRef());
     }
 
     /**

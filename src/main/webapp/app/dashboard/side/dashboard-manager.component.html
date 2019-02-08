@@ -12,10 +12,10 @@
                 [icon]="'times'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
-        <div class="layers-list">
+        <div class="side-list-container" style="height: 85%;">
             <div *ngFor="let db of dashboardIds;" (click)="onDashboardSelected(db.idObject)"
                  [ngClass]="{'selected': db.selected}">
-                <span><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.idObject}}</span>
+                <span><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.title}}</span>
                 <span><fa-icon [icon]="'times'"></fa-icon></span>
             </div>
         </div>

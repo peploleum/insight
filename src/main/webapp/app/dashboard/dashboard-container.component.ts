@@ -49,7 +49,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
             return;
         }
         this.dbs.postDashboard(dashboardParam).subscribe(
-            (res: HttpResponse<string[]>) => {
+            (res: HttpResponse<KibanaDashboardReference[]>) => {
                 console.log('PostDefaultDashboard Succeed');
                 if (!res.body || res.body.length === 0) {
                     return;
