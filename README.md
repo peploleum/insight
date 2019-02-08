@@ -356,3 +356,10 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiw
 -   get API key set consumer secret in NiFi gettwitter processor
 
 -   get Access token secret key set Access token secret in NiFi gettwitter processor
+
+## Syslog stream
+
+-   connect to rsyslogclient k8s container
+
+
+        cd /home && ./boucle.sh
