@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EntityMappingInfo, IEntityMappingInfo, KibanaDashboardReference } from 'app/dashboard/kibana-object.model';
 import { JhiAlertService } from 'ng-jhipster';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
 import { AnalysisState } from '../../shared/model/analysis.model';
+import { Subscription } from 'rxjs/index';
 
 @Component({
     selector: 'ins-dashboard-manager',
     templateUrl: './dashboard-manager.component.html',
     styles: [':host { width:100% }']
 })
-export class DashboardManagerComponent implements OnInit {
+export class DashboardManagerComponent implements OnInit, OnDestroy {
     dashboardIds: KibanaDashboardReference[];
+    dbsIdsSubscription: Subscription;
 
     constructor(private jhiAlertService: JhiAlertService, private dbs: DashboardService) {}
 
     ngOnInit() {
-        this.dbs.dashboards.subscribe(dbIds => {
+        this.dbsIdsSubscription = this.dbs.dashboards.subscribe(dbIds => {
             this.dashboardIds = dbIds;
         });
         this.dbs.getEntitiesSchema().subscribe(
@@ -32,6 +34,12 @@ export class DashboardManagerComponent implements OnInit {
         this.getDashboardIds();
     }
 
+    ngOnDestroy() {
+        if (this.dbsIdsSubscription) {
+            this.dbsIdsSubscription.unsubscribe();
+        }
+    }
+
     onDashboardSelected(idObject: string) {
         const dbs: KibanaDashboardReference[] = this.dbs.dashboards.getValue();
         dbs.forEach(db => {
@@ -42,7 +50,7 @@ export class DashboardManagerComponent implements OnInit {
 
     createDashboard() {
         const currentState: AnalysisState = this.dbs.analysisState.getValue();
-        currentState.isEditing = !currentState.isEditing;
+        currentState.isEditing = true;
         this.dbs.analysisState.next(currentState);
     }
 

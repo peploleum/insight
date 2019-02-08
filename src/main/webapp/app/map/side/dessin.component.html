@@ -1,11 +1,11 @@
-<div class="h-100 w-100 dessin" [formGroup]="dessinForm">
+<div class="h-100 w-100 side-container" [formGroup]="dessinForm">
     <div class="side-title">
         <h4>
             <fa-icon [icon]="'pencil-alt'"></fa-icon>
             <b> Dessin</b>
         </h4>
     </div>
-    <div class="drawing-layers drawing-element">
+    <div class="side-main side-element drawing-layers">
         <div class="tools">
             <span title="Add layer" (click)="onLayerAction('ADD_DESSIN_LAYER')"><fa-icon
                 [icon]="'plus'"></fa-icon></span>
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="drawing-params drawing-element">
+    <div class="side-secondary side-element">
         <div class="tools">
             <span title="Line" (click)="onFormSelected('LineString')"
                   [ngClass]="{'selected': (currentStyle.form === 'LineString')}"><fa-icon

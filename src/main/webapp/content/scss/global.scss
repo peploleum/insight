@@ -347,7 +347,7 @@ Custom network css
 }
 
 .selected {
-    background-color: #4dff4d;
+    background-color: #4dff4d !important;
 }
 
 .selected:hover {
@@ -457,11 +457,7 @@ SidePannel custom CSS
     border-right: none;
 }
 
-/* ==========================================================================
-Dessin custom CSS
-========================================================================== */
-
-.dessin {
+.side-container {
     font-size: 1.2rem;
     display: flex;
     flex-direction: column;
@@ -469,11 +465,45 @@ Dessin custom CSS
     color: white;
 }
 
-.drawing-layers {
+.side-main {
     flex: 1;
-    max-height: 70%;
     display: flex;
     flex-direction: column;
+}
+
+.tools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    padding-bottom: 0.2rem;
+}
+
+.tools > span {
+    padding: 0.3rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tools > span:hover {
+    background-color: #7b8c9d;
+}
+
+.side-secondary {
+}
+
+.side-element {
+    border-bottom: 1px solid;
+    padding: 0.3rem;
+}
+
+/* ==========================================================================
+Dessin custom CSS
+========================================================================== */
+
+.drawing-layers {
+    max-height: 70%;
 }
 
 .layers-list {
@@ -517,28 +547,6 @@ Dessin custom CSS
     cursor: pointer;
 }
 
-.tools {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-
-    padding-bottom: 0.2rem;
-}
-
-.tools > span {
-    padding: 0.3rem 1.5rem;
-    text-align: center;
-    cursor: pointer;
-}
-
-.tools > span:hover {
-    background-color: #7b8c9d;
-}
-
-.drawing-params {
-}
-
 .drawing-style {
     font-size: 1rem;
     width: 100%;
@@ -560,9 +568,4 @@ Dessin custom CSS
 
 .drawing-input-container > label {
     margin-bottom: 0 !important;
-}
-
-.drawing-element {
-    border-bottom: 1px solid;
-    padding: 0.3rem;
 }

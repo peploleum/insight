@@ -66,6 +66,9 @@ export class DashboardService {
             dbRef.dashboardSafeUrl = dbRef.getSafeResourceUrl(this.ds, this.kibanaUrl);
             return dbRef;
         });
+        if (dashboardIds && dashboardIds.length) {
+            dashboardIds[0].selected = true;
+        }
         this.dashboards.next(dashboardIds);
     }
 }

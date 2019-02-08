@@ -1,28 +1,47 @@
 /**
  * Created by gFolgoas on 07/02/2019.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EntityMappingInfo, IKibanaDashboardGenerationParameters, KibanaDashboardReference } from 'app/dashboard/kibana-object.model';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
 import { AnalysisState } from '../shared/model/analysis.model';
+import { Subscription } from 'rxjs/index';
 
 @Component({
     selector: 'ins-dashboard-container',
     templateUrl: './dashboard-container.component.html',
     styles: [':host { width:100% }']
 })
-export class DashboardContainerComponent implements OnInit {
-    dashboardIds: KibanaDashboardReference[] = [];
+export class DashboardContainerComponent implements OnInit, OnDestroy {
+    dashboardSelected: KibanaDashboardReference;
     mappingInfo: EntityMappingInfo[] = [];
     analysisState: AnalysisState;
+
+    dbsIdsSubscription: Subscription;
+    mappingInfosSubscription: Subscription;
+    analysisStateSubscription: Subscription;
 
     constructor(private dbs: DashboardService) {}
 
     ngOnInit() {
-        this.dbs.dashboards.subscribe(dbs => (this.dashboardIds = dbs));
-        this.dbs.mappingInfos.subscribe(maps => (this.mappingInfo = maps));
-        this.dbs.analysisState.subscribe(state => (this.analysisState = state));
+        this.dbsIdsSubscription = this.dbs.dashboards.subscribe(
+            (dbs: KibanaDashboardReference[]) => (this.dashboardSelected = dbs.find(db => db.selected))
+        );
+        this.mappingInfosSubscription = this.dbs.mappingInfos.subscribe(maps => (this.mappingInfo = maps));
+        this.analysisStateSubscription = this.dbs.analysisState.subscribe(state => (this.analysisState = state));
+    }
+
+    ngOnDestroy() {
+        if (this.dbsIdsSubscription) {
+            this.dbsIdsSubscription.unsubscribe();
+        }
+        if (this.mappingInfosSubscription) {
+            this.mappingInfosSubscription.unsubscribe();
+        }
+        if (this.analysisStateSubscription) {
+            this.analysisStateSubscription.unsubscribe();
+        }
     }
 
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters) {
@@ -36,6 +55,9 @@ export class DashboardContainerComponent implements OnInit {
                     return;
                 }
                 this.dbs.onNewDashboardIdReceived(res.body);
+                const currentState: AnalysisState = this.dbs.analysisState.getValue();
+                currentState.isEditing = false;
+                this.dbs.analysisState.next(currentState);
             },
             error => {
                 console.log('PostDefaultDashboard Failed');

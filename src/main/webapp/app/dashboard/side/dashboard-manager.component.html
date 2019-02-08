@@ -1,19 +1,21 @@
-<div class="h-100 w-100 dessin">
+<div class="h-100 w-100 side-container">
     <div class="side-title">
         <h4>
             <fa-icon [icon]="'chart-area'"></fa-icon>
             <b> Analysis</b>
         </h4>
     </div>
-    <div class="drawing-layers drawing-element">
+    <div class="side-main side-element">
         <div class="tools">
             <span title="Créer un dashboard" (click)="createDashboard()"><fa-icon [icon]="'plus'"></fa-icon></span>
-            <span title="Supprimer tous les dashboards" (click)="deleteAllDashboard()"><fa-icon [icon]="'times'"></fa-icon></span>
+            <span title="Supprimer tous les dashboards" (click)="deleteAllDashboard()"><fa-icon
+                [icon]="'times'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
         <div class="layers-list">
-            <div *ngFor="let db of dashboardIds;" (click)="onDashboardSelected(db.idObject)">
-                <span><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.dashboardSafeUrl}}</span>
+            <div *ngFor="let db of dashboardIds;" (click)="onDashboardSelected(db.idObject)"
+                 [ngClass]="{'selected': db.selected}">
+                <span><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.idObject}}</span>
                 <span><fa-icon [icon]="'times'"></fa-icon></span>
             </div>
         </div>
