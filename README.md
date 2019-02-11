@@ -333,17 +333,17 @@ Create connection with parameters:
 
 [Apache NiFi endpoint](http://10.65.34.149:32579/nifi/)
 
-[Insight endpoint](http://10.65.34.149:32539/#/)
+[Insight endpoint](http://10.65.34.149:30603/#/)
 
-[Insight console](http://10.65.34.149:32334/app/kibana#/dashboards?_g=())
+[Insight console](<http://10.65.34.149:32334/app/kibana#/dashboards?_g=()>)
 
-[Insight dashboards](http://10.65.34.149:30100/app/kibana#/home?_g=())
+[Insight dashboards](<http://10.65.34.149:30100/app/kibana#/home?_g=()>)
 
 [Graphy endpoint](http://10.65.34.150:30200/api/traversal/mock/bidou)
 
 [ftp share](ftp://10.65.34.238/Partage/)
 
-[Georef endpoint](http://10.65.34.149:31000/app/kibana#?_g=())
+[Georef endpoint](<http://10.65.34.149:31000/app/kibana#?_g=()>)
 
 [Insight index endpoint](http://10.65.34.149:30201/_cat/indices?v)
 
