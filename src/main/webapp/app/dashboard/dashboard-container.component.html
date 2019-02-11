@@ -1,17 +1,18 @@
-<div class="container-fluid">
-    <jhi-alert></jhi-alert>
-    <div class="row bg-light m-lg-1" *ngIf="analysisState.isEditing && mappingInfo.length > 0">
-        <div class="col-sm-12">
-            <ins-dashboard-create [mappingInfo]="mappingInfo"
-                                  (dashboardEmitter)="postDashboard($event)"></ins-dashboard-create>
-        </div>
-    </div>
-    <div class="row bg-light m-lg-1" *ngIf="dashboardSelected && !analysisState.isEditing">
-        <div class="col-sm-12">
-            <div class="embed-responsive embed-responsive-21by9">
-                <iframe class="embed-responsive-item"
-                        [src]="dashboardSelected.dashboardSafeUrl"></iframe>
-            </div>
-        </div>
+<div class="row justify-content-center bg-light m-lg-1" *ngIf="analysisState.isEditing && mappingInfo.length > 0">
+    <div class="col-sm-10 pb-2 pt-2">
+        <ins-dashboard-create [mappingInfo]="mappingInfo"
+                              (dashboardEmitter)="postDashboard($event)"></ins-dashboard-create>
     </div>
 </div>
+<div class="h-100 bg-light" *ngIf="dashboardSelected && !analysisState.isEditing">
+    <div class="embed-responsive h-100">
+        <iframe class="embed-responsive-item"
+                [src]="dashboardSelected.dashboardSafeUrl"></iframe>
+    </div>
+</div>
+<div class="row bg-light m-lg-1" *ngIf="!dashboardSelected && !analysisState.isEditing">
+    <div class="col-sm-12 d-flex justify-content-center align-items-center">
+        <h6>Aucun dashboard sélectionné</h6>
+    </div>
+</div>
+

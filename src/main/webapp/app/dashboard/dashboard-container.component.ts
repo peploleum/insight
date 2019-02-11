@@ -46,6 +46,9 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
 
     postDashboard(dashboardParam: IKibanaDashboardGenerationParameters) {
         if (dashboardParam == null) {
+            const currentState: AnalysisState = this.dbs.analysisState.getValue();
+            currentState.isEditing = false;
+            this.dbs.analysisState.next(currentState);
             return;
         }
         this.dbs.postDashboard(dashboardParam).subscribe(

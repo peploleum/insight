@@ -219,7 +219,8 @@ public class KibanaObjectUtils {
                 String type = "string";
 
                 if (field.getAnnotation(GeoPointField.class) != null) {
-                    type = "geolocation";
+                    // type = "geolocation"; Old mapping pour les anciennes versions de kibana ?
+                    type = "geo_point";
                 } else if (field.getAnnotation(org.springframework.data.elasticsearch.annotations.Field.class) != null) {
                     if (field.getAnnotation(org.springframework.data.elasticsearch.annotations.Field.class).type().equals(FieldType.Date))
                         type = "date";

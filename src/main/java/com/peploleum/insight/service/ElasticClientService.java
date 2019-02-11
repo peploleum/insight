@@ -142,6 +142,28 @@ public class ElasticClientService {
         }
     }
 
+    public void deleteSingleKibanaObject(final String objectId) {
+        if (!this.kibanaVisualization.isEmpty()) {
+            try {
+                KibanaObject kibanaObject = kibanaVisualization.stream().filter(ko -> ko.getId().equals(objectId)).findFirst().get();
+                kibanaVisualization.remove(kibanaObject);
+                sendDeleteMessageToKibana(objectId, KibanaMessageUri.DELETE_VISUALISATION);
+            } catch (NoSuchElementException e) {
+                // Cas ou l'optionnal du findFirst n'a aucune valeur
+            }
+        }
+
+        if (!kibanaDashboard.isEmpty()) {
+            try {
+                KibanaObject kibanaObject = kibanaDashboard.stream().filter(ko -> ko.getId().equals(objectId)).findFirst().get();
+                kibanaDashboard.remove(kibanaObject);
+                sendDeleteMessageToKibana(objectId, KibanaMessageUri.DELETE_DASHBOARD);
+            } catch (NoSuchElementException e) {
+                // Cas ou l'optionnal du findFirst n'a aucune valeur
+            }
+        }
+    }
+
     /**
      * Supprime de Kibana, tous les dashboards et visualisations créés
      */

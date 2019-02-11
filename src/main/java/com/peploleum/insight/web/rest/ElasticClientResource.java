@@ -76,11 +76,22 @@ public class ElasticClientResource {
     }
 
     /**
-     * DELETE getEntitiesSchema
+     * DELETE deleteAllDashboard
      */
     @DeleteMapping("/delete-all-dashboard")
     public ResponseEntity<Void> deleteAllDashboard() {
         this.esClientService.deleteAllDashboard();
+        return ResponseEntity.ok().headers(new HttpHeaders()).build();
+    }
+
+    /**
+     * DELETE  /delete-single-kibana-object/:id : delete object by "id".
+     *
+     * @param id the id of the object (dashboard or visualisation) to delete
+     */
+    @DeleteMapping("/delete-single-kibana-object/{id}")
+    public ResponseEntity<Void> deleteSingleKibanaObject(@PathVariable String id) {
+        this.esClientService.deleteSingleKibanaObject(id);
         return ResponseEntity.ok().headers(new HttpHeaders()).build();
     }
 

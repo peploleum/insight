@@ -81,6 +81,23 @@ export class DashboardManagerComponent implements OnInit, OnDestroy {
         );
     }
 
+    deleteSingleDashboard(id: string) {
+        this.dbs.deleteSingleDashboard(id).subscribe(
+            res => {
+                console.log('Suppression du dashboard succeed');
+                const list: KibanaDashboardReference[] = this.dbs.dashboards.getValue();
+                const toDelete: KibanaDashboardReference = list.find(i => i.idObject === id);
+                if (toDelete) {
+                    list.splice(list.indexOf(toDelete), 1);
+                    this.dbs.dashboards.next(list);
+                }
+            },
+            error => {
+                this.onError('Erreur lors de la suppression du dashboard');
+            }
+        );
+    }
+
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }

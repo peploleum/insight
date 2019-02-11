@@ -19,6 +19,7 @@ export class DashboardService {
     private _getDashboardId = '/get-dashboard-ids';
     private _regenerateDashboard = '/regenerate-dashboard';
     private _deleteAllDashboard = '/delete-all-dashboard';
+    private _deleteSingleDashboard = '/delete-single-kibana-object';
     private _postDashboard = '/post-dashboard';
     private _getEntitiesSchema = '/get-entities-schema';
 
@@ -50,6 +51,10 @@ export class DashboardService {
 
     deleteAllDashboard(): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl + this._deleteAllDashboard}`, { observe: 'response' });
+    }
+
+    deleteSingleDashboard(id: string): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.resourceUrl + this._deleteSingleDashboard}/${id}`, { observe: 'response' });
     }
 
     /**
