@@ -10,12 +10,14 @@
             <span title="Créer un dashboard" (click)="createDashboard()"><fa-icon [icon]="'plus'"></fa-icon></span>
             <span title="Supprimer tous les dashboards" (click)="deleteAllDashboard()"><fa-icon
                 [icon]="'times'"></fa-icon></span>
+            <span title="Rafraîchir la liste" (click)="getDashboardRefs()"><fa-icon
+                [icon]="'sync-alt'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Liste des Dashboards :</h6>
         <div class="side-list-container" style="height: 85%;">
-            <div *ngFor="let db of dashboardIds;" (click)="onDashboardSelected(db.idObject)"
+            <div *ngFor="let db of dashboardIds;"
                  [ngClass]="{'selected': db.selected}">
-                <span style="cursor: pointer;"><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.title}}</span>
+                <span (click)="onDashboardSelected(db.idObject)" style="cursor: pointer;"><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.title}}</span>
                 <span (click)=" deleteSingleDashboard(db.idObject)"><fa-icon [icon]="'times'"></fa-icon></span>
             </div>
         </div>

@@ -14,10 +14,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.context.event.EventListener;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,6 +41,11 @@ public class ElasticClientService {
     }
 
     public List<KibanaObjectReferenceDTO> getDashboardRef() {
+        // Refresh dashboards list
+        Set<KibanaObject> kibanaObjects = getAllKibanaObjects();
+        this.kibanaDashboard = kibanaObjects.stream().filter(ko -> ko.getType().equals(KibanaObject.DASHBOARD)).collect(Collectors.toList());
+
+        // Renvoie une list de references
         return this.kibanaDashboard.stream().map(ko -> {
             KibanaObjectReferenceDTO dto = new KibanaObjectReferenceDTO();
             dto.setIdObject(ko.getId());
@@ -333,28 +335,34 @@ public class ElasticClientService {
             final StringBuilder sb = new StringBuilder(this.KIBANA_ENTRY_URI);
             sb.append(uriPattern.getUri());
             sb.append(id);
-            rt.delete(sb.toString());
+            // rt.delete(sb.toString());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("kbn-xsrf", "true");
+            HttpEntity<?> request = new HttpEntity<>(headers);
+
+            rt.exchange(sb.toString(), HttpMethod.DELETE, request, String.class);
             return true;
         } catch (Exception e) {
-            this.log.info("Erreur posting kibana json", e);
+            this.log.info("Erreur deleting kibana object", e);
             return false;
         }
     }
 
     enum KibanaMessageUri {
 
-        GET_UPDATE_INDEX_PATTERN_FIELDS("api/index_patterns/_fields_for_wildcard?pattern=$PATTERN$&meta_fields=[\"_source\",\"_id\",\"_type\",\"_index\",\"_score\"]"),
-        GET_FIND_OBJECTS("api/saved_objects/_find?type=index-pattern&type=visualization&type=dashboard"),
-        POST_INDEX_PATTERN("api/saved_objects/index-pattern/"),
+        GET_UPDATE_INDEX_PATTERN_FIELDS("/api/index_patterns/_fields_for_wildcard?pattern=$PATTERN$&meta_fields=[\"_source\",\"_id\",\"_type\",\"_index\",\"_score\"]"),
+        GET_FIND_OBJECTS("/api/saved_objects/_find?type=index-pattern&type=visualization&type=dashboard"),
+        POST_INDEX_PATTERN("/api/saved_objects/index-pattern/"),
         POST_VISUALISATION(""),
         /* POST_DASHBOARD comprend le dashboard et tous les éléments (index pattern + visu) dont il dépend*/
-        POST_DASHBOARD("api/kibana/dashboards/import?exclude=index-pattern"),
-        POST_BULK_CREATE_OBJECTS("api/saved_objects/_bulk_create"),
-        POST_BULK_GET_OBJECTS("api/saved_objects/_bulk_get"),
-        SET_DEFAULT_INDEX_PATTERN("api/kibana/settings/defaultIndex"),
-        DELETE_VISUALISATION("api/saved_objects/visualization/"),
-        DELETE_INDEX_PATTERN("api/saved_objects/index-pattern/"),
-        DELETE_DASHBOARD("api/saved_objects/dashboard/");
+        POST_DASHBOARD("/api/kibana/dashboards/import?exclude=index-pattern"),
+        POST_BULK_CREATE_OBJECTS("/api/saved_objects/_bulk_create"),
+        POST_BULK_GET_OBJECTS("/api/saved_objects/_bulk_get"),
+        SET_DEFAULT_INDEX_PATTERN("/api/kibana/settings/defaultIndex"),
+        DELETE_VISUALISATION("/api/saved_objects/visualization/"),
+        DELETE_INDEX_PATTERN("/api/saved_objects/index-pattern/"),
+        DELETE_DASHBOARD("/api/saved_objects/dashboard/");
 
         final String uri;
 

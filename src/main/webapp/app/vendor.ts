@@ -58,6 +58,7 @@ import {
     faSortUp,
     faSquare,
     faSync,
+    faSyncAlt,
     faTachometerAlt,
     faTasks,
     faThList,
@@ -145,5 +146,6 @@ library.add(faHandPaper);
 library.add(faPencilAlt);
 library.add(faMapMarkedAlt);
 library.add(faChartPie);
+library.add(faSyncAlt);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
