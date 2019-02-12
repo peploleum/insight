@@ -34,7 +34,7 @@ export class MapService {
         switch (objectType) {
             case 'RawData':
                 return IMAGE_URL_RAW;
-            case 'Equipement':
+            case 'Equipment':
                 return IMAGE_URL_EQUIP;
             case 'Location':
                 return IMAGE_URL_RAW;

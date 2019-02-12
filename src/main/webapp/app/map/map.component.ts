@@ -45,18 +45,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     dragAndDropInteraction: DragAndDropInteraction;
 
     private circleImage = new Circle({
-        radius: 13,
+        radius: 14,
         fill: new Fill({
-            color: 'rgba(203, 65, 42, 0.1)'
+            color: 'rgba(230, 240, 255, 1)'
         }),
         stroke: new Stroke({ color: '#ffc600', width: 3 })
     });
     private selectedCircleImage = new Circle({
-        radius: 13,
+        radius: 14,
         fill: new Fill({
-            color: 'rgba(203, 65, 42, 0.1)'
+            color: 'rgba(230, 240, 255, 1)'
         }),
-        stroke: new Stroke({ color: '#cb412a', width: 3 })
+        stroke: new Stroke({ color: '#cb412a', width: 4 })
     });
 
     computedHeight = 0;
@@ -374,7 +374,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 mainStyle.getText().setText('');
             }
-            return [iconStyle, mainStyle];
+            return [mainStyle, iconStyle];
         }
         return [mainStyle];
     }
