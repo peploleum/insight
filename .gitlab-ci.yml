@@ -14,7 +14,7 @@ stages:
   - deploy 
 
 maven-build:
-  image: capgemini/insight-build
+  image: magnarox/insight-build
   stage: build
   script: 
     - npm install
