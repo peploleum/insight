@@ -17,7 +17,7 @@ maven-build:
   image: capgemini/insight-build
   stage: build
   script: 
-    - yarn install
+    - npm install
     - mvn package -DskipTests
   artifacts:
     paths:
