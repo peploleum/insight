@@ -26,7 +26,7 @@
                 </a>
                 <a class="card-link" [routerLink]="['/raw-data', rawData.id, 'view' ]">
                     <fa-icon [icon]="getSourceTypeIcon(rawData.rawDataSourceType)"></fa-icon>
-                    <span>{{rawData.rawDataCreationDate | date:'short'}}</span>
+                    <span>{{rawData.rawDataCreationDate | date:'short':'':'fr-FR'}}</span>
                 </a>
             </div>
         </div>

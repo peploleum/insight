@@ -1,12 +1,12 @@
 /**
  * Created by gFolgoas on 31/01/2019.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
-import { MapLayer, FigureStyle } from '../../shared/util/map-utils';
+import { FigureStyle, MapLayer } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { UUID } from '../../shared/util/insight-util';
 
@@ -64,6 +64,10 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
 
     onFormSelected(form: string) {
         this.f.form.setValue(form);
+    }
+
+    zoomToLayer(layerId: string) {
+        this.ms.zoomToLayer.next(layerId);
     }
 
     onLayerAction(action: string, targetLayer?: MapLayer) {

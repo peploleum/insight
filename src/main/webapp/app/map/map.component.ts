@@ -64,6 +64,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     featureSourceSubs: Subscription;
     featureSelectorSubs: Subscription;
     layerSubs: Subscription;
+    zoomToLayerSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
@@ -107,6 +108,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectAndGoTo(ids[0]);
             }
         });
+        this.zoomToLayerSubs = this.ms.zoomToLayer.subscribe(id => {
+            const layerToZoom = this._map
+                .getLayers()
+                .getArray()
+                .find(layer => layer.get('id') === id);
+            if (layerToZoom && layerToZoom instanceof VectorLayer) {
+                this._map.getView().fit((<VectorLayer>layerToZoom).getSource().getExtent());
+            }
+        });
         this.initDessinTools();
     }
 
@@ -119,6 +129,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (this.layerSubs) {
             this.layerSubs.unsubscribe();
+        }
+        if (this.zoomToLayerSubs) {
+            this.zoomToLayerSubs.unsubscribe();
         }
     }
 
@@ -368,13 +381,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (feature.getGeometry().getType() === 'Point') {
             const iconStyle: Style = this.getIconStyle(feature);
-            const zoom = this._map.getView().getZoom();
-            if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
-                mainStyle.getText().setText(feature.get('label'));
-            } else {
-                mainStyle.getText().setText('');
+            if (iconStyle !== null) {
+                const zoom = this._map.getView().getZoom();
+                if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
+                    mainStyle.getText().setText(feature.get('label'));
+                } else {
+                    mainStyle.getText().setText('');
+                }
+                return [mainStyle, iconStyle];
             }
-            return [mainStyle, iconStyle];
         }
         return [mainStyle];
     }
@@ -382,13 +397,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     getIconStyle(feature: Feature): Style {
         const objectType = feature.get('objectType');
         const src: string = MapService.getImageIconUrl(objectType);
-        return new Style({
-            image: new Icon({
-                anchor: [0.5, 0.5],
-                scale: 0.05,
-                src: `${src}`
-            })
-        });
+        return src === null
+            ? null
+            : new Style({
+                  image: new Icon({
+                      anchor: [0.5, 0.5],
+                      scale: 0.05,
+                      src: `${src}`
+                  })
+              });
     }
 
     getStyle(geometryType: string): Style {

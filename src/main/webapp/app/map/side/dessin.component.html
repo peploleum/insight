@@ -18,7 +18,8 @@
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"
                                [style.color]="layer.selected && layer.layerType === 'DESSIN' ? 'red' : 'inherit'"
                                [style.cursor]="layer.layerType === 'DESSIN' ? 'pointer' : 'none'"
-                               (click)="onLayerAction('DESSIN_SELECTION_CHANGED', layer)"></fa-icon> {{layer.layerName}}</span>
+                               (click)="onLayerAction('DESSIN_SELECTION_CHANGED', layer)"></fa-icon><span
+                    (click)="zoomToLayer(layer.layerId)" [style.cursor]="'pointer'"> {{layer.layerName}}</span></span>
                 <span *ngIf="layer.layerType !== 'SOURCE'" (click)="onLayerAction('REMOVE_DESSIN_LAYER', layer)"><fa-icon
                     [icon]="'times'"></fa-icon></span>
                 <span (click)="onLayerAction('VISIBILITY_CHANGED', layer)"><fa-icon

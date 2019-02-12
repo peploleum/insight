@@ -17,6 +17,8 @@ import { InsightHomeModule } from './home/home.module';
 import { InsightAccountModule } from './account/account.module';
 import { InsightEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
+import localeFr from '@angular/common/locales/fr';
+
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { ActiveMenuDirective, ErrorComponent, FooterComponent, JhiMainComponent, NavbarComponent, PageRibbonComponent } from './layouts';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
@@ -24,7 +26,15 @@ import { MapModule } from 'app/map/map.module';
 import { SourcesModule } from 'app/sources/sources.module';
 import { NetworkModule } from 'app/network/network.module';
 import { SideModule } from './side/side.module';
+import { registerLocaleData } from '@angular/common';
 
+/**
+ * Si Locale ne fonctionne pas en AOT:
+ * @NgModule({ { provide: LOCALE_ID, useValue: 'de' } })
+ * And then you also need to add the npm dependency to your project.config
+ * { name: '@angular/common/locales/fr', path: '${this.NPM_BASE}@angular/common/locales/fr.js' }
+ * */
+registerLocaleData(localeFr, 'fr-FR');
 @NgModule({
     imports: [
         BrowserModule,

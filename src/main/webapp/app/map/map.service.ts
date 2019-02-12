@@ -29,6 +29,7 @@ export class MapService {
         new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
     );
     mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
+    zoomToLayer: Subject<string> = new Subject();
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {
@@ -45,7 +46,7 @@ export class MapService {
             case 'Event':
                 return IMAGE_URL_DEFAULT;
             default:
-                return IMAGE_URL_DEFAULT;
+                return null;
         }
     }
 
