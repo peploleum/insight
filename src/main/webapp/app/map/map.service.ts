@@ -22,6 +22,7 @@ export class MapService {
 
     featureSource: Subject<Feature[]> = new Subject();
     outsideFeatureSelector: Subject<string[]> = new Subject();
+    insideFeatureSelector: Subject<string[]> = new Subject();
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
@@ -71,10 +72,6 @@ export class MapService {
     }
 
     constructor(private http: HttpClient) {}
-
-    selectOnMap(ids: string[]) {
-        this.outsideFeatureSelector.next(ids);
-    }
 
     getFeaturesFromIds(ids: string[]): void {
         this.http

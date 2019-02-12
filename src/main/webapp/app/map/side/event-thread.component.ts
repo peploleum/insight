@@ -38,6 +38,9 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
 
     mapStates: MapState;
     mapStatesSubs: Subscription;
+    selectedFeatSubs: Subscription;
+
+    selectedFeatureId: string[] = [];
 
     constructor(
         protected rawDataService: RawDataService,
@@ -112,11 +115,15 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
             this.currentAccount = account;
         });
         this.registerChangeInRawData();
+        this.selectedFeatSubs = this.ms.insideFeatureSelector.subscribe(ids => (this.selectedFeatureId = ids));
     }
 
     ngOnDestroy() {
         if (this.mapStatesSubs) {
             this.mapStatesSubs.unsubscribe();
+        }
+        if (this.selectedFeatSubs) {
+            this.selectedFeatSubs.unsubscribe();
         }
     }
 
@@ -184,7 +191,7 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         switch (dataType) {
             case 'CYBER':
                 return 'user-secret';
-            case 'OSINT ':
+            case 'OSINT':
                 return 'wifi';
             default:
                 return 'rss-square';
@@ -214,6 +221,6 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     }
 
     selectOnMap(itemId: string) {
-        this.ms.selectOnMap([itemId]);
+        this.ms.outsideFeatureSelector.next([itemId]);
     }
 }

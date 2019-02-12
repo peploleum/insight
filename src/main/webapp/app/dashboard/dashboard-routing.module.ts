@@ -7,7 +7,7 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashboardContainerComponent,
         data: {
-            pageTitle: 'sources.title'
+            pageTitle: 'dashboard.title'
         }
     }
 ];

@@ -15,6 +15,7 @@ import SnapInteraction from 'ol/interaction/snap';
 import ModifyInteraction from 'ol/interaction/modify';
 import DragAndDropInteraction from 'ol/interaction/draganddrop';
 import KML from 'ol/format/kml';
+import Proj from 'ol/proj';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -33,7 +34,7 @@ import { UUID } from '../shared/util/insight-util';
     styles: [':host { flex-grow: 1 }']
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
-    rawDataSource: VectorSource = new VectorSource();
+    rawDataSource: VectorSource = new VectorSource({ wrapX: false });
     featureLayer: VectorLayer;
     _map: Map;
 
@@ -134,8 +135,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             view: new View({
                 center: [0, 0],
                 zoom: 2,
-                minZoom: 1,
-                maxZoom: 20
+                minZoom: 2,
+                maxZoom: 20,
+                extent: [-15723249.59231732, -5106184.58202049, 16485479.638377108, 11546080.652074866]
             })
         });
         setTimeout(() => {
@@ -148,7 +150,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             const newMapLayer: MapLayer = new MapLayer(UUID(), 'KML', 'KML', true);
             newMapLayer.layerStatus = 'UPDATE'; // Pour éviter de l'ajouter une deuxième fois
             const vectorSource = new VectorSource({
-                features: event.features
+                features: event.features,
+                wrapX: false
             });
             const newVectorLayer: VectorLayer = new VectorLayer({
                 source: vectorSource,
@@ -159,6 +162,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this._map.addLayer(newVectorLayer);
             this._map.getView().fit(vectorSource.getExtent());
             this.ms.mapLayers.next(this.ms.mapLayers.getValue().concat(newMapLayer));
+        });
+
+        this.selectInteraction.on('select', (event: SelectInteration.Event) => {
+            const selectedIds: any[] = this.selectInteraction
+                .getFeatures()
+                .getArray()
+                .map(feat => {
+                    return feat.getId();
+                });
+            this.ms.insideFeatureSelector.next(selectedIds);
         });
     }
 
@@ -208,7 +221,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         addLayers.forEach(newLayer => {
             let newItem = null;
             if (newLayer.layerType === 'DESSIN') {
-                const vectorSource = new VectorSource();
+                const vectorSource = new VectorSource({ wrapX: false });
                 vectorSource.set('id', newLayer.layerId);
                 newItem = new VectorLayer({
                     source: vectorSource,
@@ -218,7 +231,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             } else if (newLayer.layerType === 'SOURCE') {
                 if (newLayer.layerName === 'OSM') {
                     newItem = new TileLayer({
-                        source: new OSM(),
+                        source: new OSM({ wrapX: false }),
                         zIndex: 0
                     });
                 } else if (newLayer.layerName === 'BingMaps') {
@@ -227,7 +240,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                         source: new BingMaps({
                             key: 'AhZ8yD8nLNihhvRg-tAzuo49c2tqIkKLDKyYqCkMoQmniNx0ruDCDmq0kbR--sGl',
                             imagerySet: 'Aerial',
-                            maxZoom: 19
+                            maxZoom: 19,
+                            wrapX: false
                         }),
                         zIndex: 0
                     });
@@ -333,6 +347,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const selectedFeat: Feature = this.rawDataSource.getFeatureById(objectId);
         if (selectedFeat) {
             this.selectInteraction.getFeatures().push(selectedFeat);
+            this.selectInteraction.dispatchEvent({
+                type: 'select',
+                selected: [selectedFeat],
+                deselected: [],
+                mapBrowserEvent: null
+            });
             this._map.getView().fit(selectedFeat.getGeometry().getExtent(), { duration: 1500 });
         }
     }
