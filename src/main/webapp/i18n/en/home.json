@@ -1,7 +1,7 @@
 {
     "home": {
         "title": "Insight",
-        "subtitle": "This is your homepage",
+        "subtitle": "This is your homepage.",
         "logged": {
             "message": "You are logged in as user \"{{username}}\"."
         },
