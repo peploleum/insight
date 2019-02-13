@@ -21,7 +21,7 @@ maven-build:
   stage: build-war
   script: 
     - npm install
-    - mvn package -DskipTests
+    - mvn package -DskipTests -Pprod
   artifacts:
     paths:
       - target/*.war
