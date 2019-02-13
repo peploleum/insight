@@ -1,7 +1,7 @@
 {
     "home": {
         "title": "Insight",
-        "subtitle": "Ceci est votre page d'accueil.",
+        "subtitle": "Ceci est votre page d'accueil",
         "logged": {
             "message": "Vous êtes connecté en tant que \"{{username}}\"."
         },
