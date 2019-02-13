@@ -1,34 +1,48 @@
-<div class="h-100 w-100">
+<div class="h-100 w-100 side-container">
     <div class="side-title">
         <h4>
             <fa-icon [icon]="'wifi'"></fa-icon>
             <b> Flux d'événements</b></h4>
     </div>
-    <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"
-         (wheelEmitter)="onNewPage($event)"
-         class="event-thread-container">
-        <div class="card event-thread-card"
-             *ngFor="let rawData of rawDataList.data | slice:firstIndex:lastIndex; trackBy:trackId; first as isFirst; last as isLast;"
-             [ngClass]="{'selected': selectedFeatureId.indexOf(rawData.id) !== -1}">
-            <div class="card-img-top event-thread-top"><img
-                *ngIf="rawData.rawDataData" class="event-thread-image" [src]="getImageBase64Src(rawData.rawDataData)">
-            </div>
-            <div class="card-body" *ngIf="isFirst || isLast ? updateIdStore(isFirst, isLast, rawData.id) : true">
-                <a class="card-title event-thread-title" (click)="selectOnMap(rawData.id)">
-                    <fa-icon [icon]="getDataTypeIcon(rawData.rawDataType)"></fa-icon>
-                    {{rawData.rawDataName | stringTruncate : 30}}</a>
-                <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>
-                <p class="card-text">
-                    <small>{{rawData.rawDataContent | stringTruncate : 140}}</small>
-                </p>
-                <a class="card-link" [routerLink]="['/network', rawData.id]">
-                    <fa-icon [icon]="'sitemap'"></fa-icon>
-                </a>
-                <a class="card-link" [routerLink]="['/raw-data', rawData.id, 'view' ]">
-                    <fa-icon [icon]="getSourceTypeIcon(rawData.rawDataSourceType)"></fa-icon>
-                    <span>{{rawData.rawDataCreationDate | date:'short':'':'fr-FR'}}</span>
-                </a>
+    <div class="side-main side-element">
+
+        <div class="tools" style="height: 10%;">
+            <span title="Compte par RawDataType"><fa-icon
+                [icon]="'rss-square'"></fa-icon></span>
+            <span title="Compte par RawDataSourceType"><fa-icon
+                [icon]="'shield-alt'"></fa-icon></span>
+            <span title="Compte par RawDataSubType"><fa-icon
+                [icon]="'exclamation'"></fa-icon></span>
+        </div>
+
+        <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"
+             (wheelEmitter)="onNewPage($event)"
+             class="event-thread-container">
+            <div class="card event-thread-card"
+                 *ngFor="let rawData of rawDataList.data | slice:firstIndex:lastIndex; trackBy:trackId; first as isFirst; last as isLast;"
+                 [ngClass]="{'selected': selectedFeatureId.indexOf(rawData.id) !== -1}">
+                <div class="card-img-top event-thread-top"><img
+                    *ngIf="rawData.rawDataData" class="event-thread-image"
+                    [src]="getImageBase64Src(rawData.rawDataData)">
+                </div>
+                <div class="card-body" *ngIf="isFirst || isLast ? updateIdStore(isFirst, isLast, rawData.id) : true">
+                    <a class="card-title event-thread-title" (click)="selectOnMap(rawData.id)">
+                        <fa-icon [icon]="getDataTypeIcon(rawData.rawDataType)"></fa-icon>
+                        {{rawData.rawDataName | stringTruncate : 30}}</a>
+                    <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>
+                    <p class="card-text">
+                        <small>{{rawData.rawDataContent | stringTruncate : 140}}</small>
+                    </p>
+                    <a class="card-link" [routerLink]="['/network', rawData.id]">
+                        <fa-icon [icon]="'sitemap'"></fa-icon>
+                    </a>
+                    <a class="card-link" [routerLink]="['/raw-data', rawData.id, 'view' ]">
+                        <fa-icon [icon]="getSourceTypeIcon(rawData.rawDataSourceType)"></fa-icon>
+                        <span>{{rawData.rawDataCreationDate | date:'short':'':'fr-FR'}}</span>
+                    </a>
+                </div>
             </div>
         </div>
+
     </div>
 </div>

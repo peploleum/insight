@@ -21,9 +21,7 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     rawDataList: EventThreadResultSet = new EventThreadResultSet([], []);
     error: any;
     success: any;
-    links: any;
-    totalItems: any;
-    queryCount: any;
+
     itemsPerPage: any;
     page: any;
     predicate: any;
@@ -83,7 +81,7 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
                 })
             )
             .subscribe(
-                (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body, res.headers),
+                (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
     }
@@ -149,11 +147,8 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         return result;
     }
 
-    protected paginateRawData(data: IRawData[], headers: HttpHeaders) {
+    protected paginateRawData(data: IRawData[]) {
         console.log('loaded ' + data.length);
-        this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.queryCount = this.totalItems;
         if (data && data.length > 0) {
             const newDataList: EventThreadResultSet = new EventThreadResultSet(
                 this.rawDataList.data.concat(data),
