@@ -20,6 +20,7 @@ import {
     faBullseye,
     faCalendarAlt,
     faChartArea,
+    faChartBar,
     faChartPie,
     faCheck,
     faCheckCircle,
@@ -29,6 +30,7 @@ import {
     faCodeBranch,
     faDotCircle,
     faDrawPolygon,
+    faExclamation,
     faEye,
     faFileImport,
     faFlag,
@@ -147,5 +149,7 @@ library.add(faPencilAlt);
 library.add(faMapMarkedAlt);
 library.add(faChartPie);
 library.add(faSyncAlt);
+library.add(faChartBar);
+library.add(faExclamation);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

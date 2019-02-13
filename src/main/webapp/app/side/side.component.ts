@@ -10,19 +10,20 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './side.component.html'
 })
 export class SideComponent extends SideInterface implements OnInit, OnDestroy {
-    _showEventThread = true;
+    _sideElement: string;
     target: string;
 
     constructor(private activatedRoute: ActivatedRoute) {
         super();
         this.target = this.activatedRoute.snapshot.data['target'];
+        this._sideElement = this.target === 'map' ? 'EVENT_THREAD' : '';
     }
 
     ngOnInit() {}
 
     ngOnDestroy() {}
 
-    showEventThread(value: boolean) {
-        this._showEventThread = value;
+    showEventThread(value: string) {
+        this._sideElement = value;
     }
 }

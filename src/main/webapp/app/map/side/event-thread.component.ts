@@ -159,6 +159,7 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
                 this.rawDataList.data.concat(data),
                 this.rawDataList.dataIds.concat(data.map(item => item.id))
             );
+            this.ms.rawDataStream.next(newDataList);
             this.rawDataList = newDataList;
             if (this.firstId) {
                 this.firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);

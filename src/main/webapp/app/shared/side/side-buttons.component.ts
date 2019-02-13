@@ -11,14 +11,14 @@ export class SideButtonsComponent implements OnInit {
     @Input()
     isClosed: boolean;
     @Input()
-    _showEventThread: boolean;
+    _sideElement: string;
     @Input()
     target: string;
 
     @Output()
     closeEmitter: EventEmitter<boolean> = new EventEmitter();
     @Output()
-    showEventThreadEmitter: EventEmitter<boolean> = new EventEmitter();
+    showEventThreadEmitter: EventEmitter<string> = new EventEmitter();
 
     constructor() {}
 
@@ -28,7 +28,7 @@ export class SideButtonsComponent implements OnInit {
         this.closeEmitter.emit(doClose);
     }
 
-    showEventThread(show: boolean) {
-        this.showEventThreadEmitter.emit(show);
+    showEventThread(element: string) {
+        this.showEventThreadEmitter.emit(element);
     }
 }

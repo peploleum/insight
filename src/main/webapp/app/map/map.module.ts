@@ -14,6 +14,6 @@ import { QuickStatsComponent } from './side/quick-stats.component';
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
     declarations: [MapComponent, EventThreadComponent, DessinComponent, MapMenuComponent, QuickStatsComponent],
-    exports: [EventThreadComponent, DessinComponent]
+    exports: [EventThreadComponent, DessinComponent, QuickStatsComponent]
 })
 export class MapModule {}

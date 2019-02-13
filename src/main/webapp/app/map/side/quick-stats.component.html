@@ -1,3 +1,22 @@
-<div *ngIf="chart">
-    <canvas #canvas >{{ chart }}</canvas>
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'chart-bar'"></fa-icon>
+            <b> QuickStats</b>
+        </h4>
+    </div>
+    <div class="side-main side-element">
+        <div class="tools">
+            <span title="Compte par RawDataType" (click)="changeAnalysedProperty('rawDataType')"><fa-icon
+                [icon]="'rss-square'"></fa-icon></span>
+            <span title="Compte par RawDataSourceType" (click)="changeAnalysedProperty('rawDataSourceType')"><fa-icon
+                [icon]="'shield-alt'"></fa-icon></span>
+            <span title="Compte par RawDataSubType" (click)="changeAnalysedProperty('rawDataSubType')"><fa-icon
+                [icon]="'exclamation'"></fa-icon></span>
+        </div>
+        <h6 class="ml-2">Analyse : Regroupement par {{countProperty}}</h6>
+        <div style="height: 60vh;">
+            <canvas #canvas>{{ chart }}</canvas>
+        </div>
+    </div>
 </div>
