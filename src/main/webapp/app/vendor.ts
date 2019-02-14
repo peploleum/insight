@@ -44,6 +44,7 @@ import {
     faList,
     faMagic,
     faMapMarkedAlt,
+    faMapMarker,
     faPencilAlt,
     faPlug,
     faPlus,
@@ -153,5 +154,6 @@ library.add(faSyncAlt);
 library.add(faChartBar);
 library.add(faExclamation);
 library.add(faPlusSquare);
+library.add(faMapMarker);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

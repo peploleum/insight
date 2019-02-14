@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { SERVER_API_URL } from 'app/app.constants';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/internal/operators';
 import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 
@@ -27,6 +27,8 @@ export class MapService {
     actionEmitter: Subject<string> = new Subject();
 
     rawDataStream: BehaviorSubject<EventThreadResultSet> = new BehaviorSubject(new EventThreadResultSet([], []));
+
+    geoMarkerSource: Subject<Feature[]> = new Subject();
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
@@ -90,7 +92,7 @@ export class MapService {
                 })
             )
             .subscribe((data: IMapDataDTO[]) => {
-                this.sendToMap(data);
+                this.sendToMapFeatureSource(data);
             });
     }
 
@@ -99,12 +101,32 @@ export class MapService {
      * */
     getFeaturesFromRawData(source: IRawData[]): void {
         if (source && source.length) {
-            this.sendToMap(source.map(item => MapService.getMapDataFromRaw(item)));
+            this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromRaw(item)));
         }
     }
 
-    sendToMap(source: IMapDataDTO[]): void {
+    /**
+     * Envoie les geoMarker dans geoMarkerSource
+     * */
+    getFeaturesFromGeoMarker(source: IMapDataDTO[]): void {
+        if (source && source.length) {
+            this.sendToMapGeoMarkerSource(source);
+        }
+    }
+
+    sendToMapFeatureSource(source: IMapDataDTO[]): void {
         this.featureSource.next(source.map(item => MapService.getGeoJsonFromDto(item)).filter(dto => dto !== null));
+    }
+
+    sendToMapGeoMarkerSource(source: IMapDataDTO[]): void {
+        this.geoMarkerSource.next(source.map(item => MapService.getGeoJsonFromDto(item)).filter(dto => dto !== null));
+    }
+
+    getGeoMarker(search: string): Observable<IMapDataDTO[]> {
+        return this.http.get<IMapDataDTO[]>(`${this.resourceUrl}/${search}`, { observe: 'response' }).pipe(
+            filter((res: HttpResponse<any[]>) => res.ok),
+            map((res: HttpResponse<any[]>) => res.body)
+        );
     }
 
     getIconImage(uri: string, id: string): string {

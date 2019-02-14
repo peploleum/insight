@@ -11,10 +11,19 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { DessinComponent } from './side/dessin.component';
 import { QuickStatsComponent } from './side/quick-stats.component';
 import { LayerControlComponent } from './side/layer-control.component';
+import { MapSearchComponent } from './side/map-search.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
-    declarations: [MapComponent, EventThreadComponent, DessinComponent, MapMenuComponent, QuickStatsComponent, LayerControlComponent],
-    exports: [EventThreadComponent, DessinComponent, QuickStatsComponent, LayerControlComponent]
+    declarations: [
+        MapComponent,
+        EventThreadComponent,
+        DessinComponent,
+        MapMenuComponent,
+        QuickStatsComponent,
+        LayerControlComponent,
+        MapSearchComponent
+    ],
+    exports: [EventThreadComponent, DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent]
 })
 export class MapModule {}

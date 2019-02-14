@@ -4,6 +4,7 @@
         <ins-dessin [hidden]="_sideElement !== 'DESSIN'"></ins-dessin>
         <ins-quick-stats [hidden]="_sideElement !== 'QUICK_STATS'"></ins-quick-stats>
         <ins-layer-control [hidden]="_sideElement !== 'LAYER_CONTROL'"></ins-layer-control>
+        <ins-map-search [hidden]="_sideElement !== 'MAP_SEARCH'"></ins-map-search>
     </div>
     <div *ngIf="target === 'dashboard'" class="h-100">
         <ins-dashboard-manager></ins-dashboard-manager>

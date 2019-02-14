@@ -35,7 +35,9 @@ import { UUID } from '../shared/util/insight-util';
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     rawDataSource: VectorSource = new VectorSource({ wrapX: false });
+    geoMarkerSource: VectorSource = new VectorSource({ wrapX: false });
     featureLayer: VectorLayer;
+    geoMarkerLayer: VectorLayer;
     _map: Map;
 
     selectInteraction: SelectInteration;
@@ -62,6 +64,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     computedHeight = 0;
 
     featureSourceSubs: Subscription;
+    geoMarkerSourceSubs: Subscription;
     featureSelectorSubs: Subscription;
     layerSubs: Subscription;
     zoomToLayerSubs: Subscription;
@@ -75,6 +78,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
         this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
+            style: (feature: Feature) => this.styleFunction(feature, false),
+            zIndex: 1
+        });
+        this.geoMarkerLayer = new VectorLayer({
+            source: this.geoMarkerSource,
             style: (feature: Feature) => this.styleFunction(feature, false),
             zIndex: 1
         });
@@ -103,6 +111,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.initMapLayerListener();
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
+        });
+        this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
+            this.geoMarkerSource.clear();
+            this.geoMarkerSource.addFeatures(features);
         });
         this.actionEmitterSubs = this.ms.actionEmitter.subscribe(action => {
             this.onActionReceived(action);
@@ -140,12 +152,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.actionEmitterSubs) {
             this.actionEmitterSubs.unsubscribe();
         }
+        if (this.geoMarkerSourceSubs) {
+            this.geoMarkerSourceSubs.unsubscribe();
+        }
     }
 
     private initMap() {
         // const readFeatures = new GeoJSON().readFeatures(GEO_JSON_OBJECT);
         this._map = new Map({
-            layers: [this.featureLayer],
+            layers: [this.featureLayer, this.geoMarkerLayer],
             target: 'map',
             controls: control.defaults({
                 attributionOptions: {

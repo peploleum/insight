@@ -24,6 +24,12 @@ export class LayerControlComponent extends SideInterface implements OnInit, Afte
 
     constructor(protected ms: MapService, protected formBuilder: FormBuilder) {
         super();
+        this.wmsLayerForm = this.formBuilder.group({
+            wmsName: ['', Validators.required],
+            wmsUrl: ['', Validators.required],
+            wmsLayer: ['', Validators.required],
+            wmsAttribution: ['']
+        });
     }
 
     ngOnInit() {
@@ -40,19 +46,6 @@ export class LayerControlComponent extends SideInterface implements OnInit, Afte
 
     onSelectedLayerChanged(layer: MapLayer) {
         this.selectedLayer = layer;
-    }
-
-    displayLayerCreationForm(display: boolean) {
-        if (display) {
-            this.wmsLayerForm = this.formBuilder.group({
-                wmsName: ['', Validators.required],
-                wmsUrl: ['', Validators.required],
-                wmsLayer: ['', Validators.required],
-                wmsAttribution: ['']
-            });
-        } else {
-            this.wmsLayerForm = null;
-        }
     }
 
     getLayerIcon(layerType: string): string {
@@ -82,6 +75,7 @@ export class LayerControlComponent extends SideInterface implements OnInit, Afte
                         WMS_LAYERS_NAME: formValue.wmsLayer
                     };
                     currentLayerList.push(new MapLayer(UUID(), formValue.wmsName, 'WMS', true, 0, true, wmsProperties));
+                    this.wmsLayerForm.reset();
                 }
                 break;
             case 'MOVE_LAYER_DOWN':

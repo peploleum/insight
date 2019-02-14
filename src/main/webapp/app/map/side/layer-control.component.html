@@ -6,8 +6,6 @@
     </div>
     <div class="side-main side-element">
         <div class="tools" style="height: 10%;">
-            <span title="Ajouter un serveur WMS" (click)="displayLayerCreationForm(!wmsLayerForm)"><fa-icon
-                [icon]="'plus-square'"></fa-icon></span>
             <span title="Mettre le layer à l'arrière-plan" (click)="onLayerAction('MOVE_LAYER_DOWN', selectedLayer)"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
             <span title="Mettre le layer au premier-plan" (click)="onLayerAction('MOVE_LAYER_UP', selectedLayer)"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
         </div>
@@ -24,7 +22,7 @@
         </div>
     </div>
 
-    <div class="side-secondary side-element" *ngIf="wmsLayerForm" [formGroup]="wmsLayerForm">
+    <div class="side-secondary side-element">
 
         <div class="tools">
             <span title="Ajouter un serveur WMS" (click)="onLayerAction('ADD_WMS')"><fa-icon
@@ -33,7 +31,7 @@
                 [icon]="'bullseye'"></fa-icon></span>
         </div>
 
-        <div class="side-inline-form">
+        <div class="side-inline-form" [formGroup]="wmsLayerForm">
             <div class="side-input-container">
                 <label class="col-form-label-sm" for="wms-name">Nom du layer WMS</label>
                 <input type="text" formControlName="wmsName" class="form-control-sm" id="wms-name"

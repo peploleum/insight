@@ -12,4 +12,7 @@
     <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('LAYER_CONTROL')"
           [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
         [icon]="'globe'"></fa-icon></span>
+    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('MAP_SEARCH')"
+          [ngClass]="{'isDisplayed' : _sideElement === 'MAP_SEARCH'}"><fa-icon
+        [icon]="'search'"></fa-icon></span>
 </div>

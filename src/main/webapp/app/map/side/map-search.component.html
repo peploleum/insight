@@ -1,0 +1,25 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'search'"></fa-icon>
+            <b> Search</b>
+        </h4>
+    </div>
+    <div class="side-main side-element">
+        <div class="side-inline-form" style="height: 10%;">
+            <div class="side-input-container">
+                <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Paris..."/>
+            </div>
+        </div>
+
+        <div class="side-list-container" style="height: 90%;" *ngIf="currentResult">
+            <div *ngFor="let result of currentResult;">
+                <span>
+                    <fa-icon [icon]="'map-marker'"></fa-icon>
+                    <span> {{result.label}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
