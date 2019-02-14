@@ -110,8 +110,7 @@ export class QuickStatsComponent extends SideInterface implements OnInit, AfterV
                             display: true,
                             ticks: {
                                 beginAtZero: true,
-                                fontColor: 'white',
-                                stepSize: 1
+                                fontColor: 'white'
                             }
                         }
                     ],

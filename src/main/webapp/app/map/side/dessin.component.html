@@ -9,21 +9,27 @@
         <div class="tools">
             <span title="Add layer" (click)="onLayerAction('ADD_DESSIN_LAYER')"><fa-icon
                 [icon]="'plus'"></fa-icon></span>
-            <span title="Move layer up"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
-            <span title="Move layer down"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
+            <span title="Mettre le layer à l'arrière-plan" (click)="onLayerAction('MOVE_LAYER_DOWN', selectedLayer)"><fa-icon
+                [icon]="'arrow-circle-down'"></fa-icon></span>
+            <span title="Mettre le layer au premier-plan" (click)="onLayerAction('MOVE_LAYER_UP', selectedLayer)"><fa-icon
+                [icon]="'arrow-circle-up'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
         <div class="side-list-container" style="height: 85%;">
-            <div *ngFor="let layer of layerList;">
+            <div *ngFor="let layer of layerList;" [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"
                                [style.color]="layer.selected && layer.layerType === 'DESSIN' ? 'red' : 'inherit'"
                                [style.cursor]="layer.layerType === 'DESSIN' ? 'pointer' : 'none'"
-                               (click)="onLayerAction('DESSIN_SELECTION_CHANGED', layer)"></fa-icon><span
-                    (click)="zoomToLayer(layer.layerId)" [style.cursor]="'pointer'"> {{layer.layerName}}</span></span>
-                <span *ngIf="layer.layerType !== 'SOURCE'" (click)="onLayerAction('REMOVE_DESSIN_LAYER', layer)"><fa-icon
+                               (click)="onLayerAction('DESSIN_SELECTION_CHANGED', layer)"></fa-icon>
+                    <span (click)="onSelectedLayerChanged(layer)"
+                          [style.cursor]="'pointer'"> {{layer.layerName}} [Z:{{layer.layerZIndex}}]</span>
+                </span>
+                <span *ngIf="layer.layerType !== 'WMS'" (click)="onLayerAction('REMOVE_DESSIN_LAYER', layer)"><fa-icon
                     [icon]="'times'"></fa-icon></span>
                 <span (click)="onLayerAction('VISIBILITY_CHANGED', layer)"><fa-icon
                     [icon]="layer.visible ? 'check-circle' : 'circle'"></fa-icon></span>
+                <span *ngIf="layer.layerType !== 'WMS'" (click)="zoomToLayer(layer.layerId)"><fa-icon
+                    [icon]="'bullseye'"></fa-icon></span>
             </div>
         </div>
     </div>
@@ -44,18 +50,18 @@
                   [ngClass]="{'selected': (currentStyle.form === 'Polygon')}"><fa-icon
                 [icon]="'draw-polygon'"></fa-icon></span>
         </div>
-        <div class="drawing-style">
-            <div class="drawing-input-container">
+        <div class="side-inline-form">
+            <div class="side-input-container">
                 <label class="col-form-label-sm" for="drawing-type">Espacement des pointillés</label>
                 <input type="number" formControlName="type" class="form-control-sm" id="drawing-type"
                        placeholder="Line dash"/>
             </div>
-            <div class="drawing-input-container">
+            <div class="side-input-container">
                 <label class="col-form-label-sm" for="drawing-size">Largeur du trait</label>
                 <input type="number" formControlName="size" class="form-control-sm" id="drawing-size"
                        placeholder="Line size"/>
             </div>
-            <div class="drawing-input-container">
+            <div class="side-input-container">
                 <label class="col-form-label-sm" for="stroke-color">Couleur du trait</label>
                 <input title="Stroke Color" [cpPosition]="'top'" [cpOutputFormat]="'rgba'"
                        [colorPicker]="f.strokeColor.value" [style.background]="f.strokeColor.value"
@@ -63,7 +69,7 @@
                        (colorPickerChange)="f.strokeColor.setValue($event)"
                        formControlName="strokeColor"/>
             </div>
-            <div class="drawing-input-container">
+            <div class="side-input-container">
                 <label class="col-form-label-sm" for="fill-color">Couleur de remplissage</label>
                 <input title="Fill Color" [cpPosition]="'top'" [cpOutputFormat]="'rgba'"
                        [colorPicker]="f.fillColor.value"

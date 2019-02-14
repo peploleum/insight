@@ -540,20 +540,11 @@ SidePannel custom CSS
     flex: 1;
 }
 
-.side-list-container > div > span:last-child,
-.side-list-container > div > span:nth-child(2) {
+.side-list-container > div > span:not(:first-child) {
     cursor: pointer;
 }
 
-/* ==========================================================================
-Dessin custom CSS
-========================================================================== */
-
-.drawing-layers {
-    max-height: 70%;
-}
-
-.drawing-style {
+.side-inline-form {
     font-size: 1rem;
     width: 100%;
     display: flex;
@@ -562,18 +553,26 @@ Dessin custom CSS
     flex-wrap: wrap;
 }
 
-.drawing-input-container {
+.side-input-container {
     flex: 1 0 50%;
     padding: 0.3rem;
     margin-bottom: 2px;
 }
 
-.drawing-input-container > input {
+.side-input-container > input {
     width: 100%;
 }
 
-.drawing-input-container > label {
+.side-input-container > label {
     margin-bottom: 0 !important;
+}
+
+/* ==========================================================================
+Dessin custom CSS
+========================================================================== */
+
+.drawing-layers {
+    max-height: 70%;
 }
 
 /* ==========================================================================

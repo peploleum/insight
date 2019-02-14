@@ -9,4 +9,7 @@
     <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('QUICK_STATS')"
           [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_STATS'}"><fa-icon
         [icon]="'chart-bar'"></fa-icon></span>
+    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('LAYER_CONTROL')"
+          [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
+        [icon]="'globe'"></fa-icon></span>
 </div>

@@ -32,7 +32,7 @@ export class EventThreadResultSet {
     }
 }
 
-export type MapLayerType = 'DESSIN' | 'KML' | 'SOURCE';
+export type MapLayerType = 'DESSIN' | 'KML' | 'WMS';
 export type MapLayerStatus = 'NEW' | 'UPDATE' | 'DELETE';
 
 export class MapLayer {
@@ -40,16 +40,28 @@ export class MapLayer {
     layerName: string;
     layerType: MapLayerType;
     visible: boolean;
-    selected?: boolean;
     layerStatus: MapLayerStatus;
+    layerZIndex: number;
+    selected?: boolean;
+    properties?: {};
 
-    constructor(layerId: string, layerName: string, layerType: MapLayerType, visible: boolean, selected?: boolean) {
+    constructor(
+        layerId: string,
+        layerName: string,
+        layerType: MapLayerType,
+        visible: boolean,
+        layerZIndex: number,
+        selected?: boolean,
+        properties?: {}
+    ) {
         this.layerId = layerId;
         this.layerName = layerName;
         this.layerType = layerType;
         this.visible = visible;
-        this.selected = selected;
         this.layerStatus = 'NEW';
+        this.layerZIndex = layerZIndex;
+        this.selected = selected;
+        this.properties = properties ? properties : {};
     }
 }
 
@@ -68,3 +80,22 @@ export class FigureStyle {
         this.fillColor = fillColor;
     }
 }
+
+export const getlayerIcon = (layerType: string): string => {
+    switch (layerType) {
+        case 'DESSIN':
+            return 'pencil-alt';
+        case 'KML':
+            return 'map-marked-alt';
+        case 'WMS':
+            return 'globe';
+    }
+};
+
+/*export const getNewLayerIndex = (mapLayers: MapLayer[], newLayerType: MapLayerType): number => {
+ mapLayers
+ };
+
+ export const updateLayerIndex = (mapLayers: MapLayer[], targetLayerId: string, moveUp: boolean): number => {
+
+ };*/

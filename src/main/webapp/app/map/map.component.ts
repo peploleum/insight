@@ -15,7 +15,7 @@ import SnapInteraction from 'ol/interaction/snap';
 import ModifyInteraction from 'ol/interaction/modify';
 import DragAndDropInteraction from 'ol/interaction/draganddrop';
 import KML from 'ol/format/kml';
-import Proj from 'ol/proj';
+import TileWMS from 'ol/source/tilewms';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -167,7 +167,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._map.addInteraction(this.dragAndDropInteraction);
 
         this.dragAndDropInteraction.on('addfeatures', (event: DragAndDropInteraction.Event) => {
-            const newMapLayer: MapLayer = new MapLayer(UUID(), 'KML', 'KML', true);
+            const newMapLayer: MapLayer = new MapLayer(UUID(), 'KML', 'KML', true, 1);
             newMapLayer.layerStatus = 'UPDATE'; // Pour éviter de l'ajouter une deuxième fois
             const vectorSource = new VectorSource({
                 features: event.features,
@@ -175,7 +175,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             });
             const newVectorLayer: VectorLayer = new VectorLayer({
                 source: vectorSource,
-                zIndex: 1
+                zIndex: newMapLayer.layerZIndex
             });
             vectorSource.set('id', newMapLayer.layerId);
             newVectorLayer.set('id', newMapLayer.layerId);
@@ -198,7 +198,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     private initMapLayerListener() {
         this.layerSubs = this.ms.mapLayers.subscribe((update: MapLayer[]) => {
             if (this._map.getLayers().getLength() === 1) {
-                // Si aucun layer présent dans la map, alors tous les layers sont status NEW
+                // Si aucun layer (autre que le VectorLayer de base) présent dans la map, alors tous les layers sont status NEW
                 update.forEach(layer => (layer.layerStatus = 'NEW'));
             }
             this.updateLayers(update);
@@ -216,6 +216,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             if (updateLayers[layerId]) {
                 const mapLayer: MapLayer = updateLayers[layerId];
                 layer.setVisible(mapLayer.visible);
+                layer.setZIndex(mapLayer.layerZIndex);
 
                 // Si changement de sélection du layer de dessin
                 if (this.getMapStates().DESSIN_ENABLED && mapLayer.layerType === 'DESSIN' && mapLayer.selected) {
@@ -246,13 +247,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 newItem = new VectorLayer({
                     source: vectorSource,
                     style: (feature: Feature) => this.getDessinStyle(),
-                    zIndex: 1
+                    zIndex: newLayer.layerZIndex
                 });
-            } else if (newLayer.layerType === 'SOURCE') {
+            } else if (newLayer.layerType === 'WMS') {
                 if (newLayer.layerName === 'OSM') {
                     newItem = new TileLayer({
                         source: new OSM({ wrapX: false }),
-                        zIndex: 0
+                        zIndex: newLayer.layerZIndex
                     });
                 } else if (newLayer.layerName === 'BingMaps') {
                     // key associée à un compte microsoft perso
@@ -263,7 +264,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                             maxZoom: 19,
                             wrapX: false
                         }),
-                        zIndex: 0
+                        zIndex: newLayer.layerZIndex
+                    });
+                } else {
+                    newItem = new TileLayer({
+                        source: new TileWMS({
+                            wrapX: false,
+                            url: newLayer.properties['WMS_URL'],
+                            crossOrigin: 'anonymous',
+                            attributions: newLayer.properties['WMS_ATTRIBUTION']
+                                ? newLayer.properties['WMS_ATTRIBUTION']
+                                : newLayer.layerName,
+                            params: { LAYERS: newLayer.properties['WMS_LAYERS_NAME'] }
+                        }),
+                        zIndex: newLayer.layerZIndex
                     });
                 }
             }

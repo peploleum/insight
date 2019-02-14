@@ -3,10 +3,10 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
-import { FigureStyle, MapLayer } from '../../shared/util/map-utils';
+import { FigureStyle, getlayerIcon, MapLayer } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { UUID } from '../../shared/util/insight-util';
 
@@ -20,6 +20,8 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     dessinForm: FormGroup;
 
     layersSubs: Subscription;
+
+    selectedLayer: MapLayer;
 
     constructor(protected formBuilder: FormBuilder, protected ms: MapService) {
         super();
@@ -51,9 +53,11 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     }
 
     ngOnInit() {
-        this.layersSubs = this.ms.mapLayers.subscribe(layers => {
-            this.layerList = layers;
-        });
+        this.layersSubs = this.ms.mapLayers
+            .pipe(map((layers: MapLayer[]) => layers.filter(layer => layer.layerType !== 'WMS')))
+            .subscribe(layers => {
+                this.layerList = layers;
+            });
     }
 
     ngOnDestroy() {
@@ -70,6 +74,10 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
         this.ms.zoomToLayer.next(layerId);
     }
 
+    onSelectedLayerChanged(layer: MapLayer) {
+        this.selectedLayer = layer;
+    }
+
     onLayerAction(action: string, targetLayer?: MapLayer) {
         const currentLayerList: MapLayer[] = this.layers();
         currentLayerList.forEach(layer => (layer.layerStatus = 'UPDATE'));
@@ -80,7 +88,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
                 }
                 break;
             case 'ADD_DESSIN_LAYER':
-                currentLayerList.push(new MapLayer(UUID(), 'LayerDessin', 'DESSIN', true, false));
+                currentLayerList.push(new MapLayer(UUID(), 'LayerDessin', 'DESSIN', true, 1, false));
                 break;
             case 'DESSIN_SELECTION_CHANGED':
                 if (targetLayer) {
@@ -115,6 +123,16 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
                     currentLayerList.splice(currentLayerList.indexOf(targetLayer), 1);
                 }
                 break;
+            case 'MOVE_LAYER_DOWN':
+                if (targetLayer) {
+                    targetLayer.layerZIndex--;
+                }
+                break;
+            case 'MOVE_LAYER_UP':
+                if (targetLayer) {
+                    targetLayer.layerZIndex++;
+                }
+                break;
             default:
                 break;
         }
@@ -122,14 +140,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     }
 
     getLayerIcon(layerType: string): string {
-        switch (layerType) {
-            case 'DESSIN':
-                return 'pencil-alt';
-            case 'KML':
-                return 'map-marked-alt';
-            case 'SOURCE':
-                return 'globe';
-        }
+        return getlayerIcon(layerType);
     }
 
     get f() {

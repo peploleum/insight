@@ -1,0 +1,60 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'wifi'"></fa-icon>
+            <b> Serveur WMS</b></h4>
+    </div>
+    <div class="side-main side-element">
+        <div class="tools" style="height: 10%;">
+            <span title="Ajouter un serveur WMS" (click)="displayLayerCreationForm(!wmsLayerForm)"><fa-icon
+                [icon]="'plus-square'"></fa-icon></span>
+            <span title="Mettre le layer à l'arrière-plan" (click)="onLayerAction('MOVE_LAYER_DOWN', selectedLayer)"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
+            <span title="Mettre le layer au premier-plan" (click)="onLayerAction('MOVE_LAYER_UP', selectedLayer)"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
+        </div>
+
+        <div class="side-list-container" style="height: 90%;">
+            <div *ngFor="let layer of layerList;" [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
+                <span (click)="onSelectedLayerChanged(layer)" style="cursor: pointer;"><fa-icon
+                    [icon]="getLayerIcon(layer.layerType)"></fa-icon><span> {{layer.layerName}} [Z:{{layer.layerZIndex}}]</span></span>
+                <span (click)="onLayerAction('REMOVE_WMS', layer)"><fa-icon
+                    [icon]="'times'"></fa-icon></span>
+                <span (click)="onLayerAction('VISIBILITY_CHANGED', layer)"><fa-icon
+                    [icon]="layer.visible ? 'check-circle' : 'circle'"></fa-icon></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-secondary side-element" *ngIf="wmsLayerForm" [formGroup]="wmsLayerForm">
+
+        <div class="tools">
+            <span title="Ajouter un serveur WMS" (click)="onLayerAction('ADD_WMS')"><fa-icon
+                [icon]="'plus'"></fa-icon></span>
+            <span title="Faire un truc pas prévu"><fa-icon
+                [icon]="'bullseye'"></fa-icon></span>
+        </div>
+
+        <div class="side-inline-form">
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="wms-name">Nom du layer WMS</label>
+                <input type="text" formControlName="wmsName" class="form-control-sm" id="wms-name"
+                       placeholder="Nom du layer"/>
+            </div>
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="wms-url">URL du serveur WMS</label>
+                <input type="text" formControlName="wmsUrl" class="form-control-sm" id="wms-url"
+                       placeholder="URL du serveur WMS"/>
+            </div>
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="wms-layer">Layer du serveur WMS</label>
+                <input type="text" formControlName="wmsLayer" class="form-control-sm" id="wms-layer"
+                       placeholder="Layer cible du serveur WMS"/>
+            </div>
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="wms-attribution">Attribution du serveur WMS</label>
+                <input type="text" formControlName="wmsAttribution" class="form-control-sm" id="wms-attribution"
+                       placeholder="Attribution du serveur WMS"/>
+            </div>
+        </div>
+
+    </div>
+</div>

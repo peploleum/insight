@@ -134,22 +134,25 @@ export const DEFAULT_MAP_LAYERS: MapLayer[] = [
         layerName: 'DrawingLayer1',
         layerType: 'DESSIN',
         visible: true,
-        selected: true,
-        layerStatus: 'NEW'
+        layerStatus: 'NEW',
+        layerZIndex: 1,
+        selected: true
     },
     {
         layerId: UUID(),
         layerName: 'OSM',
-        layerType: 'SOURCE',
-        visible: true,
-        layerStatus: 'NEW'
+        layerType: 'WMS',
+        layerStatus: 'NEW',
+        layerZIndex: 0,
+        visible: true
     },
     {
         layerId: UUID(),
         layerName: 'BingMaps',
-        layerType: 'SOURCE',
-        visible: false,
-        layerStatus: 'NEW'
+        layerType: 'WMS',
+        layerStatus: 'NEW',
+        layerZIndex: 0,
+        visible: false
     }
 ];
 
