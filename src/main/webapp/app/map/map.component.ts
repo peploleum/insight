@@ -65,6 +65,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     featureSelectorSubs: Subscription;
     layerSubs: Subscription;
     zoomToLayerSubs: Subscription;
+    actionEmitterSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
@@ -103,6 +104,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
+        this.actionEmitterSubs = this.ms.actionEmitter.subscribe(action => {
+            this.onActionReceived(action);
+        });
         this.featureSelectorSubs = this.ms.outsideFeatureSelector.subscribe((ids: string[]) => {
             if (ids && ids.length) {
                 this.selectAndGoTo(ids[0]);
@@ -132,6 +136,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (this.zoomToLayerSubs) {
             this.zoomToLayerSubs.unsubscribe();
+        }
+        if (this.actionEmitterSubs) {
+            this.actionEmitterSubs.unsubscribe();
         }
     }
 

@@ -7,12 +7,21 @@
     <div class="side-main side-element">
 
         <div class="tools" style="height: 10%;">
-            <span title="Compte par RawDataType"><fa-icon
-                [icon]="'rss-square'"></fa-icon></span>
-            <span title="Compte par RawDataSourceType"><fa-icon
-                [icon]="'shield-alt'"></fa-icon></span>
-            <span title="Compte par RawDataSubType"><fa-icon
-                [icon]="'exclamation'"></fa-icon></span>
+            <span title="Voir toutes les données localisées" (click)="sendAction('F_ALL_DATA')"
+                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'all'}"><fa-icon
+                [icon]="'user-circle'"></fa-icon></span>
+            <span title="Voir les localités uniquement" (click)="sendAction('F_LOCATIONS_ONLY')"
+                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'locations'}"><fa-icon
+                [icon]="'bullseye'"></fa-icon></span>
+            <span title="Voir les données avec images uniquement" (click)="sendAction('F_IMAGES_ONLY')"
+                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'images'}"><fa-icon
+                [icon]="'image'"></fa-icon></span>
+            <span title="Voir toutes les données (Aucun filtre)" (click)="sendAction('F_NO_FILTER')"
+                  [ngClass]="{'selected': (!mapStates.FILTER_TYPE)}"><fa-icon
+                [icon]="'ban'"></fa-icon></span>
+            <span title="Activer les outils de dessin" (click)="sendAction('DESSIN_ENABLED')"
+                  [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"><fa-icon
+                [icon]="'pencil-alt'"></fa-icon></span>
         </div>
 
         <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"

@@ -219,4 +219,8 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     selectOnMap(itemId: string) {
         this.ms.outsideFeatureSelector.next([itemId]);
     }
+
+    sendAction(action: string) {
+        this.ms.actionEmitter.next(action);
+    }
 }

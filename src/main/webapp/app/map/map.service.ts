@@ -24,6 +24,8 @@ export class MapService {
     outsideFeatureSelector: Subject<string[]> = new Subject();
     insideFeatureSelector: Subject<string[]> = new Subject();
 
+    actionEmitter: Subject<string> = new Subject();
+
     rawDataStream: BehaviorSubject<EventThreadResultSet> = new BehaviorSubject(new EventThreadResultSet([], []));
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
