@@ -24,7 +24,7 @@ spec:
         - |
           while true
           do
-            rt=$(nc -z -w 1 insight-janusgraph 9042)
+            rt=$(nc -z -w 1 insight-janusgraph 8182)
             if [ $? -eq 0 ]; then
               echo "JANUSGRAPH is UP"
               break
