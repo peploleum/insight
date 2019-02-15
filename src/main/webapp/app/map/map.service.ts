@@ -15,6 +15,7 @@ import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from
 import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { EventThreadResultSet, FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
 import { UUID } from '../shared/util/insight-util';
+import { createRequestOption } from '../shared/util/request-util';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -123,10 +124,17 @@ export class MapService {
     }
 
     getGeoMarker(search: string): Observable<IMapDataDTO[]> {
-        return this.http.get<IMapDataDTO[]>(`${this.resourceUrl}/${search}`, { observe: 'response' }).pipe(
-            filter((res: HttpResponse<any[]>) => res.ok),
-            map((res: HttpResponse<any[]>) => res.body)
-        );
+        const req = { query: search };
+        const options = createRequestOption(req);
+        return this.http
+            .get<IMapDataDTO[]>(`${this.resourceUrl}/_search/georef`, {
+                params: options,
+                observe: 'response'
+            })
+            .pipe(
+                filter((res: HttpResponse<any[]>) => res.ok),
+                map((res: HttpResponse<any[]>) => res.body)
+            );
     }
 
     getIconImage(uri: string, id: string): string {
