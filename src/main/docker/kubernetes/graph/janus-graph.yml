@@ -10,13 +10,30 @@ spec:
       labels:
         app: insight-janusgraph
     spec:
+      initContainers:
+      - name: init-ds
+        image: busybox
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 insight-cassandra 9042)
+            if [ $? -eq 0 ]; then
+              echo "CASSANDRA is UP"
+              break
+            fi
+            echo "CASSANDRA is not yet reachable;sleep for 10s before retry"
+            sleep 10
+          done
       containers:
-      - name: janusgraph 
+      - name: janusgraph
         image: peploleum/janusgraph:1.0.0
         ports:
         - containerPort: 8182
           name: gremlin
-          protocol: TCP 
+          protocol: TCP
         - containerPort: 9160
           name: cassandra
           protocol: TCP
@@ -37,7 +54,7 @@ spec:
       volumes:
       - name: storage
         persistentVolumeClaim:
-          claimName: insight-storage-graph-claim 
+          claimName: insight-storage-graph-claim
 ---
 apiVersion: v1
 kind: Service
@@ -52,9 +69,10 @@ spec:
   - name: janus
     port: 9042
     targetPort: 9042
-  - name: cassandra 
-    port: 9160 
-    targetPort: 9160 
+  - name: cassandra
+    port: 9160
+    targetPort: 9160
   - name: gremlin
     port: 8182
     targetPort: 8182
+

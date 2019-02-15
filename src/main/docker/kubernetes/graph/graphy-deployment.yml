@@ -15,6 +15,23 @@ spec:
         app: insight-graphy
         version: "1.0"
     spec:
+      initContainers:
+      - name: init-ds
+        image: busybox
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 insight-janusgraph 9042)
+            if [ $? -eq 0 ]; then
+              echo "JANUSGRAPH is UP"
+              break
+            fi
+            echo "JANUSGRAPH is not yet reachable;sleep for 10s before retry"
+            sleep 10
+          done
       containers:
       - name: graphy-app
         image: peploleum/graphy:1.0.0
@@ -23,7 +40,7 @@ spec:
          - name: VERTEX_THRESHOLD
            value: '4'
          - name: SERVER_PORT
-           value: "8080"  
+           value: "8080"
          - name: JAVA_OPTS
            value: " -Xms256m -Xmx2048m"
          - name: ENDPOINT
@@ -54,5 +71,5 @@ spec:
   ports:
   - name: graphy
     port: 8080
-    nodePort: 30200 
+    nodePort: 30200
     targetPort: 8080
