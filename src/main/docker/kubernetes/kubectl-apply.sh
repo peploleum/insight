@@ -15,3 +15,4 @@ kubectl apply -f insight/ner/insight-ner-docker.yml
 kubectl apply -f insight/ner/insight-ner-kaf2json.yml
 kubectl apply -f insight/ner/insight-ner.yml
 kubectl apply -f graph/
+kubectl apply -f syslog/
