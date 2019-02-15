@@ -22,12 +22,24 @@ globals << [hook: [
             res = graph.openManagement().containsGraphIndex('insightIdMixedIndex')
             ctx.logger.warn("Index created : " + res.toString())
 
-            mgmt.makeVertexLabel("Biographics").make()
-            mgmt.makeVertexLabel("Event").make()
-            mgmt.makeVertexLabel("Organisation").make()
-            mgmt.makeVertexLabel("RawData").make()
-            mgmt.makeVertexLabel("Location").make()
-            mgmt.makeVertexLabel("Equipment").make()
+			if(mgmt.getVertexLabel("Biographics") == null) {
+				mgmt.makeVertexLabel("Biographics").make()
+			}
+			if(mgmt.getVertexLabel("Event") == null) {
+				mgmt.makeVertexLabel("Event").make()
+			}
+			if(mgmt.getVertexLabel("Organisation") == null) {
+				mgmt.makeVertexLabel("Organisation").make()
+			}
+			if(mgmt.getVertexLabel("RawData") == null) {
+				mgmt.makeVertexLabel("RawData").make()
+			}
+			if(mgmt.getVertexLabel("Location") == null) {
+				mgmt.makeVertexLabel("Location").make()
+			}
+			if(mgmt.getVertexLabel("Equipment") == null) {
+				mgmt.makeVertexLabel("Equipment").make()
+			}
 
             mgmt.commit()
         }
