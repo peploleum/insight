@@ -5,26 +5,31 @@ globals << [hook: [
     onStartUp : { ctx ->
         ctx.logger.warn("Creating indexes.")
         graph.tx().rollback()
-        res = graph.openManagement().containsGraphIndex('insightIdNameComposite')
-        ctx.logger.warn("Index already exists: " + res)
+        res = graph.openManagement().containsGraphIndex('insightIdMixedIndex')
+        ctx.logger.warn("Indexes already exists: " + res)
         if (res) {
-            ctx.logger.warn("Index already exists.")
+            ctx.logger.warn("Mixed index already exists.")
         } else {
             mgmt = graph.openManagement()
             propertyKey = mgmt.getPropertyKey('idInsight')
             if (propertyKey == null) {
                 propertyKey = mgmt.makePropertyKey('idInsight').dataType(String.class).make()
-                mgmt.makeVertexLabel("idInsight").make()
             }
             ctx.logger.warn("property key  : " + propertyKey.toString())
-            //compositeIndex = mgmt.buildIndex('insightIdNameComposite', Vertex.class).addKey(propertyKey).buildCompositeIndex()
-            //ctx.logger.warn("compositeIndex  : " + compositeIndex.toString())
-            
-            mixedIndex = mgmt.buildIndex('insightIdNameMixed', Vertex.class).addKey(propertyKey).buildMixedIndex("search")
-            ctx.logger.warn("compositeIndex  : " + mixedIndex.toString())
-            mgmt.commit()
-            res = graph.openManagement().containsGraphIndex('insightIdNameComposite')
+            mixedIndex = mgmt.buildIndex('insightIdMixedIndex', Vertex.class).addKey(propertyKey).buildMixedIndex("search")
+            ctx.logger.warn("mixedIndex  : " + mixedIndex.toString())
+
+            res = graph.openManagement().containsGraphIndex('insightIdMixedIndex')
             ctx.logger.warn("Index created : " + res.toString())
+
+            mgmt.makeVertexLabel("Biographics").make()
+            mgmt.makeVertexLabel("Event").make()
+            mgmt.makeVertexLabel("Organisation").make()
+            mgmt.makeVertexLabel("RawData").make()
+            mgmt.makeVertexLabel("Location").make()
+            mgmt.makeVertexLabel("Equipment").make()
+
+            mgmt.commit()
         }
     },
     onShutDown: { ctx ->
@@ -33,5 +38,3 @@ globals << [hook: [
 ] as LifeCycleHook]
 globals << [g   : graph.traversal(),
             mgmt: graph.openManagement()]
-
-
