@@ -23,6 +23,11 @@ spec:
                   echo "Waiting for elasticsearch to get initialized;sleep for 10s before retry"
                   sleep 10
                 done
+                until nc -z -w 1 insight 8080
+                do
+                  echo "Waiting for insight to get initialized;sleep for 10s before retry"
+                  sleep 10
+                done
       containers:
       - image: docker.elastic.co/logstash/logstash-oss:6.4.2
         name: refgeo-import-gazetter
