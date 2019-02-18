@@ -66,7 +66,7 @@ spec:
               - name: JAVA_OPTS
                 value: " -Xmx2048m -Xms256m"
               - name: GRAPH_ENABLED
-                value: 'false'
+                value: 'true'
               - name: GRAPH_HOST
                 value: "insight-graphy"
               - name: ELASTICSEARCH_ENABLED
