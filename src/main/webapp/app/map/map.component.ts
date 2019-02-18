@@ -27,6 +27,7 @@ import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
 import { UUID } from '../shared/util/insight-util';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'jhi-map',
@@ -115,6 +116,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.rawDataSource.addFeatures(features);
         });
         this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
+            features.forEach(feat => {
+                const featId: any = feat.getId();
+                feat.set('pinned', this.ms.pinnedGeoMarker.getValue().indexOf(featId) !== -1);
+            });
             this.removeUnpinnedMarker(this.geoMarkerSource);
             this.geoMarkerSource.addFeatures(features);
         });
@@ -464,6 +469,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             const isPinned = feature.get('pinned');
             const iconStyle: Style = this.getIconStyle(feature, isPinned);
             if (iconStyle !== null) {
+                iconStyle.setText(
+                    new Text({
+                        font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+                        placement: 'point',
+                        textBaseline: 'top',
+                        offsetY: 10,
+                        fill: new Fill({
+                            color: 'black'
+                        }),
+                        text: feature.get('label')
+                    })
+                );
                 return [iconStyle];
             }
         }

@@ -5,7 +5,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/internal/operators';
 import { IMapDataDTO } from '../../shared/model/map.model';
 import { ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/index';
 })
 export class MapSearchComponent extends SideInterface implements OnInit, AfterViewInit, OnDestroy {
     currentResult: IMapDataDTO[] = [];
+
     searchForm: FormControl = new FormControl('');
     pinnedIds: string[];
 
@@ -36,10 +37,14 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
             )
             .subscribe(
                 (result: IMapDataDTO[]) => {
-                    this.currentResult = result;
+                    // Garde les pinned point
+                    const filteredResult = this.currentResult.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) !== -1);
+                    // Remove doublon
+                    result = result.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) === -1);
+                    this.currentResult = filteredResult.concat(result);
                 },
                 error => {
-                    console.log('Error GeorRef');
+                    console.log('Error GeoRef');
                 }
             );
         this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((pinnedIds: string[]) => {

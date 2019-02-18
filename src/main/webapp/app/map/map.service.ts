@@ -93,7 +93,7 @@ export class MapService {
             feature.setId(dto.id);
             feature.set('description', dto.description);
             feature.set('objectType', dto.objectType);
-            feature.set('label', dto.objectType);
+            feature.set('label', dto.label);
             return feature;
         }
         return null;
@@ -140,6 +140,12 @@ export class MapService {
     }
 
     sendToMapGeoMarkerSource(source: IMapDataDTO[]): void {
+        source.forEach(item => {
+            if (!item.properties) {
+                item.properties = {};
+            }
+            item.properties['ADDED_TO_MAP'] = true;
+        });
         this.geoMarkerSource.next(source.map(item => MapService.getGeoJsonFromDto(item)).filter(dto => dto !== null));
     }
 
