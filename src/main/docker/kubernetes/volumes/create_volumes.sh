@@ -13,5 +13,3 @@ mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
 cp ../refgeo/logstash/csv/* /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/pipeline
 cp ../refgeo/logstash/pipeline/* /home/capgemini/binding/INSIGHT/refgeo/logstash/pipeline
-mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/script
-cp ../refgeo/logstash/script/* /home/capgemini/binding/INSIGHT/refgeo/logstash/script
