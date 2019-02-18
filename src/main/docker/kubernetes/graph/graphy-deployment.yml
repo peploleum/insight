@@ -34,7 +34,7 @@ spec:
           done
       containers:
       - name: graphy-app
-        image: peploleum/graphy:1.0.0
+        image: magnarox/graphy:latest
         imagePullPolicy: Always
         env:
          - name: VERTEX_THRESHOLD

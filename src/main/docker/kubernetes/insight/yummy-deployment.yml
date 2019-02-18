@@ -34,7 +34,7 @@ spec:
                   done
             containers:
             - name: yummy-app
-              image: peploleum/yummy:1.0.0
+              image: magnarox/yummy:latest
               imagePullPolicy: Always
               env:
               - name: SPRING_MAIN_WEB_APPLICATION_TYPE
@@ -66,7 +66,7 @@ spec:
               - name: JAVA_OPTS
                 value: " -Xmx2048m -Xms256m"
               - name: GRAPH_ENABLED
-                value: 'true'
+                value: 'false'
               - name: GRAPH_HOST
                 value: "insight-graphy"
               - name: ELASTICSEARCH_ENABLED

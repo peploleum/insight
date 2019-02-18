@@ -34,7 +34,7 @@ spec:
                   done
             containers:
             - name: insight-app
-              image: peploleum/insight:1.0.0
+              image: magnarox/insight:latest
               imagePullPolicy: Always
               env:
               - name: SPRING_PROFILES_ACTIVE
