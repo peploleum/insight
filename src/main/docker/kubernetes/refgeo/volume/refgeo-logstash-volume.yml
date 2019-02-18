@@ -15,7 +15,7 @@ spec:
     - ReadWriteOnce
   storageClassName: local-storage 
   local:
-    path: /home/capgemini/binding/refgeo/logstash/
+    path: /home/capgemini/binding/INSIGHT/refgeo/logstash/
   nodeAffinity:
     required:
       nodeSelectorTerms:
