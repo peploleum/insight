@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: refgeo-import-gazetter
+  namespace: insight
+  labels:
+    job: refgeo-import-gazetter
+spec:
+  template:
+    metadata:
+      labels:
+        app: refgeo-import-gazetter
+    spec:
+      initContainers:
+      - name: init-es-check
+        image: busybox:latest
+        command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                until nc -z -w 1 insight-elasticsearch 9200
+                do
+                  echo "Waiting for elasticsearch to get initialized;sleep for 10s before retry"
+                  sleep 10
+                done
+      containers:
+      - image: docker.elastic.co/logstash/logstash-oss:6.4.2
+        name: refgeo-import-gazetter
+        ports:
+        - containerPort: 9600
+          protocol: TCP
+        - containerPort: 5000
+          protocol: TCP
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xmx256m -Xms256m
+        - name: CONFIG_RELOAD_AUTOMATIC
+          value: "true"
+        - name: CONFIG_RELOAD_INTERVAL
+          value: 3s 
+        resources: {}
+        volumeMounts:
+        - name: logstash-data 
+          mountPath: /usr/share/logstash/csv
+          subPath: csv
+        - name: logstash-data 
+          mountPath: /usr/share/logstash/pipeline
+          subPath: pipeline
+      restartPolicy: OnFailure
+      volumes:
+      - name: logstash-data
+        persistentVolumeClaim:
+          claimName: refgeo-storage-logstash-claim
