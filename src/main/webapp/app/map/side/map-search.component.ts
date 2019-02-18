@@ -34,9 +34,14 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
                     return this.ms.getGeoMarker(value);
                 })
             )
-            .subscribe((result: IMapDataDTO[]) => {
-                this.currentResult = result;
-            });
+            .subscribe(
+                (result: IMapDataDTO[]) => {
+                    this.currentResult = result;
+                },
+                error => {
+                    console.log('Error GeorRef');
+                }
+            );
         this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((pinnedIds: string[]) => {
             this.pinnedIds = pinnedIds;
         });
