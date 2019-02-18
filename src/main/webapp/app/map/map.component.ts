@@ -23,7 +23,7 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
-import { FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
+import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
 import { UUID } from '../shared/util/insight-util';
@@ -68,7 +68,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     featureSelectorSubs: Subscription;
     layerSubs: Subscription;
     zoomToLayerSubs: Subscription;
+    zoomToFeatureSubs: Subscription;
     actionEmitterSubs: Subscription;
+    pinnedGeoMarkerSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
@@ -78,17 +80,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
         this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
-            style: (feature: Feature) => this.styleFunction(feature, false),
+            style: (feature: Feature) => this.mainStyleFunction(feature, false),
             zIndex: 1
         });
         this.geoMarkerLayer = new VectorLayer({
             source: this.geoMarkerSource,
-            style: (feature: Feature) => this.styleFunction(feature, false),
+            style: (feature: Feature) => this.geoMarkerStyleFunction(feature, false),
             zIndex: 1
         });
 
         this.selectInteraction = new SelectInteration({
-            style: (feature: Feature) => this.styleFunction(feature, true),
+            style: (feature: Feature) => this.mainStyleFunction(feature, true),
             multi: true
         });
         this.dragAndDropInteraction = new DragAndDropInteraction({
@@ -113,7 +115,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.rawDataSource.addFeatures(features);
         });
         this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
-            this.geoMarkerSource.clear();
+            this.removeUnpinnedMarker(this.geoMarkerSource);
             this.geoMarkerSource.addFeatures(features);
         });
         this.actionEmitterSubs = this.ms.actionEmitter.subscribe(action => {
@@ -132,6 +134,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             if (layerToZoom && layerToZoom instanceof VectorLayer) {
                 this._map.getView().fit((<VectorLayer>layerToZoom).getSource().getExtent());
             }
+        });
+        this.zoomToFeatureSubs = this.ms.zoomToFeature.subscribe((request: ZoomToFeatureRequest) => {
+            const targetLayer: VectorLayer = request.targetLayer === 'geoMarkerLayer' ? this.geoMarkerLayer : this.featureLayer;
+            const featureById: Feature = targetLayer.getSource().getFeatureById(request.featureId);
+            if (featureById) {
+                this._map.getView().fit(featureById.getGeometry().getExtent());
+            }
+        });
+        this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((markerIds: string[]) => {
+            this.geoMarkerSource.getFeatures().forEach((feat: Feature) => {
+                const featId: any = feat.getId();
+                feat.set('pinned', markerIds.indexOf(featId) !== -1);
+            });
         });
         this.initDessinTools();
     }
@@ -155,6 +170,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.geoMarkerSourceSubs) {
             this.geoMarkerSourceSubs.unsubscribe();
         }
+        if (this.zoomToFeatureSubs) {
+            this.zoomToFeatureSubs.unsubscribe();
+        }
+        if (this.pinnedGeoMarkerSubs) {
+            this.pinnedGeoMarkerSubs.unsubscribe();
+        }
+    }
+
+    private removeUnpinnedMarker(source: VectorSource) {
+        const features: Feature[] = source.getFeatures();
+        const filterFeat = features.filter(feat => !feat.get('pinned'));
+        filterFeat.forEach(feat => {
+            source.removeFeature(feat);
+        });
     }
 
     private initMap() {
@@ -410,7 +439,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.ms.mapStates.getValue();
     }
 
-    styleFunction(feature: Feature, isSelected: boolean) {
+    mainStyleFunction(feature: Feature, isSelected: boolean) {
         const mainStyle: Style = this.getStyle(feature.getGeometry().getType());
         if (isSelected) {
             mainStyle.setImage(this.selectedCircleImage);
@@ -430,9 +459,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         return [mainStyle];
     }
 
-    getIconStyle(feature: Feature): Style {
+    geoMarkerStyleFunction(feature: Feature, isSelected: boolean) {
+        if (feature.getGeometry().getType() === 'Point') {
+            const isPinned = feature.get('pinned');
+            const iconStyle: Style = this.getIconStyle(feature, isPinned);
+            if (iconStyle !== null) {
+                return [iconStyle];
+            }
+        }
+        return this.getStyle(feature.getGeometry().getType());
+    }
+
+    getIconStyle(feature: Feature, selected?: boolean): Style {
         const objectType = feature.get('objectType');
-        const src: string = MapService.getImageIconUrl(objectType);
+        const src: string = selected ? MapService.getSelectedImageIconUrl(objectType) : MapService.getImageIconUrl(objectType);
         return src === null
             ? null
             : new Style({

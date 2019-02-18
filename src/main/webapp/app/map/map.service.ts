@@ -11,9 +11,16 @@ import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
-import { IMAGE_URL_BIO, IMAGE_URL_DEFAULT, IMAGE_URL_EQUIP, IMAGE_URL_RAW } from '../network/network.service';
+import {
+    IMAGE_URL_BIO,
+    IMAGE_URL_DEFAULT,
+    IMAGE_URL_EQUIP,
+    IMAGE_URL_GEOMARKER,
+    IMAGE_URL_RAW,
+    IMAGE_URL_SELECTED_GEOMARKER
+} from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
-import { EventThreadResultSet, FigureStyle, MapLayer, MapState } from '../shared/util/map-utils';
+import { EventThreadResultSet, FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 
@@ -30,6 +37,7 @@ export class MapService {
     rawDataStream: BehaviorSubject<EventThreadResultSet> = new BehaviorSubject(new EventThreadResultSet([], []));
 
     geoMarkerSource: Subject<Feature[]> = new Subject();
+    pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
     mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
@@ -37,6 +45,7 @@ export class MapService {
     );
     mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
     zoomToLayer: Subject<string> = new Subject();
+    zoomToFeature: Subject<ZoomToFeatureRequest> = new Subject();
 
     static getImageIconUrl(objectType: string): string {
         switch (objectType) {
@@ -52,6 +61,17 @@ export class MapService {
                 return IMAGE_URL_DEFAULT;
             case 'Event':
                 return IMAGE_URL_DEFAULT;
+            case 'geoMarker':
+                return IMAGE_URL_GEOMARKER;
+            default:
+                return null;
+        }
+    }
+
+    static getSelectedImageIconUrl(objectType: string): string {
+        switch (objectType) {
+            case 'geoMarker':
+                return IMAGE_URL_SELECTED_GEOMARKER;
             default:
                 return null;
         }
@@ -110,7 +130,7 @@ export class MapService {
      * Envoie les geoMarker dans geoMarkerSource
      * */
     getFeaturesFromGeoMarker(source: IMapDataDTO[]): void {
-        if (source && source.length) {
+        if (source) {
             this.sendToMapGeoMarkerSource(source);
         }
     }

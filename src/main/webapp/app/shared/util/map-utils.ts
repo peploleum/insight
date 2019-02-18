@@ -92,10 +92,12 @@ export const getlayerIcon = (layerType: string): string => {
     }
 };
 
-/*export const getNewLayerIndex = (mapLayers: MapLayer[], newLayerType: MapLayerType): number => {
- mapLayers
- };
+export class ZoomToFeatureRequest {
+    targetLayer: string;
+    featureId: string;
 
- export const updateLayerIndex = (mapLayers: MapLayer[], targetLayerId: string, moveUp: boolean): number => {
-
- };*/
+    constructor(targetLayer: string, featureId: string) {
+        this.targetLayer = targetLayer;
+        this.featureId = featureId;
+    }
+}

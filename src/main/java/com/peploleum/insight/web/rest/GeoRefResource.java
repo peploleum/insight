@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,8 +49,17 @@ public class GeoRefResource {
         List<MapData> mapDto = page.getContent().stream().map(geoRef -> {
             MapData dto = new MapData();
             dto.setId(geoRef.getId());
-            dto.setLabel(geoRef.getGeonameid());
-            dto.setCoordinate(geoRef.getLocation());
+            if (geoRef.getProperties() != null) {
+                String countryCode = geoRef.getProperties().get("countrycode");
+                dto.setLabel(geoRef.getName() + " [" + countryCode + "]");
+            } else {
+                dto.setLabel(geoRef.getName());
+            }
+            List<Double> coordLatLon = new ArrayList<>(geoRef.getLocation());
+            // Reverse ordre de lont-lat en lat-lon pour avoir même structure que RawDataCoordinate
+            Collections.reverse(coordLatLon);
+            dto.setCoordinate(coordLatLon);
+            dto.setObjectType("geoMarker");
             return dto;
         }).collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/georef");

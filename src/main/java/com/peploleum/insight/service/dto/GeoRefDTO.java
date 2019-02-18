@@ -12,7 +12,7 @@ public class GeoRefDTO implements Serializable {
 
     private String id;
     private String name;
-    private String geonameid;
+    private String asciiname;
     private List<Double> location;
     private Map<String, String> properties;
 
@@ -32,12 +32,12 @@ public class GeoRefDTO implements Serializable {
         this.name = name;
     }
 
-    public String getGeonameid() {
-        return geonameid;
+    public String getAsciiname() {
+        return asciiname;
     }
 
-    public void setGeonameid(String geonameid) {
-        this.geonameid = geonameid;
+    public void setAsciiname(String asciiname) {
+        this.asciiname = asciiname;
     }
 
     public List<Double> getLocation() {

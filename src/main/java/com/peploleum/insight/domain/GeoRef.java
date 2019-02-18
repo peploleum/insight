@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class GeoRef implements Serializable {
     private String name;
 
     @Field(type = FieldType.Text)
-    private String geonameid;
+    private String asciiname;
 
     @GeoPointField
     private List<Double> location;
@@ -35,7 +36,7 @@ public class GeoRef implements Serializable {
     /**
      * Toutes propriétés inconnues seront ajoutées à properties
      **/
-    private Map<String, String> properties;
+    private Map<String, String> properties = new HashMap<>();
 
     public String getId() {
         return id;
@@ -53,12 +54,12 @@ public class GeoRef implements Serializable {
         this.name = name;
     }
 
-    public String getGeonameid() {
-        return geonameid;
+    public String getAsciiname() {
+        return asciiname;
     }
 
-    public void setGeonameid(String geonameid) {
-        this.geonameid = geonameid;
+    public void setAsciiname(String asciiname) {
+        this.asciiname = asciiname;
     }
 
     public List<Double> getLocation() {
@@ -75,7 +76,7 @@ public class GeoRef implements Serializable {
     }
 
     @JsonAnySetter
-    public void setProperties(Map<String, String> properties) {
-        this.properties = properties;
+    public void setProperties(String name, String value) {
+        this.properties.put(name, value);
     }
 }
