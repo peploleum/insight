@@ -4,6 +4,7 @@
 
 kubectl delete -f syslog/ --force --grace-period=0
 kubectl delete -f graph/ --force --grace-period=0
+kubectl delete -f refgeo/ --force --grace-period=0
 kubectl delete -f insight/ner/ --force --grace-period=0
 kubectl delete -f feeder/ --force --grace-period=0
 kubectl delete -f console/ --force --grace-period=0
