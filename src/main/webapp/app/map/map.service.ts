@@ -17,7 +17,8 @@ import {
     IMAGE_URL_EQUIP,
     IMAGE_URL_GEOMARKER,
     IMAGE_URL_RAW,
-    IMAGE_URL_SELECTED_GEOMARKER
+    IMAGE_URL_SELECTED_GEOMARKER,
+    IMAGE_URL_SELECTED_RAW
 } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { EventThreadResultSet, FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
@@ -72,8 +73,10 @@ export class MapService {
         switch (objectType) {
             case 'geoMarker':
                 return IMAGE_URL_SELECTED_GEOMARKER;
+            case 'RawData':
+                return IMAGE_URL_SELECTED_RAW;
             default:
-                return null;
+                return MapService.getImageIconUrl(objectType);
         }
     }
 

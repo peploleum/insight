@@ -27,7 +27,6 @@ import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
 import { UUID } from '../shared/util/insight-util';
-import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'jhi-map',
@@ -449,16 +448,37 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (isSelected) {
             mainStyle.setImage(this.selectedCircleImage);
         }
+        // if (feature.getGeometry().getType() === 'Point') {
+        //     const iconStyle: Style = this.getIconStyle(feature);
+        //     if (iconStyle !== null) {
+        //         const zoom = this._map.getView().getZoom();
+        //         if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
+        //             mainStyle.getText().setText(feature.get('label'));
+        //         } else {
+        //             mainStyle.getText().setText('');
+        //         }
+        //         return [mainStyle, iconStyle];
+        //     }
+        // }
         if (feature.getGeometry().getType() === 'Point') {
-            const iconStyle: Style = this.getIconStyle(feature);
+            const iconStyle: Style = this.getIconStyle(feature, isSelected);
             if (iconStyle !== null) {
                 const zoom = this._map.getView().getZoom();
                 if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
-                    mainStyle.getText().setText(feature.get('label'));
-                } else {
-                    mainStyle.getText().setText('');
+                    iconStyle.setText(
+                        new Text({
+                            font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+                            placement: 'point',
+                            textBaseline: 'top',
+                            offsetY: 10,
+                            fill: new Fill({
+                                color: 'black'
+                            }),
+                            text: feature.get('label')
+                        })
+                    );
                 }
-                return [mainStyle, iconStyle];
+                return [iconStyle];
             }
         }
         return [mainStyle];
@@ -467,7 +487,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     geoMarkerStyleFunction(feature: Feature, isSelected: boolean) {
         if (feature.getGeometry().getType() === 'Point') {
             const isPinned = feature.get('pinned');
-            const iconStyle: Style = this.getIconStyle(feature, isPinned);
+            const iconStyle: Style = this.getIconStyle(feature, isPinned, 0.05);
             if (iconStyle !== null) {
                 iconStyle.setText(
                     new Text({
@@ -487,7 +507,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.getStyle(feature.getGeometry().getType());
     }
 
-    getIconStyle(feature: Feature, selected?: boolean): Style {
+    getIconStyle(feature: Feature, selected?: boolean, scale?: number): Style {
         const objectType = feature.get('objectType');
         const src: string = selected ? MapService.getSelectedImageIconUrl(objectType) : MapService.getImageIconUrl(objectType);
         return src === null
@@ -495,7 +515,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             : new Style({
                   image: new Icon({
                       anchor: [0.5, 0.5],
-                      scale: 0.05,
+                      scale: scale ? scale : 0.01,
                       src: `${src}`
                   })
               });
