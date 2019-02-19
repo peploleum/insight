@@ -5,7 +5,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
 import { IMapDataDTO } from '../../shared/model/map.model';
 import { ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
@@ -37,7 +37,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
             )
             .subscribe(
                 (result: IMapDataDTO[]) => {
-                    // Garde les pinned point
+                    // Garde les pinned points
                     const filteredResult = this.currentResult.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) !== -1);
                     // Remove doublon
                     result = result.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) === -1);
@@ -68,14 +68,21 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         this.ms.zoomToFeature.next(new ZoomToFeatureRequest('geoMarkerLayer', featId));
     }
 
-    pinnedFeature(featId: string) {
+    pinnedFeature(feat: IMapDataDTO, addToMap?: boolean) {
+        if (addToMap) {
+            this.addSingleFeatureToMap(feat);
+        }
         const currentValue = this.ms.pinnedGeoMarker.getValue();
-        const i = currentValue.indexOf(featId);
+        const i = currentValue.indexOf(feat.id);
         if (i !== -1) {
             currentValue.splice(i, 1);
         } else {
-            currentValue.push(featId);
+            currentValue.push(feat.id);
         }
         this.ms.pinnedGeoMarker.next(currentValue);
+    }
+
+    addSingleFeatureToMap(feat: IMapDataDTO) {
+        this.ms.getFeaturesFromGeoMarker([feat]);
     }
 }

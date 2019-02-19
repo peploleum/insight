@@ -16,14 +16,14 @@
         <div class="side-list-container" style="height: 90%;" *ngIf="currentResult">
             <div *ngFor="let result of currentResult;">
                 <span *ngIf="result.properties && result.properties['ADDED_TO_MAP']; else notOnMap">
-                    <fa-icon (click)="pinnedFeature(result.id)" [icon]="'map-marker'"
+                    <fa-icon (click)="pinnedFeature(result)" [icon]="'map-marker'"
                              [style.color]="pinnedIds.indexOf(result.id) !== -1 ? 'red' : 'inherit'"></fa-icon>
                     <span (click)="zoomToFeature(result.id)" style="cursor: pointer;"> {{result.label}}</span>
                 </span>
 
                 <ng-template #notOnMap>
                     <fa-icon [icon]="'map-marker'"
-                             (click)="pinnedFeature(result.id)"
+                             (click)="pinnedFeature(result, true)"
                              [style.color]="pinnedIds.indexOf(result.id) !== -1 ? 'red' : '#6c757d'"></fa-icon>
                     <span [style.color]="'#a0a6ac'"> {{result.label}}</span>
                 </ng-template>
