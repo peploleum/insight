@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.repository.support.PageableExecutionUtils;
@@ -138,5 +139,11 @@ public class RawDataServiceImpl implements RawDataService {
         final List<RawDataDTO> resultList = this.mongoTemplate.find(query, RawData.class).stream().map(rawDataMapper::toDto).collect(Collectors.toList());
         final Page<RawDataDTO> page = PageableExecutionUtils.getPage(resultList, pageable, () -> resultList.size());
         return page;
+    }
+
+    @Override
+    public Page<RawDataDTO> search(NativeSearchQuery query) {
+        log.debug("Request to search for a page of RawData for query");
+        return this.rawDataSearchRepository.search(query).map(rawDataMapper::toDto);
     }
 }

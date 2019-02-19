@@ -3,6 +3,7 @@ package com.peploleum.insight.service;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
@@ -70,4 +71,12 @@ public interface RawDataService {
      * @return the page of entities
      */
     Page<RawDataDTO> searchByCriteria(Query query, Pageable pageable);
+
+    /**
+     * Search for the rawData corresponding to the query.
+     *
+     * @param query the SearchQuery of the search
+     * @return the list of entities
+     */
+    Page<RawDataDTO> search(NativeSearchQuery query);
 }

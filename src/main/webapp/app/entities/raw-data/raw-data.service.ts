@@ -42,7 +42,6 @@ export class RawDataService {
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         if (options.get('filter') !== null) {
-            console.log('found custom filter');
             return this.http
                 .get<IRawData[]>(this.resourceFilterUrl, { params: options, observe: 'response' })
                 .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));

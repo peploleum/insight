@@ -7,13 +7,18 @@ import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
 import com.peploleum.insight.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +29,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing RawData.
@@ -152,25 +159,54 @@ public class RawDataResource {
      */
     @GetMapping("/raw-data/filter")
     @Timed
-    public ResponseEntity<List<RawDataDTO>> getAllRawDataByCustomCriteria(@RequestParam String filter, Pageable pageable) {
+    public ResponseEntity<List<RawDataDTO>> getAllRawDataByCustomCriteria(@RequestParam String query, @RequestParam String filter, Pageable pageable) {
         log.debug("REST request to get a page of RawData with filters");
-        final Query query = new Query();
+
+        final QueryBuilder builder = query != null && !query.isEmpty() ? queryStringQuery(query) : QueryBuilders.matchAllQuery();
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(builder);
         switch (filter) {
             case "all":
-                query.addCriteria(Criteria.where("rawDataData").exists(true));
-                query.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+                BoolQueryBuilder filterAll = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.existsQuery("rawDataData"))
+                    .must(QueryBuilders.existsQuery("rawDataCoordinates"));
+                searchQueryBuilder.withFilter(filterAll);
                 break;
             case "locations":
-                query.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+                BoolQueryBuilder filterLoc = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.existsQuery("rawDataCoordinates"));
+                searchQueryBuilder.withFilter(filterLoc);
                 break;
             case "images":
-                query.addCriteria(Criteria.where("rawDataData").exists(true));
+                BoolQueryBuilder filterImg = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.existsQuery("rawDataData"));
+                searchQueryBuilder.withFilter(filterImg);
                 break;
             default:
                 break;
         }
-        query.with(new Sort(Sort.Direction.DESC, "rawDataCreationDate"));
-        final Page<RawDataDTO> page = rawDataService.searchByCriteria(query, pageable);
+
+        searchQueryBuilder.withSort(SortBuilders.fieldSort("rawDataCreationDate").order(SortOrder.DESC));
+        NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
+        final Page<RawDataDTO> page = rawDataService.search(esQuery);
+
+        // final Query mongoQuery = new Query();
+        // switch (filter) {
+        //     case "all":
+        //         mongoQuery.addCriteria(Criteria.where("rawDataData").exists(true));
+        //         mongoQuery.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+        //         break;
+        //     case "locations":
+        //         mongoQuery.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
+        //         break;
+        //     case "images":
+        //         mongoQuery.addCriteria(Criteria.where("rawDataData").exists(true));
+        //         break;
+        //     default:
+        //         break;
+        // }
+        // mongoQuery.with(new Sort(Sort.Direction.DESC, "rawDataCreationDate"));
+        // final Page<RawDataDTO> page = rawDataService.searchByCriteria(mongoQuery, pageable);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/raw-data/filter");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

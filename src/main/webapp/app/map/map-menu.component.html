@@ -18,7 +18,7 @@
                 <fa-icon [icon]="'image'"></fa-icon>
             </p>
         </li>
-        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': (!mapStates.FILTER_TYPE)}"
+        <li class="list-group-item popover-menu-item" [ngClass]="{'selected': mapStates.FILTER_TYPE === ''}"
             (click)="sendAction('F_NO_FILTER')" title="Voir toutes les données (Aucun filtre)">
             <p>
                 <fa-icon [icon]="'ban'"></fa-icon>

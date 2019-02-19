@@ -6,7 +6,7 @@
     </div>
     <div class="side-main side-element">
 
-        <div class="tools" style="height: 10%;">
+        <div class="tools" style="height: 8%;">
             <span title="Voir toutes les données localisées" (click)="sendAction('F_ALL_DATA')"
                   [ngClass]="{'selected': mapStates.FILTER_TYPE === 'all'}"><fa-icon
                 [icon]="'user-circle'"></fa-icon></span>
@@ -17,11 +17,17 @@
                   [ngClass]="{'selected': mapStates.FILTER_TYPE === 'images'}"><fa-icon
                 [icon]="'image'"></fa-icon></span>
             <span title="Voir toutes les données (Aucun filtre)" (click)="sendAction('F_NO_FILTER')"
-                  [ngClass]="{'selected': (!mapStates.FILTER_TYPE)}"><fa-icon
+                  [ngClass]="{'selected': mapStates.FILTER_TYPE === ''}"><fa-icon
                 [icon]="'ban'"></fa-icon></span>
             <span title="Activer les outils de dessin" (click)="sendAction('DESSIN_ENABLED')"
                   [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"><fa-icon
                 [icon]="'pencil-alt'"></fa-icon></span>
+        </div>
+
+        <div class="side-inline-form" style="height: 7%;">
+            <div class="side-input-container">
+                <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Balkany..."/>
+            </div>
         </div>
 
         <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"

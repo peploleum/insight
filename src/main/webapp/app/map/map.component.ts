@@ -595,6 +595,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onActionReceived(action: string) {
         const mapState = this.getMapStates();
+        let emitNewState = true;
         switch (action) {
             case 'F_ALL_DATA':
                 if (mapState.FILTER_TYPE !== 'all') {
@@ -615,8 +616,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 break;
             case 'F_NO_FILTER':
-                if (mapState.FILTER_TYPE) {
-                    mapState.FILTER_TYPE = null;
+                if (mapState.FILTER_TYPE !== '') {
+                    mapState.FILTER_TYPE = '';
                     this.onFilterChanged();
                 }
                 break;
@@ -630,10 +631,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.addDrawInteraction();
                 }
                 break;
+            case 'CLEAR_RAW_DATA_SOURCE':
+                this.rawDataSource.clear();
+                emitNewState = false;
+                break;
             default:
                 break;
         }
-        this.ms.mapStates.next(mapState);
+        if (emitNewState) {
+            this.ms.mapStates.next(mapState);
+        }
     }
 
     onFilterChanged() {

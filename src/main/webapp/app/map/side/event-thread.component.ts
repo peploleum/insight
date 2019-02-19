@@ -5,11 +5,12 @@ import { RawDataService } from 'app/entities/raw-data';
 import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { AccountService } from 'app/core';
 import { Router } from '@angular/router';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MapService } from '../map.service';
-import { tap } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/internal/operators';
 import { EventThreadResultSet, MapState } from '../../shared/util/map-utils';
 import { SideInterface } from '../../shared/side/side.abstract';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'ins-event-thread',
@@ -19,8 +20,6 @@ import { SideInterface } from '../../shared/side/side.abstract';
 export class EventThreadComponent extends SideInterface implements OnInit, OnDestroy {
     currentAccount: any;
     rawDataList: EventThreadResultSet = new EventThreadResultSet([], []);
-    error: any;
-    success: any;
 
     itemsPerPage: any;
     page: any;
@@ -36,9 +35,12 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
 
     mapStates: MapState;
     mapStatesSubs: Subscription;
-    selectedFeatSubs: Subscription;
 
+    selectedFeatSubs: Subscription;
     selectedFeatureId: string[] = [];
+
+    searchForm: FormControl = new FormControl('');
+    currentSearch = '';
 
     constructor(
         protected rawDataService: RawDataService,
@@ -68,9 +70,10 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.rawDataService
             .query({
                 page: this.page - 1,
+                query: this.currentSearch,
                 size: this.itemsPerPage,
                 sort: this.sort(),
-                filter: this.mapStates.FILTER_TYPE // out of 'all', 'locations', 'images', no filter in options means retrieving all data
+                filter: this.mapStates.FILTER_TYPE // out of 'all', 'locations', 'images', no filter ( '' ) in options means retrieving all data
             })
             .pipe(
                 tap((res: HttpResponse<IRawData[]>) => {
@@ -100,6 +103,17 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     }
 
     ngOnInit() {
+        this.searchForm.valueChanges
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged()
+            )
+            .subscribe((value: any) => {
+                this.currentSearch = value;
+                this.clear();
+                this.sendAction('CLEAR_RAW_DATA_SOURCE');
+                this.loadAll();
+            });
         this.mapStatesSubs = this.ms.mapStates.subscribe((newState: MapState) => {
             const needReload: boolean = this.mapStates !== null && typeof this.mapStates !== 'undefined';
             this.mapStates = newState;
@@ -112,7 +126,6 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.accountService.identity().then(account => {
             this.currentAccount = account;
         });
-        this.registerChangeInRawData();
         this.selectedFeatSubs = this.ms.insideFeatureSelector.subscribe(ids => (this.selectedFeatureId = ids));
     }
 
@@ -136,8 +149,6 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     openFile(contentType, field) {
         return this.dataUtils.openFile(contentType, field);
     }
-
-    registerChangeInRawData() {}
 
     sort() {
         const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
