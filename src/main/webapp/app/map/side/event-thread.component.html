@@ -19,9 +19,9 @@
             <span title="Voir toutes les données (Aucun filtre)" (click)="sendAction('F_NO_FILTER')"
                   [ngClass]="{'selected': mapStates.FILTER_TYPE === ''}"><fa-icon
                 [icon]="'ban'"></fa-icon></span>
-            <span title="Activer les outils de dessin" (click)="sendAction('DESSIN_ENABLED')"
-                  [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"><fa-icon
-                [icon]="'pencil-alt'"></fa-icon></span>
+            <span title="Activer le rafraîchissement automatique" (click)="sendAction('AUTO_REFRESH')"
+                  [ngClass]="{'selected': (mapStates.AUTO_REFRESH)}"><fa-icon
+                [icon]="'sync-alt'"></fa-icon></span>
         </div>
 
         <div class="side-inline-form" style="height: 7%;">

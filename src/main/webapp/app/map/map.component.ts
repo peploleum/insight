@@ -620,25 +620,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             case 'F_ALL_DATA':
                 if (mapState.FILTER_TYPE !== 'all') {
                     mapState.FILTER_TYPE = 'all';
-                    this.onFilterChanged();
+                    this.clearRawDataSource();
                 }
                 break;
             case 'F_LOCATIONS_ONLY':
                 if (mapState.FILTER_TYPE !== 'locations') {
                     mapState.FILTER_TYPE = 'locations';
-                    this.onFilterChanged();
+                    this.clearRawDataSource();
                 }
                 break;
             case 'F_IMAGES_ONLY':
                 if (mapState.FILTER_TYPE !== 'images') {
                     mapState.FILTER_TYPE = 'images';
-                    this.onFilterChanged();
+                    this.clearRawDataSource();
                 }
                 break;
             case 'F_NO_FILTER':
                 if (mapState.FILTER_TYPE !== '') {
                     mapState.FILTER_TYPE = '';
-                    this.onFilterChanged();
+                    this.clearRawDataSource();
                 }
                 break;
             case 'DESSIN_ENABLED':
@@ -652,8 +652,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 break;
             case 'CLEAR_RAW_DATA_SOURCE':
-                this.rawDataSource.clear();
+                this.clearRawDataSource();
                 emitNewState = false;
+                break;
+            case 'AUTO_REFRESH':
+                mapState.AUTO_REFRESH = !mapState.AUTO_REFRESH;
                 break;
             default:
                 break;
@@ -663,7 +666,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onFilterChanged() {
+    clearRawDataSource() {
         this.rawDataSource.clear();
     }
 }

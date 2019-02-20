@@ -13,10 +13,14 @@
                 [icon]="'arrow-circle-down'"></fa-icon></span>
             <span title="Mettre le layer au premier-plan" (click)="onLayerAction('MOVE_LAYER_UP', selectedLayer)"><fa-icon
                 [icon]="'arrow-circle-up'"></fa-icon></span>
+            <span title="Activer les outils de dessin" (click)="sendAction('DESSIN_ENABLED')"
+                  [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"><fa-icon
+                [icon]="'pencil-alt'"></fa-icon></span>
         </div>
         <h6 class="ml-2">Layer List :</h6>
         <div class="side-list-container" style="height: 85%;">
-            <div *ngFor="let layer of layerList;" [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
+            <div *ngFor="let layer of layerList;"
+                 [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"
                                [style.color]="layer.selected && layer.layerType === 'DESSIN' ? 'red' : 'inherit'"
                                [style.cursor]="layer.layerType === 'DESSIN' ? 'pointer' : 'none'"

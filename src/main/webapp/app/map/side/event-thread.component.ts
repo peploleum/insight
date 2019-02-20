@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IRawData } from 'app/shared/model/raw-data.model';
-import { Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { RawDataService } from 'app/entities/raw-data';
 import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { AccountService } from 'app/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MapService } from '../map.service';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, filter, takeWhile, tap } from 'rxjs/internal/operators';
 import { EventThreadResultSet, MapState } from '../../shared/util/map-utils';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { FormControl } from '@angular/forms';
@@ -42,6 +42,10 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     searchForm: FormControl = new FormControl('');
     currentSearch = '';
 
+    autoRefreshSubs: Subscription;
+    canRefresh = false;
+    isDestroyed = false; // isDestroyed nécessaire pour arrêter l'interval
+
     constructor(
         protected rawDataService: RawDataService,
         protected parseLinks: JhiParseLinks,
@@ -61,6 +65,7 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
     updateIdStore(isFirst: boolean, isLast: boolean, id: string): boolean {
         this.firstId = isFirst ? id : this.firstId;
         this.lastId = isLast ? id : this.lastId;
+        this.canRefresh = this.firstId === this.rawDataList.dataIds[0];
         return true;
     }
 
@@ -76,8 +81,19 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
                 filter: this.mapStates.FILTER_TYPE // out of 'all', 'locations', 'images', no filter ( '' ) in options means retrieving all data
             })
             .pipe(
+                filter((res: HttpResponse<IRawData[]>) => {
+                    if (this.mapStates.AUTO_REFRESH && this.canRefresh && res.body && res.body.length) {
+                        return res.body[0].id !== this.rawDataList.dataIds[0];
+                    }
+                    return true;
+                }),
                 tap((res: HttpResponse<IRawData[]>) => {
                     if (res.ok) {
+                        if (this.mapStates.AUTO_REFRESH && this.canRefresh) {
+                            // Dans le cas d'un refresh, clear la liste et les indices uniquement
+                            // si le premier élément est différent (voir fonction filter précédente)
+                            this.clear();
+                        }
                         // Envoi en carto
                         this.ms.getFeaturesFromRawData(res.body);
                     }
@@ -117,6 +133,9 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         this.mapStatesSubs = this.ms.mapStates.subscribe((newState: MapState) => {
             const needReload: boolean = this.mapStates !== null && typeof this.mapStates !== 'undefined';
             this.mapStates = newState;
+            if (this.mapStates.AUTO_REFRESH && !this.autoRefreshSubs) {
+                this.triggerAutoRefresh();
+            }
             if (needReload) {
                 this.clear();
                 this.loadAll();
@@ -136,6 +155,34 @@ export class EventThreadComponent extends SideInterface implements OnInit, OnDes
         if (this.selectedFeatSubs) {
             this.selectedFeatSubs.unsubscribe();
         }
+        if (this.autoRefreshSubs) {
+            this.autoRefreshSubs.unsubscribe();
+        }
+        this.isDestroyed = true;
+    }
+
+    triggerAutoRefresh() {
+        // emit toutes les 5 secondes
+        // unsubscribe si AUTO_REFRESH === true
+        // N'accepte pas la séquence si canRefresh === false (l'utilisateur n'est plus au top de la page)
+        // Déclenche un loadAll avec la première page des rawData
+        this.autoRefreshSubs = interval(10000)
+            .pipe(
+                takeWhile(i => this.mapStates.AUTO_REFRESH && !this.isDestroyed),
+                filter(i => this.canRefresh),
+                tap(i => {
+                    this.page = 1;
+                    this.loadAll();
+                })
+            )
+            .subscribe(
+                success => console.log('New refresh received'),
+                error => console.log('Error auto refresh'),
+                () => {
+                    this.autoRefreshSubs.unsubscribe();
+                    this.autoRefreshSubs = null;
+                }
+            );
     }
 
     trackId(index: number, item: IRawData) {

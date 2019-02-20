@@ -8,12 +8,20 @@ export class MapState {
     DISPLAY_CONTENT_ON_HOVER: boolean;
     FILTER_TYPE: string;
     DESSIN_ENABLED: boolean;
+    AUTO_REFRESH: boolean;
 
-    constructor(DISPLAY_LABEL: boolean, DISPLAY_CONTENT_ON_HOVER: boolean, FILTER_TYPE: string, DESSIN_ENABLED: boolean) {
+    constructor(
+        DISPLAY_LABEL: boolean,
+        DISPLAY_CONTENT_ON_HOVER: boolean,
+        FILTER_TYPE: string,
+        DESSIN_ENABLED: boolean,
+        AUTO_REFRESH: boolean
+    ) {
         this.DISPLAY_LABEL = DISPLAY_LABEL;
         this.DISPLAY_CONTENT_ON_HOVER = DISPLAY_CONTENT_ON_HOVER;
         this.FILTER_TYPE = FILTER_TYPE;
         this.DESSIN_ENABLED = DESSIN_ENABLED;
+        this.AUTO_REFRESH = AUTO_REFRESH;
     }
 }
 

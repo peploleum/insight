@@ -40,7 +40,7 @@ export class MapService {
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
-    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false));
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, 'all', false, false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
         new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
     );

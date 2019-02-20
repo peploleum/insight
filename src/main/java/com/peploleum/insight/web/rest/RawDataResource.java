@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.http.HttpHeaders;
@@ -188,24 +187,6 @@ public class RawDataResource {
         searchQueryBuilder.withSort(SortBuilders.fieldSort("rawDataCreationDate").order(SortOrder.DESC));
         NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
         final Page<RawDataDTO> page = rawDataService.search(esQuery);
-
-        // final Query mongoQuery = new Query();
-        // switch (filter) {
-        //     case "all":
-        //         mongoQuery.addCriteria(Criteria.where("rawDataData").exists(true));
-        //         mongoQuery.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
-        //         break;
-        //     case "locations":
-        //         mongoQuery.addCriteria(Criteria.where("rawDataCoordinates").exists(true));
-        //         break;
-        //     case "images":
-        //         mongoQuery.addCriteria(Criteria.where("rawDataData").exists(true));
-        //         break;
-        //     default:
-        //         break;
-        // }
-        // mongoQuery.with(new Sort(Sort.Direction.DESC, "rawDataCreationDate"));
-        // final Page<RawDataDTO> page = rawDataService.searchByCriteria(mongoQuery, pageable);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/raw-data/filter");
         return ResponseEntity.ok().headers(headers).body(page.getContent());

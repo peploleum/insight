@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { SideInterface } from '../../shared/side/side.abstract';
 import { MapService } from '../map.service';
-import { FigureStyle, getlayerIcon, MapLayer } from '../../shared/util/map-utils';
+import { FigureStyle, getlayerIcon, MapLayer, MapState } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { UUID } from '../../shared/util/insight-util';
 
@@ -22,6 +22,9 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     layersSubs: Subscription;
 
     selectedLayer: MapLayer;
+
+    mapStates: MapState;
+    mapStatesSubs: Subscription;
 
     constructor(protected formBuilder: FormBuilder, protected ms: MapService) {
         super();
@@ -58,12 +61,22 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
             .subscribe(layers => {
                 this.layerList = layers;
             });
+        this.mapStatesSubs = this.ms.mapStates.subscribe((newState: MapState) => {
+            this.mapStates = newState;
+        });
     }
 
     ngOnDestroy() {
         if (this.layersSubs) {
             this.layersSubs.unsubscribe();
         }
+        if (this.mapStatesSubs) {
+            this.mapStatesSubs.unsubscribe();
+        }
+    }
+
+    sendAction(action: string) {
+        this.ms.actionEmitter.next(action);
     }
 
     onFormSelected(form: string) {
