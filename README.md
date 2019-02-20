@@ -331,11 +331,11 @@ Create connection with parameters:
 
 [Kubernetes dashboard](https://10.65.34.150:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/pod?namespace=insight)
 
-[Apache NiFi endpoint](http://10.65.34.149:30463/nifi/)
+[Apache NiFi endpoint](http://10.65.34.149:31748/nifi/)
 
-[Insight endpoint](http://10.65.34.149:30603/#/)
+[Insight endpoint](http://10.65.34.149:32681/#/)
 
-[Insight console](http://10.65.34.149:32334/app/kibana#/dashboards?_g=())
+[Insight console](http://10.65.34.149:31294/app/kibana#/dashboards?_g=())
 
 [Insight dashboards](http://10.65.34.149:30100/app/kibana#/home?_g=())
 
