@@ -4,24 +4,12 @@
             <fa-icon [icon]="'wifi'"></fa-icon>
             <b> Flux d'événements</b></h4>
     </div>
-    <div class="side-main side-element">
+    <div class="side-main side-element" *ngIf="TOOLBAR_ACTIONS">
 
         <div class="tools" style="height: 8%;">
-            <span title="Voir toutes les données localisées" (click)="sendAction('F_ALL_DATA')"
-                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'all'}"><fa-icon
-                [icon]="'user-circle'"></fa-icon></span>
-            <span title="Voir les localités uniquement" (click)="sendAction('F_LOCATIONS_ONLY')"
-                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'locations'}"><fa-icon
-                [icon]="'bullseye'"></fa-icon></span>
-            <span title="Voir les données avec images uniquement" (click)="sendAction('F_IMAGES_ONLY')"
-                  [ngClass]="{'selected': mapStates.FILTER_TYPE === 'images'}"><fa-icon
-                [icon]="'image'"></fa-icon></span>
-            <span title="Voir toutes les données (Aucun filtre)" (click)="sendAction('F_NO_FILTER')"
-                  [ngClass]="{'selected': mapStates.FILTER_TYPE === ''}"><fa-icon
-                [icon]="'ban'"></fa-icon></span>
-            <span title="Activer le rafraîchissement automatique" (click)="sendAction('AUTO_REFRESH')"
-                  [ngClass]="{'selected': (mapStates.AUTO_REFRESH)}"><fa-icon
-                [icon]="'sync-alt'"></fa-icon></span>
+            <span *ngFor="let action of TOOLBAR_ACTIONS" title="{{action.tooltip}}" (click)="sendAction(action.action)"
+                  [ngClass]="{'selected': action.isToggled}"><fa-icon
+                [icon]="action.icon"></fa-icon></span>
         </div>
 
         <div class="side-inline-form" style="height: 7%;">
@@ -35,13 +23,13 @@
              class="event-thread-container">
             <div class="card event-thread-card"
                  *ngFor="let rawData of rawDataList.data | slice:firstIndex:lastIndex; trackBy:trackId; first as isFirst; last as isLast;"
-                 [ngClass]="{'selected': selectedFeatureId.indexOf(rawData.id) !== -1}">
+                 [ngClass]="{'selected': SELECTED_DATA_IDS.indexOf(rawData.id) !== -1}">
                 <div class="card-img-top event-thread-top"><img
                     *ngIf="rawData.rawDataData" class="event-thread-image"
                     [src]="getImageBase64Src(rawData.rawDataData)">
                 </div>
                 <div class="card-body" *ngIf="isFirst || isLast ? updateIdStore(isFirst, isLast, rawData.id) : true">
-                    <a class="card-title event-thread-title" (click)="selectOnMap(rawData.id)">
+                    <a class="card-title event-thread-title" (click)="onRawDataClicked(rawData.id)">
                         <fa-icon [icon]="getDataTypeIcon(rawData.rawDataType)"></fa-icon>
                         {{rawData.rawDataName | stringTruncate : 30}}</a>
                     <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>

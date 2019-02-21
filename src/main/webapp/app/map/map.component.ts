@@ -26,7 +26,10 @@ import Text from 'ol/style/text';
 import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
-import { UUID } from '../shared/util/insight-util';
+import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
+import { SideMediatorService } from '../side/side-mediator.service';
+import { EventThreadParameters, SideAction, SideParameters } from '../shared/util/side.util';
+import { IRawData } from '../shared/model/raw-data.model';
 
 @Component({
     selector: 'jhi-map',
@@ -65,19 +68,22 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     featureSourceSubs: Subscription;
     geoMarkerSourceSubs: Subscription;
-    featureSelectorSubs: Subscription;
+    outsideFeatureSelectorSubs: Subscription;
     layerSubs: Subscription;
     zoomToLayerSubs: Subscription;
     zoomToFeatureSubs: Subscription;
     actionEmitterSubs: Subscription;
     pinnedGeoMarkerSubs: Subscription;
+    mapStatesSubs: Subscription;
+    newDataReceivedSubs: Subscription;
+    newEventThreadSearchValueSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
         this.internalOnResize();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService) {
+    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService, private sms: SideMediatorService) {
         this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.mainStyleFunction(feature, false),
@@ -106,13 +112,45 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.mapStatesSubs = this.ms.mapStates
+            .pipe(
+                startWith(null),
+                pairwise()
+            )
+            .subscribe((states: MapState[]) => {
+                const needReload: boolean = states[0] !== null && typeof states[0] !== 'undefined';
+                const newState = states[1];
+
+                const newSideParameters: SideParameters<EventThreadParameters> = SideParameters(
+                    'EVENT_THREAD',
+                    new EventThreadParameters(newState.AUTO_REFRESH, newState.FILTER_TYPE)
+                );
+                this.sms.updateSideParameters(newSideParameters);
+
+                const updatedEventThreadToolbar: ToolbarButtonParameters[] = this.ms.getUpdatedEventThreadToolbar();
+                this.sms._toolbarActions.next(updatedEventThreadToolbar);
+
+                const sideActions: SideAction[] = [];
+                if (newState.AUTO_REFRESH) {
+                    sideActions.push(new SideAction('EVENT_THREAD', 'TRIGGER_AUTO_REFRESH'));
+                }
+                if (needReload) {
+                    sideActions.push(new SideAction('EVENT_THREAD', 'CLEAR'));
+                    sideActions.push(new SideAction('EVENT_THREAD', 'LOAD_ALL'));
+                }
+                this.sms._sideAction.next(sideActions);
+            });
+    }
 
     ngAfterViewInit(): void {
         this.initMap();
         this.initMapLayerListener();
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
+        });
+        this.newDataReceivedSubs = this.sms._onNewDataReceived.subscribe((data: any[]) => {
+            this.ms.getFeaturesFromRawData(<IRawData[]>data);
         });
         this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
             features.forEach(feat => {
@@ -125,11 +163,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.actionEmitterSubs = this.ms.actionEmitter.subscribe(action => {
             this.onActionReceived(action);
         });
-        this.featureSelectorSubs = this.ms.outsideFeatureSelector.subscribe((ids: string[]) => {
+        this.outsideFeatureSelectorSubs = this.sms._onNewDataSelected.subscribe((ids: string[]) => {
             if (ids && ids.length) {
                 this.selectAndGoTo(ids[0]);
             }
         });
+        this.newEventThreadSearchValueSubs = this.sms._onNewSearchValue.subscribe(value =>
+            this.ms.actionEmitter.next('CLEAR_RAW_DATA_SOURCE')
+        );
         this.zoomToLayerSubs = this.ms.zoomToLayer.subscribe(id => {
             const layerToZoom = this._map
                 .getLayers()
@@ -159,8 +200,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.featureSourceSubs) {
             this.featureSourceSubs.unsubscribe();
         }
-        if (this.featureSelectorSubs) {
-            this.featureSelectorSubs.unsubscribe();
+        if (this.outsideFeatureSelectorSubs) {
+            this.outsideFeatureSelectorSubs.unsubscribe();
         }
         if (this.layerSubs) {
             this.layerSubs.unsubscribe();
@@ -179,6 +220,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (this.pinnedGeoMarkerSubs) {
             this.pinnedGeoMarkerSubs.unsubscribe();
+        }
+        if (this.mapStatesSubs) {
+            this.mapStatesSubs.unsubscribe();
+        }
+        if (this.newDataReceivedSubs) {
+            this.newDataReceivedSubs.unsubscribe();
+        }
+        if (this.newEventThreadSearchValueSubs) {
+            this.newEventThreadSearchValueSubs.unsubscribe();
         }
     }
 
@@ -239,7 +289,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 .map(feat => {
                     return feat.getId();
                 });
-            this.ms.insideFeatureSelector.next(selectedIds);
+            this.sms._selectedData.next(selectedIds);
         });
     }
 

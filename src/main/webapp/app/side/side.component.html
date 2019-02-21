@@ -1,6 +1,6 @@
 <div [hidden]="isHidden" class="side">
     <div *ngIf="target === 'map'" class="h-100">
-        <ins-event-thread [hidden]="_sideElement !== 'EVENT_THREAD'"></ins-event-thread>
+        <ins-side-event-thread [hidden]="_sideElement !== 'EVENT_THREAD'"></ins-side-event-thread>
         <ins-dessin [hidden]="_sideElement !== 'DESSIN'"></ins-dessin>
         <ins-quick-stats [hidden]="_sideElement !== 'QUICK_STATS'"></ins-quick-stats>
         <ins-layer-control [hidden]="_sideElement !== 'LAYER_CONTROL'"></ins-layer-control>
@@ -9,7 +9,11 @@
     <div *ngIf="target === 'dashboard'" class="h-100">
         <ins-dashboard-manager></ins-dashboard-manager>
     </div>
+    <div *ngIf="target === 'network'" class="h-100">
+        <ins-network-search [hidden]="_sideElement !== 'NETWORK_SEARCH'"></ins-network-search>
+        <ins-network-content [hidden]="_sideElement !== 'NETWORK_CONTENT'"></ins-network-content>
+    </div>
 </div>
 <ins-side-buttons [isClosed]="isHidden" [_sideElement]="_sideElement" [target]="target"
                   (closeEmitter)="displaySidePannel($event)"
-                  (showEventThreadEmitter)="showEventThread($event)"></ins-side-buttons>
+                  (changeSideElementEmitter)="changeSideElement($event)"></ins-side-buttons>

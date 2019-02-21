@@ -9,9 +9,10 @@ import { SideComponent } from './side.component';
 import { SideRoutingModule } from './side-routing.module';
 import { MapModule } from '../map/map.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { SideEventThreadComponent } from './side-event-thread.component';
 
 @NgModule({
     imports: [CommonModule, InsightSharedModule, SideRoutingModule, MapModule, DashboardModule],
-    declarations: [SideComponent]
+    declarations: [SideComponent, SideEventThreadComponent]
 })
 export class SideModule {}

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { MapRoutingModule } from './map-routing.module';
 import { MapComponent } from './map.component';
-import { EventThreadComponent } from './side/event-thread.component';
 import { InsightSharedModule } from 'app/shared';
 import { MapMenuComponent } from './map-menu.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,15 +14,7 @@ import { MapSearchComponent } from './side/map-search.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
-    declarations: [
-        MapComponent,
-        EventThreadComponent,
-        DessinComponent,
-        MapMenuComponent,
-        QuickStatsComponent,
-        LayerControlComponent,
-        MapSearchComponent
-    ],
-    exports: [EventThreadComponent, DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent]
+    declarations: [MapComponent, DessinComponent, MapMenuComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent],
+    exports: [DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent]
 })
 export class MapModule {}

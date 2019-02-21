@@ -17,3 +17,17 @@ export const UUID = (): string => {
 export interface FileReaderEventTarget extends EventTarget {
     result: string;
 }
+
+export class ToolbarButtonParameters {
+    action: string;
+    icon: string;
+    tooltip: string;
+    isToggled?: boolean;
+
+    constructor(action: string, icon: string, tooltip: string, isToggled?: boolean) {
+        this.action = action;
+        this.icon = icon;
+        this.tooltip = tooltip;
+        this.isToggled = isToggled;
+    }
+}

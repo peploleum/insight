@@ -18,7 +18,7 @@ export class SideButtonsComponent implements OnInit {
     @Output()
     closeEmitter: EventEmitter<boolean> = new EventEmitter();
     @Output()
-    showEventThreadEmitter: EventEmitter<string> = new EventEmitter();
+    changeSideElementEmitter: EventEmitter<string> = new EventEmitter();
 
     constructor() {}
 
@@ -28,7 +28,7 @@ export class SideButtonsComponent implements OnInit {
         this.closeEmitter.emit(doClose);
     }
 
-    showEventThread(element: string) {
-        this.showEventThreadEmitter.emit(element);
+    changeSideElement(element: string) {
+        this.changeSideElementEmitter.emit(element);
     }
 }

@@ -1,18 +1,31 @@
 <div class="side-buttons" [ngStyle]="{'right.px': isClosed ? 0 : 408}">
     <span (click)="closePanel(!isClosed)"><fa-icon [icon]="isClosed ? 'angle-left' : 'angle-right'"></fa-icon></span>
-    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('EVENT_THREAD')"
-          [ngClass]="{'isDisplayed' : _sideElement === 'EVENT_THREAD'}"><fa-icon
-        [icon]="'wifi'"></fa-icon></span>
-    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('DESSIN')"
-          [ngClass]="{'isDisplayed' : _sideElement === 'DESSIN'}"><fa-icon
-        [icon]="'pencil-alt'"></fa-icon></span>
-    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('QUICK_STATS')"
-          [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_STATS'}"><fa-icon
-        [icon]="'chart-bar'"></fa-icon></span>
-    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('LAYER_CONTROL')"
-          [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
-        [icon]="'globe'"></fa-icon></span>
-    <span *ngIf="!isClosed && target === 'map'" (click)="showEventThread('MAP_SEARCH')"
-          [ngClass]="{'isDisplayed' : _sideElement === 'MAP_SEARCH'}"><fa-icon
-        [icon]="'search'"></fa-icon></span>
+
+    <ng-template *ngIf="!isClosed && target === 'map'">
+        <span (click)="changeSideElement('EVENT_THREAD')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'EVENT_THREAD'}"><fa-icon
+            [icon]="'wifi'"></fa-icon></span>
+        <span (click)="changeSideElement('DESSIN')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'DESSIN'}"><fa-icon
+            [icon]="'pencil-alt'"></fa-icon></span>
+        <span (click)="changeSideElement('QUICK_STATS')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_STATS'}"><fa-icon
+            [icon]="'chart-bar'"></fa-icon></span>
+        <span (click)="changeSideElement('LAYER_CONTROL')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
+            [icon]="'globe'"></fa-icon></span>
+        <span (click)="changeSideElement('MAP_SEARCH')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'MAP_SEARCH'}"><fa-icon
+            [icon]="'search'"></fa-icon></span>
+    </ng-template>
+
+    <ng-template *ngIf="!isClosed && target === 'network'">
+        <span (click)="changeSideElement('NETWORK_SEARCH')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'NETWORK_SEARCH'}"><fa-icon
+            [icon]="'wifi'"></fa-icon></span>
+        <span (click)="changeSideElement('NETWORK_CONTENT')"
+              [ngClass]="{'isDisplayed' : _sideElement === 'NETWORK_CONTENT'}"><fa-icon
+            [icon]="'search'"></fa-icon></span>
+    </ng-template>
+
 </div>

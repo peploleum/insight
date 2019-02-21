@@ -22,7 +22,7 @@ import {
 } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { EventThreadResultSet, FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
-import { UUID } from '../shared/util/insight-util';
+import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 
 @Injectable({ providedIn: 'root' })
@@ -104,22 +104,6 @@ export class MapService {
 
     constructor(private http: HttpClient) {}
 
-    getFeaturesFromIds(ids: string[]): void {
-        this.http
-            .post<IMapDataDTO[]>(`${this.resourceUrl}`, ids, {
-                observe: 'response'
-            })
-            .pipe(
-                filter((res: HttpResponse<IMapDataDTO[]>) => res.ok),
-                map(res => {
-                    return <IMapDataDTO[]>res.body;
-                })
-            )
-            .subscribe((data: IMapDataDTO[]) => {
-                this.sendToMapFeatureSource(data);
-            });
-    }
-
     /**
      * Transforme les RawData et les envoie dans featureSource
      * */
@@ -166,24 +150,49 @@ export class MapService {
             );
     }
 
-    getIconImage(uri: string, id: string): string {
-        const svg =
-            '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-            '<defs>' +
-            `<clipPath id="${id}">` +
-            '<circle cx="60" cy="60" r="60" fill="red" />' +
-            '</clipPath>' +
-            '</defs>' +
-            `<image width="100%" height="100%" xlink:href="${uri}" clip-path="url(%23${id})" />` +
-            '</svg>';
-        return svg;
-    }
-
-    /** Temporaire: Remplace swagger */
-    generateRawData() {
-        return this.http.get(`${SERVER_API_URL}api/generator/bulk`, {
-            observe: 'response'
-        });
+    getUpdatedEventThreadToolbar(): ToolbarButtonParameters[] {
+        const newToolbar = [];
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'F_ALL_DATA',
+                'user-circle',
+                'Voir toutes les données localisées',
+                this.mapStates.getValue().FILTER_TYPE === 'all'
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'F_LOCATIONS_ONLY',
+                'bullseye',
+                'Voir les localités uniquement',
+                this.mapStates.getValue().FILTER_TYPE === 'locations'
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'F_IMAGES_ONLY',
+                'image',
+                'Voir les données avec images uniquement',
+                this.mapStates.getValue().FILTER_TYPE === 'images'
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'F_NO_FILTER',
+                'ban',
+                'Voir toutes les données (Aucun filtre)',
+                this.mapStates.getValue().FILTER_TYPE === ''
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'AUTO_REFRESH',
+                'sync-alt',
+                'Activer le rafraîchissement automatique',
+                this.mapStates.getValue().AUTO_REFRESH
+            )
+        );
+        return newToolbar;
     }
 }
 

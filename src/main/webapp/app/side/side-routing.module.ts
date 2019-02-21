@@ -21,6 +21,14 @@ const routes: Routes = [
             target: 'dashboard'
         },
         outlet: 'side'
+    },
+    {
+        path: 'ins-network-side-panel',
+        component: SideComponent,
+        data: {
+            target: 'network'
+        },
+        outlet: 'side'
     }
 ];
 
