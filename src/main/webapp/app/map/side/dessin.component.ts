@@ -9,6 +9,7 @@ import { MapService } from '../map.service';
 import { FigureStyle, getlayerIcon, MapLayer, MapState } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { UUID } from '../../shared/util/insight-util';
+import { SideMediatorService } from '../../side/side-mediator.service';
 
 @Component({
     selector: 'ins-dessin',
@@ -26,7 +27,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     mapStates: MapState;
     mapStatesSubs: Subscription;
 
-    constructor(protected formBuilder: FormBuilder, protected ms: MapService) {
+    constructor(protected formBuilder: FormBuilder, protected ms: MapService, protected sms: SideMediatorService) {
         super();
         this.currentStyle = this.ms.dessinStates.getValue();
         this.dessinForm = this.formBuilder.group({
@@ -76,7 +77,7 @@ export class DessinComponent extends SideInterface implements OnInit, OnDestroy 
     }
 
     sendAction(action: string) {
-        this.ms.actionEmitter.next(action);
+        this.sms._onNewActionClicked.next(action);
     }
 
     onFormSelected(form: string) {

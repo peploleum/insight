@@ -8,6 +8,7 @@ import * as Chart from 'chart.js';
 import { EventThreadResultSet } from '../../shared/util/map-utils';
 import { debounceTime } from 'rxjs/internal/operators';
 import { IRawData } from '../../shared/model/raw-data.model';
+import { SideMediatorService } from '../../side/side-mediator.service';
 
 @Component({
     selector: 'ins-quick-stats',
@@ -24,7 +25,7 @@ export class QuickStatsComponent extends SideInterface implements OnInit, AfterV
     };
     countProperty = 'rawDataType';
 
-    constructor(protected ms: MapService) {
+    constructor(protected ms: MapService, protected sms: SideMediatorService) {
         super();
     }
 
@@ -32,12 +33,12 @@ export class QuickStatsComponent extends SideInterface implements OnInit, AfterV
 
     changeAnalysedProperty(property: string) {
         this.countProperty = property;
-        this.prepareDataSet(this.ms.rawDataStream.getValue(), this.countProperty);
+        this.prepareDataSet(this.sms._currentResultSet.getValue(), this.countProperty);
         this.updateChart();
     }
 
     ngAfterViewInit() {
-        this.ms.rawDataStream.pipe(debounceTime(100)).subscribe((data: EventThreadResultSet) => {
+        this.sms._currentResultSet.pipe(debounceTime(100)).subscribe((data: EventThreadResultSet) => {
             this.prepareDataSet(data, this.countProperty);
             if (this.dataSet.labels.length && this.dataSet.data.length) {
                 if (!this.chart) {

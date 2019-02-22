@@ -21,7 +21,7 @@ import {
     IMAGE_URL_SELECTED_RAW
 } from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
-import { EventThreadResultSet, FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
+import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 
@@ -30,12 +30,6 @@ export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
 
     featureSource: Subject<Feature[]> = new Subject();
-    outsideFeatureSelector: Subject<string[]> = new Subject();
-    insideFeatureSelector: Subject<string[]> = new Subject();
-
-    actionEmitter: Subject<string> = new Subject();
-
-    rawDataStream: BehaviorSubject<EventThreadResultSet> = new BehaviorSubject(new EventThreadResultSet([], []));
 
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);

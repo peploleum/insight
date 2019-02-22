@@ -11,6 +11,7 @@ import { NetworkSearchComponent } from './side/network-search.component';
 import { NetworkContentComponent } from './side/network-content.component';
 
 @NgModule({
+    imports: [CommonModule, NetworkRoutingModule, InsightSharedModule],
     declarations: [
         NetworkComponent,
         NetworkMenuComponent,
@@ -19,7 +20,6 @@ import { NetworkContentComponent } from './side/network-content.component';
         NetworkSearchComponent,
         NetworkContentComponent
     ],
-    imports: [CommonModule, NetworkRoutingModule, InsightSharedModule],
     entryComponents: [NetworkMenuComponent, NetworkSideMenuComponent],
     exports: [NetworkSearchComponent, NetworkContentComponent]
 })

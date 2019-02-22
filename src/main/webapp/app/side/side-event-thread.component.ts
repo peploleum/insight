@@ -1,7 +1,7 @@
 /**
  * Created by gFolgoas on 20/02/2019.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { EventThreadResultSet } from '../shared/util/map-utils';
 import { FormControl } from '@angular/forms';
 import { interval, Subscription } from 'rxjs/index';
@@ -18,11 +18,11 @@ import { EventThreadParameters, SideAction, SideParameters } from '../shared/uti
     selector: 'ins-side-event-thread',
     templateUrl: 'side-event-thread.component.html'
 })
-export class SideEventThreadComponent implements OnInit, OnDestroy {
-    AUTO_REFRESH?: boolean = false;
-    FILTER?: string = 'all';
+export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewInit {
+    AUTO_REFRESH = false;
+    FILTER = 'all';
     SELECTED_DATA_IDS: string[] = [];
-    TOOLBAR_ACTIONS: ToolbarButtonParameters[];
+    TOOLBAR_ACTIONS: ToolbarButtonParameters[] = [];
 
     toolbarActionsSubs: Subscription;
     sideParametersSubs: Subscription;
@@ -66,6 +66,10 @@ export class SideEventThreadComponent implements OnInit, OnDestroy {
                 this.clear();
                 this.loadAll();
             });
+        this.loadAll();
+    }
+
+    ngAfterViewInit() {
         this.sideActionSubs = this.sms._sideAction
             .pipe(map((actions: SideAction[]) => actions.filter((a: SideAction) => a.componentTarget === 'EVENT_THREAD')))
             .subscribe((actions: SideAction[]) => {
@@ -87,21 +91,28 @@ export class SideEventThreadComponent implements OnInit, OnDestroy {
             });
         this.sideParametersSubs = this.sms._sideParameters
             .pipe(
-                filter((params: SideParameters[]) => params && params.length),
-                map((params: SideParameters[]) => params.filter(param => param.componentTarget === 'EVENT_THREAD')),
-                map(params => params[0])
+                filter((params: SideParameters<any>[]) => {
+                    return params && params.length > 0;
+                }),
+                map((params: SideParameters<any>[]) => {
+                    return params.filter(param => param.parameters instanceof EventThreadParameters);
+                })
             )
-            .subscribe((param: SideParameters<EventThreadParameters>) => {
-                this.AUTO_REFRESH = param.parameters.autoRefresh;
-                this.FILTER = param.parameters.filter;
+            .subscribe((params: SideParameters<EventThreadParameters>[]) => {
+                params.forEach(param => {
+                    this.AUTO_REFRESH = param.parameters.autoRefresh;
+                    this.FILTER = param.parameters.filter;
+                });
             });
-        this.toolbarActionsSubs = this.sms._toolbarActions.subscribe((actions: ToolbarButtonParameters[]) => {
-            this.TOOLBAR_ACTIONS = actions;
+        // setTimeout pour éviter les changeAfterChecked error sur TOOLBAR_ACTIONS à l'initialisation
+        setTimeout(() => {
+            this.toolbarActionsSubs = this.sms._toolbarActions.subscribe((actions: ToolbarButtonParameters[]) => {
+                this.TOOLBAR_ACTIONS = actions;
+            });
         });
         this.selectedDataSubs = this.sms._selectedData.subscribe((ids: string[]) => {
             this.SELECTED_DATA_IDS = ids;
         });
-        this.loadAll();
     }
 
     ngOnDestroy() {
@@ -215,13 +226,12 @@ export class SideEventThreadComponent implements OnInit, OnDestroy {
     }
 
     protected paginateRawData(data: IRawData[]) {
-        console.log('loaded ' + data.length);
         if (data && data.length > 0) {
             const newDataList: EventThreadResultSet = new EventThreadResultSet(
                 this.rawDataList.data.concat(data),
                 this.rawDataList.dataIds.concat(data.map(item => item.id))
             );
-            this.ms.rawDataStream.next(newDataList);
+            this.sms._currentResultSet.next(newDataList);
             this.rawDataList = newDataList;
             if (this.firstId) {
                 this.firstIndex = this.rawDataList.dataIds.indexOf(this.firstId);

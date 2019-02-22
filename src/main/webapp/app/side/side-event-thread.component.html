@@ -4,7 +4,7 @@
             <fa-icon [icon]="'wifi'"></fa-icon>
             <b> Flux d'événements</b></h4>
     </div>
-    <div class="side-main side-element" *ngIf="TOOLBAR_ACTIONS">
+    <div class="side-main side-element">
 
         <div class="tools" style="height: 8%;">
             <span *ngFor="let action of TOOLBAR_ACTIONS" title="{{action.tooltip}}" (click)="sendAction(action.action)"

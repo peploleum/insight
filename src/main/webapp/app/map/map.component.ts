@@ -112,7 +112,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    ngOnInit() {
+    ngOnInit() {}
+
+    ngAfterViewInit(): void {
+        this.initMap();
+        this.initMapLayerListener();
         this.mapStatesSubs = this.ms.mapStates
             .pipe(
                 startWith(null),
@@ -122,7 +126,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 const needReload: boolean = states[0] !== null && typeof states[0] !== 'undefined';
                 const newState = states[1];
 
-                const newSideParameters: SideParameters<EventThreadParameters> = SideParameters(
+                const newSideParameters: SideParameters<EventThreadParameters> = new SideParameters<EventThreadParameters>(
                     'EVENT_THREAD',
                     new EventThreadParameters(newState.AUTO_REFRESH, newState.FILTER_TYPE)
                 );
@@ -141,11 +145,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this.sms._sideAction.next(sideActions);
             });
-    }
-
-    ngAfterViewInit(): void {
-        this.initMap();
-        this.initMapLayerListener();
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
             this.rawDataSource.addFeatures(features);
         });
@@ -160,7 +159,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.removeUnpinnedMarker(this.geoMarkerSource);
             this.geoMarkerSource.addFeatures(features);
         });
-        this.actionEmitterSubs = this.ms.actionEmitter.subscribe(action => {
+        this.actionEmitterSubs = this.sms._onNewActionClicked.subscribe(action => {
             this.onActionReceived(action);
         });
         this.outsideFeatureSelectorSubs = this.sms._onNewDataSelected.subscribe((ids: string[]) => {
@@ -168,9 +167,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectAndGoTo(ids[0]);
             }
         });
-        this.newEventThreadSearchValueSubs = this.sms._onNewSearchValue.subscribe(value =>
-            this.ms.actionEmitter.next('CLEAR_RAW_DATA_SOURCE')
-        );
+        this.newEventThreadSearchValueSubs = this.sms._onNewSearchValue.subscribe(value => this.onActionReceived('CLEAR_RAW_DATA_SOURCE'));
         this.zoomToLayerSubs = this.ms.zoomToLayer.subscribe(id => {
             const layerToZoom = this._map
                 .getLayers()
