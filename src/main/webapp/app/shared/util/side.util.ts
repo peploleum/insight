@@ -1,6 +1,7 @@
 /**
  * Created by gFolgoas on 21/02/2019.
  */
+import { ToolbarButtonParameters } from './insight-util';
 /**
  * Permet l'execution de fonction dans le composant du sidePanel visé.
  * Les paramètres sont les inputs optionnels de la fonction.
@@ -13,6 +14,16 @@ export class SideAction {
     constructor(componentTarget: string, action: string, parameters?: any[]) {
         this.componentTarget = componentTarget;
         this.action = action;
+        this.parameters = parameters;
+    }
+}
+
+export class ToolbarState {
+    componentTarget: string;
+    parameters: ToolbarButtonParameters[];
+
+    constructor(componentTarget: string, parameters: ToolbarButtonParameters[]) {
+        this.componentTarget = componentTarget;
         this.parameters = parameters;
     }
 }

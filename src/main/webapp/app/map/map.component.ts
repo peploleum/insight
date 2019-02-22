@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
-import { EventThreadParameters, SideAction, SideParameters } from '../shared/util/side.util';
+import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
 import { IRawData } from '../shared/model/raw-data.model';
 
 @Component({
@@ -133,7 +133,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.sms.updateSideParameters(newSideParameters);
 
                 const updatedEventThreadToolbar: ToolbarButtonParameters[] = this.ms.getUpdatedEventThreadToolbar();
-                this.sms._toolbarActions.next(updatedEventThreadToolbar);
+                this.sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
 
                 const sideActions: SideAction[] = [];
                 if (newState.AUTO_REFRESH) {

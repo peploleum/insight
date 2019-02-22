@@ -12,7 +12,8 @@ import { IRawData } from '../shared/model/raw-data.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ToolbarButtonParameters } from '../shared/util/insight-util';
 import { SideMediatorService } from './side-mediator.service';
-import { EventThreadParameters, SideAction, SideParameters } from '../shared/util/side.util';
+import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
+import { SideInterface } from '../shared/side/side.abstract';
 
 @Component({
     selector: 'ins-side-event-thread',
@@ -20,7 +21,7 @@ import { EventThreadParameters, SideAction, SideParameters } from '../shared/uti
 })
 export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewInit {
     AUTO_REFRESH = false;
-    FILTER = 'all';
+    FILTER = '';
     SELECTED_DATA_IDS: string[] = [];
     TOOLBAR_ACTIONS: ToolbarButtonParameters[] = [];
 
@@ -106,9 +107,11 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
             });
         // setTimeout pour éviter les changeAfterChecked error sur TOOLBAR_ACTIONS à l'initialisation
         setTimeout(() => {
-            this.toolbarActionsSubs = this.sms._toolbarActions.subscribe((actions: ToolbarButtonParameters[]) => {
-                this.TOOLBAR_ACTIONS = actions;
-            });
+            this.toolbarActionsSubs = this.sms._toolbarActions
+                .pipe(map((states: ToolbarState[]) => states.filter(state => state.componentTarget === 'EVENT_THREAD')))
+                .subscribe((states: ToolbarState[]) => {
+                    states.forEach(actions => (this.TOOLBAR_ACTIONS = actions.parameters));
+                });
         });
         this.selectedDataSubs = this.sms._selectedData.subscribe((ids: string[]) => {
             this.SELECTED_DATA_IDS = ids;

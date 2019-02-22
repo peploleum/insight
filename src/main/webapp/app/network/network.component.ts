@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
@@ -8,21 +8,25 @@ import { RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { FileReaderEventTarget } from '../shared/util/insight-util';
+import { SideMediatorService } from '../side/side-mediator.service';
+import { NetworkState } from '../shared/util/network.util';
+import { ToolbarState } from '../shared/util/side.util';
 
 @Component({
     selector: 'ins-network',
     templateUrl: './network.component.html',
     styles: [':host { flex-grow: 1}']
 })
-export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit {
+export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
-    networkStates = { LAYOUT_DIR: 'UD', LAYOUT_FREE: false, PHYSICS_ENABLED: false };
 
     graphDataSubscription: Subscription;
+    actionClickedSubs: Subscription;
+    networkStateSubs: Subscription;
 
-    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute) {}
+    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute, private sms: SideMediatorService) {}
 
     ngOnInit() {
         this._ns.JSONFileSelected.subscribe(
@@ -41,11 +45,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.initNetworkEventListener();
         this.activatedRoute.data.subscribe(({ originNode }) => {
             if (originNode) {
-                console.log('ROUTING DONE');
                 const theRawData: RawData = <RawData>originNode;
-                console.log(theRawData);
                 if (theRawData.externalId != null) {
-                    console.log('ROUTING DONE ' + theRawData.externalId);
                     this._ns
                         .getNodeProperties(theRawData.externalId)
                         .pipe(
@@ -56,7 +57,6 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                             })
                         )
                         .subscribe((nodeDTO: NodeDTO) => {
-                            console.log('ROUTING DONE ' + nodeDTO);
                             this.addNodes([nodeDTO], []);
                             this.getNodesNeighbours([nodeDTO.id]);
                         });
@@ -67,6 +67,25 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 this.getMockData();
             }
         });
+        this.networkStateSubs = this._ns.networkState.subscribe(state => {
+            const updatedEventThreadToolbar = this._ns.getUpdatedEventThreadToolbar();
+            this.sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
+        });
+        this.actionClickedSubs = this.sms._onNewActionClicked.subscribe(action => {
+            this.onActionReceived(action);
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.actionClickedSubs) {
+            this.actionClickedSubs.unsubscribe();
+        }
+        if (this.graphDataSubscription) {
+            this.graphDataSubscription.unsubscribe();
+        }
+        if (this.networkStateSubs) {
+            this.networkStateSubs.unsubscribe();
+        }
     }
 
     getMockData() {
@@ -99,7 +118,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     getPhysicsOption(): any {
         return {
-            enabled: this.networkStates['PHYSICS_ENABLED'],
+            enabled: this.getState().PHYSICS_ENABLED,
             solver: 'repulsion'
         };
     }
@@ -107,9 +126,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     getLayoutOption(): any {
         return {
             hierarchical: {
-                enabled: !this.networkStates['LAYOUT_FREE'],
+                enabled: !this.getState().LAYOUT_FREE,
                 levelSeparation: 100,
-                direction: this.networkStates['LAYOUT_DIR']
+                direction: this.getState().LAYOUT_DIR
             }
         };
     }
@@ -126,10 +145,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             console.log(node);
         });
         this.network.on('selectNode', properties => {
-            if (this.networkStates['ADD_NEIGHBOURS']) {
+            if (this.getState().ADD_NEIGHBOURS) {
                 this.getNodesNeighbours(properties.nodes);
             }
-            if (!this.networkStates['CLUSTER_NODES']) {
+            if (!this.getState().CLUSTER_NODES) {
                 const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
@@ -145,6 +164,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 this.addNodes(data.nodes, data.edges);
             });
         }
+    }
+
+    getState(): NetworkState {
+        return this._ns.networkState.getValue();
     }
 
     addNodes(nodes: Node[], edges: Edge[]) {
@@ -196,6 +219,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     onActionReceived(action: string) {
+        const networkState: NetworkState = this._ns.networkState.getValue();
         switch (action) {
             case 'ADD_NODES':
                 break;
@@ -205,46 +229,50 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             case 'UPDATE_NODES':
                 break;
             case 'ADD_NEIGHBOURS':
-                this.networkStates['ADD_NEIGHBOURS'] = !this.networkStates['ADD_NEIGHBOURS'];
+                networkState.ADD_NEIGHBOURS = !networkState.ADD_NEIGHBOURS;
                 break;
             case 'CLUSTER_NODES':
-                this.networkStates['CLUSTER_NODES'] = !this.networkStates['CLUSTER_NODES'];
-                if (this.networkStates['CLUSTER_NODES']) {
+                networkState.CLUSTER_NODES = !networkState.CLUSTER_NODES;
+                if (networkState.CLUSTER_NODES) {
                     this.clusterNodes();
                 }
                 break;
             case 'PHYSICS_ENABLED':
-                this.networkStates['PHYSICS_ENABLED'] = !this.networkStates['PHYSICS_ENABLED'];
+                networkState.PHYSICS_ENABLED = !networkState.PHYSICS_ENABLED;
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_FREE':
-                this.networkStates['LAYOUT_FREE'] = !this.networkStates['LAYOUT_FREE'];
+                networkState.LAYOUT_FREE = !networkState.LAYOUT_FREE;
                 this.network.setOptions({ layout: this.getLayoutOption() });
                 // Obliger de remettre l'option physic sinon elle est écrasée avec le changement de layout
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_UD':
-                this.networkStates['LAYOUT_DIR'] = 'UD';
+                networkState.LAYOUT_DIR = 'UD';
                 this.network.setOptions({ layout: this.getLayoutOption() });
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_DU':
-                this.networkStates['LAYOUT_DIR'] = 'DU';
+                networkState.LAYOUT_DIR = 'DU';
                 this.network.setOptions({ layout: this.getLayoutOption() });
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_LR':
-                this.networkStates['LAYOUT_DIR'] = 'LR';
+                networkState.LAYOUT_DIR = 'LR';
                 this.network.setOptions({ layout: this.getLayoutOption() });
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_DIR_RL':
-                this.networkStates['LAYOUT_DIR'] = 'RL';
+                networkState.LAYOUT_DIR = 'RL';
                 this.network.setOptions({ layout: this.getLayoutOption() });
                 this.network.setOptions({ physics: this.getPhysicsOption() });
+                break;
+            case 'AUTO_REFRESH':
+                networkState.AUTO_REFRESH = !networkState.AUTO_REFRESH;
                 break;
             default:
                 break;
         }
+        this._ns.networkState.next(networkState);
     }
 }

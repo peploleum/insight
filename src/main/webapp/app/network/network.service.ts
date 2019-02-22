@@ -4,17 +4,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { IdType } from 'vis';
 import { filter, map } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { RawData } from 'app/shared/model/raw-data.model';
+import { NetworkState } from '../shared/util/network.util';
+import { ToolbarButtonParameters } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
     private resourceUrl;
     JSONFileSelected: Subject<File> = new Subject();
+    networkState: BehaviorSubject<NetworkState> = new BehaviorSubject({
+        LAYOUT_DIR: 'UD',
+        LAYOUT_FREE: false,
+        PHYSICS_ENABLED: false
+    });
 
     public static getNodeDto(
         label: string,
@@ -148,6 +155,75 @@ export class NetworkService {
             headers,
             observe: 'response'
         });
+    }
+
+    getUpdatedEventThreadToolbar(): ToolbarButtonParameters[] {
+        const newToolbar = [];
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'AUTO_REFRESH',
+                'sync-alt',
+                'Activer le rafraîchissement automatique',
+                this.networkState.getValue().AUTO_REFRESH
+            )
+        );
+        return newToolbar;
+    }
+
+    getUpdatedNetworkContentToolbar(): ToolbarButtonParameters[] {
+        const newToolbar = [];
+        newToolbar.push(
+            new ToolbarButtonParameters('ADD_NEIGHBOURS', 'code-branch', 'Ajouter des Voisins', this.networkState.getValue().ADD_NEIGHBOURS)
+        );
+        newToolbar.push(new ToolbarButtonParameters('DELETE_NODES', 'times', 'Supprimer des Nodes'));
+        newToolbar.push(
+            new ToolbarButtonParameters('CLUSTER_NODES', 'dot-circle', 'Activer le clustering', this.networkState.getValue().CLUSTER_NODES)
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'PHYSICS_ENABLED',
+                'magic',
+                'Activer le positionnement libre',
+                this.networkState.getValue().PHYSICS_ENABLED
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters(
+                'LAYOUT_FREE',
+                'hand-paper',
+                'Activer le positionnement libre',
+                this.networkState.getValue().LAYOUT_FREE
+            )
+        );
+        newToolbar.push(
+            new ToolbarButtonParameters('LAYOUT_MENU', 'arrows-alt', 'Changer la disposition', false, [
+                new ToolbarButtonParameters(
+                    'LAYOUT_DIR_UD',
+                    'arrow-circle-down',
+                    'Haut-Bas',
+                    this.networkState.getValue().LAYOUT_DIR === 'UD'
+                ),
+                new ToolbarButtonParameters(
+                    'LAYOUT_DIR_DU',
+                    'arrow-circle-up',
+                    'Bas-Haut',
+                    this.networkState.getValue().LAYOUT_DIR === 'DU'
+                ),
+                new ToolbarButtonParameters(
+                    'LAYOUT_DIR_LR',
+                    'arrow-circle-right',
+                    'Gauche-Droite',
+                    this.networkState.getValue().LAYOUT_DIR === 'LR'
+                ),
+                new ToolbarButtonParameters(
+                    'LAYOUT_DIR_RL',
+                    'arrow-circle-left',
+                    'Droite-Gauche',
+                    this.networkState.getValue().LAYOUT_DIR === 'RL'
+                )
+            ])
+        );
+        return newToolbar;
     }
 }
 

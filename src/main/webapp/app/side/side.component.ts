@@ -16,7 +16,7 @@ export class SideComponent extends SideInterface implements OnInit, OnDestroy {
     constructor(private activatedRoute: ActivatedRoute) {
         super();
         this.target = this.activatedRoute.snapshot.data['target'];
-        this._sideElement = this.target === 'map' ? 'EVENT_THREAD' : this.target === 'network' ? 'NETWORK_CONTENT' : '';
+        this._sideElement = this.target === 'map' ? 'EVENT_THREAD' : this.target === 'network' ? 'EVENT_THREAD' : '';
     }
 
     ngOnInit() {}

@@ -23,11 +23,13 @@ export class ToolbarButtonParameters {
     icon: string;
     tooltip: string;
     isToggled?: boolean;
+    subButtons?: ToolbarButtonParameters[];
 
-    constructor(action: string, icon: string, tooltip: string, isToggled?: boolean) {
+    constructor(action: string, icon: string, tooltip: string, isToggled?: boolean, subButtons?: ToolbarButtonParameters[]) {
         this.action = action;
         this.icon = icon;
         this.tooltip = tooltip;
         this.isToggled = isToggled;
+        this.subButtons = subButtons;
     }
 }

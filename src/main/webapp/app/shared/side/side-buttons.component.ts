@@ -25,6 +25,7 @@ export class SideButtonsComponent implements OnInit {
     ngOnInit() {}
 
     closePanel(doClose: boolean) {
+        console.log(this.target);
         this.closeEmitter.emit(doClose);
     }
 
