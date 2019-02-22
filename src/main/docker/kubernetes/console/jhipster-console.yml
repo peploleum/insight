@@ -29,6 +29,7 @@ spec:
   - name: http
     port: 5601
     targetPort: 5601
+    nodePort: 30103
   type: NodePort
   selector:
     app: jhipster-console

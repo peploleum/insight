@@ -167,6 +167,7 @@ spec:
   - name: http
     port: 8080
     targetPort: 8080
+    nodePort: 30101
   - name: udp 
     port: 10514 
     targetPort: 10514 
