@@ -13,7 +13,6 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ToolbarButtonParameters } from '../shared/util/insight-util';
 import { SideMediatorService } from './side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
-import { SideInterface } from '../shared/side/side.abstract';
 
 @Component({
     selector: 'ins-side-event-thread',

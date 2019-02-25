@@ -30,7 +30,7 @@ import { registerLocaleData } from '@angular/common';
 
 /**
  * Si Locale ne fonctionne pas en AOT:
- * @NgModule({ { provide: LOCALE_ID, useValue: 'de' } })
+ * @NgModule({ { provide: LOCALE_ID, useValue: 'fr' } })
  * And then you also need to add the npm dependency to your project.config
  * { name: '@angular/common/locales/fr', path: '${this.NPM_BASE}@angular/common/locales/fr.js' }
  * */

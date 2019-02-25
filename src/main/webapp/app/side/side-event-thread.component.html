@@ -37,7 +37,7 @@
                         <small>{{rawData.rawDataContent | stringTruncate : 140}}</small>
                     </p>
                     <a class="card-link"
-                       [routerLink]="[{outlets: { primary: ['network', rawData.id], side: ['ins-network-side-panel'] }}]">
+                       [routerLink]="['/',{outlets: { primary: ['network', rawData.id], side: ['ins-network-side-panel'] }}]">
                         <fa-icon [icon]="'sitemap'"></fa-icon>
                     </a>
                     <a class="card-link" [routerLink]="['/raw-data', rawData.id, 'view' ]">
