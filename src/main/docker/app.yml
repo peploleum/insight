@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
     insight-app:
         image: insight
@@ -9,13 +9,40 @@ services:
             - SPRING_DATA_MONGODB_DATABASE=insight
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
             - SPRING_DATA_JEST_URI=http://insight-elasticsearch:9200
+            - APPLICATION_KIBANA_URI=http://insight-kibana:5601
         ports:
             - 8080:8080
-    insight-mongodb:
-        extends:
-            file: mongodb.yml
-            service: insight-mongodb
+        networks:
+            - insight
+    insight-kibana:
+        image: docker.elastic.co/kibana/kibana-oss:6.4.2
+        container_name: insight-kibana
+        ports:
+            - "5601:5601"
+        environment:
+            - "ELASTICSEARCH_URL=http://insight-elasticsearch:9200"
+        networks:
+            - insight
     insight-elasticsearch:
-        extends:
-            file: elasticsearch.yml
-            service: insight-elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.2
+        container_name: insight-elasticsearch
+        environment:
+            - network.host=0.0.0.0
+            - discovery.type=single-node
+            - cluster.name=insight
+        ports:
+            - 9200:9200
+            - 9300:9300
+        networks:
+            - insight
+    insight-mongodb:
+        image: mongo:4.0.2
+        ports:
+            - "27017:27017"
+        # volumes:
+        #     - ~/volumes/jhipster/insight/mongodb/:/data/db/
+        networks:
+            - insight
+networks:
+    insight:
+        external: true

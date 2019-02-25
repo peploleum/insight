@@ -69,6 +69,8 @@ spec:
                 value: 'true'
               - name: GRAPH_HOST
                 value: "insight-graphy"
+              - name: GRAPH_PORT
+                value: "8080"
               - name: ELASTICSEARCH_ENABLED
                 value: 'true'
               - name: ELASTICSEARCH_INDEX_NAME
@@ -77,8 +79,10 @@ spec:
                 value: 'insight-elasticsearch'
               - name: ELASTICSEARCH_PORT
                 value: "9200"
-              - name: GRAPH_PORT
-                value: "8080"
+              - name: ELASTICSEARCH_NODE_PORT
+                value: "9300"
+              - name: ELASTICSEARCH_CLUSTERNAME
+                value: "insight"
               resources:
                   requests:
                       memory: "512Mi"
