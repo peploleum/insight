@@ -10,6 +10,7 @@ cp ./logstash/* /home/capgemini/binding/INSIGHT/logstash/
 mkdir -p /home/capgemini/binding/INSIGHT/mongodb/
 mkdir -p /home/capgemini/binding/INSIGHT/graph
 cp ../graph/conf/* /home/capgemini/binding/INSIGHT/graph/
+cp /home/capgemini/binding/INSIGHT/graph/gremlin-server-configuration.yml /home/capgemini/binding/INSIGHT/graph/gremlin-server-configuration.yaml
 mkdir -p /home/capgemini/binding/INSIGHT/cassandra
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
