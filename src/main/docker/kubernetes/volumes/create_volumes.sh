@@ -1,8 +1,8 @@
+rm -R /home/capgemini/binding/INSIGHT
 mkdir -p /home/capgemini/binding/INSIGHT/nifi/
 cp ../feeder/* /home/capgemini/binding/INSIGHT/nifi/
 mkdir -p /home/capgemini/binding/INSIGHT/nifi/out
-mkdir -p /home/capgemini/binding/INSIGHT/master
-mkdir -p /home/capgemini/binding/INSIGHT/data
+mkdir -p /home/capgemini/binding/INSIGHT/master/data
 mkdir -p /home/capgemini/binding/INSIGHT/elasticsearch-console
 mkdir -p /home/capgemini/binding/INSIGHT/elasticsearch
 mkdir -p /home/capgemini/binding/INSIGHT/logstash/
