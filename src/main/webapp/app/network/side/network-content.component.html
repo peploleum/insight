@@ -6,27 +6,27 @@
     </div>
     <div class="side-main side-element">
 
-        <div class="tools" style="height: 8%; min-height: 2.5rem;">
+        <div class="tools" style="height: 5%; min-height: 2.5rem;">
+            <span title="Changer la disposition" insSideMenuDirective [networkStates]="networkStates"
+                  [elementName]="'LAYOUT_MENU'"
+                  (actionEmitter)="sendAction($event)"><fa-icon [icon]="'arrows-alt'"></fa-icon></span>
             <span title="Ajouter des Voisins" (click)="sendAction('ADD_NEIGHBOURS')"
-                  [ngClass]="{'selected': networkStates['ADD_NEIGHBOURS']}"><fa-icon
+            [ngClass]="{'selected': networkStates['ADD_NEIGHBOURS']}"><fa-icon
                 [icon]="'code-branch'"></fa-icon></span>
             <span title="Supprimer des Nodes" (click)="sendAction('DELETE_NODES')"><fa-icon
                 [icon]="'times'"></fa-icon></span>
             <span title="Activer le clustering" (click)="sendAction('CLUSTER_NODES')"
-                  [ngClass]="{'selected': networkStates['CLUSTER_NODES']}"><fa-icon
+            [ngClass]="{'selected': networkStates['CLUSTER_NODES']}"><fa-icon
                 [icon]="'dot-circle'"></fa-icon></span>
             <span title="Activer la physique" (click)="sendAction('PHYSICS_ENABLED')"
-                  [ngClass]="{'selected': networkStates['PHYSICS_ENABLED']}"><fa-icon
+            [ngClass]="{'selected': networkStates['PHYSICS_ENABLED']}"><fa-icon
                 [icon]="'magic'"></fa-icon></span>
             <span title="Activer le positionnement libre" (click)="sendAction('LAYOUT_FREE')"
-                  [ngClass]="{'selected': networkStates['LAYOUT_FREE']}"><fa-icon
+            [ngClass]="{'selected': networkStates['LAYOUT_FREE']}"><fa-icon
                 [icon]="'hand-paper'"></fa-icon></span>
-            <span title="Changer la disposition" insSideMenuDirective [networkStates]="networkStates"
-                  [elementName]="'LAYOUT_MENU'"
-                  (actionEmitter)="sendAction($event)"><fa-icon [icon]="'arrows-alt'"></fa-icon></span>
         </div>
 
-        <div class="side-inline-form" style="height: 7%; min-height: 2.5rem;">
+        <div class="side-inline-form" style="height: 5%; min-height: 2.5rem;">
             <div class="side-input-container">
                 <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Balkany..."/>
             </div>
