@@ -10,6 +10,7 @@ cp ./logstash/* /home/capgemini/binding/INSIGHT/logstash/
 mkdir -p /home/capgemini/binding/INSIGHT/mongodb/
 mkdir -p /home/capgemini/binding/INSIGHT/graph
 cp ../graph/conf/* /home/capgemini/binding/INSIGHT/graph/
+mkdir -p /home/capgemini/binding/INSIGHT/cassandra
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
 cp ../refgeo/logstash/csv/* /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
