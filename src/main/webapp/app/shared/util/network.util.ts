@@ -1,6 +1,7 @@
 /**
  * Created by gFolgoas on 22/02/2019.
  */
+import { IdType } from 'vis';
 export class NetworkState {
     LAYOUT_DIR: string;
     LAYOUT_FREE: boolean;
@@ -23,5 +24,23 @@ export class NetworkState {
         this.ADD_NEIGHBOURS = ADD_NEIGHBOURS;
         this.CLUSTER_NODES = CLUSTER_NODES;
         this.AUTO_REFRESH = AUTO_REFRESH;
+    }
+}
+
+export class DataContentInfo {
+    label: string;
+    id: IdType;
+    mongoId: string;
+    objectType: string;
+    title?: string;
+    image?: string;
+
+    constructor(label: string, id: IdType, mongoId: string, objectType: string, title?: string, image?: string) {
+        this.label = label;
+        this.id = id;
+        this.mongoId = mongoId;
+        this.objectType = objectType;
+        this.title = title;
+        this.image = image;
     }
 }

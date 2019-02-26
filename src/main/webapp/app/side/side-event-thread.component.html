@@ -6,13 +6,13 @@
     </div>
     <div class="side-main side-element">
 
-        <div class="tools" style="height: 8%;">
+        <div class="tools" style="height: 8%; min-height: 2.5rem;">
             <span *ngFor="let action of TOOLBAR_ACTIONS" title="{{action.tooltip}}" (click)="sendAction(action.action)"
                   [ngClass]="{'selected': action.isToggled}"><fa-icon
                 [icon]="action.icon"></fa-icon></span>
         </div>
 
-        <div class="side-inline-form" style="height: 7%;">
+        <div class="side-inline-form" style="height: 7%; min-height: 2.5rem;">
             <div class="side-input-container">
                 <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Balkany..."/>
             </div>

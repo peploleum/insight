@@ -43,16 +43,23 @@ export class GraphyRelationDTO implements IGraphyRelationDTO {
 }
 
 export class NodeDTO implements Node {
+    mongoId?: string;
+    objectType?: string;
+
     constructor(
         public label?: string,
         public id?: IdType,
-        public mongoId?: string,
+        mongoId?: string,
+        objectType?: string,
         public title?: string,
         public image?: string,
         public color?: any,
-        public border?: number,
+        public borderWidth?: number,
         public font?: any
-    ) {}
+    ) {
+        this.mongoId = mongoId;
+        this.objectType = objectType;
+    }
 }
 
 export class EdgeDTO implements Edge {

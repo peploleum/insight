@@ -1,1 +1,76 @@
-<div></div>
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'network-wired'"></fa-icon>
+            <b> Network content</b></h4>
+    </div>
+    <div class="side-main side-element">
+
+        <div class="tools" style="height: 8%; min-height: 2.5rem;">
+            <span title="Ajouter des Voisins" (click)="sendAction('ADD_NEIGHBOURS')"
+                  [ngClass]="{'selected': networkStates['ADD_NEIGHBOURS']}"><fa-icon
+                [icon]="'code-branch'"></fa-icon></span>
+            <span title="Supprimer des Nodes" (click)="sendAction('DELETE_NODES')"><fa-icon
+                [icon]="'times'"></fa-icon></span>
+            <span title="Activer le clustering" (click)="sendAction('CLUSTER_NODES')"
+                  [ngClass]="{'selected': networkStates['CLUSTER_NODES']}"><fa-icon
+                [icon]="'dot-circle'"></fa-icon></span>
+            <span title="Activer la physique" (click)="sendAction('PHYSICS_ENABLED')"
+                  [ngClass]="{'selected': networkStates['PHYSICS_ENABLED']}"><fa-icon
+                [icon]="'magic'"></fa-icon></span>
+            <span title="Activer le positionnement libre" (click)="sendAction('LAYOUT_FREE')"
+                  [ngClass]="{'selected': networkStates['LAYOUT_FREE']}"><fa-icon
+                [icon]="'hand-paper'"></fa-icon></span>
+            <span title="Changer la disposition" insSideMenuDirective [networkStates]="networkStates"
+                  [elementName]="'LAYOUT_MENU'"
+                  (actionEmitter)="sendAction($event)"><fa-icon [icon]="'arrows-alt'"></fa-icon></span>
+        </div>
+
+        <div class="side-inline-form" style="height: 7%; min-height: 2.5rem;">
+            <div class="side-input-container">
+                <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Balkany..."/>
+            </div>
+        </div>
+
+        <div *ngIf="networkContent" class="event-thread-container">
+            <div class="card event-thread-card"
+                 *ngFor="let data of networkContent;">
+                <div class="card-body d-flex align-items-center" [ngClass]="{'selected': selectedIds.indexOf(data.id) !== -1}">
+                    <div style="flex: 1 1 20%;">
+                        <img style="max-height: 3rem;" src="{{data.image}}"/>
+                    </div>
+                    <div style="flex: 1 0 80%;">
+                        <a class="card-title event-thread-title" (click)="onDataClicked(data.id)">
+                            {{data.label | stringTruncate : 30}}</a>
+                        <h6 class="card-subtitle mb-1 text-muted">{{data.title}}</h6>
+                        <a class="card-link" [routerLink]="[getLink(data.objectType), data.mongoId, 'view' ]">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span> Voir en fiche</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="side-secondary side-element">
+        <div class="side-inline-form">
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="file-input">Importer un diagramme réseau</label>
+                <input type="file" (change)="onFileInputChange($event)"
+                       class="form-control-file form-control-sm" id="file-input" title="Choisir un fichier JSON"/>
+            </div>
+            <div class="side-input-container"
+                 style="flex-basis: 10% !important; flex-grow: 0 !important;">
+                <div class="tools">
+                    <span (click)="importJsonFile()" title="Lancer l'import de fichier"><fa-icon
+                        [icon]="'check'"></fa-icon></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

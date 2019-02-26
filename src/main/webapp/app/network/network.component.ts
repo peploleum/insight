@@ -9,7 +9,7 @@ import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { FileReaderEventTarget } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
-import { NetworkState } from '../shared/util/network.util';
+import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
 
 @Component({
@@ -25,6 +25,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     graphDataSubscription: Subscription;
     actionClickedSubs: Subscription;
     networkStateSubs: Subscription;
+    dataSelectedSubs: Subscription;
 
     constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute, private sms: SideMediatorService) {}
 
@@ -74,6 +75,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.actionClickedSubs = this.sms._onNewActionClicked.subscribe(action => {
             this.onActionReceived(action);
         });
+        this.dataSelectedSubs = this.sms._onNewDataSelected.subscribe((selectedIds: string[]) => {
+            this.network.selectNodes(selectedIds, true);
+            this.sms._selectedData.next(selectedIds);
+        });
     }
 
     ngOnDestroy() {
@@ -85,6 +90,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         }
         if (this.networkStateSubs) {
             this.networkStateSubs.unsubscribe();
+        }
+        if (this.dataSelectedSubs) {
+            this.dataSelectedSubs.unsubscribe();
         }
     }
 
@@ -152,9 +160,16 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
+            this.sms._selectedData.next(<string[]>properties.nodes);
+        });
+        this.network.on('deselectNode', properties => {
+            this.sms._selectedData.next(<string[]>properties.nodes);
         });
         this.networkData.nodes.on('add', (event, properties) => {
-            console.log(properties);
+            this.updateDataContent();
+        });
+        this.networkData.nodes.on('remove', (event, properties) => {
+            this.updateDataContent();
         });
     }
 
@@ -180,6 +195,15 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.network.storePositions();
         this.networkData.nodes.remove(idNodes);
         this.networkData.edges.remove(idEdges);
+    }
+
+    updateDataContent() {
+        const updatedList: DataContentInfo[] = [];
+        this.networkData.nodes.forEach(item => {
+            const node: NodeDTO = <NodeDTO>item;
+            updatedList.push(new DataContentInfo(node.label, node.id, node.mongoId, node.objectType, node.title, node.image));
+        });
+        this._ns.networkDataContent.next(updatedList);
     }
 
     addJSONFileElements(json: File) {

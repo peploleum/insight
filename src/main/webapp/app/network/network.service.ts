@@ -10,18 +10,24 @@ import { filter, map } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { RawData } from 'app/shared/model/raw-data.model';
-import { NetworkState } from '../shared/util/network.util';
+import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarButtonParameters } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
-    private resourceUrl;
+    private _resourceUrl;
     JSONFileSelected: Subject<File> = new Subject();
     networkState: BehaviorSubject<NetworkState> = new BehaviorSubject({
         LAYOUT_DIR: 'UD',
         LAYOUT_FREE: false,
-        PHYSICS_ENABLED: false
+        PHYSICS_ENABLED: false,
+        ADD_NEIGHBOURS: false,
+        CLUSTER_NODES: false,
+        AUTO_REFRESH: false
     });
+
+    /** ids des objets contenus dans le network */
+    networkDataContent: BehaviorSubject<DataContentInfo[]> = new BehaviorSubject([]);
 
     public static getNodeDto(
         label: string,
@@ -38,7 +44,7 @@ export class NetworkService {
         const font = {
             color: 'white'
         };
-        return new NodeDTO(label, id, mongoId, title, image, color, 3, font);
+        return new NodeDTO(label, id, mongoId, objectType, title, image, color, 3, font);
     }
 
     public static getEdgeCollection(idOrigin: IdType, relations: IGraphyRelationDTO[]): EdgeDTO[] {
@@ -96,9 +102,9 @@ export class NetworkService {
 
     constructor(private http: HttpClient, private rawDataService: RawDataService) {
         if (DEBUG_INFO_ENABLED) {
-            this.resourceUrl = 'http://' + window.location.hostname + ':8090/';
+            this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
         } else {
-            this.resourceUrl = 'http://10.65.34.149:30200/';
+            this._resourceUrl = 'http://10.65.34.149:30200/';
         }
     }
 
@@ -119,7 +125,7 @@ export class NetworkService {
         const headers = new HttpHeaders();
         // const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/' : 'api/traversal/';
-        return this.http.get(`${this.resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
+        return this.http.get(`${this._resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
@@ -151,7 +157,7 @@ export class NetworkService {
         //     return of(fakeResponse);
         // }
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/janus/';
-        return this.http.get<IGraphyNodeDTO>(`${this.resourceUrl}` + url + `${idOrigin}`, {
+        return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${idOrigin}`, {
             headers,
             observe: 'response'
         });
