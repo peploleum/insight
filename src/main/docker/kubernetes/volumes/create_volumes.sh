@@ -1,4 +1,4 @@
-rm -R /home/capgemini/binding/INSIGHT
+sudo rm -R /home/capgemini/binding/INSIGHT
 mkdir -p /home/capgemini/binding/INSIGHT/nifi/
 cp ../feeder/* /home/capgemini/binding/INSIGHT/nifi/
 mkdir -p /home/capgemini/binding/INSIGHT/nifi/out
@@ -16,3 +16,4 @@ mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
 cp ../refgeo/logstash/csv/* /home/capgemini/binding/INSIGHT/refgeo/logstash/csv
 mkdir -p /home/capgemini/binding/INSIGHT/refgeo/logstash/pipeline
 cp ../refgeo/logstash/pipeline/* /home/capgemini/binding/INSIGHT/refgeo/logstash/pipeline
+sudo chmod -R 755 /home/capgemini/binding/INSIGHT
