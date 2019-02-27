@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 @Document(collection = "location")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "location")
-public class Location implements Serializable {
+public class Location extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

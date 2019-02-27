@@ -66,4 +66,5 @@ public class DatabaseConfiguration {
         mongobee.setChangeLogsScanPackage("com.peploleum.insight.config.dbmigrations");
         mongobee.setEnabled(true);
         return mongobee;
-    }}
+    }
+}

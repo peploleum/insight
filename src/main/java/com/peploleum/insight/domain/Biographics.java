@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ import com.peploleum.insight.domain.enumeration.Gender;
  */
 @Document(collection = "biographics")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "biographics")
-public class Biographics implements Serializable {
+public class Biographics extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

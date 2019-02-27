@@ -18,7 +18,7 @@ import com.peploleum.insight.domain.enumeration.EquipmentType;
  */
 @Document(collection = "equipment")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "equipment")
-public class Equipment implements Serializable {
+public class Equipment extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

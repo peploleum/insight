@@ -1,0 +1,24 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'book-reader'"></fa-icon>
+            <b> QuickView</b></h4>
+    </div>
+    <div class="side-main side-element">
+
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <span title="Précédent" (click)="onAction('PREVIOUS')"><fa-icon
+                [icon]="'arrows-alt'"></fa-icon></span>
+            <span title="Suivant" (click)="onAction('NEXT')"><fa-icon [icon]="'code-branch'"></fa-icon></span>
+        </div>
+
+        <div *ngIf="entity" class="event-thread-container" style="flex: 5 1 auto;">
+            <div *ngFor="let item of entity | keyvalue" class="qv-property-container">
+                <div>{{item.key}}</div>
+                <div>{{item.value}}</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

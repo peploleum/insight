@@ -2,6 +2,7 @@ package com.peploleum.insight.config;
 
 import com.github.mongobee.Mongobee;
 
+import com.peploleum.insight.config.converters.InsightEntityReadConverter;
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.domain.util.JSR310DateConverters.*;
 
@@ -52,6 +53,7 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
         List<Converter<?, ?>> converterList = new ArrayList<>();
         converterList.add(DateToZonedDateTimeConverter.INSTANCE);
         converterList.add(ZonedDateTimeToDateConverter.INSTANCE);
+        converterList.add(new InsightEntityReadConverter());
         return new MongoCustomConversions(converterList);
     }
 

@@ -17,6 +17,7 @@ import {
     faBars,
     faBell,
     faBook,
+    faBookReader,
     faBullseye,
     faCalendarAlt,
     faChartArea,
@@ -157,5 +158,6 @@ library.add(faExclamation);
 library.add(faPlusSquare);
 library.add(faMapMarker);
 library.add(faNetworkWired);
+library.add(faBookReader);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

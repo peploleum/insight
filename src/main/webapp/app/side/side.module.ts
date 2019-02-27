@@ -12,9 +12,10 @@ import { DashboardModule } from '../dashboard/dashboard.module';
 import { SideEventThreadComponent } from './side-event-thread.component';
 import { NetworkModule } from '../network/network.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { QuickViewComponent } from './quick-view.component';
 
 @NgModule({
     imports: [CommonModule, ReactiveFormsModule, InsightSharedModule, SideRoutingModule, MapModule, DashboardModule, NetworkModule],
-    declarations: [SideComponent, SideEventThreadComponent]
+    declarations: [SideComponent, SideEventThreadComponent, QuickViewComponent]
 })
 export class SideModule {}

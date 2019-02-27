@@ -27,6 +27,9 @@
             <span (click)="changeSideElement('NETWORK_CONTENT')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'NETWORK_CONTENT'}"><fa-icon
                 [icon]="'network-wired'"></fa-icon></span>
+            <span (click)="changeSideElement('QUICK_VIEW')"
+                  [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_VIEW'}"><fa-icon
+                [icon]="'book-reader'"></fa-icon></span>
         </ng-template>
     </ng-container>
 

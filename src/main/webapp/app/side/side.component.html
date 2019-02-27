@@ -12,6 +12,7 @@
     <div *ngIf="target === 'network'" class="h-100">
         <ins-side-event-thread [hidden]="_sideElement !== 'EVENT_THREAD'"></ins-side-event-thread>
         <ins-network-content [hidden]="_sideElement !== 'NETWORK_CONTENT'"></ins-network-content>
+        <ins-quick-view [hidden]="_sideElement !== 'QUICK_VIEW'"></ins-quick-view>
     </div>
 </div>
 <ins-side-buttons [isClosed]="isHidden" [_sideElement]="_sideElement" [target]="target"

@@ -19,7 +19,7 @@ import com.peploleum.insight.domain.enumeration.EventType;
  */
 @Document(collection = "event")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "event")
-public class Event implements Serializable {
+public class Event extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

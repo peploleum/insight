@@ -18,7 +18,7 @@ import com.peploleum.insight.domain.enumeration.Size;
  */
 @Document(collection = "organisation")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "organisation")
-public class Organisation implements Serializable {
+public class Organisation extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

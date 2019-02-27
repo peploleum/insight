@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 @Document(collection = "raw_data")
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "rawdata")
-public class RawData implements Serializable {
+public class RawData extends InsightEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
