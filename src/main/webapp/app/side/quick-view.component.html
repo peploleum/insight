@@ -8,15 +8,17 @@
 
         <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Précédent" (click)="onAction('PREVIOUS')"><fa-icon
-                [icon]="'arrows-alt'"></fa-icon></span>
-            <span title="Suivant" (click)="onAction('NEXT')"><fa-icon [icon]="'code-branch'"></fa-icon></span>
+                [icon]="'arrow-circle-left'"></fa-icon></span>
+            <span title="Suivant" (click)="onAction('NEXT')"><fa-icon [icon]="'arrow-circle-right'"></fa-icon></span>
         </div>
 
         <div *ngIf="entity" class="event-thread-container" style="flex: 5 1 auto;">
-            <div *ngFor="let item of entity | keyvalue" class="qv-property-container">
-                <div>{{item.key}}</div>
-                <div>{{item.value}}</div>
-            </div>
+            <ng-container *ngFor="let item of entity | keyvalue">
+                <div *ngIf="item.value" class="qv-property-container">
+                    <div>{{item.key}}</div>
+                    <div insTextExpanderDirective [txtLimit]="100">{{item.value}}</div>
+                </div>
+            </ng-container>
         </div>
 
     </div>

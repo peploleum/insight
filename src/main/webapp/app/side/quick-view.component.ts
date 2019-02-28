@@ -50,7 +50,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
 
     getEntity(id: string) {
-        id = '5c614f891605a829c8677dd1';
+        id = '5c6150271605a829c8677dea';
         this._qvs.find(id).subscribe(
             res => {
                 this.entity = res.body;

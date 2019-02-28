@@ -7,6 +7,7 @@ import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
 import { SideButtonsComponent } from './side/side-buttons.component';
 import { ListFilterPipe } from './util/list-filter.pipe';
+import { TextExpanderDirective } from './util/text-expander.directive';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule],
@@ -16,7 +17,8 @@ import { ListFilterPipe } from './util/list-filter.pipe';
         PaginationDirective,
         SideButtonsComponent,
         StringTruncatePipe,
-        ListFilterPipe
+        ListFilterPipe,
+        TextExpanderDirective
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent],
@@ -27,7 +29,8 @@ import { ListFilterPipe } from './util/list-filter.pipe';
         PaginationDirective,
         SideButtonsComponent,
         StringTruncatePipe,
-        ListFilterPipe
+        ListFilterPipe,
+        TextExpanderDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
