@@ -13,7 +13,7 @@ import { map } from 'rxjs/internal/operators';
     styles: []
 })
 export class QuickViewComponent implements OnInit, OnDestroy {
-    entity: GenericModel;
+    entity: Map<string, string>;
     toolbar_actions: ToolbarButtonParameters[] = [];
     selected_data_ids: string[] = [];
 
@@ -50,10 +50,13 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
 
     getEntity(id: string) {
-        id = '5c6150271605a829c8677dea';
         this._qvs.find(id).subscribe(
             res => {
-                this.entity = res.body;
+                const map: Map<string, string> = new Map();
+                Object.keys(res.body).forEach(key => {
+                    map.set(key, res.body[key]);
+                });
+                this.entity = map;
             },
             error => console.log('Error finding entity by id')
         );
