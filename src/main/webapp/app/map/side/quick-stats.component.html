@@ -6,7 +6,7 @@
         </h4>
     </div>
     <div class="side-main side-element">
-        <div class="tools">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Compte par RawDataType" (click)="changeAnalysedProperty('rawDataType')"><fa-icon
                 [icon]="'rss-square'"></fa-icon></span>
             <span title="Compte par RawDataSourceType" (click)="changeAnalysedProperty('rawDataSourceType')"><fa-icon
@@ -14,7 +14,7 @@
             <span title="Compte par RawDataSubType" (click)="changeAnalysedProperty('rawDataSubType')"><fa-icon
                 [icon]="'exclamation'"></fa-icon></span>
         </div>
-        <h6 class="ml-2">Analyse : Regroupement par {{countProperty}}</h6>
+        <h6 style="flex: 0 1 5%; min-height: 2rem;">Analyse : Regroupement par {{countProperty}}</h6>
         <div style="height: 60vh;">
             <canvas #canvas>{{ chart }}</canvas>
         </div>

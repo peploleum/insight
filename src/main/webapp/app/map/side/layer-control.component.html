@@ -5,12 +5,12 @@
             <b> Serveur WMS</b></h4>
     </div>
     <div class="side-main side-element">
-        <div class="tools" style="height: 10%;">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Mettre le layer à l'arrière-plan" (click)="onLayerAction('MOVE_LAYER_DOWN', selectedLayer)"><fa-icon [icon]="'arrow-circle-down'"></fa-icon></span>
             <span title="Mettre le layer au premier-plan" (click)="onLayerAction('MOVE_LAYER_UP', selectedLayer)"><fa-icon [icon]="'arrow-circle-up'"></fa-icon></span>
         </div>
 
-        <div class="side-list-container" style="height: 90%;">
+        <div class="side-list-container" style="flex: 1 1 auto;">
             <div *ngFor="let layer of layerList;" [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
                 <span (click)="onSelectedLayerChanged(layer)" style="cursor: pointer;"><fa-icon
                     [icon]="getLayerIcon(layer.layerType)"></fa-icon><span> {{layer.layerName}} [Z:{{layer.layerZIndex}}]</span></span>

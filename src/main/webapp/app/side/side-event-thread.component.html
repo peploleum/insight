@@ -20,11 +20,11 @@
 
         <div *ngIf="rawDataList.data && rawDataList.data.length" insPaginationDirective [dataList]="rawDataList.data"
              (wheelEmitter)="onNewPage($event)"
-             class="event-thread-container" style="flex: 5 1 auto;">
+             class="event-thread-container" style="flex: 1 1 auto;">
             <div class="card event-thread-card"
                  *ngFor="let rawData of rawDataList.data | slice:firstIndex:lastIndex; trackBy:trackId; first as isFirst; last as isLast;"
                  [ngClass]="{'selected': SELECTED_DATA_IDS.indexOf(rawData.id) !== -1}">
-                <div class="card-img-top event-thread-top"><img
+                <div class="card-img-top event-thread-header"><img
                     *ngIf="rawData.rawDataData" class="event-thread-image"
                     [src]="getImageBase64Src(rawData.rawDataData)">
                 </div>

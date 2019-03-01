@@ -1,4 +1,5 @@
 @import 'bootstrap-variables';
+@import 'custom-insight-variables';
 
 /* ==============================================================
 Bootstrap tweaks
@@ -13,13 +14,11 @@ h4 {
 }
 
 a {
-    // color: #533f03;
     color: #0056b3;
     font-weight: bold;
 }
 
 a:hover {
-    // color: #533f03;
     color: #003e80;
     font-weight: bold;
     /* make sure browsers use the pointer cursor for anchors, even with no href */
@@ -310,6 +309,10 @@ body {
 Custom network css
 ========================================================================== */
 
+.network-main {
+    background-color: $network-background-color;
+}
+
 .popover-menu {
     z-index: 2;
     min-width: 25px;
@@ -352,6 +355,10 @@ Custom network css
     margin: 0;
     flex: 1 1 auto;
 }
+
+/* ==========================================================================
+Custom global css
+========================================================================== */
 
 .selected {
     background-color: rgb(128, 255, 128) !important;
@@ -416,8 +423,8 @@ Custom map css
     margin: 1px;
 }
 
-.event-thread-top {
-    background-color: #f2f2f2;
+.event-thread-header {
+    background-color: $et-header-background-color;
     display: flex;
     justify-content: center;
 }
@@ -431,9 +438,6 @@ Custom map css
     font-size: 1.05rem;
 }
 
-/* ==========================================================================
-Map custom CSS
-========================================================================== */
 .map-container {
     margin: 0 !important;
     padding: 0 !important;
@@ -450,18 +454,18 @@ SidePannel custom CSS
     right: 0;
     z-index: 100;
 
-    background-color: rgba(87, 100, 117, 0.9);
+    background-color: $sidepanel-background-color;
 
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .side-title {
-    color: #003e80;
+    color: $sidepanel-title-color;
     width: 100%;
     height: 8%;
     font-size: larger !important;
 
-    background-color: white;
+    background-color: $sidepanel-title-background-color;
 
     border-bottom: 1px solid rgb(87, 100, 117);
 
@@ -548,7 +552,7 @@ SidePannel custom CSS
 }
 
 .tools > span:hover {
-    background-color: #7b8c9d;
+    background-color: $tools-element-background-color-hover;
 }
 
 .tools .noInteract {
@@ -560,11 +564,18 @@ SidePannel custom CSS
 }
 
 .side-secondary {
+    flex: 0;
 }
 
 .side-element {
     border-bottom: 1px solid;
     padding: 0.3rem;
+}
+
+.side-element > h6 {
+    padding-bottom: 0.2rem;
+    padding-top: 0.2rem;
+    margin-bottom: 0 !important;
 }
 
 .side-list-container {
@@ -582,7 +593,7 @@ SidePannel custom CSS
 .side-list-container > div {
     padding: 0.4rem;
     min-height: 2rem;
-    background-color: #7e899a;
+    background-color: $side-list-element-background-color;
 
     display: flex;
     align-items: center;
@@ -590,7 +601,7 @@ SidePannel custom CSS
 }
 
 .side-list-container > div:hover {
-    background-color: #7b8c9d;
+    background-color: $side-list-element-background-color-hover;
 }
 
 .side-list-container > div > span {
@@ -638,14 +649,14 @@ QuickView custom CSS
     align-items: flex-start;
     flex-wrap: nowrap;
     justify-content: center;
-    background-color: white;
+    background-color: $qv-property-background-color;
 
     padding: 0.3rem;
     margin-bottom: 1px;
 
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
+    border-radius: 0.15rem;
 }
 
 .qv-property-container > div {
@@ -671,10 +682,6 @@ QuickView custom CSS
 /* ==========================================================================
 Dessin custom CSS
 ========================================================================== */
-
-.drawing-layers {
-    max-height: 70%;
-}
 
 /* ==========================================================================
 Dashboard custom CSS

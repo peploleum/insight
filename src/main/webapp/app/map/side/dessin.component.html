@@ -5,8 +5,8 @@
             <b> Dessin</b>
         </h4>
     </div>
-    <div class="side-main side-element drawing-layers">
-        <div class="tools">
+    <div class="side-main side-element">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Add layer" (click)="onLayerAction('ADD_DESSIN_LAYER')"><fa-icon
                 [icon]="'plus'"></fa-icon></span>
             <span title="Mettre le layer à l'arrière-plan" (click)="onLayerAction('MOVE_LAYER_DOWN', selectedLayer)"><fa-icon
@@ -17,8 +17,8 @@
                   [ngClass]="{'selected': (mapStates.DESSIN_ENABLED)}"><fa-icon
                 [icon]="'pencil-alt'"></fa-icon></span>
         </div>
-        <h6 class="ml-2">Layer List :</h6>
-        <div class="side-list-container" style="height: 85%;">
+        <h6 style="flex: 0 1 5%; min-height: 2rem;">Layer List :</h6>
+        <div class="side-list-container" style="flex: 1 1 auto;">
             <div *ngFor="let layer of layerList;"
                  [ngClass]="{'selected': selectedLayer && (selectedLayer.layerId === layer.layerId)}">
                 <span><fa-icon [icon]="getLayerIcon(layer.layerType)"

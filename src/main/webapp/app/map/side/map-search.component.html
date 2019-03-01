@@ -6,14 +6,14 @@
         </h4>
     </div>
     <div class="side-main side-element">
-        <div class="side-inline-form" style="height: 10%;">
+        <div class="side-inline-form" style="flex: 0 1 5%; min-height: 2.5rem;">
             <div class="side-input-container">
                 <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Paris..."
                        (keyup.enter)="onEnter($event)"/>
             </div>
         </div>
 
-        <div class="side-list-container" style="height: 90%;" *ngIf="currentResult">
+        <div class="side-list-container" style="flex: 1 1 auto;" *ngIf="currentResult">
             <div *ngFor="let result of currentResult;">
                 <span *ngIf="result.properties && result.properties['ADDED_TO_MAP']; else notOnMap">
                     <fa-icon (click)="pinnedFeature(result)" [icon]="'map-marker'"

@@ -1,3 +1,5 @@
+@import '../../../content/scss/custom-insight-variables';
+
 /* ==========================================================================
 Navbar
 ========================================================================== */
@@ -8,7 +10,7 @@ Navbar
 }
 
 .jh-navbar {
-    background-color: #353d47;
+    background-color: $navbar-background-color;
     padding: 0.2em 1em;
     .profile-image {
         margin: -10px 0px;

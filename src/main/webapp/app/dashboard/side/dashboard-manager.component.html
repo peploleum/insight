@@ -6,15 +6,15 @@
         </h4>
     </div>
     <div class="side-main side-element">
-        <div class="tools">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Créer un dashboard" (click)="createDashboard()"><fa-icon [icon]="'plus'"></fa-icon></span>
             <span title="Supprimer tous les dashboards" (click)="deleteAllDashboard()"><fa-icon
                 [icon]="'times'"></fa-icon></span>
             <span title="Rafraîchir la liste" (click)="getDashboardRefs()"><fa-icon
                 [icon]="'sync-alt'"></fa-icon></span>
         </div>
-        <h6 class="ml-2">Liste des Dashboards :</h6>
-        <div class="side-list-container" style="height: 85%;">
+        <h6 style="flex: 0 1 5%; min-height: 2rem;">Liste des Dashboards :</h6>
+        <div class="side-list-container" style="flex: 1 1 auto;">
             <div *ngFor="let db of dashboardIds;"
                  [ngClass]="{'selected': db.selected}">
                 <span (click)="onDashboardSelected(db.idObject)" style="cursor: pointer;"><fa-icon [icon]="'chart-pie'"></fa-icon> {{db.title}}</span>
