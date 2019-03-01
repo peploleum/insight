@@ -5,7 +5,7 @@ import { NgbDateMomentAdapter } from './util/datepicker-adapter';
 import { HasAnyAuthorityDirective, InsightSharedCommonModule, InsightSharedLibsModule, JhiLoginModalComponent } from './';
 import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
-import { ListFilterPipe } from './util/list-filter.pipe';
+import { ListFilterByStringPipe, ListFilterPipe } from './util/list-filter.pipe';
 import { TextExpanderDirective } from './util/text-expander.directive';
 
 @NgModule({
@@ -16,6 +16,7 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         PaginationDirective,
         StringTruncatePipe,
         ListFilterPipe,
+        ListFilterByStringPipe,
         TextExpanderDirective
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
@@ -27,6 +28,7 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         PaginationDirective,
         StringTruncatePipe,
         ListFilterPipe,
+        ListFilterByStringPipe,
         TextExpanderDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

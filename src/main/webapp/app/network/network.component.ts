@@ -27,7 +27,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     networkStateSubs: Subscription;
     dataSelectedSubs: Subscription;
 
-    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute, private sms: SideMediatorService) {}
+    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute, private _sms: SideMediatorService) {}
 
     ngOnInit() {
         this._ns.JSONFileSelected.subscribe(
@@ -70,14 +70,14 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         });
         this.networkStateSubs = this._ns.networkState.subscribe(state => {
             const updatedEventThreadToolbar = this._ns.getUpdatedEventThreadToolbar();
-            this.sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
+            this._sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
         });
-        this.actionClickedSubs = this.sms._onNewActionClicked.subscribe(action => {
+        this.actionClickedSubs = this._sms._onNewActionClicked.subscribe(action => {
             this.onActionReceived(action);
         });
-        this.dataSelectedSubs = this.sms._onNewDataSelected.subscribe((selectedIds: string[]) => {
+        this.dataSelectedSubs = this._sms._onNewDataSelected.subscribe((selectedIds: string[]) => {
             this.network.selectNodes(selectedIds, true);
-            this.sms._selectedData.next(selectedIds);
+            this._sms._selectedData.next(selectedIds);
         });
     }
 
@@ -160,10 +160,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
-            this.sms._selectedData.next(<string[]>properties.nodes);
+            this._sms._selectedData.next(<string[]>properties.nodes);
         });
         this.network.on('deselectNode', properties => {
-            this.sms._selectedData.next(<string[]>properties.nodes);
+            this._sms._selectedData.next(<string[]>properties.nodes);
         });
         this.networkData.nodes.on('add', (event, properties) => {
             this.updateDataContent();

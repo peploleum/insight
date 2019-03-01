@@ -17,3 +17,25 @@ export class ListFilterPipe implements PipeTransform {
         });
     }
 }
+
+/**
+ * Filtre la liste en input sur la valeur des propriétés des objets spécifiée (propriétés: string[], keyword: string)
+ * */
+@Pipe({ name: 'listFilterByStringPipe' })
+export class ListFilterByStringPipe implements PipeTransform {
+    transform(value: any[], targetProperties: string[], keyWord: string): any[] {
+        if (value == null || typeof value === 'undefined') {
+            return null;
+        }
+        return value.filter(i => {
+            const found = targetProperties.find(prop => {
+                if (typeof i[prop] !== 'string') {
+                    return false;
+                }
+                const val: string = i[prop];
+                return val.toLowerCase().match(keyWord.toLowerCase()) !== null;
+            });
+            return typeof found !== 'undefined';
+        });
+    }
+}

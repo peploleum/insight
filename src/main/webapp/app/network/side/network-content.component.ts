@@ -19,6 +19,7 @@ export class NetworkContentComponent extends SideInterface implements OnInit, Af
     networkContent: DataContentInfo[];
     searchForm: FormControl = new FormControl('');
     currentSearch = '';
+    searchProperties: string[] = ['label'];
     networkStates: NetworkState;
     selectedJSONFile: File;
     selectedIds: string[] = [];
