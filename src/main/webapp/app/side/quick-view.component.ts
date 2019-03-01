@@ -2,10 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SideMediatorService } from './side-mediator.service';
 import { QuickViewService } from './quick-view.service';
 import { GenericModel } from '../shared/model/quick-view.model';
-import { ToolbarButtonParameters } from '../shared/util/insight-util';
 import { Subscription } from 'rxjs/index';
-import { ToolbarState } from '../shared/util/side.util';
-import { map } from 'rxjs/internal/operators';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'ins-quick-view',
@@ -14,22 +12,13 @@ import { map } from 'rxjs/internal/operators';
 })
 export class QuickViewComponent implements OnInit, OnDestroy {
     entity: Map<string, string>;
-    toolbar_actions: ToolbarButtonParameters[] = [];
     selected_data_ids: string[] = [];
 
-    toolbarActionsSubs: Subscription;
     selectedDataSubs: Subscription;
 
     constructor(private _sms: SideMediatorService, private _qvs: QuickViewService) {}
 
     ngOnInit() {
-        setTimeout(() => {
-            this.toolbarActionsSubs = this._sms._toolbarActions
-                .pipe(map((states: ToolbarState[]) => states.filter(state => state.componentTarget === 'QUICK_VIEW')))
-                .subscribe((states: ToolbarState[]) => {
-                    states.forEach(actions => (this.toolbar_actions = actions.parameters));
-                });
-        });
         this.selectedDataSubs = this._sms._selectedData.subscribe((ids: string[]) => {
             this.selected_data_ids = ids;
             if (this.selected_data_ids && this.selected_data_ids.length) {
@@ -41,9 +30,6 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.toolbarActionsSubs) {
-            this.toolbarActionsSubs.unsubscribe();
-        }
         if (this.selectedDataSubs) {
             this.selectedDataSubs.unsubscribe();
         }
@@ -51,7 +37,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
 
     getEntity(id: string) {
         this._qvs.find(id).subscribe(
-            res => {
+            (res: HttpResponse<GenericModel>) => {
                 const map: Map<string, string> = new Map();
                 Object.keys(res.body).forEach(key => {
                     map.set(key, res.body[key]);
