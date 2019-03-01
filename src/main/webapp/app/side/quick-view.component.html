@@ -9,6 +9,7 @@
         <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
             <span title="Précédent" (click)="onAction('PREVIOUS')"><fa-icon
                 [icon]="'arrow-circle-left'"></fa-icon></span>
+            <span class="noInteract" *ngIf="selected_data_ids && entity">{{selected_data_ids.indexOf(entity.get('id')) + 1}} / {{selected_data_ids.length}}</span>
             <span title="Suivant" (click)="onAction('NEXT')"><fa-icon [icon]="'arrow-circle-right'"></fa-icon></span>
         </div>
 

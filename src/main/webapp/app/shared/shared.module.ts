@@ -5,7 +5,6 @@ import { NgbDateMomentAdapter } from './util/datepicker-adapter';
 import { HasAnyAuthorityDirective, InsightSharedCommonModule, InsightSharedLibsModule, JhiLoginModalComponent } from './';
 import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
-import { SideButtonsComponent } from './side/side-buttons.component';
 import { ListFilterPipe } from './util/list-filter.pipe';
 import { TextExpanderDirective } from './util/text-expander.directive';
 
@@ -15,7 +14,6 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
         PaginationDirective,
-        SideButtonsComponent,
         StringTruncatePipe,
         ListFilterPipe,
         TextExpanderDirective
@@ -27,7 +25,6 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
         PaginationDirective,
-        SideButtonsComponent,
         StringTruncatePipe,
         ListFilterPipe,
         TextExpanderDirective

@@ -13,9 +13,10 @@ import { SideEventThreadComponent } from './side-event-thread.component';
 import { NetworkModule } from '../network/network.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { QuickViewComponent } from './quick-view.component';
+import { SideButtonsComponent } from './side-buttons.component';
 
 @NgModule({
     imports: [CommonModule, ReactiveFormsModule, InsightSharedModule, SideRoutingModule, MapModule, DashboardModule, NetworkModule],
-    declarations: [SideComponent, SideEventThreadComponent, QuickViewComponent]
+    declarations: [SideComponent, SideEventThreadComponent, QuickViewComponent, SideButtonsComponent]
 })
 export class SideModule {}

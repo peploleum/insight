@@ -51,13 +51,13 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     onAction(action: string) {
         switch (action) {
             case 'PREVIOUS':
-                const currentIndex = this.selected_data_ids.indexOf(this.entity['id']);
+                const currentIndex = this.selected_data_ids.indexOf(this.entity.get('id'));
                 if (this.selected_data_ids[currentIndex - 1]) {
                     this.getEntity(this.selected_data_ids[currentIndex - 1]);
                 }
                 break;
             case 'NEXT':
-                const currentIndex2 = this.selected_data_ids.indexOf(this.entity['id']);
+                const currentIndex2 = this.selected_data_ids.indexOf(this.entity.get('id'));
                 if (this.selected_data_ids[currentIndex2 + 1]) {
                     this.getEntity(this.selected_data_ids[currentIndex2 + 1]);
                 }
