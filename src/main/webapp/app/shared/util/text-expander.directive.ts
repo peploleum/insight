@@ -20,7 +20,8 @@ export class TextExpanderDirective implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {}
 
     ngAfterViewInit() {
-        this.txtContent = this._el.nativeElement.innerText;
+        // this.txtContent = this._el.nativeElement.innerText;
+        this.txtContent = this._el.nativeElement.innerHTML;
         this.setContent();
     }
 
@@ -32,7 +33,7 @@ export class TextExpanderDirective implements OnInit, AfterViewInit, OnDestroy {
                 this.txtContent.length > this.txtLimit && !this.expanded
                     ? this.txtContent.substring(0, this.txtLimit).concat('...')
                     : this.txtContent;
-            this._renderer.setProperty(this._el.nativeElement, 'innerText', newtext);
+            this._renderer.setProperty(this._el.nativeElement, 'innerHTML', newtext);
         }
     }
 

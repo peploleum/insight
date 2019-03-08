@@ -7,6 +7,8 @@ import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
 import { ListFilterByStringPipe, ListFilterPipe } from './util/list-filter.pipe';
 import { TextExpanderDirective } from './util/text-expander.directive';
+import { RawdataAnnotationDirective } from './util/rawdata-annotation.directive';
+import { RawdataAnnotationComponent } from './util/rawdata-annotation.component';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule],
@@ -17,7 +19,9 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         StringTruncatePipe,
         ListFilterPipe,
         ListFilterByStringPipe,
-        TextExpanderDirective
+        TextExpanderDirective,
+        RawdataAnnotationDirective,
+        RawdataAnnotationComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent],
@@ -29,7 +33,9 @@ import { TextExpanderDirective } from './util/text-expander.directive';
         StringTruncatePipe,
         ListFilterPipe,
         ListFilterByStringPipe,
-        TextExpanderDirective
+        TextExpanderDirective,
+        RawdataAnnotationDirective,
+        RawdataAnnotationComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -39,3 +39,13 @@ export class RawData implements IRawData {
         public externalId?: string
     ) {}
 }
+
+export class EntityPosition {
+    constructor(
+        public idMongo: string,
+        public idJanus: string,
+        public position: number,
+        public entityWord: string,
+        public entityType: string
+    ) {}
+}
