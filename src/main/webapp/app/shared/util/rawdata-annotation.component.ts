@@ -14,23 +14,36 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
     data: any;
     @Input()
     rawTextContent: string;
-    entitiesPositions: EntityPosition[];
 
+    @Input()
+    textLimit: number;
+    @Input()
+    useExpander: boolean;
+
+    entitiesPositions: EntityPosition[];
     innerHTML: any;
 
     constructor() {}
 
     ngOnChanges(changes: any) {
         if (this.data !== null && typeof this.data !== 'undefined') {
-            const rawDataAnnotations: string =
-                this.data['rawDataAnnotations'] || this.data instanceof Map ? this.data.get('rawDataAnnotations') : null;
+            const rawDataAnnotations: string = this.data['rawDataAnnotations']
+                ? this.data['rawDataAnnotations']
+                : this.data instanceof Map
+                ? this.data.get('rawDataAnnotations')
+                : null;
             if (rawDataAnnotations) {
                 try {
                     this.entitiesPositions = JSON.parse(rawDataAnnotations) || [];
+                    this.entitiesPositions.sort((a, b) => {
+                        return a.position < b.position ? -1 : a.position > b.position ? 1 : 0;
+                    });
                     this.setAnnotations();
                 } catch (e) {
                     console.log('RawdataAnnotationDirective: Bad JSON to parse');
                 }
+            } else {
+                this.innerHTML = this.rawTextContent;
             }
         }
     }
@@ -43,41 +56,54 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
 
     setAnnotations() {
         if (this.entitiesPositions) {
-            let newTxt = `${this.rawTextContent}`;
-            let addedCaractersNumber = 0;
-            this.entitiesPositions.forEach((pos: EntityPosition) => {
+            let newTxt = '';
+            let lastPosition = 0;
+            let index = 0;
+
+            for (const pos of this.entitiesPositions) {
                 const entityLength: number = pos.entityWord.length;
-                const entityPosition = pos.position + addedCaractersNumber;
-                if (newTxt.length + addedCaractersNumber - 3 > entityPosition + entityLength) {
-                    const entityReplace: string = this.getEntityLink(pos.entityWord, pos.entityType);
-                    newTxt = newTxt.substring(0, entityPosition) + entityReplace + newTxt.substring(entityPosition + entityLength);
-                    addedCaractersNumber += entityReplace.length - 1;
+                const entityPosition = index > 0 ? pos.position + 1 : pos.position;
+                const entityReplace: string = this.getEntityLink(pos.entityWord, pos.entityType);
+
+                if (this.rawTextContent.length - 3 > entityPosition + entityLength) {
+                    const partText: string = this.rawTextContent.substring(lastPosition, entityPosition) + entityReplace + '';
+                    newTxt = newTxt.concat(partText);
+                    lastPosition = entityPosition + entityLength;
+                    if (index === this.entitiesPositions.length - 1) {
+                        const endText: string = this.rawTextContent.substring(lastPosition);
+                        newTxt = newTxt.concat(endText);
+                    }
+                } else {
+                    const endText: string = this.rawTextContent.substring(lastPosition);
+                    newTxt = newTxt.concat(endText);
+                    break;
                 }
-            });
+                index++;
+            }
             this.innerHTML = newTxt;
         }
     }
 
     getEntityLink(entityWord: string, entityType: string): string {
-        return `<a style="color:${this.getEntityColor(entityType)} !important;">${entityWord.toString()}</a>`;
+        return `<a class="${this.getEntityClass(entityType)}">${entityWord.toString()}</a>`;
     }
 
-    getEntityColor(objectType: string): string {
+    getEntityClass(objectType: string): string {
         switch (objectType) {
             case 'Biographics':
-                return 'red';
+                return 'biographics';
                 break;
             case 'Event':
-                return 'blue';
+                return 'event';
                 break;
             case 'Equipment':
-                return 'green';
+                return 'equipment';
                 break;
             case 'RawData':
-                return 'pink';
+                return 'rawdata';
                 break;
             case 'Location':
-                return 'red';
+                return 'location';
                 break;
             default:
                 return '';

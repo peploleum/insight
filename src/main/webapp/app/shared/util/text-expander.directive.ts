@@ -20,7 +20,6 @@ export class TextExpanderDirective implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {}
 
     ngAfterViewInit() {
-        // this.txtContent = this._el.nativeElement.innerText;
         this.txtContent = this._el.nativeElement.innerHTML;
         this.setContent();
     }
@@ -37,8 +36,13 @@ export class TextExpanderDirective implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    @HostListener('click', ['$event.target'])
-    onClick(el) {
+    @HostListener('click', ['$event'])
+    onClick(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+        // Ne pas effectuer d'action sur un HTML tag <a>
+        if (target.tagName === 'A') {
+            return;
+        }
         this.expanded = !this.expanded;
         this.setContent();
     }

@@ -21,10 +21,10 @@
                          [txtLimit]="100">{{item.value}}
                     </div>
                     <ng-template #rawDataAnnotations>
-                        <!--<div insRawdataAnnotationDirective
-                             [data]="entity">{{item.value}}
-                        </div>-->
-                        <ins-rawdata-annotation [data]="entity" [rawTextContent]="item.value"></ins-rawdata-annotation>
+                        <div>
+                            <ins-rawdata-annotation [data]="entity"
+                                                    [rawTextContent]="item.value" [useExpander]="true" [textLimit]="100"></ins-rawdata-annotation>
+                        </div>
                     </ng-template>
                 </div>
             </ng-container>

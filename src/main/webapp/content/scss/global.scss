@@ -690,3 +690,24 @@ Dashboard custom CSS
 .dashboard-list {
     max-height: 90%;
 }
+
+/* ==========================================================================
+Clickable entities CSS
+========================================================================== */
+.clickable-entity-container {
+    .location {
+        color: red !important;
+    }
+    .rawdata {
+        color: pink !important;
+    }
+    .equipment {
+        color: green !important;
+    }
+    .event {
+        color: blue !important;
+    }
+    .biographics {
+        color: yellow !important;
+    }
+}

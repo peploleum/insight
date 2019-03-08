@@ -302,4 +302,11 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
     onRawDataClicked(id: string) {
         this.sms._onNewDataSelected.next([id]);
     }
+
+    getTruncatedString(value: string, textLimit: number): string {
+        if (value == null || typeof value === 'undefined') {
+            return '';
+        }
+        return value.length > textLimit ? value.substring(0, textLimit).concat('...') : value;
+    }
 }
