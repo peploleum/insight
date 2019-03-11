@@ -19,10 +19,12 @@
 
 a:first-child {
     border-radius: 1rem 0 0 1rem;
+    border-right: 1px solid rgba(65, 75, 88, 0.2);
 }
 
 a:last-child {
     border-radius: 0 1rem 1rem 0;
+    border-left: 1px solid rgba(65, 75, 88, 0.2);
 }
 
 .ins-hyperlink > a:hover {

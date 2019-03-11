@@ -2,6 +2,7 @@
  * Created by gFolgoas on 11/03/2019.
  */
 import { AfterViewInit, Component, EventEmitter, HostListener, Inject, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { toKebabCase } from '../util/insight-util';
 
 @Component({
     selector: 'ins-hyperlink-popover',
@@ -11,6 +12,7 @@ import { AfterViewInit, Component, EventEmitter, HostListener, Inject, OnChanges
 export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, AfterViewInit {
     idMongo: string;
     idJanus: string;
+    entityType: string;
 
     right: number;
     top: number;
@@ -34,7 +36,10 @@ export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, 
 
     ngAfterViewInit() {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (this.entityType) {
+        }
+    }
 
     ngOnDestroy() {}
 
@@ -47,5 +52,10 @@ export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, 
             !target.classList.contains('rawdata') &&
             !target.classList.contains('biographics')
         );
+    }
+
+    getLink(): string {
+        const i: string = toKebabCase(this.entityType);
+        return '/' + i;
     }
 }
