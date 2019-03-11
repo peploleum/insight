@@ -2,7 +2,7 @@
  * Created by gFolgoas on 31/01/2019.
  */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SideInterface } from '../../shared/side/side.abstract';
+import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import { getlayerIcon, MapLayer } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';

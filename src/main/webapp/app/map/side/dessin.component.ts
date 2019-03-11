@@ -4,7 +4,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/internal/operators';
-import { SideInterface } from '../../shared/side/side.abstract';
+import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import { FigureStyle, getlayerIcon, MapLayer, MapState } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';

@@ -7,10 +7,14 @@ import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
 import { ListFilterByStringPipe, ListFilterPipe } from './util/list-filter.pipe';
 import { TextExpanderDirective } from './util/text-expander.directive';
-import { RawdataAnnotationComponent } from './util/rawdata-annotation.component';
+import { RawdataHyperlinkComponent } from './hyperlink/rawdata-hyperlink.component';
+import { HyperlinkDirective } from './hyperlink/hyperlink.directive';
+import { SafeHtmlPipe } from './util/safe-html.pipe';
+import { HyperlinkPopoverComponent } from './hyperlink/hyperlink-popover.component';
+import { NetworkRoutingModule } from '../network/network-routing.module';
 
 @NgModule({
-    imports: [InsightSharedLibsModule, InsightSharedCommonModule],
+    imports: [InsightSharedLibsModule, InsightSharedCommonModule, NetworkRoutingModule],
     declarations: [
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
@@ -19,10 +23,13 @@ import { RawdataAnnotationComponent } from './util/rawdata-annotation.component'
         ListFilterPipe,
         ListFilterByStringPipe,
         TextExpanderDirective,
-        RawdataAnnotationComponent
+        RawdataHyperlinkComponent,
+        HyperlinkDirective,
+        SafeHtmlPipe,
+        HyperlinkPopoverComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
-    entryComponents: [JhiLoginModalComponent],
+    entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
     exports: [
         InsightSharedCommonModule,
         JhiLoginModalComponent,
@@ -32,7 +39,10 @@ import { RawdataAnnotationComponent } from './util/rawdata-annotation.component'
         ListFilterPipe,
         ListFilterByStringPipe,
         TextExpanderDirective,
-        RawdataAnnotationComponent
+        RawdataHyperlinkComponent,
+        HyperlinkDirective,
+        SafeHtmlPipe,
+        HyperlinkPopoverComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

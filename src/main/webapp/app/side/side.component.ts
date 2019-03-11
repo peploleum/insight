@@ -2,7 +2,7 @@
  * Created by gFolgoas on 01/02/2019.
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SideInterface } from '../shared/side/side.abstract';
+import { SideInterface } from './side.abstract';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

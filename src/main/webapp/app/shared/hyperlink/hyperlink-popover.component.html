@@ -1,0 +1,8 @@
+<div class="ins-hyperlink" [style.top.px]="top" [style.right.px]="right">
+    <a [routerLink]="['/raw-data', idMongo, 'view' ]">
+        <fa-icon [icon]="'search'"></fa-icon>
+    </a>
+    <a [routerLink]="['/',{outlets: { primary: ['network', idMongo], side: ['ins-network-side-panel'] }}]">
+        <fa-icon [icon]="'sitemap'"></fa-icon>
+    </a>
+</div>

@@ -1,0 +1,30 @@
+.ins-hyperlink {
+    z-index: 3;
+    position: absolute;
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: rgb(65, 75, 88);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.ins-hyperlink > a {
+    padding: 0.3rem 1.5rem;
+    flex: 1 1 auto;
+}
+
+a:first-child {
+    border-radius: 1rem 0 0 1rem;
+}
+
+a:last-child {
+    border-radius: 0 1rem 1rem 0;
+}
+
+.ins-hyperlink > a:hover {
+    background-color: #f2f2f2;
+}

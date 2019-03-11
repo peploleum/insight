@@ -3,13 +3,14 @@
  */
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { EntityPosition } from '../model/raw-data.model';
+import { UUID } from '../util/insight-util';
 
 @Component({
-    selector: 'ins-rawdata-annotation',
-    templateUrl: './rawdata-annotation.component.html',
+    selector: 'ins-rawdata-hyperlink',
+    templateUrl: './rawdata-hyperlink.component.html',
     styles: []
 })
-export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy, AfterViewInit {
+export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, AfterViewInit {
     @Input()
     data: any;
     @Input()
@@ -21,6 +22,7 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
     useExpander: boolean;
 
     entitiesPositions: EntityPosition[];
+    uniqueHyperlinkIds: Map<string, EntityPosition> = new Map();
     innerHTML: any;
 
     constructor() {}
@@ -61,9 +63,11 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
             let index = 0;
 
             for (const pos of this.entitiesPositions) {
+                const uniqueId = UUID();
+                this.uniqueHyperlinkIds.set(uniqueId, pos);
                 const entityLength: number = pos.entityWord.length;
                 const entityPosition = index > 0 ? pos.position + 1 : pos.position;
-                const entityReplace: string = this.getEntityLink(pos.entityWord, pos.entityType);
+                const entityReplace: string = this.getEntityLink(pos.entityWord, pos.entityType, uniqueId);
 
                 if (this.rawTextContent.length - 3 > entityPosition + entityLength) {
                     const partText: string = this.rawTextContent.substring(lastPosition, entityPosition) + entityReplace + '';
@@ -84,8 +88,8 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
         }
     }
 
-    getEntityLink(entityWord: string, entityType: string): string {
-        return `<a class="${this.getEntityClass(entityType)}">${entityWord.toString()}</a>`;
+    getEntityLink(entityWord: string, entityType: string, entityUniqueId: string): string {
+        return `<a id="${entityUniqueId.toString()}" class="${this.getEntityClass(entityType)}">${entityWord.toString()}</a>`;
     }
 
     getEntityClass(objectType: string): string {
@@ -108,5 +112,9 @@ export class RawdataAnnotationComponent implements OnChanges, OnInit, OnDestroy,
             default:
                 return '';
         }
+    }
+
+    coucou(el) {
+        console.log(el);
     }
 }

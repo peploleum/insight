@@ -2,7 +2,7 @@
  * Created by gFolgoas on 31/01/2019.
  */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SideInterface } from '../../shared/side/side.abstract';
+import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';

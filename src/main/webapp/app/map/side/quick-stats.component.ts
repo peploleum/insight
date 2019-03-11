@@ -2,7 +2,7 @@
  * Created by gFolgoas on 31/01/2019.
  */
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SideInterface } from '../../shared/side/side.abstract';
+import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import * as Chart from 'chart.js';
 import { EventThreadResultSet } from '../../shared/util/map-utils';

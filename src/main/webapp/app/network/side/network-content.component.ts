@@ -2,7 +2,7 @@
  * Created by gFolgoas on 20/02/2019.
  */
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { SideInterface } from '../../shared/side/side.abstract';
+import { SideInterface } from '../../side/side.abstract';
 import { Subscription } from 'rxjs/index';
 import { NetworkService } from '../network.service';
 import { DataContentInfo, NetworkState } from '../../shared/util/network.util';

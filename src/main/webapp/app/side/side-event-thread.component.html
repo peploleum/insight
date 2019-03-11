@@ -36,9 +36,9 @@
                     <p class="card-text">
                         <!--<small>{{rawData.rawDataContent | stringTruncate : 140}}</small>-->
                         <small>
-                            <ins-rawdata-annotation [data]="rawData"
-                                                    [rawTextContent]="getTruncatedString(rawData.rawDataContent, 140)"
-                                                    [useExpander]="false"></ins-rawdata-annotation>
+                            <ins-rawdata-hyperlink [data]="rawData"
+                                                   [rawTextContent]="getTruncatedString(rawData.rawDataContent, 140)"
+                                                   [useExpander]="false"></ins-rawdata-hyperlink>
                         </small>
                     </p>
                     <a class="card-link"
