@@ -6,7 +6,7 @@ Navbar
 
 .navbar-version {
     font-size: 10px;
-    color: #ccc;
+    color: $navbar-version-color; // origin: #ccc
 }
 
 .jh-navbar {
@@ -34,6 +34,7 @@ Navbar
     }
     a.nav-link {
         font-weight: 400;
+        font-size: 1.3rem;
     }
     .jh-navbar-toggler {
         color: #ccc;
