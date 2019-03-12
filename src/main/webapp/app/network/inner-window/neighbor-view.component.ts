@@ -85,7 +85,6 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     addNodes(nodes: Node[], edges: Edge[]) {
-        this.network.storePositions();
         this.networkData.nodes.add(nodes);
         this.networkData.edges.add(edges);
     }

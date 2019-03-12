@@ -161,7 +161,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
             this._sms._selectedData.next(<string[]>properties.nodes);
-            this.sendSelectionToModal(properties.nodes, properties.edges);
+            this.emitNeighborsOnSelection(properties.nodes, properties.edges);
         });
         this.network.on('deselectNode', properties => {
             this._sms._selectedData.next(<string[]>properties.nodes);
@@ -174,10 +174,18 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         });
     }
 
-    sendSelectionToModal(nodeIds: IdType[], edgeIds: IdType[]) {
-        const nodeArray: Node[] = this.networkData.nodes.get(nodeIds);
+    emitNeighborsOnSelection(nodeIds: IdType[], edgeIds: IdType[]) {
         const edgeArray: Edge[] = this.networkData.edges.get(edgeIds);
-        this._ns.neighborsEmitter.next(new GraphDataCollection(nodeArray.map(node => <NodeDTO>node), edgeArray.map(edge => <EdgeDTO>edge)));
+        const unduplicatedNodeArrayIds = {};
+        edgeArray.forEach(edge => {
+            unduplicatedNodeArrayIds[edge.from] = 0;
+            unduplicatedNodeArrayIds[edge.to] = 0;
+        });
+        const targetNodeIds: IdType[] = Object.keys(unduplicatedNodeArrayIds);
+        const nodeArray: Node[] = this.networkData.nodes.get(targetNodeIds);
+        this._ns.neighborsEmitter.next(
+            new GraphDataCollection(nodeArray.map((node: Node) => <NodeDTO>node), edgeArray.map((edge: Edge) => <EdgeDTO>edge))
+        );
     }
 
     getNodesNeighbours(idOrigins: IdType[]) {
