@@ -711,3 +711,36 @@ Clickable entities CSS
         color: yellow !important;
     }
 }
+
+/* ==========================================================================
+Modal window custom CSS
+========================================================================== */
+.modal-window {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @media screen and (max-height: 800px), screen and (max-width: 800px) {
+        width: 200px;
+        height: 200px;
+    }
+
+    .modal-header {
+        font-size: 1.1rem;
+        padding: 0.3rem 1.5rem;
+        color: white;
+        background-color: $modal-background-color;
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    :nth-child(2) {
+        flex: 1 0 auto;
+        width: 100%;
+    }
+}

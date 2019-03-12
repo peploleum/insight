@@ -12,6 +12,7 @@ import { HyperlinkDirective } from './hyperlink/hyperlink.directive';
 import { SafeHtmlPipe } from './util/safe-html.pipe';
 import { HyperlinkPopoverComponent } from './hyperlink/hyperlink-popover.component';
 import { NetworkRoutingModule } from '../network/network-routing.module';
+import { ModalWindowComponent } from './modal-window/modal-window.component';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, NetworkRoutingModule],
@@ -26,7 +27,8 @@ import { NetworkRoutingModule } from '../network/network-routing.module';
         RawdataHyperlinkComponent,
         HyperlinkDirective,
         SafeHtmlPipe,
-        HyperlinkPopoverComponent
+        HyperlinkPopoverComponent,
+        ModalWindowComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
@@ -42,7 +44,8 @@ import { NetworkRoutingModule } from '../network/network-routing.module';
         RawdataHyperlinkComponent,
         HyperlinkDirective,
         SafeHtmlPipe,
-        HyperlinkPopoverComponent
+        HyperlinkPopoverComponent,
+        ModalWindowComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

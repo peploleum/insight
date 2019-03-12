@@ -28,6 +28,8 @@ export class NetworkService {
 
     /** ids des objets contenus dans le network */
     networkDataContent: BehaviorSubject<DataContentInfo[]> = new BehaviorSubject([]);
+    /** source de la modal de visualisation de neighbors */
+    neighborsEmitter: BehaviorSubject<GraphDataCollection> = new BehaviorSubject(new GraphDataCollection([], []));
 
     public static getNodeDto(
         label: string,

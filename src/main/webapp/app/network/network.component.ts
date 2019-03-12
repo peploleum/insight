@@ -3,7 +3,7 @@ import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
-import { GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
+import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
@@ -161,6 +161,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
             this._sms._selectedData.next(<string[]>properties.nodes);
+            this.sendSelectionToModal(properties.nodes, properties.edges);
         });
         this.network.on('deselectNode', properties => {
             this._sms._selectedData.next(<string[]>properties.nodes);
@@ -171,6 +172,12 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.networkData.nodes.on('remove', (event, properties) => {
             this.updateDataContent();
         });
+    }
+
+    sendSelectionToModal(nodeIds: IdType[], edgeIds: IdType[]) {
+        const nodeArray: Node[] = this.networkData.nodes.get(nodeIds);
+        const edgeArray: Edge[] = this.networkData.edges.get(edgeIds);
+        this._ns.neighborsEmitter.next(new GraphDataCollection(nodeArray.map(node => <NodeDTO>node), edgeArray.map(edge => <EdgeDTO>edge)));
     }
 
     getNodesNeighbours(idOrigins: IdType[]) {
