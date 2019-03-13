@@ -80,7 +80,7 @@ export class HyperlinkDirective implements AfterViewInit, OnChanges, OnDestroy {
         const rect: ClientRect = targetElement.getBoundingClientRect();
         this.popover.instance.entityType = entityPosition.entityType;
         this.popover.instance.right = document.body.clientWidth - rect.left + 5;
-        this.popover.instance.top = targetElement.offsetTop;
+        this.popover.instance.top = rect.top;
     }
 
     destroyHyperlinkPopover() {

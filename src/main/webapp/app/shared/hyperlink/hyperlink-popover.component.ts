@@ -29,6 +29,11 @@ export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, 
         }
     }
 
+    @HostListener('document:wheel', ['$event'])
+    onMouseGlobalWheel(event: WheelEvent) {
+        this._closeEmitter.emit(true);
+    }
+
     constructor(@Inject('closeEmitter') private _closeEmitter: EventEmitter<boolean>) {}
 
     ngOnChanges(changes: any) {}

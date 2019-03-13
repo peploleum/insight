@@ -1,4 +1,5 @@
 <div class="ins-popover" [style.top.px]="top" [style.right.px]="right">
+    <span class="noInteract">{{entityType}}</span>
     <a [routerLink]="[getLink(), idMongo, 'view' ]">
         <fa-icon [icon]="'search'"></fa-icon>
     </a>

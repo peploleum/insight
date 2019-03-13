@@ -557,12 +557,12 @@ SidePannel custom CSS
     background-color: $tools-element-background-color-hover;
 }
 
-.tools .noInteract {
+.noInteract {
     cursor: inherit;
 }
 
-.tools .noInteract:hover {
-    background-color: inherit;
+.noInteract:hover {
+    background-color: inherit !important;
 }
 
 .side-secondary {
