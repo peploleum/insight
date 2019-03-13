@@ -106,8 +106,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     internalOnResize() {
-        console.log('RESIZE');
-        console.log(this.er.nativeElement.offsetHeight);
         this.computedHeight = this.er.nativeElement.offsetHeight;
         this.cdr.detectChanges();
     }
@@ -292,7 +290,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private initMapLayerListener() {
         this.layerSubs = this.ms.mapLayers.subscribe((update: MapLayer[]) => {
-            if (this._map.getLayers().getLength() === 1) {
+            console.log(this._map.getLayers().getLength());
+            // 2 correspond au 2 layers ajoutés obligatoirement (featureLayer et geoMarkerLayer) dans la fonction initMap
+            if (this._map.getLayers().getLength() === 2) {
                 // Si aucun layer (autre que le VectorLayer de base) présent dans la map, alors tous les layers sont status NEW
                 update.forEach(layer => (layer.layerStatus = 'NEW'));
             }
