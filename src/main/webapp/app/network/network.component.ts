@@ -138,7 +138,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             hierarchical: {
                 enabled: !this.getState().LAYOUT_FREE,
                 levelSeparation: 100,
-                direction: this.getState().LAYOUT_DIR
+                direction: this.getState().LAYOUT_DIR,
+                sortMethod: this.getState().SORT_METHOD
             }
         };
     }
@@ -280,6 +281,16 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 break;
             case 'PHYSICS_ENABLED':
                 networkState.PHYSICS_ENABLED = !networkState.PHYSICS_ENABLED;
+                this.network.setOptions({ physics: this.getPhysicsOption() });
+                break;
+            case 'SORT_METHOD_HU':
+                networkState.SORT_METHOD = 'hubsize';
+                this.network.setOptions({ layout: this.getLayoutOption() });
+                this.network.setOptions({ physics: this.getPhysicsOption() });
+                break;
+            case 'SORT_METHOD_DIR':
+                networkState.SORT_METHOD = 'directed';
+                this.network.setOptions({ layout: this.getLayoutOption() });
                 this.network.setOptions({ physics: this.getPhysicsOption() });
                 break;
             case 'LAYOUT_FREE':

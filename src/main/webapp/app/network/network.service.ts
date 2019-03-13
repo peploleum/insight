@@ -21,6 +21,7 @@ export class NetworkService {
         LAYOUT_DIR: 'UD',
         LAYOUT_FREE: false,
         PHYSICS_ENABLED: false,
+        SORT_METHOD: 'hubsize',
         ADD_NEIGHBOURS: false,
         CLUSTER_NODES: false,
         AUTO_REFRESH: false,

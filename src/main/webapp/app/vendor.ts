@@ -29,6 +29,7 @@ import {
     faClock,
     faCloud,
     faCodeBranch,
+    faDirections,
     faDotCircle,
     faDrawPolygon,
     faExclamation,
@@ -165,5 +166,6 @@ library.add(faBookReader);
 library.add(faMinus);
 library.add(faWindowMaximize);
 library.add(faWindowMinimize);
+library.add(faDirections);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

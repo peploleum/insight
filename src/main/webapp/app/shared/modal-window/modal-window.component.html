@@ -1,7 +1,7 @@
 <div [style.bottom]="modalBottom" [style.left]="modalLeft" class="modal-window" [ngClass]="{'modal-hidden': !expanded}">
     <div class="modal-header">
         <span>{{titleModal}}</span>
-        <fa-icon [icon]="expanded ? 'window-minimize' : 'window-maximize'" (click)="onClick()"></fa-icon>
+        <fa-icon style="cursor: pointer;" [icon]="expanded ? 'window-minimize' : 'window-maximize'" (click)="onClick()"></fa-icon>
     </div>
     <ng-content select="[modal-content]"></ng-content>
 </div>

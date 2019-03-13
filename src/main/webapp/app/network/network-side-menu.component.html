@@ -2,6 +2,11 @@
      [style.right.px]="dimension.right" [style.height.px]="dimension.height" [ngSwitch]="elementName">
 
     <ng-template [ngSwitchCase]="'LAYOUT_MENU'">
+        <span [ngClass]="{'selected': (networkStates['SORT_METHOD'] === 'directed')}"
+              (click)="sendAction(networkStates['SORT_METHOD'] === 'directed' ? 'SORT_METHOD_HU' : 'SORT_METHOD_DIR')"
+              title="Changer la méthode de tri">
+                <fa-icon [icon]="'directions'"></fa-icon>
+        </span>
         <span [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'UD')}"
               (click)="sendAction('LAYOUT_DIR_UD')" title="Haut-Bas">
                 <fa-icon [icon]="'arrow-circle-down'"></fa-icon>
