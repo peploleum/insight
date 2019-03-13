@@ -66,8 +66,8 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 keyboard: {
                     enabled: true
                 },
-                multiselect: true,
-                navigationButtons: true
+                multiselect: false,
+                navigationButtons: false
             },
             nodes: {
                 shape: 'circularImage'
@@ -88,6 +88,7 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
     addNodes(nodes: Node[], edges: Edge[]) {
         this.networkData.nodes.add(nodes);
         this.networkData.edges.add(edges);
+        this.network.fit();
     }
 
     clearDatasets() {

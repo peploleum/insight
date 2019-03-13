@@ -8,6 +8,9 @@
 $network-background-color: #576475;
 $main-background-color: #353d47;
 
+$a-color: #0056b3;
+$a-color-hover: #003e80;
+
 // Side Panel
 $sidepanel-background-color: rgba(87, 100, 117, 0.9);
 $sidepanel-title-background-color: white;
@@ -22,7 +25,13 @@ $qv-property-background-color: white;
 $et-header-background-color: #f2f2f2;
 
 // [Side] Tools
-$tools-element-background-color-hover: #7b8c9d;*/
+$tools-element-background-color-hover: #7b8c9d;
+
+// Popover
+$popover-background-color: white;
+$popover-button-background-color-hover: #f2f2f2;
+
+*/
 
 /////////////////////////////////////////////////////////////////////////
 /////////////////////// BLUE THEME //////////////////////////////////////
@@ -30,6 +39,9 @@ $tools-element-background-color-hover: #7b8c9d;*/
 
 $network-background-color: #e4e5e6;
 $main-background-color: #e4e5e6;
+
+$a-color: #0056b3;
+$a-color-hover: #003e80;
 
 // Navbar
 $navbar-background-color: #369;
@@ -54,3 +66,7 @@ $et-header-background-color: #f2f2f2;
 
 // [Side] Tools
 $tools-element-background-color-hover: rgb(83, 140, 198);
+
+// Popover
+$popover-background-color: white;
+$popover-button-background-color-hover: #f2f2f2;

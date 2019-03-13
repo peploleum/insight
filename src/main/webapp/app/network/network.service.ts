@@ -45,7 +45,7 @@ export class NetworkService {
             border: NetworkService.getNodeColor(objectType)
         };
         const font = {
-            color: 'white'
+            color: '#0056b3'
         };
         return new NodeDTO(label, id, mongoId, objectType, title, image, color, 3, font);
     }

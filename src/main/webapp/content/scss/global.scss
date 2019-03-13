@@ -14,12 +14,12 @@ h4 {
 }
 
 a {
-    color: #0056b3;
+    color: $a-color;
     font-weight: bold;
 }
 
 a:hover {
-    color: #003e80;
+    color: $a-color-hover;
     font-weight: bold;
     /* make sure browsers use the pointer cursor for anchors, even with no href */
     cursor: pointer;
@@ -313,47 +313,49 @@ Custom network css
     background-color: $network-background-color;
 }
 
-.popover-menu {
-    z-index: 2;
-    min-width: 25px;
-    max-height: 30vh;
+/* ==========================================================================
+Custom popover css
+========================================================================== */
+.ins-popover {
+    z-index: 1000;
     position: absolute;
-    background-color: white;
-    align-items: stretch;
-}
-
-.popover-side-menu-container {
-    z-index: 3;
-    position: absolute;
+    background-color: $popover-background-color;
 
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-.popover-side-menu {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    background-color: rgba(87, 100, 117, 0.9);
     border: rgb(65, 75, 88);
+    border-radius: 1rem;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+    color: $a-color;
 }
 
-.popover-side-menu > span {
+.ins-popover > * {
     padding: 0.3rem 1.5rem;
-    text-align: center;
-    cursor: pointer;
-}
-
-.popover-side-menu > span:hover {
-    background-color: #7b8c9d;
-}
-
-.popover-menu-item {
-    cursor: pointer;
-    margin: 0;
     flex: 1 1 auto;
+    cursor: pointer;
+    border-right: 1px solid rgba(65, 75, 88, 0.2);
+    border-left: 1px solid rgba(65, 75, 88, 0.2);
+}
+
+.ins-popover > a:first-child,
+.ins-popover > span:first-child {
+    border-radius: 1rem 0 0 1rem;
+    border-left: none;
+}
+
+.ins-popover > a:last-child,
+.ins-popover > span:last-child {
+    border-radius: 0 1rem 1rem 0;
+    border-right: none;
+}
+
+.ins-popover > a:hover,
+.ins-popover > span:hover {
+    background-color: $popover-button-background-color-hover;
+    color: $a-color-hover;
 }
 
 /* ==========================================================================
@@ -483,7 +485,7 @@ SidePannel custom CSS
     justify-content: center;
     align-items: center;
 
-    z-index: 101;
+    z-index: 90;
 }
 
 .side-buttons > span {

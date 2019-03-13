@@ -1,38 +1,31 @@
-<div class="popover-side-menu-container" [style.top.px]="dimension.top"
-     [style.right.px]="dimension.left" [style.height.px]="dimension.height">
+<div class="ins-popover" [style.top.px]="dimension.top"
+     [style.right.px]="dimension.right" [style.height.px]="dimension.height" [ngSwitch]="elementName">
 
-    <div class="popover-side-menu" [ngSwitch]="elementName">
-
-        <ng-template [ngSwitchCase]="'LAYOUT_MENU'">
-        <span class="popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'UD')}"
+    <ng-template [ngSwitchCase]="'LAYOUT_MENU'">
+        <span [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'UD')}"
               (click)="sendAction('LAYOUT_DIR_UD')" title="Haut-Bas">
                 <fa-icon [icon]="'arrow-circle-down'"></fa-icon>
         </span>
-            <span class="popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'DU')}"
-                  (click)="sendAction('LAYOUT_DIR_DU')" title="Bas-Haut">
+        <span [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'DU')}"
+              (click)="sendAction('LAYOUT_DIR_DU')" title="Bas-Haut">
                 <fa-icon [icon]="'arrow-circle-up'"></fa-icon>
         </span>
-            <span class="popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'LR')}"
-                  (click)="sendAction('LAYOUT_DIR_LR')" title="Gauche-Droite">
+        <span [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'LR')}"
+              (click)="sendAction('LAYOUT_DIR_LR')" title="Gauche-Droite">
                 <fa-icon [icon]="'arrow-circle-right'"></fa-icon>
         </span>
-            <span class="popover-menu-item" [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'RL')}"
-                  (click)="sendAction('LAYOUT_DIR_RL')" title="Droite-Gauche">
+        <span [ngClass]="{'selected': (networkStates['LAYOUT_DIR'] === 'RL')}"
+              (click)="sendAction('LAYOUT_DIR_RL')" title="Droite-Gauche">
                 <fa-icon [icon]="'arrow-circle-left'"></fa-icon>
         </span>
-        </ng-template>
+    </ng-template>
 
-        <ng-template [ngSwitchCase]="'FILECHOOSER_MENU'">
-            <input type="file" (change)="onFileInputChange($event)"
-                   class="form-control-file form-control-sm" style="flex-basis: 20rem !important;"/>
-            <span class="popover-menu-item"
-                  (click)="importJsonFile()" title="Lancer l'import de fichier">
+    <ng-template [ngSwitchCase]="'FILECHOOSER_MENU'">
+        <input type="file" (change)="onFileInputChange($event)"
+               class="form-control-file form-control-sm" style="flex-basis: 20rem !important;"/>
+        <span (click)="importJsonFile()" title="Lancer l'import de fichier">
                 <fa-icon [icon]="'check'"></fa-icon>
         </span>
-        </ng-template>
-
-    </div>
-
-    <div class="arrow-triangle left" style="background-color: rgba(87, 100, 117, 0.9); margin-left: -2px;"></div>
+    </ng-template>
 
 </div>

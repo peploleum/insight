@@ -11,7 +11,7 @@ import { NetworkService } from './network.service';
 export class NetworkSideMenuComponent implements OnInit {
     networkStates;
     elementName: string;
-    dimension: { top: number; left: number; height: number } = { top: 0, left: 0, height: 0 };
+    dimension: { top: number; right: number; height: number } = { top: 0, right: 0, height: 0 };
     selectedJSONFile: File;
 
     constructor(@Inject('directiveActionEmitter') private actionEmitter: EventEmitter<string>, private _ns: NetworkService) {}

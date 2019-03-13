@@ -63,7 +63,7 @@ export class NetworkSideMenuDirective implements OnChanges {
         this.sideMenu.instance.elementName = this.elementName;
         const rect: ClientRect = this._el.nativeElement.getBoundingClientRect();
         this.sideMenu.instance.dimension.top = this._el.nativeElement.offsetTop;
-        this.sideMenu.instance.dimension.left = window.innerWidth - rect.right + rect.width + 20;
+        this.sideMenu.instance.dimension.right = document.body.clientWidth - rect.left + 5;
         this.sideMenu.instance.dimension.height = rect.height;
     }
 

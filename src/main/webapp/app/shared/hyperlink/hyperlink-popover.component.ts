@@ -6,8 +6,7 @@ import { toKebabCase } from '../util/insight-util';
 
 @Component({
     selector: 'ins-hyperlink-popover',
-    templateUrl: './hyperlink-popover.component.html',
-    styleUrls: ['./hyperlink-popover.component.scss']
+    templateUrl: './hyperlink-popover.component.html'
 })
 export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, AfterViewInit {
     idMongo: string;
