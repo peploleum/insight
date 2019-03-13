@@ -740,10 +740,17 @@ Modal window custom CSS
         background-color: $modal-header-background-color;
         flex: 0 0 auto;
         width: 100%;
+
+        display: flex;
+        justify-content: space-between;
     }
 
-    :nth-child(2) {
+    .modal-header + * {
         flex: 1 0 auto;
         width: 100%;
     }
+}
+
+.modal-hidden {
+    height: auto !important;
 }

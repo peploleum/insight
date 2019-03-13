@@ -94,6 +94,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         if (this.dataSelectedSubs) {
             this.dataSelectedSubs.unsubscribe();
         }
+        // Clean le behaviorSubject de relations
+        this._ns.neighborsEmitter.next(new GraphDataCollection([], []));
     }
 
     getMockData() {

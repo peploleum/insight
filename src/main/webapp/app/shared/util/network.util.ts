@@ -9,6 +9,7 @@ export class NetworkState {
     ADD_NEIGHBOURS?: boolean;
     CLUSTER_NODES?: boolean;
     AUTO_REFRESH?: boolean;
+    DISPLAY_RELATION?: boolean;
 
     constructor(
         LAYOUT_DIR: string,
@@ -16,7 +17,8 @@ export class NetworkState {
         PHYSICS_ENABLED: boolean,
         ADD_NEIGHBOURS?: boolean,
         CLUSTER_NODES?: boolean,
-        AUTO_REFRESH?: boolean
+        AUTO_REFRESH?: boolean,
+        DISPLAY_RELATION?: boolean
     ) {
         this.LAYOUT_DIR = LAYOUT_DIR;
         this.LAYOUT_FREE = LAYOUT_FREE;
@@ -24,6 +26,7 @@ export class NetworkState {
         this.ADD_NEIGHBOURS = ADD_NEIGHBOURS;
         this.CLUSTER_NODES = CLUSTER_NODES;
         this.AUTO_REFRESH = AUTO_REFRESH;
+        this.DISPLAY_RELATION = DISPLAY_RELATION;
     }
 }
 

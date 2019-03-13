@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/index';
 import { GraphDataCollection, GraphDataSet } from '../../shared/model/node.model';
 import { DataSet, Edge, Network, Node, Options } from 'vis';
 import { NetworkService } from '../network.service';
+import { NetworkState } from '../../shared/util/network.util';
 
 @Component({
     selector: 'ins-neighbor-view',
@@ -16,7 +17,7 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
     network: Network;
     networkData: GraphDataSet;
 
-    networkStates;
+    networkStates: NetworkState;
     stateSubs: Subscription;
     neighborsEmitterSubs: Subscription;
 
@@ -92,5 +93,11 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
     clearDatasets() {
         this.networkData.nodes.clear();
         this.networkData.edges.clear();
+    }
+
+    expandWindow(event) {
+        const networkState: NetworkState = this._ns.networkState.getValue();
+        networkState.DISPLAY_RELATION = !networkState.DISPLAY_RELATION;
+        this._ns.networkState.next(networkState);
     }
 }

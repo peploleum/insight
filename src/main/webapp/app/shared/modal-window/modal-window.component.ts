@@ -1,7 +1,7 @@
 /**
  * Created by gFolgoas on 12/03/2019.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 @Component({
     selector: 'ins-modal-window',
@@ -14,6 +14,11 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
     modalBottom;
     @Input()
     modalLeft;
+    @Input()
+    expanded = true;
+
+    @Output()
+    expansionClickEmitter: EventEmitter<boolean> = new EventEmitter();
 
     constructor() {}
 
@@ -21,5 +26,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {}
 
-    sendAction(action: string) {}
+    onClick() {
+        this.expansionClickEmitter.emit(true);
+    }
 }

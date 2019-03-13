@@ -23,7 +23,8 @@ export class NetworkService {
         PHYSICS_ENABLED: false,
         ADD_NEIGHBOURS: false,
         CLUSTER_NODES: false,
-        AUTO_REFRESH: false
+        AUTO_REFRESH: false,
+        DISPLAY_RELATION: true
     });
 
     /** ids des objets contenus dans le network */

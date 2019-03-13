@@ -1,3 +1,4 @@
-<ins-modal-window titleModal="Relations" modalBottom="20px" modalLeft="20px">
-    <div #neighbor modal-content></div>
+<ins-modal-window titleModal="Relations" modalBottom="20px" modalLeft="20px"
+                  (expansionClickEmitter)="expandWindow($event)" [expanded]="networkStates.DISPLAY_RELATION">
+    <div [hidden]="!networkStates.DISPLAY_RELATION" #neighbor modal-content></div>
 </ins-modal-window>

@@ -46,6 +46,7 @@ import {
     faMagic,
     faMapMarkedAlt,
     faMapMarker,
+    faMinus,
     faNetworkWired,
     faPencilAlt,
     faPlug,
@@ -75,6 +76,8 @@ import {
     faUserPlus,
     faUserSecret,
     faWifi,
+    faWindowMaximize,
+    faWindowMinimize,
     faWrench
 } from '@fortawesome/free-solid-svg-icons';
 import { faArrowCircleDown } from '@fortawesome/free-solid-svg-icons/faArrowCircleDown';
@@ -159,5 +162,8 @@ library.add(faPlusSquare);
 library.add(faMapMarker);
 library.add(faNetworkWired);
 library.add(faBookReader);
+library.add(faMinus);
+library.add(faWindowMaximize);
+library.add(faWindowMinimize);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
