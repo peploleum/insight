@@ -1,0 +1,36 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+            <b> Annotation tool</b></h4>
+    </div>
+    <div class="side-main side-element">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <span title="Mettre le layer à l'arrière-plan"><fa-icon
+                [icon]="'arrow-circle-down'"></fa-icon></span>
+            <span title="Mettre le layer au premier-plan"><fa-icon
+                [icon]="'arrow-circle-up'"></fa-icon></span>
+        </div>
+
+        <div class="side-text-container" style="flex: 1 1 auto;" *ngIf="entity">
+            <p class="red-select" insTextHighlight (selectedTextEmitter)="onTextSelectionChange($event)">{{entity.rawDataContent}}</p>
+        </div>
+    </div>
+
+    <div class="side-secondary side-element">
+
+        <div class="side-inline-form" [formGroup]="entityForm">
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="entityType">Type de l'entité</label>
+                <input type="text" formControlName="entityType" class="form-control-sm" id="entityType"
+                       placeholder="Type de l'entité"/>
+            </div>
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="entityName">Nom de l'entité</label>
+                <input type="text" formControlName="entityName" class="form-control-sm" id="entityName"
+                       placeholder="Nom de l'entité"/>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -17,6 +17,7 @@ import {
     faBars,
     faBell,
     faBook,
+    faBookmark,
     faBookReader,
     faBullseye,
     faCalendarAlt,
@@ -167,5 +168,6 @@ library.add(faMinus);
 library.add(faWindowMaximize);
 library.add(faWindowMinimize);
 library.add(faDirections);
+library.add(faBookmark);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
