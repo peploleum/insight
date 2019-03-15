@@ -45,7 +45,7 @@ export class QuickAnnotationComponent implements OnInit {
         );
     }
 
-    onTextSelectionChange(text: string) {
-        this.entityForm.controls['entityName'].setValue(text);
+    onTextSelectionChange(selection: { textSelected: string; position: number }) {
+        this.entityForm.controls['entityName'].setValue(selection.textSelected);
     }
 }
