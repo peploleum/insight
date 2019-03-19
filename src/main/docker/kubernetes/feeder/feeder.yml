@@ -35,7 +35,7 @@ spec:
           protocol: TCP 
         - containerPort: 10514
           name: listener
-          protocol: UDP 
+          protocol: TCP
         resources:
           requests:
             memory: "10240Mi"
@@ -168,6 +168,7 @@ spec:
     port: 8080
     targetPort: 8080
     nodePort: 30101
-  - name: udp 
-    port: 10514 
-    targetPort: 10514 
+  - name: listener
+    port: 10514
+    protocol: TCP
+    targetPort: 10514
