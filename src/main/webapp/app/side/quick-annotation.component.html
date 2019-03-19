@@ -27,8 +27,11 @@
         <div class="side-inline-form" [formGroup]="entityForm">
             <div class="side-input-container">
                 <label class="col-form-label-sm" for="entityType">Type de l'entité</label>
-                <input type="text" formControlName="entityType" class="form-control-sm" id="entityType"
-                       placeholder="Type de l'entité"/>
+                <!--<input type="text" formControlName="entityType" class="form-control-sm" id="entityType"
+                       placeholder="Type de l'entité"/>-->
+                <select class="form-control-sm" formControlName="entityType" id="entityType">
+                    <option *ngFor="let type of entityTypeList" [ngValue]="type">{{type}}</option>
+                </select>
             </div>
             <div class="side-input-container">
                 <label class="col-form-label-sm" for="entityName">Nom de l'entité</label>

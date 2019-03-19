@@ -37,6 +37,8 @@ export class ToolbarButtonParameters {
     }
 }
 
+export const ENTITY_TYPE_LIST: string[] = ['Biographics', 'Equipment', 'Event', 'Location', 'Organisation', 'RawData'];
+
 export const toKebabCase = (str: string): string => {
     if (str) {
         return str

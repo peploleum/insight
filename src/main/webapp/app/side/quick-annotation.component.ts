@@ -6,6 +6,7 @@ import { RawDataService } from '../entities/raw-data/raw-data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { QuickViewService } from './quick-view.service';
+import { ENTITY_TYPE_LIST } from '../shared/util/insight-util';
 
 @Component({
     selector: 'ins-quick-annotation',
@@ -17,6 +18,7 @@ export class QuickAnnotationComponent implements OnInit {
     selected_data_ids: string[] = [];
     selectedDataSubs: Subscription;
     entityForm: FormGroup;
+    entityTypeList = ENTITY_TYPE_LIST;
 
     constructor(
         private _sms: SideMediatorService,
