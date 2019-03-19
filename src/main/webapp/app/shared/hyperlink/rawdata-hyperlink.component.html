@@ -1,3 +1,15 @@
-<span *ngIf="innerHTML && useExpander" [innerHTML]="innerHTML | insSafeHtml" insTextExpanderDirective
-      [txtLimit]="textLimit" insHyperlinkDirective [uniqueHyperlinkIds]="uniqueHyperlinkIds" class="clickable-entity-container"></span>
-<span *ngIf="innerHTML && !useExpander" [innerHTML]="innerHTML | insSafeHtml" class="clickable-entity-container"></span>
+<span *ngIf="innerHTML && useExpander && !useHighlight" [innerHTML]="innerHTML | insSafeHtml" insTextExpanderDirective
+      [txtLimit]="textLimit" insHyperlinkDirective [uniqueHyperlinkIds]="uniqueHyperlinkIds"
+      class="clickable-entity-container"></span>
+<span *ngIf="innerHTML && !useExpander && !useHighlight" [innerHTML]="innerHTML | insSafeHtml" insHyperlinkDirective
+      [uniqueHyperlinkIds]="uniqueHyperlinkIds"
+      class="clickable-entity-container"></span>
+
+<!-- Temporaire => Code Moche Alerte -->
+<span *ngIf="innerHTML && useExpander && useHighlight" [innerHTML]="innerHTML | insSafeHtml" insTextExpanderDirective
+      [txtLimit]="textLimit" insHyperlinkDirective
+      [uniqueHyperlinkIds]="uniqueHyperlinkIds" insTextHighlight (selectedTextEmitter)="onTextSelectionChange($event)"
+      class="clickable-entity-container red-select"></span>
+<span *ngIf="innerHTML && !useExpander && useHighlight" [innerHTML]="innerHTML | insSafeHtml" insHyperlinkDirective
+      [uniqueHyperlinkIds]="uniqueHyperlinkIds" insTextHighlight (selectedTextEmitter)="onTextSelectionChange($event)"
+      class="clickable-entity-container red-select"></span>

@@ -11,12 +11,12 @@ import { RawdataHyperlinkComponent } from './hyperlink/rawdata-hyperlink.compone
 import { HyperlinkDirective } from './hyperlink/hyperlink.directive';
 import { SafeHtmlPipe } from './util/safe-html.pipe';
 import { HyperlinkPopoverComponent } from './hyperlink/hyperlink-popover.component';
-import { NetworkRoutingModule } from '../network/network-routing.module';
 import { ModalWindowComponent } from './modal-window/modal-window.component';
 import { TextHighlightDirective } from './util/text-highlight.directive';
+import { InsightAppRoutingModule } from '../app-routing.module';
 
 @NgModule({
-    imports: [InsightSharedLibsModule, InsightSharedCommonModule, NetworkRoutingModule],
+    imports: [InsightSharedLibsModule, InsightSharedCommonModule, InsightAppRoutingModule],
     declarations: [
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,

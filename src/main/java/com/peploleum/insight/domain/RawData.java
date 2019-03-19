@@ -52,10 +52,12 @@ public class RawData extends InsightEntity implements Serializable {
 
     @Field("raw_data_creation_date")
     @Indexed(direction = IndexDirection.ASCENDING)
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Date)
     private Instant rawDataCreationDate;
 
     @Indexed(direction = IndexDirection.ASCENDING)
     @Field("raw_data_extracted_date")
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Date)
     private Instant rawDataExtractedDate;
 
     @Field("raw_data_symbol")

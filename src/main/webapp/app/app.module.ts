@@ -18,7 +18,6 @@ import { InsightAccountModule } from './account/account.module';
 import { InsightEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
 import localeFr from '@angular/common/locales/fr';
-
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { ActiveMenuDirective, ErrorComponent, FooterComponent, JhiMainComponent, NavbarComponent, PageRibbonComponent } from './layouts';
 import { DashboardModule } from 'app/dashboard/dashboard.module';

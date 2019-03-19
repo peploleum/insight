@@ -5,6 +5,7 @@ import { IRawData } from '../shared/model/raw-data.model';
 import { RawDataService } from '../entities/raw-data/raw-data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
+import { QuickViewService } from './quick-view.service';
 
 @Component({
     selector: 'ins-quick-annotation',
@@ -17,12 +18,18 @@ export class QuickAnnotationComponent implements OnInit {
     selectedDataSubs: Subscription;
     entityForm: FormGroup;
 
-    constructor(private _sms: SideMediatorService, private _rds: RawDataService, private _fb: FormBuilder) {}
+    constructor(
+        private _sms: SideMediatorService,
+        private _rds: RawDataService,
+        private _fb: FormBuilder,
+        private _qvs: QuickViewService
+    ) {}
 
     ngOnInit() {
         this.entityForm = this._fb.group({
             entityType: ['', Validators.required],
-            entityName: ['', Validators.required]
+            entityName: ['', Validators.required],
+            entityPosition: [0, Validators.required]
         });
         this.selectedDataSubs = this._sms._selectedData.subscribe((ids: string[]) => {
             this.selected_data_ids = ids;
@@ -47,5 +54,21 @@ export class QuickAnnotationComponent implements OnInit {
 
     onTextSelectionChange(selection: { textSelected: string; position: number }) {
         this.entityForm.controls['entityName'].setValue(selection.textSelected);
+        this.entityForm.controls['entityPosition'].setValue(selection.position);
+    }
+
+    saveEntity() {
+        if (this.entityForm.valid) {
+            const entity = { entityType: '', entityName: '', entityPosition: 0, idRawData: '' };
+            Object.keys(this.entityForm.value).forEach(key => (entity[key] = this.entityForm.value[key]));
+            entity.idRawData = this.entity.id;
+            this._qvs.saveAnnotatedEntity(entity, this.entity).subscribe(
+                (res: HttpResponse<IRawData>) => {
+                    this.entity = res.body;
+                    this.entityForm.reset();
+                },
+                error => console.log('Failed to save the new RawData annotations.')
+            );
+        }
     }
 }

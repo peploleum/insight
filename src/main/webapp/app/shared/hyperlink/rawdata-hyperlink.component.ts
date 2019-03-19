@@ -1,7 +1,7 @@
 /**
  * Created by gFolgoas on 07/03/2019.
  */
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { EntityPosition } from '../model/raw-data.model';
 import { UUID } from '../util/insight-util';
 
@@ -20,6 +20,12 @@ export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, 
     textLimit: number;
     @Input()
     useExpander: boolean;
+
+    @Input()
+    useHighlight: boolean;
+
+    @Output()
+    selectedTextEmitter: EventEmitter<{ textSelected: string; position: number }> = new EventEmitter();
 
     entitiesPositions: EntityPosition[];
     uniqueHyperlinkIds: Map<string, EntityPosition> = new Map();
@@ -61,15 +67,17 @@ export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, 
             let newTxt = '';
             let lastPosition = 0;
             let index = 0;
+            const isTruncated: boolean = this.isTruncated(this.rawTextContent);
 
             for (const pos of this.entitiesPositions) {
                 const uniqueId = UUID();
                 this.uniqueHyperlinkIds.set(uniqueId, pos);
                 const entityLength: number = pos.entityWord.length;
-                const entityPosition = index > 0 ? pos.position + 1 : pos.position;
+                const entityPosition = pos.position;
                 const entityReplace: string = this.getEntityLink(pos.entityWord, pos.entityType, uniqueId);
 
-                if (this.rawTextContent.length - 3 > entityPosition + entityLength) {
+                const canBeAdded: boolean = isTruncated ? this.rawTextContent.length - 3 > entityPosition + entityLength : true;
+                if (canBeAdded) {
                     const partText: string = this.rawTextContent.substring(lastPosition, entityPosition) + entityReplace + '';
                     newTxt = newTxt.concat(partText);
                     lastPosition = entityPosition + entityLength;
@@ -86,6 +94,11 @@ export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, 
             }
             this.innerHTML = newTxt;
         }
+    }
+
+    // Truncated si le text se termine par "..."
+    isTruncated(text: string): boolean {
+        return /(\.\.\.)/.test(text.substring(text.length - 3));
     }
 
     getEntityLink(entityWord: string, entityType: string, entityUniqueId: string): string {
@@ -114,7 +127,7 @@ export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, 
         }
     }
 
-    coucou(el) {
-        console.log(el);
+    onTextSelectionChange(selection: { textSelected: string; position: number }) {
+        this.selectedTextEmitter.emit(selection);
     }
 }

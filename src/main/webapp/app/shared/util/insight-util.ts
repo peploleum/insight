@@ -2,6 +2,9 @@
  * Created by gFolgoas on 16/01/2019.
  */
 /* tslint:disable:no-bitwise */
+import { IRawData } from '../model/raw-data.model';
+import { HttpResponse } from '@angular/common/http';
+import * as moment from 'moment';
 export const UUID = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0,
@@ -42,4 +45,32 @@ export const toKebabCase = (str: string): string => {
             .join('-');
     }
     return null;
+};
+
+export const convertRawDataDateFromClient = (rawData: IRawData): IRawData => {
+    const copy: IRawData = Object.assign({}, rawData, {
+        rawDataCreationDate:
+            rawData.rawDataCreationDate != null && rawData.rawDataCreationDate.isValid() ? rawData.rawDataCreationDate.toJSON() : null,
+        rawDataExtractedDate:
+            rawData.rawDataExtractedDate != null && rawData.rawDataExtractedDate.isValid() ? rawData.rawDataExtractedDate.toJSON() : null
+    });
+    return copy;
+};
+
+export const convertRawDataDateFromServer = (res: HttpResponse<IRawData>): HttpResponse<IRawData> => {
+    if (res.body) {
+        res.body.rawDataCreationDate = res.body.rawDataCreationDate != null ? moment(res.body.rawDataCreationDate) : null;
+        res.body.rawDataExtractedDate = res.body.rawDataExtractedDate != null ? moment(res.body.rawDataExtractedDate) : null;
+    }
+    return res;
+};
+
+export const convertRawDataDateArrayFromServer = (res: HttpResponse<IRawData[]>): HttpResponse<IRawData[]> => {
+    if (res.body) {
+        res.body.forEach((rawData: IRawData) => {
+            rawData.rawDataCreationDate = rawData.rawDataCreationDate != null ? moment(rawData.rawDataCreationDate) : null;
+            rawData.rawDataExtractedDate = rawData.rawDataExtractedDate != null ? moment(rawData.rawDataExtractedDate) : null;
+        });
+    }
+    return res;
 };

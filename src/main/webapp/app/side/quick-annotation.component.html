@@ -5,19 +5,24 @@
             <b> Annotation tool</b></h4>
     </div>
     <div class="side-main side-element">
-        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
-            <span title="Mettre le layer à l'arrière-plan"><fa-icon
-                [icon]="'arrow-circle-down'"></fa-icon></span>
-            <span title="Mettre le layer au premier-plan"><fa-icon
-                [icon]="'arrow-circle-up'"></fa-icon></span>
-        </div>
-
         <div class="side-text-container" style="flex: 1 1 auto;" *ngIf="entity">
-            <p class="red-select" insTextHighlight (selectedTextEmitter)="onTextSelectionChange($event)">{{entity.rawDataContent}}</p>
+            <!--<p class="red-select" insTextHighlight (selectedTextEmitter)="onTextSelectionChange($event)">
+                {{entity.rawDataContent}}</p>-->
+            <ins-rawdata-hyperlink [data]="entity"
+                                   [rawTextContent]="entity.rawDataContent"
+                                   [useExpander]="false" [useHighlight]="true"
+                                   (selectedTextEmitter)="onTextSelectionChange($event)"></ins-rawdata-hyperlink>
         </div>
     </div>
 
     <div class="side-secondary side-element">
+
+        <div class="tools">
+            <span title="Sauvegarder l'entité" (click)="saveEntity()"><fa-icon
+                [icon]="'save'"></fa-icon></span>
+            <span title="Clear form"><fa-icon
+                [icon]="'times'"></fa-icon></span>
+        </div>
 
         <div class="side-inline-form" [formGroup]="entityForm">
             <div class="side-input-container">
