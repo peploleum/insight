@@ -29,7 +29,7 @@ try:
             # print(" Autentification " + token)
             authResponse = session.post(url=authenticationUrl, data=payload, verify=True, headers=headers)
             if authResponse.ok:
-                date = datetime.datetime.now().isoformat()
+                date = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M')
                 headersRawData = {
                     'Accept': 'application/json',
                     'Content-type': 'application/json',
