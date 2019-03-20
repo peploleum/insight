@@ -13,10 +13,10 @@ import { SafeHtmlPipe } from './util/safe-html.pipe';
 import { HyperlinkPopoverComponent } from './hyperlink/hyperlink-popover.component';
 import { ModalWindowComponent } from './modal-window/modal-window.component';
 import { TextHighlightDirective } from './util/text-highlight.directive';
-import { InsightAppRoutingModule } from '../app-routing.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-    imports: [InsightSharedLibsModule, InsightSharedCommonModule, InsightAppRoutingModule],
+    imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule],
     declarations: [
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
