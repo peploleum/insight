@@ -7,9 +7,9 @@ import datetime
 
 try:
     # print(" début script")
-    accountUrl = "http://10.0.75.1:8080/api/account"
-    authenticationUrl = "http://10.0.75.1:8080/api/authentication"
-    urlpostrawdata = "http://10.0.75.1:8080/api/raw-data"
+    accountUrl = "http://insight.insight:8080/api/account"
+    authenticationUrl = "http://insight.insight:8080/api/authentication"
+    urlpostrawdata = "http://insight.insight:8080/api/raw-data"
     payload = {
         'j_username': 'admin',
         'j_password': 'admin',
@@ -46,19 +46,19 @@ try:
                 print("postDataRawResponse")
                 postDataRawResponse = session.post(url=urlpostrawdata, json=payloadRawData, headers=headersRawData)
                 print(postDataRawResponse.json())
+            else:
+                print("Auth failed")
         else:
-            print("Auth failed")
-    else:
-    # For successful API call, response code will be 200 (OK)
-    if myResponse.ok:
-        jData = json.loads(myResponse.content)
-        print("The response contains {0} properties".format(len(jData)))
-        print("\n")
-        for key in jData:
-            print(key + " : " + jData[key])
-    else:
-        # If response code is not ok (200), print the resulting http error code with description
-        myResponse.raise_for_status()
+            # For successful API call, response code will be 200 (OK)
+            if myResponse.ok:
+                jData = json.loads(myResponse.content)
+                print("The response contains {0} properties".format(len(jData)))
+                print("\n")
+                for key in jData:
+                    print(key + " : " + jData[key])
+            else:
+                # If response code is not ok (200), print the resulting http error code with description
+                myResponse.raise_for_status()
 finally:
 # print(" Out ")
 exit(0)
