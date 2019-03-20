@@ -122,6 +122,9 @@ export class RawdataHyperlinkComponent implements OnChanges, OnInit, OnDestroy, 
             case 'Location':
                 return 'location';
                 break;
+            case 'Organisation':
+                return 'organisation';
+                break;
             default:
                 return '';
         }

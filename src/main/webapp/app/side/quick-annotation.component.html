@@ -20,15 +20,13 @@
         <div class="tools">
             <span title="Sauvegarder l'entité" (click)="saveEntity()"><fa-icon
                 [icon]="'save'"></fa-icon></span>
-            <span title="Clear form"><fa-icon
+            <span title="Clear form" (click)="clearForm()"><fa-icon
                 [icon]="'times'"></fa-icon></span>
         </div>
 
         <div class="side-inline-form" [formGroup]="entityForm">
             <div class="side-input-container">
                 <label class="col-form-label-sm" for="entityType">Type de l'entité</label>
-                <!--<input type="text" formControlName="entityType" class="form-control-sm" id="entityType"
-                       placeholder="Type de l'entité"/>-->
                 <select class="form-control-sm" formControlName="entityType" id="entityType">
                     <option *ngFor="let type of entityTypeList" [ngValue]="type">{{type}}</option>
                 </select>

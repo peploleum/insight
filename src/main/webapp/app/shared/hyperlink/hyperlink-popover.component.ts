@@ -54,7 +54,8 @@ export class HyperlinkPopoverComponent implements OnChanges, OnInit, OnDestroy, 
             !target.classList.contains('location') &&
             !target.classList.contains('equipment') &&
             !target.classList.contains('rawdata') &&
-            !target.classList.contains('biographics')
+            !target.classList.contains('biographics') &&
+            !target.classList.contains('organisation')
         );
     }
 

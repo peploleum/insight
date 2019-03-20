@@ -59,6 +59,10 @@ export class QuickAnnotationComponent implements OnInit {
         this.entityForm.controls['entityPosition'].setValue(selection.position);
     }
 
+    clearForm() {
+        this.entityForm.reset();
+    }
+
     saveEntity() {
         if (this.entityForm.valid) {
             const entity = { entityType: '', entityName: '', entityPosition: 0, idRawData: '' };
@@ -67,7 +71,7 @@ export class QuickAnnotationComponent implements OnInit {
             this._qvs.saveAnnotatedEntity(entity, this.entity).subscribe(
                 (res: HttpResponse<IRawData>) => {
                     this.entity = res.body;
-                    this.entityForm.reset();
+                    this.clearForm();
                 },
                 error => console.log('Failed to save the new RawData annotations.')
             );

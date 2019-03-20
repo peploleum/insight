@@ -18,7 +18,7 @@ export class TextHighlightDirective {
             this.validSelection = this.isValidSelection(select);
             if (this.validSelection) {
                 const pos: number = this.getSelectionPosition();
-                this.selectedTextEmitter.emit({ textSelected: select.toLowerCase(), position: pos });
+                this.selectedTextEmitter.emit({ textSelected: select, position: pos });
             }
         }
     }
