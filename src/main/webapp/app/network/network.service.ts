@@ -4,14 +4,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
-import { filter, map } from 'rxjs/internal/operators';
+import { catchError, filter, map } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
-import { ToolbarButtonParameters } from '../shared/util/insight-util';
+import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
@@ -130,6 +130,18 @@ export class NetworkService {
         // const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/' : 'api/traversal/';
         return this.http.get(`${this._resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
+            catchError(error => {
+                if (DEBUG_INFO_ENABLED) {
+                    const fakeResponse: HttpResponse<IGraphyNodeDTO[]> = new HttpResponse({
+                        body: this.getRamdomizedMockData().nodes,
+                        headers: new HttpHeaders(),
+                        status: 200
+                    });
+                    return of(fakeResponse);
+                } else {
+                    return throwError(error);
+                }
+            }),
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
@@ -234,6 +246,24 @@ export class NetworkService {
             ])
         );
         return newToolbar;
+    }
+
+    getRamdomizedMockData(): { nodes: any[]; edges: any[] } {
+        const mock = MOCK_GRAPH_DATA;
+        const random = { nodes: [], edges: [] };
+        mock.nodes.forEach((node: { id: IdType; label: string; title: string; type: string }) => {
+            const newId = <IdType>UUID();
+            const filterE = mock.edges
+                .filter((edge: { from: IdType; to: IdType }) => edge.from === node.id || edge.to === node.id)
+                .map((edge: { from: IdType; to: IdType }) => {
+                    edge.from = edge.from === node.id ? newId : edge.from;
+                    edge.to = edge.to === node.id ? newId : edge.to;
+                });
+            random.edges.concat(filterE);
+            node.id = newId;
+            random.nodes.push(node);
+        });
+        return random;
     }
 }
 

@@ -193,9 +193,14 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     getNodesNeighbours(idOrigins: IdType[]) {
         for (const i of idOrigins) {
-            this._ns.getGraphData(i).subscribe((data: GraphDataCollection) => {
-                this.addNodes(data.nodes, data.edges);
-            });
+            this._ns.getGraphData(i).subscribe(
+                (data: GraphDataCollection) => {
+                    this.addNodes(data.nodes, data.edges);
+                },
+                error => {
+                    console.log('[NETWORK] Error lors de la récupération des voisins.');
+                }
+            );
         }
     }
 
@@ -210,17 +215,17 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         // On évite de remplacer toute la liste de nodes du network pour ne pas perdre
         // les positions de ceux déjà présents.
         const tempN = {};
-        const tempE = {};
+        const tempAddN = {};
         this.networkData.nodes.forEach(n => (tempN[n.id] = n));
         nodes.forEach(node => {
-            if (tempN[node.id]) {
-                delete tempN[node.id];
-            } else {
-                tempN[node.id] = node;
+            if (!tempN[node.id]) {
+                tempAddN[node.id] = node;
             }
         });
-        nodes = Object.keys(tempN).map(key => tempN[key]);
+        nodes = Object.keys(tempAddN).map(key => tempAddN[key]);
 
+        const tempE = {};
+        const tempAddE: Edge[] = [];
         this.networkData.edges.forEach(e => {
             const tempEdges: Edge[] = tempE[e.from] || [];
             tempEdges.push(e);
@@ -239,11 +244,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             if (!isPresent) {
                 tempEdges.push(edge);
                 tempE[edge.from] = tempEdges;
+                tempAddE.push(edge);
             }
         });
-        edges = Object.keys(tempE)
-            .map(key => tempE[key])
-            .reduce((acc, currentValue) => acc.concat(currentValue), []);
+        edges = Object.keys(tempAddE).map(key => tempAddE[key]);
 
         this.networkData.nodes.add(nodes);
         this.networkData.edges.add(edges);
