@@ -205,6 +205,46 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     addNodes(nodes: Node[], edges: Edge[]) {
         this.network.storePositions();
+
+        // Dédoublonnage avant ajout au network
+        // On évite de remplacer toute la liste de nodes du network pour ne pas perdre
+        // les positions de ceux déjà présents.
+        const tempN = {};
+        const tempE = {};
+        this.networkData.nodes.forEach(n => (tempN[n.id] = n));
+        nodes.forEach(node => {
+            if (tempN[node.id]) {
+                delete tempN[node.id];
+            } else {
+                tempN[node.id] = node;
+            }
+        });
+        nodes = Object.keys(tempN).map(key => tempN[key]);
+
+        this.networkData.edges.forEach(e => {
+            const tempEdges: Edge[] = tempE[e.from] || [];
+            tempEdges.push(e);
+            tempE[e.from] = tempEdges;
+        });
+        edges.forEach((edge: EdgeDTO) => {
+            const tempEdges: EdgeDTO[] = tempE[edge.from] || [];
+            let isPresent = false;
+            for (let i = 0; i < tempEdges.length; i++) {
+                const e: EdgeDTO = tempEdges[i];
+                if (e.from === edge.from && e.to === edge.to) {
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (!isPresent) {
+                tempEdges.push(edge);
+                tempE[edge.from] = tempEdges;
+            }
+        });
+        edges = Object.keys(tempE)
+            .map(key => tempE[key])
+            .reduce((acc, currentValue) => acc.concat(currentValue), []);
+
         this.networkData.nodes.add(nodes);
         this.networkData.edges.add(edges);
     }
