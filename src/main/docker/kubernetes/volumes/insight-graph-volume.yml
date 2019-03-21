@@ -23,5 +23,5 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - kubernetes-node2
+          - kubernetes-node-02
 ---
