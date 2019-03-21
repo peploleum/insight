@@ -75,9 +75,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.actionClickedSubs = this._sms._onNewActionClicked.subscribe(action => {
             this.onActionReceived(action);
         });
-        this.dataSelectedSubs = this._sms._onNewDataSelected.subscribe((selectedIds: string[]) => {
-            this.network.selectNodes(selectedIds, true);
-            this._sms._selectedData.next(selectedIds);
+        this.dataSelectedSubs = this._sms._onNewDataSelected.subscribe((selectedMongoIds: string[]) => {
+            const selectedNodeIds: IdType[] = this.getNodeIdsFromMongoIds(selectedMongoIds);
+            this.network.selectNodes(selectedNodeIds, true);
+            this._sms._selectedData.next(selectedMongoIds);
         });
     }
 
@@ -163,11 +164,11 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
                 clusteredIds.forEach(id => this.network.openCluster(id));
             }
-            this._sms._selectedData.next(<string[]>properties.nodes);
+            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(properties.nodes));
             this.emitNeighborsOnSelection(properties.nodes, properties.edges);
         });
         this.network.on('deselectNode', properties => {
-            this._sms._selectedData.next(<string[]>properties.nodes);
+            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(properties.nodes));
         });
         this.networkData.nodes.on('add', (event, properties) => {
             this.updateDataContent();
@@ -175,6 +176,21 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.networkData.nodes.on('remove', (event, properties) => {
             this.updateDataContent();
         });
+    }
+
+    getMongoIdsFromNodeIds(nodeIds: IdType[]): string[] {
+        const nodes: Node[] = this.networkData.nodes.get(nodeIds);
+        return nodes.map(n => (<NodeDTO>n).mongoId);
+    }
+
+    getNodeIdsFromMongoIds(mongoIds: string[]): IdType[] {
+        return this.networkData.nodes
+            .get({
+                filter: node => {
+                    return mongoIds.indexOf((<NodeDTO>node).mongoId) !== -1;
+                }
+            })
+            .map(node => node.id);
     }
 
     emitNeighborsOnSelection(nodeIds: IdType[], edgeIds: IdType[]) {

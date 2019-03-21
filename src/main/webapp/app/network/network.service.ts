@@ -117,7 +117,7 @@ export class NetworkService {
             map(data => {
                 const dataCollection = new GraphDataCollection([], []);
                 dataCollection.nodes = data['nodes'].map(item =>
-                    NetworkService.getNodeDto(item['label'], item['type'], <IdType>item['id'], item['title'])
+                    NetworkService.getNodeDto(item['label'], item['type'], <IdType>item['id'], item['mongoId'], item['title'])
                 );
                 dataCollection.edges = data['edges'].map(item => NetworkService.getEdgeDto(<IdType>item['from'], <IdType>item['to']));
                 return dataCollection;
@@ -125,11 +125,10 @@ export class NetworkService {
         );
     }
 
-    getGraphData(idOrigin: IdType): Observable<GraphDataCollection> {
+    getGraphData(janusIdOrigin: IdType): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
-        // const url = DEBUG_INFO_ENABLED ? 'api/traversal/mock/' : 'api/traversal/';
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/' : 'api/traversal/';
-        return this.http.get(`${this._resourceUrl}` + url + `${idOrigin}`, { headers, observe: 'response' }).pipe(
+        const url = 'api/traversal/';
+        return this.http.get(`${this._resourceUrl}` + url + `${janusIdOrigin}`, { headers, observe: 'response' }).pipe(
             catchError(error => {
                 if (DEBUG_INFO_ENABLED) {
                     const fakeResponse: HttpResponse<IGraphyNodeDTO[]> = new HttpResponse({
@@ -145,10 +144,10 @@ export class NetworkService {
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
-                data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
+                data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id, item.mongoId));
                 /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
                  *  lorsque les relations seront ajoutées au IGraphyNodeDTO depuis le serveur */
-                data.edges = NetworkService.getDirectNeighboursEdgeCollection(idOrigin, data.nodes);
+                data.edges = NetworkService.getDirectNeighboursEdgeCollection(janusIdOrigin, data.nodes);
                 return data;
             })
         );
@@ -161,7 +160,7 @@ export class NetworkService {
         );
     }
 
-    getNodeProperties(idOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
+    getNodeProperties(janusIdOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
         // if (DEBUG_INFO_ENABLED) {
         //     /** Tant que l'endpoint de graphy n'est pas dispo */
@@ -173,7 +172,7 @@ export class NetworkService {
         //     return of(fakeResponse);
         // }
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/janus/';
-        return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${idOrigin}`, {
+        return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
             headers,
             observe: 'response'
         });
@@ -277,16 +276,16 @@ export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
 export const MOCK_GRAPH_DATA = {
     nodes: [
-        { id: 1, label: 'Bobby', title: 'Personne', type: 'Biographics' },
-        { id: 2, label: 'Explosion', title: 'Evenement', type: 'Event' },
-        { id: 3, label: 'Voiture', title: 'Equipement', type: 'Equipment' },
-        { id: 4, label: 'Brian', title: 'Personne', type: 'Biographics' },
-        { id: 5, label: 'AK-47', title: 'Equipement', type: 'Equipment' },
-        { id: 6, label: 'Attentat', title: 'Evenement', type: 'Event' },
-        { id: 7, label: 'Raoul', title: 'Personne', type: 'Biographics' },
-        { id: 8, label: 'RawData', title: 'Donnee brute', type: 'RawData' },
-        { id: 9, label: 'Rencontre', title: 'Evenement', type: 'Event' },
-        { id: 10, label: 'RawData', title: 'Donnee brute', type: 'RawData' }
+        { id: 1, mongoId: '1a', label: 'Bobby', title: 'Personne', type: 'Biographics' },
+        { id: 2, mongoId: '2a', label: 'Explosion', title: 'Evenement', type: 'Event' },
+        { id: 3, mongoId: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
+        { id: 4, mongoId: '4a', label: 'Brian', title: 'Personne', type: 'Biographics' },
+        { id: 5, mongoId: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
+        { id: 6, mongoId: '6a', label: 'Attentat', title: 'Evenement', type: 'Event' },
+        { id: 7, mongoId: '7a', label: 'Raoul', title: 'Personne', type: 'Biographics' },
+        { id: 8, mongoId: '8a', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
+        { id: 9, mongoId: '9a', label: 'Rencontre', title: 'Evenement', type: 'Event' },
+        { id: 10, mongoId: '10a', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
     ],
     edges: [
         { from: 1, to: 3 },
