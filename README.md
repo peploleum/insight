@@ -329,27 +329,27 @@ Create connection with parameters:
 
 ## Links
 
-[Kubernetes dashboard](https://10.65.34.150:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/pod?namespace=insight)
+[Kubernetes dashboard](https://192.168.0.120:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/pod?namespace=insight)
 
-[Apache NiFi endpoint](http://10.65.34.149:30101/nifi/)
+[Apache NiFi endpoint](http://192.168.0.120:30101/nifi/)
 
-[Insight endpoint](http://10.65.34.149:30102/#/)
+[Insight endpoint](http://192.168.0.120:30102/#/)
 
-[Insight console](http://10.65.34.149:30103/app/kibana#/dashboards?_g=())
+[Insight console](http://192.168.0.120:30103/app/kibana#/dashboards?_g=())
 
-[Insight dashboards](http://10.65.34.149:30100/app/kibana#/home?_g=())
+[Insight dashboards](http://192.168.0.120:30100/app/kibana#/home?_g=())
 
-[Graphy endpoint](http://10.65.34.150:30200/api/traversal/mock/bidou)
+[Graphy endpoint](http://192.168.0.120:30200/api/traversal/mock/bidou)
 
 [ftp share](ftp://10.65.34.238/Partage/)
 
-[Georef endpoint](http://10.65.34.149:31000/app/kibana#?_g=())
+[Georef endpoint](http://192.168.0.120:31000/app/kibana#?_g=())
 
-[Insight index endpoint](http://10.65.34.149:30201/_cat/indices?v)
+[Insight index endpoint](http://192.168.0.120:30201/_cat/indices?v)
 
 [Openstack webUI](http://192.168.0.10/horizon/identity/)
 
-eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWRrOW5kIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyYTYzMzM3Yy0xN2U2LTExZTktYTk1ZC0wODAwMjdjM2JhNTIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YWRtaW4tdXNlciJ9.otqYI7FZ_2o63tOhH5bun8wROnoYgyN6cK8jiJV2zYFemunMelGI5TWJZm-wXbKICqBP0vwJiiL4zo_83funvYzKTqeFqyf-Ax7DzkSKoUsnYZqpyscIi1tAD_eQfmueNvA2cfO1Vo8OiBhyg4sUAeP93v4eeE1SzcyR_ndUbGaIE2ScZKH8iAEH\_\_xRzOzekWuzTXeQ-dko_VLrewWfdkKOCZDmovWtO6UPpKp8wBWIJSgAoBhiI8j3iAePSMjuLn05LcGHPZ05ZkW7QXzrxa0emHkakEs7hBMI4X-zSphloGBoEZi1DRzVt0NXMvmhyBFt5XXrmItpVwbA7LHZbQ
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1zbGtkciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjFiNWRjZjE0LTRiZTEtMTFlOS05OGE5LWZhMTYzZWNlMjMwOCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.DkKDPCvIRrk_FWkPUS5pVqXaOLamDpUjXjbWRsCVfEAyzaUz5KQbksJUZN_Rx2qXtSkryEyDaAwDrpttYJSJHyHO1wC2qbvY3UXHNr2dj9--pd08NpUbGGCtErJ0kjrLxm_Ei7ZxRAQhjL9QgVUTX9ErtE_HO4-DeFMN1-kbvrqbv293i2ZB7goFSwOl183I8GGWkBJYWqGeVFa-BZJbC3fF50m0DfeDUAsQBRfxmwRXlaP35-jhKjyLLMv1lNpyKVrjkBjigDbpj82-dcBEr3JDdrravDppF1fHCG2qDzoCB6dT56PgtjyIT3r6pTel4eWmcGQ_ENs4ErFC1xIZWQ
 
 ## Twitter NiFi flow
 
