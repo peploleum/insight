@@ -108,7 +108,7 @@ export class NetworkService {
         if (DEBUG_INFO_ENABLED) {
             this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
         } else {
-            this._resourceUrl = 'http://10.65.34.149:30200/';
+            this._resourceUrl = 'http://192.168.0.120:30200/';
         }
     }
 
