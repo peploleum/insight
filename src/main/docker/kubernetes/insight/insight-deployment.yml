@@ -32,9 +32,30 @@ spec:
                     echo "DB is not yet reachable;sleep for 10s before retry"
                     sleep 10
                   done
+                  while true
+                  do
+                    rt=$(nc -z -w 1 insight-elasticsearch 9200)
+                    if [ $? -eq 0 ]; then
+                      echo "ELASTIC is UP"
+                      break
+                    fi
+                    echo "ELASTIC is not yet reachable;sleep for 10s before retry"
+                    sleep 10
+                  done
+                  while true
+                  do
+                    rt=$(nc -z -w 1 insight-kibana 5601)
+                    if [ $? -eq 0 ]; then
+                      echo "KIBANA is UP"
+                      break
+                    fi
+                    echo "KIBANA is not yet reachable;sleep for 10s before retry"
+                    sleep 10
+                  done
+
             containers:
             - name: insight-app
-              image: magnarox/insight:latest
+              image: peploleum/insight:latest
               imagePullPolicy: Always
               env:
               - name: SPRING_PROFILES_ACTIVE

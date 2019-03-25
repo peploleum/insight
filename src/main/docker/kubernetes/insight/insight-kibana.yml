@@ -10,6 +10,24 @@ spec:
       labels:
         app: insight-kibana
     spec:
+      initContainers:
+      - name: init-ds
+        image: busybox
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+            while true
+            do
+              rt=$(nc -z -w 1 insight-elasticsearch 9200)
+              if [ $? -eq 0 ]; then
+                echo "ELASTIC is UP"
+                break
+              fi
+              echo "ELASTIC is not yet reachable;sleep for 10s before retry"
+              sleep 10
+            done
+
       containers:
       - image: docker.elastic.co/kibana/kibana-oss:6.4.2
         env:
