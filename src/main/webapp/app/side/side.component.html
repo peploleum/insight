@@ -6,7 +6,6 @@
         <ins-layer-control [hidden]="_sideElement !== 'LAYER_CONTROL'"></ins-layer-control>
         <ins-map-search [hidden]="_sideElement !== 'MAP_SEARCH'"></ins-map-search>
         <ins-quick-view [hidden]="_sideElement !== 'QUICK_VIEW'"></ins-quick-view>
-        <ins-quick-annotation [hidden]="_sideElement !== 'QUICK_ANNOTATION'"></ins-quick-annotation>
     </div>
     <div *ngIf="target === 'dashboard'" class="h-100">
         <ins-dashboard-manager></ins-dashboard-manager>
@@ -15,6 +14,7 @@
         <ins-side-event-thread [hidden]="_sideElement !== 'EVENT_THREAD'"></ins-side-event-thread>
         <ins-network-content [hidden]="_sideElement !== 'NETWORK_CONTENT'"></ins-network-content>
         <ins-quick-view [hidden]="_sideElement !== 'QUICK_VIEW'"></ins-quick-view>
+        <ins-quick-annotation [hidden]="_sideElement !== 'QUICK_ANNOTATION'"></ins-quick-annotation>
     </div>
 </div>
 <ins-side-buttons [isClosed]="isHidden" [_sideElement]="_sideElement" [target]="target"

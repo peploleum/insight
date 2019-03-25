@@ -21,9 +21,6 @@
             <span (click)="changeSideElement('QUICK_VIEW')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_VIEW'}"><fa-icon
                 [icon]="'book-reader'"></fa-icon></span>
-            <span (click)="changeSideElement('QUICK_ANNOTATION')"
-                  [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_ANNOTATION'}"><fa-icon
-                [icon]="'pencil-alt'"></fa-icon></span>
         </ng-template>
 
         <ng-template [ngSwitchCase]="'network'">
@@ -36,6 +33,9 @@
             <span (click)="changeSideElement('QUICK_VIEW')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_VIEW'}"><fa-icon
                 [icon]="'book-reader'"></fa-icon></span>
+            <span (click)="changeSideElement('QUICK_ANNOTATION')"
+                  [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_ANNOTATION'}"><fa-icon
+                [icon]="'pencil-alt'"></fa-icon></span>
         </ng-template>
     </ng-container>
 

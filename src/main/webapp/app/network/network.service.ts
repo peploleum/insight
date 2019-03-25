@@ -162,15 +162,6 @@ export class NetworkService {
 
     getNodeProperties(janusIdOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
-        // if (DEBUG_INFO_ENABLED) {
-        //     /** Tant que l'endpoint de graphy n'est pas dispo */
-        //     const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse({
-        //         body: new GraphyNodeDTO(UUID(), 'Personne Origine', 'Biographics'),
-        //         headers: new HttpHeaders(),
-        //         status: 200
-        //     });
-        //     return of(fakeResponse);
-        // }
         const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/janus/';
         return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
             headers,
@@ -276,13 +267,13 @@ export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
 export const MOCK_GRAPH_DATA = {
     nodes: [
-        { id: 1, mongoId: '1a', label: 'Bobby', title: 'Personne', type: 'Biographics' },
+        { id: 1, mongoId: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
         { id: 2, mongoId: '2a', label: 'Explosion', title: 'Evenement', type: 'Event' },
         { id: 3, mongoId: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
-        { id: 4, mongoId: '4a', label: 'Brian', title: 'Personne', type: 'Biographics' },
+        { id: 4, mongoId: '5c90fa1b5e365c06ac7e187c', label: 'Brian', title: 'Personne', type: 'Biographics' },
         { id: 5, mongoId: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
         { id: 6, mongoId: '6a', label: 'Attentat', title: 'Evenement', type: 'Event' },
-        { id: 7, mongoId: '7a', label: 'Raoul', title: 'Personne', type: 'Biographics' },
+        { id: 7, mongoId: '5c911d434a45de0e0ca2556b', label: 'Raoul', title: 'Personne', type: 'Biographics' },
         { id: 8, mongoId: '8a', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
         { id: 9, mongoId: '9a', label: 'Rencontre', title: 'Evenement', type: 'Event' },
         { id: 10, mongoId: '10a', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
