@@ -50,3 +50,13 @@ export class DataContentInfo {
         this.image = image;
     }
 }
+
+export class NetworkSymbol {
+    symbolId?: string;
+    base64?: string;
+
+    constructor(symbolId?: string, base64?: string) {
+        this.symbolId = symbolId;
+        this.base64 = base64;
+    }
+}

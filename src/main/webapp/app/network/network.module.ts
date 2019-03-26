@@ -9,11 +9,21 @@ import { NetworkSideMenuDirective } from './network-side-menu.directive';
 import { NetworkContentComponent } from './side/network-content.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NeighborViewComponent } from './inner-window/neighbor-view.component';
+import { NetworkSymbolManagerComponent } from './side/network-symbol-manager.component';
+import { NetworkDraggingDirective } from './side/network-dragging.directive';
 
 @NgModule({
     imports: [CommonModule, NetworkRoutingModule, InsightSharedModule, ReactiveFormsModule],
-    declarations: [NetworkComponent, NetworkSideMenuComponent, NetworkSideMenuDirective, NetworkContentComponent, NeighborViewComponent],
+    declarations: [
+        NetworkComponent,
+        NetworkSideMenuComponent,
+        NetworkSideMenuDirective,
+        NetworkContentComponent,
+        NeighborViewComponent,
+        NetworkSymbolManagerComponent,
+        NetworkDraggingDirective
+    ],
     entryComponents: [NetworkSideMenuComponent],
-    exports: [NetworkContentComponent]
+    exports: [NetworkContentComponent, NetworkSymbolManagerComponent]
 })
 export class NetworkModule {}

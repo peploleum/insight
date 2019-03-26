@@ -153,8 +153,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     initNetworkEventListener() {
-        this.network.on('hoverNode', node => {
-            console.log(node);
+        this.network.on('hoverNode', properties => {
+            const nodeId: IdType = properties.node;
+            this._ns.hoveredNodeEmitter.next(<NodeDTO>this.networkData.nodes.get(nodeId));
         });
         this.network.on('selectNode', properties => {
             if (this.getState().ADD_NEIGHBOURS) {

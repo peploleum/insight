@@ -1,0 +1,36 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'network-wired'"></fa-icon>
+            <b> Symbology Manager</b></h4>
+    </div>
+    <div class="side-main side-element">
+
+        <div class="tools" style="min-height: 2.5rem;">
+             <span title="Faire un truc 1" (click)="sendAction('ADD_NEIGHBOURS')"><fa-icon
+                 [icon]="'code-branch'"></fa-icon></span>
+            <span title="Faire un truc 2" (click)="sendAction('ADD_NEIGHBOURS')"><fa-icon
+                [icon]="'code-branch'"></fa-icon></span>
+        </div>
+
+        <div *ngIf="symbols" class="side-grid-container">
+            <div *ngFor="let symbol of symbols;">
+                <img class="symbol" style="max-height: 5rem;" src="{{symbol.base64}}" insNetworkDragging/>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="side-secondary side-element">
+        <div class="side-inline-form">
+            <div class="side-input-container">
+                <label class="col-form-label-sm" for="file-input">Importer une image</label>
+                <input type="file" (change)="onFileInputChange($event)"
+                       class="form-control-file form-control-sm" id="file-input" title="Importer un fichier JPEG/PNG"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+
