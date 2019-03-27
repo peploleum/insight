@@ -7,15 +7,17 @@
     <div class="side-main side-element">
 
         <div class="tools" style="min-height: 2.5rem;">
-             <span title="Faire un truc 1" (click)="sendAction('ADD_NEIGHBOURS')"><fa-icon
+             <span title="Supprimer toutes les images" (click)="onAction('DELETE_ALL_IMAGES')"><fa-icon
                  [icon]="'code-branch'"></fa-icon></span>
-            <span title="Faire un truc 2" (click)="sendAction('ADD_NEIGHBOURS')"><fa-icon
+            <span title="Supprimer les images sélectionnées" (click)="onAction('DELETE_SELECTED_IMAGES')"><fa-icon
                 [icon]="'code-branch'"></fa-icon></span>
         </div>
 
         <div *ngIf="symbols" class="side-grid-container">
             <div *ngFor="let symbol of symbols;">
-                <img class="symbol" style="max-height: 5rem;" src="{{symbol.base64}}" draggable="true"
+                <img class="symbol" [ngClass]="{'selected2': selectedImageIds.indexOf(symbol.symbolId) !== -1}"
+                     style="max-height: 5rem;" src="{{symbol.base64}}" (click)="onImageSelected(symbol.symbolId)"
+                     draggable="true"
                      insDraggableElement [data]="symbol.base64"/>
             </div>
         </div>

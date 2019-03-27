@@ -4,7 +4,7 @@ import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
 import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
-import { RawData } from 'app/shared/model/raw-data.model';
+import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-util';
@@ -325,9 +325,20 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         const mouseY: number = params.event.clientY - bound.top;
         const targetNodeId: IdType = this.network.getNodeAt({ x: mouseX, y: mouseY });
         if (targetNodeId) {
-            this.networkData.nodes.update({ id: targetNodeId, image: params.data });
             const node: Node = this.networkData.nodes.get(targetNodeId);
             const targetNodeMongoId: string = (<NodeDTO>node).mongoId;
+            if (!targetNodeMongoId) {
+                return;
+            }
+            this._ns.updateRawData(targetNodeMongoId, params.data).subscribe(
+                (res: HttpResponse<IRawData>) => {
+                    console.log('Update du symbole successful');
+                    this.networkData.nodes.update({ id: targetNodeId, image: params.data });
+                },
+                error => {
+                    console.log("Error lors de l'update du symbole du RawData, Id: " + targetNodeMongoId);
+                }
+            );
         }
     }
 

@@ -4,12 +4,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
-import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
-import { catchError, filter, map } from 'rxjs/internal/operators';
+import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
-import { RawData } from 'app/shared/model/raw-data.model';
+import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 
@@ -104,12 +104,22 @@ export class NetworkService {
         }
     }
 
-    constructor(private http: HttpClient, private rawDataService: RawDataService) {
+    constructor(private http: HttpClient, private rds: RawDataService) {
         if (DEBUG_INFO_ENABLED) {
             this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
         } else {
             this._resourceUrl = 'http://192.168.0.120:30200/';
         }
+    }
+
+    updateRawData(rawDataId: string, symbole: string): Observable<HttpResponse<IRawData>> {
+        return this.rds.find(rawDataId).pipe(
+            switchMap((res: HttpResponse<IRawData>) => {
+                const data: IRawData = res.body;
+                data.rawDataSymbol = symbole;
+                return this.rds.update(data);
+            })
+        );
     }
 
     getMockGraphData(): Observable<GraphDataCollection> {
@@ -154,7 +164,7 @@ export class NetworkService {
     }
 
     getRawDataById(idOrigin: string): Observable<RawData> {
-        return this.rawDataService.find(<string>idOrigin).pipe(
+        return this.rds.find(<string>idOrigin).pipe(
             filter((response: HttpResponse<RawData>) => response.ok),
             map((rawData: HttpResponse<RawData>) => rawData.body)
         );

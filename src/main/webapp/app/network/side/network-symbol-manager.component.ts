@@ -11,6 +11,7 @@ import symbols = Mocha.reporters.Base.symbols;
 })
 export class NetworkSymbolManagerComponent implements OnInit {
     symbols: NetworkSymbol[] = [];
+    selectedImageIds: string[] = [];
     validImageTypes = ['image/jpeg', 'image/png'];
 
     constructor(private dataUtils: JhiDataUtils) {}
@@ -33,7 +34,28 @@ export class NetworkSymbolManagerComponent implements OnInit {
         }
     }
 
-    onDragLeave(event) {
-        console.log('On DragLeave');
+    onAction(action: string) {
+        switch (action) {
+            case 'DELETE_ALL_IMAGES':
+                this.symbols = [];
+                break;
+            case 'DELETE_SELECTED_IMAGES':
+                this.symbols = this.symbols.filter(symbole => this.selectedImageIds.indexOf(symbole.symbolId) === -1);
+                this.selectedImageIds = [];
+                break;
+            default:
+                break;
+        }
+    }
+
+    onImageSelected(id: string) {
+        const newArray: string[] = this.selectedImageIds;
+        const index = newArray.indexOf(id);
+        if (index !== -1) {
+            newArray.splice(index, 1);
+        } else {
+            newArray.push(id);
+        }
+        this.selectedImageIds = newArray;
     }
 }

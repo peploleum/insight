@@ -370,6 +370,14 @@ Custom global css
     background-color: rgb(128, 255, 128) !important;
 }
 
+.selected2 {
+    border: 3px solid #ff0000 !important;
+}
+
+.selected2:hover {
+    border: 3px solid #cc0000 !important;
+}
+
 /* ==========================================================================
 Div with arrow end in css
 ========================================================================== */
@@ -635,21 +643,21 @@ SidePannel custom CSS
     @include side-main-content('row', 'center');
     flex-wrap: wrap;
     box-sizing: border-box;
-    justify-content: center;
+    justify-content: flex-start;
     > * {
         padding: 0.2rem;
-        flex: 1 0 25%;
+        flex: 0 0 25%;
         display: flex;
         justify-content: center;
     }
+}
 
-    .symbol {
-        border: 3px solid white;
-    }
+.symbol {
+    border: 3px solid white;
+}
 
-    .symbol:hover {
-        border: 3px solid #009e30;
-    }
+.symbol:hover {
+    border: 3px solid red;
 }
 
 .green-select::selection {
