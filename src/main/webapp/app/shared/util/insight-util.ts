@@ -76,3 +76,13 @@ export const convertRawDataDateArrayFromServer = (res: HttpResponse<IRawData[]>)
     }
     return res;
 };
+
+export class DragParameter {
+    data: string;
+    event: any;
+
+    constructor(data: string, event: any) {
+        this.data = data;
+        this.event = event;
+    }
+}

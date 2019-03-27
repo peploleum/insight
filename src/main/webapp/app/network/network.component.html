@@ -1,2 +1,2 @@
-<div [style.height.%]="'100'" class="flex-container-container network-main" #network></div>
+<div [style.height.%]="'100'" class="flex-container-container network-main" #network insDropZone (dropEmitter)="onImageDropped($event)"></div>
 <ins-neighbor-view></ins-neighbor-view>

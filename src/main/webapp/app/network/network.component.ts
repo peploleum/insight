@@ -7,7 +7,7 @@ import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } f
 import { RawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { FileReaderEventTarget } from '../shared/util/insight-util';
+import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
@@ -153,10 +153,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     initNetworkEventListener() {
-        this.network.on('hoverNode', properties => {
-            const nodeId: IdType = properties.node;
-            this._ns.hoveredNodeEmitter.next(<NodeDTO>this.networkData.nodes.get(nodeId));
-        });
+        this.network.on('hoverNode', properties => {});
+        this.network.on('blurNode', properties => {});
         this.network.on('selectNode', properties => {
             if (this.getState().ADD_NEIGHBOURS) {
                 this.getNodesNeighbours(properties.nodes);
@@ -319,6 +317,18 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             }
         };
         this.network.clusterByHubsize(3, clusterOption);
+    }
+
+    onImageDropped(params: DragParameter) {
+        const bound: ClientRect = this._networkRef.nativeElement.getBoundingClientRect();
+        const mouseX: number = params.event.clientX - bound.left;
+        const mouseY: number = params.event.clientY - bound.top;
+        const targetNodeId: IdType = this.network.getNodeAt({ x: mouseX, y: mouseY });
+        if (targetNodeId) {
+            this.networkData.nodes.update({ id: targetNodeId, image: params.data });
+            const node: Node = this.networkData.nodes.get(targetNodeId);
+            const targetNodeMongoId: string = (<NodeDTO>node).mongoId;
+        }
     }
 
     onActionReceived(action: string) {

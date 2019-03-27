@@ -15,7 +15,8 @@
 
         <div *ngIf="symbols" class="side-grid-container">
             <div *ngFor="let symbol of symbols;">
-                <img class="symbol" style="max-height: 5rem;" src="{{symbol.base64}}" insNetworkDragging/>
+                <img class="symbol" style="max-height: 5rem;" src="{{symbol.base64}}" draggable="true"
+                     insDraggableElement [data]="symbol.base64"/>
             </div>
         </div>
 

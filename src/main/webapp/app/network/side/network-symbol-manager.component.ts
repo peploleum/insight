@@ -28,7 +28,12 @@ export class NetworkSymbolManagerComponent implements OnInit {
                 const type = file.type;
                 newSymbol.base64 = `data:${type};base64,` + base64Data;
                 this.symbols = this.symbols.concat([newSymbol]);
+                console.log(this.symbols);
             });
         }
+    }
+
+    onDragLeave(event) {
+        console.log('On DragLeave');
     }
 }

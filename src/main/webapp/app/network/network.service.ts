@@ -32,8 +32,6 @@ export class NetworkService {
     networkDataContent: BehaviorSubject<DataContentInfo[]> = new BehaviorSubject([]);
     /** source de la modal de visualisation de neighbors */
     neighborsEmitter: BehaviorSubject<GraphDataCollection> = new BehaviorSubject(new GraphDataCollection([], []));
-    /** node avec mouseover pour le drag&drop des images */
-    hoveredNodeEmitter: Subject<NodeDTO> = new Subject();
 
     public static getNodeDto(
         label: string,

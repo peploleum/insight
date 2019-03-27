@@ -14,6 +14,8 @@ import { HyperlinkPopoverComponent } from './hyperlink/hyperlink-popover.compone
 import { ModalWindowComponent } from './modal-window/modal-window.component';
 import { TextHighlightDirective } from './util/text-highlight.directive';
 import { RouterModule } from '@angular/router';
+import { DropZoneDirective } from './util/drop-zone.directive';
+import { DraggableElementDirective } from './util/draggable-element.directive';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule],
@@ -30,7 +32,9 @@ import { RouterModule } from '@angular/router';
         SafeHtmlPipe,
         HyperlinkPopoverComponent,
         ModalWindowComponent,
-        TextHighlightDirective
+        TextHighlightDirective,
+        DropZoneDirective,
+        DraggableElementDirective
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
@@ -48,7 +52,9 @@ import { RouterModule } from '@angular/router';
         SafeHtmlPipe,
         HyperlinkPopoverComponent,
         ModalWindowComponent,
-        TextHighlightDirective
+        TextHighlightDirective,
+        DropZoneDirective,
+        DraggableElementDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
