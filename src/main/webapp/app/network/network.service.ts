@@ -192,62 +192,9 @@ export class NetworkService {
         return newToolbar;
     }
 
-    getUpdatedNetworkContentToolbar(): ToolbarButtonParameters[] {
-        const newToolbar = [];
-        newToolbar.push(
-            new ToolbarButtonParameters('ADD_NEIGHBOURS', 'code-branch', 'Ajouter des Voisins', this.networkState.getValue().ADD_NEIGHBOURS)
-        );
-        newToolbar.push(new ToolbarButtonParameters('DELETE_NODES', 'times', 'Supprimer des Nodes'));
-        newToolbar.push(
-            new ToolbarButtonParameters('CLUSTER_NODES', 'dot-circle', 'Activer le clustering', this.networkState.getValue().CLUSTER_NODES)
-        );
-        newToolbar.push(
-            new ToolbarButtonParameters(
-                'PHYSICS_ENABLED',
-                'magic',
-                'Activer le positionnement libre',
-                this.networkState.getValue().PHYSICS_ENABLED
-            )
-        );
-        newToolbar.push(
-            new ToolbarButtonParameters(
-                'LAYOUT_FREE',
-                'hand-paper',
-                'Activer le positionnement libre',
-                this.networkState.getValue().LAYOUT_FREE
-            )
-        );
-        newToolbar.push(
-            new ToolbarButtonParameters('LAYOUT_MENU', 'arrows-alt', 'Changer la disposition', false, [
-                new ToolbarButtonParameters(
-                    'LAYOUT_DIR_UD',
-                    'arrow-circle-down',
-                    'Haut-Bas',
-                    this.networkState.getValue().LAYOUT_DIR === 'UD'
-                ),
-                new ToolbarButtonParameters(
-                    'LAYOUT_DIR_DU',
-                    'arrow-circle-up',
-                    'Bas-Haut',
-                    this.networkState.getValue().LAYOUT_DIR === 'DU'
-                ),
-                new ToolbarButtonParameters(
-                    'LAYOUT_DIR_LR',
-                    'arrow-circle-right',
-                    'Gauche-Droite',
-                    this.networkState.getValue().LAYOUT_DIR === 'LR'
-                ),
-                new ToolbarButtonParameters(
-                    'LAYOUT_DIR_RL',
-                    'arrow-circle-left',
-                    'Droite-Gauche',
-                    this.networkState.getValue().LAYOUT_DIR === 'RL'
-                )
-            ])
-        );
-        return newToolbar;
-    }
-
+    /**
+     * Get MockData with random Id
+     * */
     getRamdomizedMockData(): { nodes: any[]; edges: any[] } {
         const mock = MOCK_GRAPH_DATA;
         const random = { nodes: [], edges: [] };

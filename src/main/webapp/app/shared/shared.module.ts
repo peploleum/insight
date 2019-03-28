@@ -16,6 +16,7 @@ import { TextHighlightDirective } from './util/text-highlight.directive';
 import { RouterModule } from '@angular/router';
 import { DropZoneDirective } from './util/drop-zone.directive';
 import { DraggableElementDirective } from './util/draggable-element.directive';
+import { OrderListByValuePipe } from './util/sort-list.pipe';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule],
@@ -34,7 +35,8 @@ import { DraggableElementDirective } from './util/draggable-element.directive';
         ModalWindowComponent,
         TextHighlightDirective,
         DropZoneDirective,
-        DraggableElementDirective
+        DraggableElementDirective,
+        OrderListByValuePipe
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
@@ -54,7 +56,8 @@ import { DraggableElementDirective } from './util/draggable-element.directive';
         ModalWindowComponent,
         TextHighlightDirective,
         DropZoneDirective,
-        DraggableElementDirective
+        DraggableElementDirective,
+        OrderListByValuePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

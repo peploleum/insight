@@ -47,7 +47,3 @@ export class EventThreadParameters {
         this.filter = filter;
     }
 }
-
-export class QuickStatsParameters {
-    constructor() {}
-}

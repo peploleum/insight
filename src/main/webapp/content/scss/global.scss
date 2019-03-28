@@ -371,11 +371,11 @@ Custom global css
 }
 
 .selected2 {
-    border: 3px solid #ff0000 !important;
+    border: 0.2rem solid #ff0000 !important;
 }
 
 .selected2:hover {
-    border: 3px solid #cc0000 !important;
+    border: 0.2rem solid #cc0000 !important;
 }
 
 /* ==========================================================================
@@ -645,19 +645,25 @@ SidePannel custom CSS
     box-sizing: border-box;
     justify-content: flex-start;
     > * {
-        padding: 0.2rem;
-        flex: 0 0 25%;
+        // 25% - 2*margin pour remplir toute la largeur sans dépasser
+        flex: 0 0 calc(25% - 0.2rem);
         display: flex;
         justify-content: center;
+        margin: 0.1rem;
     }
-}
 
-.symbol {
-    border: 3px solid white;
-}
+    > .symbol {
+        background-color: white;
+        border: 0.2rem solid white;
+        height: 5.2rem;
+        width: 5.2rem;
+        overflow: hidden;
+    }
 
-.symbol:hover {
-    border: 3px solid red;
+    > .symbol:hover {
+        background-color: red;
+        border: 0.2rem solid red;
+    }
 }
 
 .green-select::selection {

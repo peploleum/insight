@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NetworkSymbol } from '../../shared/util/network.util';
+import { DataContentInfo, NetworkSymbol } from '../../shared/util/network.util';
 import { JhiDataUtils } from 'ng-jhipster';
 import { UUID } from '../../shared/util/insight-util';
 import symbols = Mocha.reporters.Base.symbols;
+import { Subscription } from 'rxjs/index';
+import { NetworkService } from '../network.service';
 
 @Component({
     selector: 'ins-network-symbol-manager',
@@ -14,13 +16,32 @@ export class NetworkSymbolManagerComponent implements OnInit {
     selectedImageIds: string[] = [];
     validImageTypes = ['image/jpeg', 'image/png'];
 
-    constructor(private dataUtils: JhiDataUtils) {}
+    orderProperty = 'isPresentInNetwork';
+    valueOrder = [true, false];
 
-    ngOnInit() {}
+    private _networkContentSubs: Subscription;
+
+    constructor(private dataUtils: JhiDataUtils, private _ns: NetworkService) {}
+
+    ngOnInit() {
+        setTimeout(() => {
+            this._networkContentSubs = this._ns.networkDataContent.subscribe((newContent: DataContentInfo[]) => {
+                const addedImageUrls = {};
+                const nonPresentSymbols = this.symbols.filter(symbol => !symbol.isPresentInNetwork);
+                newContent
+                    .filter(item => item.image !== null && typeof item.image !== 'undefined')
+                    .forEach(item => {
+                        const newSymbole = new NetworkSymbol(UUID(), item.image, true);
+                        addedImageUrls[newSymbole.base64] = newSymbole;
+                    });
+                this.symbols = nonPresentSymbols.concat(Object.keys(addedImageUrls).map(key => addedImageUrls[key]));
+            });
+        });
+    }
 
     onFileInputChange(event: any) {
         if (event.target.files && event.target.files.length) {
-            const newSymbol: NetworkSymbol = new NetworkSymbol(UUID());
+            const newSymbol: NetworkSymbol = new NetworkSymbol(UUID(), '', false);
             const file = event.target.files[0];
             if (this.validImageTypes.indexOf(file.type) === -1) {
                 return;
@@ -37,10 +58,12 @@ export class NetworkSymbolManagerComponent implements OnInit {
     onAction(action: string) {
         switch (action) {
             case 'DELETE_ALL_IMAGES':
-                this.symbols = [];
+                this.symbols = this.symbols.filter(s => s.isPresentInNetwork);
                 break;
             case 'DELETE_SELECTED_IMAGES':
-                this.symbols = this.symbols.filter(symbole => this.selectedImageIds.indexOf(symbole.symbolId) === -1);
+                this.symbols = this.symbols.filter(
+                    symbole => this.selectedImageIds.indexOf(symbole.symbolId) === -1 || symbole.isPresentInNetwork
+                );
                 this.selectedImageIds = [];
                 break;
             default:

@@ -54,9 +54,11 @@ export class DataContentInfo {
 export class NetworkSymbol {
     symbolId?: string;
     base64?: string;
+    isPresentInNetwork: boolean;
 
-    constructor(symbolId?: string, base64?: string) {
+    constructor(symbolId?: string, base64?: string, isPresentInNetwork?: boolean) {
         this.symbolId = symbolId;
         this.base64 = base64;
+        this.isPresentInNetwork = isPresentInNetwork;
     }
 }
