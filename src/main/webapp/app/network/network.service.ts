@@ -154,7 +154,9 @@ export class NetworkService {
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
-                data.nodes = body.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id, item.mongoId));
+                data.nodes = body.map((item: IGraphyNodeDTO) =>
+                    NetworkService.getNodeDto(item.label, item.type, item.id, item.mongoId, '', item.image)
+                );
                 /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
                  *  lorsque les relations seront ajoutées au IGraphyNodeDTO depuis le serveur */
                 data.edges = NetworkService.getDirectNeighboursEdgeCollection(janusIdOrigin, data.nodes);

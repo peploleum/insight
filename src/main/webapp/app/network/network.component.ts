@@ -11,6 +11,7 @@ import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-uti
 import { SideMediatorService } from '../side/side-mediator.service';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
+import { DEBUG_INFO_ENABLED } from '../app.constants';
 
 @Component({
     selector: 'ins-network',
@@ -54,17 +55,24 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                             filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
                             map((response: HttpResponse<IGraphyNodeDTO>) => {
                                 const rawData: IGraphyNodeDTO = response.body;
-                                return NetworkService.getNodeDto(rawData.label, rawData.type, rawData.id, rawData.mongoId);
+                                return NetworkService.getNodeDto(
+                                    rawData.label,
+                                    rawData.type,
+                                    rawData.id,
+                                    rawData.mongoId,
+                                    '',
+                                    rawData.image
+                                );
                             })
                         )
                         .subscribe((nodeDTO: NodeDTO) => {
                             this.addNodes([nodeDTO], []);
                             this.getNodesNeighbours([nodeDTO.id]);
                         });
-                } else {
-                    this.getMockData();
+                    return;
                 }
-            } else {
+            }
+            if (DEBUG_INFO_ENABLED) {
                 this.getMockData();
             }
         });
@@ -290,7 +298,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             jsonString = (<FileReaderEventTarget>event.target).result;
             const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
             const data = new GraphDataCollection([], []);
-            data.nodes = graphyDatas.map((item: IGraphyNodeDTO) => NetworkService.getNodeDto(item.label, item.type, item.id));
+            data.nodes = graphyDatas.map((item: IGraphyNodeDTO) =>
+                NetworkService.getNodeDto(item.label, item.type, item.id, item.mongoId, '', item.image)
+            );
             data.edges = graphyDatas
                 .map(item => NetworkService.getEdgeCollection(item.id, item.to))
                 .reduce((acc, currentValue) => acc.concat(currentValue), []);

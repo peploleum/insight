@@ -601,7 +601,7 @@ SidePannel custom CSS
 }
 
 .side-list-container {
-    @include side-main-content('column', 'stretch');
+    @include side-main-content(column, stretch);
 
     > div {
         padding: 0.4rem;
@@ -631,7 +631,7 @@ SidePannel custom CSS
 }
 
 .side-text-container {
-    @include side-main-content('column', 'stretch');
+    @include side-main-content(column, stretch);
     > p,
     > span {
         padding: 0 0.2rem;
@@ -640,7 +640,7 @@ SidePannel custom CSS
 }
 
 .side-grid-container {
-    @include side-main-content('row', 'center');
+    @include side-main-content(row, center);
     flex-wrap: wrap;
     box-sizing: border-box;
     justify-content: flex-start;
