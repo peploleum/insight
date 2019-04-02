@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.microsoft.spring.data.gremlin.common.GremlinFactory;
 import com.microsoft.spring.data.gremlin.conversion.MappingGremlinConverter;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.domain.EntityScanner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
  * Created by GFOLGOAS on 01/04/2019.
  */
 @Service
+@Profile("graphy")
 public class InsightGraphManagementServiceImpl implements InsightGraphManagementService {
     private final Logger log = LoggerFactory.getLogger(InsightGraphManagementServiceImpl.class);
 

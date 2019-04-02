@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.RawData;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -29,7 +29,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * Service Implementation for managing RawData.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class RawDataServiceImpl implements RawDataService {
 
     private final Logger log = LoggerFactory.getLogger(RawDataServiceImpl.class);
@@ -38,14 +38,17 @@ public class RawDataServiceImpl implements RawDataService {
 
     private final RawDataRepository rawDataRepository;
     private final RawDataSearchRepository rawDataSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     private final MongoTemplate mongoTemplate;
 
     public RawDataServiceImpl(RawDataRepository rawDataRepository, RawDataMapper rawDataMapper,
-                              RawDataSearchRepository rawDataSearchRepository, MongoTemplate mongoTemplate) {
+                              RawDataSearchRepository rawDataSearchRepository, MongoTemplate mongoTemplate,
+                              InsightGraphEntityService insightGraphEntityRepository) {
         this.rawDataRepository = rawDataRepository;
         this.rawDataMapper = rawDataMapper;
         this.rawDataSearchRepository = rawDataSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -58,9 +61,13 @@ public class RawDataServiceImpl implements RawDataService {
     @Override
     public RawDataDTO save(RawDataDTO rawDataDTO) {
         log.debug("Request to save RawData : {}", rawDataDTO);
+
         RawData rawData = rawDataMapper.toEntity(rawDataDTO);
         rawData = rawDataRepository.save(rawData);
         rawDataSearchRepository.save(rawData);
+        Long externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), InsightEntityType.RawData);
+        rawData.setExternalId(String.valueOf(externalId));
+        rawData = rawDataRepository.save(rawData);
         return rawDataMapper.toDto(rawData);
     }
 

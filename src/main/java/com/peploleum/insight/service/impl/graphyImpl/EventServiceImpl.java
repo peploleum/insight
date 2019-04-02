@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.Event;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -23,7 +23,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * Service Implementation for managing Event.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class EventServiceImpl implements EventService {
 
     private final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
@@ -32,12 +32,14 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventSearchRepository eventSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper,
-                            EventSearchRepository eventSearchRepository) {
+                            EventSearchRepository eventSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.eventSearchRepository = eventSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +51,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO save(EventDTO eventDTO) {
         log.debug("Request to save Event : {}", eventDTO);
+
         Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
         eventSearchRepository.save(event);
+        Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), InsightEntityType.Event);
+        event.setExternalId(String.valueOf(externalId));
+        event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
 

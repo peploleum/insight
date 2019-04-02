@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.Location;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -23,7 +23,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * Service Implementation for managing Location.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class LocationServiceImpl implements LocationService {
 
     private final Logger log = LoggerFactory.getLogger(LocationServiceImpl.class);
@@ -32,12 +32,14 @@ public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
     private final LocationSearchRepository locationSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     public LocationServiceImpl(LocationRepository locationRepository, LocationMapper locationMapper,
-                               LocationSearchRepository locationSearchRepository) {
+                               LocationSearchRepository locationSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.locationRepository = locationRepository;
         this.locationMapper = locationMapper;
         this.locationSearchRepository = locationSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +51,13 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDTO save(LocationDTO locationDTO) {
         log.debug("Request to save Location : {}", locationDTO);
+
         Location location = locationMapper.toEntity(locationDTO);
         location = locationRepository.save(location);
         locationSearchRepository.save(location);
+        Long externalId = this.insightGraphEntityRepository.save(location.getLocationName(), location.getId(), InsightEntityType.Location);
+        location.setExternalId(String.valueOf(externalId));
+        location = locationRepository.save(location);
         return locationMapper.toDto(location);
     }
 

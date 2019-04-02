@@ -1,16 +1,15 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
-import com.peploleum.insight.domain.enumeration.InsightEntityType;
-import com.peploleum.insight.service.InsightGraphEntityService;
-import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.domain.Organisation;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.OrganisationRepository;
 import com.peploleum.insight.repository.search.OrganisationSearchRepository;
+import com.peploleum.insight.service.InsightGraphEntityService;
+import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.service.dto.OrganisationDTO;
 import com.peploleum.insight.service.mapper.OrganisationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Organisation.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class OrganisationServiceImpl implements OrganisationService {
 
     private final Logger log = LoggerFactory.getLogger(OrganisationServiceImpl.class);
@@ -33,12 +32,14 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private final OrganisationRepository organisationRepository;
     private final OrganisationSearchRepository organisationSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     public OrganisationServiceImpl(OrganisationRepository organisationRepository, OrganisationMapper organisationMapper,
-                                   OrganisationSearchRepository organisationSearchRepository) {
+                                   OrganisationSearchRepository organisationSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.organisationRepository = organisationRepository;
         this.organisationMapper = organisationMapper;
         this.organisationSearchRepository = organisationSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -50,9 +51,13 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public OrganisationDTO save(OrganisationDTO organisationDTO) {
         log.debug("Request to save Organisation : {}", organisationDTO);
+
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
         organisation = organisationRepository.save(organisation);
         organisationSearchRepository.save(organisation);
+        Long externalId = this.insightGraphEntityRepository.save(organisation.getOrganisationName(), organisation.getId(), InsightEntityType.Organisation);
+        organisation.setExternalId(String.valueOf(externalId));
+        organisation = organisationRepository.save(organisation);
         return organisationMapper.toDto(organisation);
     }
 

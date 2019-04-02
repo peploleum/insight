@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.Biographics;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -23,7 +23,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * Service Implementation for managing Biographics.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class BiographicsServiceImpl implements BiographicsService {
 
     private final Logger log = LoggerFactory.getLogger(BiographicsServiceImpl.class);
@@ -32,12 +32,14 @@ public class BiographicsServiceImpl implements BiographicsService {
 
     private final BiographicsRepository biographicsRepository;
     private final BiographicsSearchRepository biographicsSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     public BiographicsServiceImpl(BiographicsRepository biographicsRepository, BiographicsMapper biographicsMapper,
-                                  BiographicsSearchRepository biographicsSearchRepository) {
+                                  BiographicsSearchRepository biographicsSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.biographicsRepository = biographicsRepository;
         this.biographicsMapper = biographicsMapper;
         this.biographicsSearchRepository = biographicsSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +51,13 @@ public class BiographicsServiceImpl implements BiographicsService {
     @Override
     public BiographicsDTO save(BiographicsDTO biographicsDTO) {
         log.debug("Request to save Biographics : {}", biographicsDTO);
+
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
         biographics = biographicsRepository.save(biographics);
         biographicsSearchRepository.save(biographics);
+        Long externalId = this.insightGraphEntityRepository.save(biographics.getBiographicsName(), biographics.getId(), InsightEntityType.Biographics);
+        biographics.setExternalId(String.valueOf(externalId));
+        biographics = biographicsRepository.save(biographics);
         return biographicsMapper.toDto(biographics);
     }
 

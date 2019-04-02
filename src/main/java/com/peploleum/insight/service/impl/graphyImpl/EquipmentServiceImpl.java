@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.Equipment;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -23,7 +23,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
  * Service Implementation for managing Equipment.
  */
 @Service
-@Profile("!graphy")
+@Profile("graphy")
 public class EquipmentServiceImpl implements EquipmentService {
 
     private final Logger log = LoggerFactory.getLogger(EquipmentServiceImpl.class);
@@ -32,12 +32,14 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
     private final EquipmentSearchRepository equipmentSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
     public EquipmentServiceImpl(EquipmentRepository equipmentRepository, EquipmentMapper equipmentMapper,
-                                EquipmentSearchRepository equipmentSearchRepository) {
+                                EquipmentSearchRepository equipmentSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.equipmentRepository = equipmentRepository;
         this.equipmentMapper = equipmentMapper;
         this.equipmentSearchRepository = equipmentSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +51,13 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public EquipmentDTO save(EquipmentDTO equipmentDTO) {
         log.debug("Request to save Equipment : {}", equipmentDTO);
+
         Equipment equipment = equipmentMapper.toEntity(equipmentDTO);
         equipment = equipmentRepository.save(equipment);
         equipmentSearchRepository.save(equipment);
+        Long externalId = this.insightGraphEntityRepository.save(equipment.getEquipmentName(), equipment.getId(), InsightEntityType.Equipment);
+        equipment.setExternalId(String.valueOf(externalId));
+        equipment = equipmentRepository.save(equipment);
         return equipmentMapper.toDto(equipment);
     }
 

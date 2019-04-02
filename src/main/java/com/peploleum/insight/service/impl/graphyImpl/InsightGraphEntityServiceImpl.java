@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.domain.graphy.InsightGraphEntity;
@@ -7,6 +7,7 @@ import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.CriteriaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Created by GFOLGOAS on 01/04/2019.
  */
 @Service
+@Profile("graphy")
 public class InsightGraphEntityServiceImpl implements InsightGraphEntityService {
     private static final int AGE_THRESHOLD = 100;
 

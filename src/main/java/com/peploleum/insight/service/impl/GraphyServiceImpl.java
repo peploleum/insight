@@ -21,13 +21,13 @@ import java.lang.reflect.Field;
 public class GraphyServiceImpl implements GraphyService {
 
     private String apiRootUrl;
-    @Value("${application.graph.enabled}")
+    @Value("${application.graphy.enabled}")
     private boolean graphEnabled;
 
-    @Value("${application.graph.host}")
+    @Value("${application.graphy.host}")
     private String graphHost;
 
-    @Value("${application.graph.port}")
+    @Value("${application.graphy.port}")
     private int graphPort;
 
     private final Logger log = LoggerFactory.getLogger(GraphyServiceImpl.class);

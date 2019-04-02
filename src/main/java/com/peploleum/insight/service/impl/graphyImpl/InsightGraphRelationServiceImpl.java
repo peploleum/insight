@@ -1,4 +1,4 @@
-package com.peploleum.insight.service.impl;
+package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.domain.graphy.InsightGraphRelation;
@@ -7,6 +7,7 @@ import com.peploleum.insight.repository.graphy.InsightGraphRelationRepository;
 import com.peploleum.insight.service.InsightGraphRelationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
  * Created by GFOLGOAS on 01/04/2019.
  */
 @Service
+@Profile("graphy")
 public class InsightGraphRelationServiceImpl implements InsightGraphRelationService {
     private final Logger log = LoggerFactory.getLogger(InsightGraphRelationServiceImpl.class);
 
