@@ -10,11 +10,12 @@ services:
         - insight
     kafka:
         image: wurstmeister/kafka:latest
+        container_name: kafka
         environment:
             KAFKA_ADVERTISED_HOST_NAME: 192.168.0.132
             KAFKA_ADVERTISED_PORT: 8092
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-            KAFKA_CREATE_TOPICS: "topic:1:1"
+            KAFKA_CREATE_TOPICS: "topic:1:1,topicrss:1:1,topicjson:1:1,topiccyber:1:1"
         ports:
         - 8092:9092
         networks:
