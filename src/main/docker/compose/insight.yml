@@ -67,7 +67,7 @@ services:
         networks:
         - insight:
               aliases:
-              - kibana
+              - "kibana"
         depends_on:
         - elasticsearch
     #NIFI
