@@ -142,7 +142,7 @@ services:
     insight-mongodb:
         image: mongo:4.0.2
          volumes:
-             - ~/volumes/jhipster/insight/mongodb/:/data/db/
+             - ./mongodb/data:/data/db/
         ports:
         - "27017:27017"
         networks:
