@@ -141,12 +141,12 @@ services:
     #insight
     insight-mongodb:
         image: mongo:4.0.2
-         volumes:
-             - ./mongodb/data:/data/db/
+        volumes:
+        - ./mongodb/data:/data/db/
         ports:
         - "27017:27017"
         networks:
-          - insight
+        - insight
     insight-app:
         image: peploleum/insight:latest
         environment:
