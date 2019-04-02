@@ -1,5 +1,7 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
+import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.domain.Organisation;
 import com.peploleum.insight.repository.OrganisationRepository;
@@ -25,16 +27,18 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private final Logger log = LoggerFactory.getLogger(OrganisationServiceImpl.class);
 
-    private final OrganisationRepository organisationRepository;
-
     private final OrganisationMapper organisationMapper;
 
+    private final OrganisationRepository organisationRepository;
     private final OrganisationSearchRepository organisationSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
-    public OrganisationServiceImpl(OrganisationRepository organisationRepository, OrganisationMapper organisationMapper, OrganisationSearchRepository organisationSearchRepository) {
+    public OrganisationServiceImpl(OrganisationRepository organisationRepository, OrganisationMapper organisationMapper,
+                                   OrganisationSearchRepository organisationSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.organisationRepository = organisationRepository;
         this.organisationMapper = organisationMapper;
         this.organisationSearchRepository = organisationSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +53,11 @@ public class OrganisationServiceImpl implements OrganisationService {
 
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
         organisation = organisationRepository.save(organisation);
-        OrganisationDTO result = organisationMapper.toDto(organisation);
         organisationSearchRepository.save(organisation);
-        return result;
+        Long externalId = this.insightGraphEntityRepository.save(organisation.getOrganisationName(), organisation.getId(), InsightEntityType.Organisation);
+        organisation.setExternalId(String.valueOf(externalId));
+        organisation = organisationRepository.save(organisation);
+        return organisationMapper.toDto(organisation);
     }
 
     /**
@@ -96,7 +102,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     /**
      * Search for the organisation corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */

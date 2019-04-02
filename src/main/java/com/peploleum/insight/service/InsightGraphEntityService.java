@@ -1,5 +1,6 @@
 package com.peploleum.insight.service;
 
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.service.dto.CriteriaDTO;
 
@@ -12,16 +13,26 @@ import java.util.Optional;
 public interface InsightGraphEntityService {
 
     /**
+     * Create and save a InsightGraphEntity Vertex
+     *
+     * @param name    name of the Entity element
+     * @param idMongo unique Identifier in mongo database
+     * @param type    Type of Entity
+     * @return unique identifier in graph db
+     */
+    Long save(String name, String idMongo, InsightEntityType type);
+
+    /**
      * Get one entity by id.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    public Optional<InsightGraphEntity> findOne(Long id);
+    Optional<InsightGraphEntity> findOne(Long id);
 
-    public List<InsightGraphEntity> findByCriteria(CriteriaDTO criteria);
+    List<InsightGraphEntity> findByCriteria(CriteriaDTO criteria);
 
-    public List<InsightGraphEntity> findAllInOutVerticesByCriteria(Long id, CriteriaDTO criteria);
+    List<InsightGraphEntity> findAllInOutVerticesByCriteria(Long id, CriteriaDTO criteria);
 
     /**
      * Delete the entity by id.
@@ -29,5 +40,5 @@ public interface InsightGraphEntityService {
      * @param id the id of the entity
      */
 
-    public void delete(Long id);
+    void delete(Long id);
 }

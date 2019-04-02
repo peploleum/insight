@@ -1,5 +1,6 @@
 package com.peploleum.insight.service.impl;
 
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.repository.graphy.InsightGraphEntityRepository;
 import com.peploleum.insight.service.InsightGraphEntityService;
@@ -23,6 +24,20 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
 
     public InsightGraphEntityServiceImpl(InsightGraphEntityRepository insightGraphEntityRepository) {
         this.insightGraphEntityRepository = insightGraphEntityRepository;
+    }
+
+    @Override
+    public Long save(String name, String idMongo, InsightEntityType type) {
+        log.debug("Request to save InsightGraphEntity : {}");
+
+        InsightGraphEntity entity = new InsightGraphEntity();
+        entity.getProperties().put("rawDataName", name);
+        entity.setIdMongo(idMongo);
+        entity.setEntityType(type);
+        entity = this.insightGraphEntityRepository.save(entity);
+
+        this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());
+        return entity.getGraphId();
     }
 
     @Override

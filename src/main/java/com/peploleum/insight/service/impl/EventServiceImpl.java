@@ -1,21 +1,22 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.EventService;
 import com.peploleum.insight.domain.Event;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.EventRepository;
 import com.peploleum.insight.repository.search.EventSearchRepository;
+import com.peploleum.insight.service.EventService;
+import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.EventDTO;
 import com.peploleum.insight.service.mapper.EventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Event.
@@ -25,16 +26,18 @@ public class EventServiceImpl implements EventService {
 
     private final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
-    private final EventRepository eventRepository;
-
     private final EventMapper eventMapper;
 
+    private final EventRepository eventRepository;
     private final EventSearchRepository eventSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
-    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, EventSearchRepository eventSearchRepository) {
+    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper,
+                            EventSearchRepository eventSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.eventSearchRepository = eventSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +52,11 @@ public class EventServiceImpl implements EventService {
 
         Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
-        EventDTO result = eventMapper.toDto(event);
         eventSearchRepository.save(event);
-        return result;
+        Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), InsightEntityType.Event);
+        event.setExternalId(String.valueOf(externalId));
+        event = eventRepository.save(event);
+        return eventMapper.toDto(event);
     }
 
     /**
@@ -96,7 +101,7 @@ public class EventServiceImpl implements EventService {
     /**
      * Search for the event corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */

@@ -1,21 +1,22 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.EquipmentService;
 import com.peploleum.insight.domain.Equipment;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.EquipmentRepository;
 import com.peploleum.insight.repository.search.EquipmentSearchRepository;
+import com.peploleum.insight.service.EquipmentService;
+import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.EquipmentDTO;
 import com.peploleum.insight.service.mapper.EquipmentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Equipment.
@@ -25,16 +26,18 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     private final Logger log = LoggerFactory.getLogger(EquipmentServiceImpl.class);
 
-    private final EquipmentRepository equipmentRepository;
-
     private final EquipmentMapper equipmentMapper;
 
+    private final EquipmentRepository equipmentRepository;
     private final EquipmentSearchRepository equipmentSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
-    public EquipmentServiceImpl(EquipmentRepository equipmentRepository, EquipmentMapper equipmentMapper, EquipmentSearchRepository equipmentSearchRepository) {
+    public EquipmentServiceImpl(EquipmentRepository equipmentRepository, EquipmentMapper equipmentMapper,
+                                EquipmentSearchRepository equipmentSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.equipmentRepository = equipmentRepository;
         this.equipmentMapper = equipmentMapper;
         this.equipmentSearchRepository = equipmentSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +52,11 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         Equipment equipment = equipmentMapper.toEntity(equipmentDTO);
         equipment = equipmentRepository.save(equipment);
-        EquipmentDTO result = equipmentMapper.toDto(equipment);
         equipmentSearchRepository.save(equipment);
-        return result;
+        Long externalId = this.insightGraphEntityRepository.save(equipment.getEquipmentName(), equipment.getId(), InsightEntityType.Equipment);
+        equipment.setExternalId(String.valueOf(externalId));
+        equipment = equipmentRepository.save(equipment);
+        return equipmentMapper.toDto(equipment);
     }
 
     /**
@@ -96,7 +101,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     /**
      * Search for the equipment corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */

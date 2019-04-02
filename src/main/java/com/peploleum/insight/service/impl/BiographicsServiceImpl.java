@@ -1,21 +1,22 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.service.BiographicsService;
 import com.peploleum.insight.domain.Biographics;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.BiographicsRepository;
 import com.peploleum.insight.repository.search.BiographicsSearchRepository;
+import com.peploleum.insight.service.BiographicsService;
+import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.BiographicsDTO;
 import com.peploleum.insight.service.mapper.BiographicsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Biographics.
@@ -25,16 +26,18 @@ public class BiographicsServiceImpl implements BiographicsService {
 
     private final Logger log = LoggerFactory.getLogger(BiographicsServiceImpl.class);
 
-    private final BiographicsRepository biographicsRepository;
-
     private final BiographicsMapper biographicsMapper;
 
+    private final BiographicsRepository biographicsRepository;
     private final BiographicsSearchRepository biographicsSearchRepository;
+    private final InsightGraphEntityService insightGraphEntityRepository;
 
-    public BiographicsServiceImpl(BiographicsRepository biographicsRepository, BiographicsMapper biographicsMapper, BiographicsSearchRepository biographicsSearchRepository) {
+    public BiographicsServiceImpl(BiographicsRepository biographicsRepository, BiographicsMapper biographicsMapper,
+                                  BiographicsSearchRepository biographicsSearchRepository, InsightGraphEntityService insightGraphEntityRepository) {
         this.biographicsRepository = biographicsRepository;
         this.biographicsMapper = biographicsMapper;
         this.biographicsSearchRepository = biographicsSearchRepository;
+        this.insightGraphEntityRepository = insightGraphEntityRepository;
     }
 
     /**
@@ -49,9 +52,11 @@ public class BiographicsServiceImpl implements BiographicsService {
 
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
         biographics = biographicsRepository.save(biographics);
-        BiographicsDTO result = biographicsMapper.toDto(biographics);
         biographicsSearchRepository.save(biographics);
-        return result;
+        Long externalId = this.insightGraphEntityRepository.save(biographics.getBiographicsName(), biographics.getId(), InsightEntityType.Biographics);
+        biographics.setExternalId(String.valueOf(externalId));
+        biographics = biographicsRepository.save(biographics);
+        return biographicsMapper.toDto(biographics);
     }
 
     /**
@@ -96,7 +101,7 @@ public class BiographicsServiceImpl implements BiographicsService {
     /**
      * Search for the biographics corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */

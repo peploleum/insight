@@ -137,7 +137,7 @@ export class NetworkService {
 
     getGraphData(janusIdOrigin: IdType): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
-        const url = 'api/traversal/';
+        const url = 'api/graph/traversal/';
         return this.http.get(`${this._resourceUrl}` + url + `${janusIdOrigin}`, { headers, observe: 'response' }).pipe(
             catchError(error => {
                 if (DEBUG_INFO_ENABLED) {
@@ -174,7 +174,7 @@ export class NetworkService {
 
     getNodeProperties(janusIdOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
-        const url = DEBUG_INFO_ENABLED ? 'api/traversal/janus/' : 'api/traversal/janus/';
+        const url = DEBUG_INFO_ENABLED ? 'api/graph/traversal/janus/' : 'api/graph/traversal/janus/';
         return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
             headers,
             observe: 'response'

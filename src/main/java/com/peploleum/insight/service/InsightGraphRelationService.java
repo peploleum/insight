@@ -6,17 +6,17 @@ import java.util.LinkedHashMap;
  * Created by GFOLGOAS on 01/04/2019.
  */
 public interface InsightGraphRelationService {
-    public String save(Long idSource, Long idCible, String name);
+    String save(Long idSource, Long idCible, String name);
 
     /**
-     * Get one entity by id.
+     * Get one relation by id.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    public LinkedHashMap findOne(String id);
+    LinkedHashMap findOne(String id);
 
-    public void linkAll();
+    void linkAll();
 
     /**
      * Delete the entity by id.
@@ -24,5 +24,5 @@ public interface InsightGraphRelationService {
      * @param id the id of the entity
      */
 
-    public void delete(String id);
+    void delete(String id);
 }

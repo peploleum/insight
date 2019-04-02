@@ -9,5 +9,5 @@ public interface InsightGraphManagementService {
      *
      * @param propertyKey the property name to index
      */
-    public void buildIndex(final String propertyKey);
+    void buildIndex(final String propertyKey);
 }

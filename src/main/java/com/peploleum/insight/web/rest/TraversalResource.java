@@ -16,7 +16,7 @@ import java.util.List;
  * Created by GFOLGOAS on 01/04/2019.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/graph")
 public class TraversalResource {
     private final Logger log = LoggerFactory.getLogger(TraversalResource.class);
     private final TraversalService traversalService;
@@ -29,7 +29,7 @@ public class TraversalResource {
     public ResponseEntity<List<NodeDTO>> traverse(@Valid @RequestBody NodeDTO sourceNode) throws URISyntaxException {
         log.debug("REST request to get neighbors for : {}", sourceNode);
         final List<NodeDTO> neighbors = this.traversalService.getNeighbors(sourceNode);
-        return ResponseEntity.created(new URI("/api/traversal/"))
+        return ResponseEntity.created(new URI("/api/graph/traversal/"))
             .body(neighbors);
     }
 
@@ -50,7 +50,7 @@ public class TraversalResource {
         log.debug("REST request to get neighbors for : {}", id);
         final List<NodeDTO> neighbors = this.traversalService.getNeighborsMock(id);
 
-        return ResponseEntity.created(new URI("/api/traversal/"))
+        return ResponseEntity.created(new URI("/api/graph/traversal/"))
             .body(neighbors);
     }
 
@@ -58,7 +58,7 @@ public class TraversalResource {
     public ResponseEntity<NodeDTO> getByMongoId(@PathVariable String id) throws URISyntaxException {
         log.info("REST request to get properties for : {}", id);
         final NodeDTO properties = this.traversalService.getByMongoId(id);
-        return ResponseEntity.created(new URI("/api/traversal/properties"))
+        return ResponseEntity.created(new URI("/api/graph/traversal/properties"))
             .body(properties);
     }
 
@@ -66,7 +66,7 @@ public class TraversalResource {
     public ResponseEntity<NodeDTO> getByJanusId(@PathVariable String id) throws URISyntaxException {
         log.info("REST request to get properties for : {}", id);
         final NodeDTO properties = this.traversalService.getByJanusId(id);
-        return ResponseEntity.created(new URI("/api/traversal/janus"))
+        return ResponseEntity.created(new URI("/api/graph/traversal/janus"))
             .body(properties);
     }
 
@@ -77,7 +77,7 @@ public class TraversalResource {
         properties.setId(id);
         properties.setLabel("label");
         properties.setType("RawData");
-        return ResponseEntity.created(new URI("/api/traversal/mock/properties"))
+        return ResponseEntity.created(new URI("/api/graph/traversal/mock/properties"))
             .body(properties);
     }
 }
