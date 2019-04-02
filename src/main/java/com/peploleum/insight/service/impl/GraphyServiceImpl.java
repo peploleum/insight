@@ -1,7 +1,7 @@
 package com.peploleum.insight.service.impl;
 
 import com.peploleum.insight.service.GraphyService;
-import com.peploleum.insight.service.dto.RelationDTO;
+import com.peploleum.insight.service.dto.InsightGraphRelationDTO;
 import com.peploleum.insight.service.util.GraphyHttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,19 +73,19 @@ public class GraphyServiceImpl implements GraphyService {
 
     private String doSendRelation(String idSource, String idTarget, String sourceType, String targetType) throws RestClientException {
         this.log.info("Creating relation between " + idSource + "/" + sourceType + " and " + idTarget + "/" + targetType);
-        final RelationDTO relationDTO = new RelationDTO();
-        relationDTO.setIdJanusSource(idSource);
-        relationDTO.setIdJanusCible(idTarget);
-        relationDTO.setName("linked to");
-        relationDTO.setTypeSource(sourceType);
-        relationDTO.setTypeCible(targetType);
+        final InsightGraphRelationDTO insightGraphRelationDTO = new InsightGraphRelationDTO();
+        insightGraphRelationDTO.setIdJanusSource(idSource);
+        insightGraphRelationDTO.setIdJanusCible(idTarget);
+        insightGraphRelationDTO.setName("linked to");
+        insightGraphRelationDTO.setTypeSource(sourceType);
+        insightGraphRelationDTO.setTypeCible(targetType);
 
         final RestTemplate rt = new RestTemplate();
         final HttpHeaders headers = GraphyHttpUtils.getBasicHeaders();
         final ResponseEntity<String> tResponseEntity;
         try {
             tResponseEntity = rt.exchange(this.apiRootUrl + "relation", HttpMethod.POST,
-                new HttpEntity<>(relationDTO, headers), String.class);
+                new HttpEntity<>(insightGraphRelationDTO, headers), String.class);
             log.debug("Received " + tResponseEntity.getBody());
             return tResponseEntity.getBody();
         } catch (RestClientException e) {

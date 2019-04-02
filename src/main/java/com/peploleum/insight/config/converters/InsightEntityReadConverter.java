@@ -1,6 +1,8 @@
 package com.peploleum.insight.config.converters;
 
-import com.peploleum.insight.domain.*;
+import com.peploleum.insight.domain.InsightEntity;
+import com.peploleum.insight.domain.RawData;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,7 +19,7 @@ public class InsightEntityReadConverter implements Converter<Document, InsightEn
     public InsightEntity convert(Document document) {
 
         RawData rawData = new RawData();
-        rawData.setEntityType("RawData");
+        rawData.setEntityType(InsightEntityType.RawData);
         return rawData;
     }
 }

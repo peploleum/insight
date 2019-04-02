@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
  */
 public interface RawDataSearchRepositoryCustom {
     /**
-     * Search for the rawData corresponding to the query.
+     * Search for the rawData matching the query.
      *
      * @param query the SearchQuery of the search
      * @return the list of entities

@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private final ApplicationProperties.Kibana kibana = new ApplicationProperties.Kibana();
     private final ApplicationProperties.Graph graph = new ApplicationProperties.Graph();
+    private final ApplicationProperties.Graphy graphy = new ApplicationProperties.Graphy();
 
     public ApplicationProperties() {
     }
@@ -22,6 +23,10 @@ public class ApplicationProperties {
 
     public ApplicationProperties.Graph getGraph() {
         return this.graph;
+    }
+
+    public ApplicationProperties.Graphy getGraphy() {
+        return this.graphy;
     }
 
     public static class Kibana {
@@ -69,6 +74,21 @@ public class ApplicationProperties {
 
         public void setPort(String port) {
             this.port = port;
+        }
+    }
+
+    public static class Graphy {
+        private Integer vertexThreshold = 3;
+
+        public Graphy() {
+        }
+
+        public Integer getVertexThreshold() {
+            return vertexThreshold;
+        }
+
+        public void setVertexThreshold(Integer vertexThreshold) {
+            this.vertexThreshold = vertexThreshold;
         }
     }
 }

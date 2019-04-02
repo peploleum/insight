@@ -1,6 +1,8 @@
 package com.peploleum.insight.service.dto;
 
-public class RelationDTO {
+import java.io.Serializable;
+
+public class InsightGraphRelationDTO implements Serializable {
 
     private String idJanusSource;
 
@@ -12,7 +14,7 @@ public class RelationDTO {
 
     private String typeCible;
 
-    public RelationDTO() {
+    public InsightGraphRelationDTO() {
     }
 
     public String getName() {
@@ -58,12 +60,12 @@ public class RelationDTO {
     @Override
     public String toString() {
         return "RawDataDTO{" +
-                "idJanusSource=" + getIdJanusSource() +
-                "idJanusCible=" + getIdJanusCible() +
-                "typeSource=" + getTypeSource() +
-                "typeCible=" + getTypeCible() +
-                ", name='" + getName() + "'" +
-                "}";
+            "idJanusSource=" + getIdJanusSource() +
+            "idJanusCible=" + getIdJanusCible() +
+            "typeSource=" + getTypeSource() +
+            "typeCible=" + getTypeCible() +
+            ", name='" + getName() + "'" +
+            "}";
     }
 }
 
