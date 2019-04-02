@@ -93,7 +93,7 @@ services:
         - 9042
         - 9160
         volumes:
-        - ./cassandra/data:/var/lib/cassandra
+        - ./graph/cassandra/data:/var/lib/cassandra
         - ./graph/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml
         command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
         # Cassandra ulimt recommended settings
