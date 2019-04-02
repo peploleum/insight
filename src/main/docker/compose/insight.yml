@@ -190,12 +190,12 @@ services:
             FIXED_DELAY: 3000
             URLNER: http://insight-ner:80/opener
             URLINSIGHT: http://insight:8080/api/
-            NER: false
-            MOCK: false
+            NER: 'false'
+            MOCK: 'false'
             JAVA_OPTS:  -Xmx2048m -Xms256m
-            GRAPH_ENABLED: false
+            GRAPH_ENABLED: 'false'
             GRAPH_HOST: http://insight:8080/api/
-            ELASTICSEARCH_ENABLED: false
+            ELASTICSEARCH_ENABLED: 'false'
             ELASTICSEARCH_INDEX_NAME: gazetter
             ELASTICSEARCH_HOST: elasticsearch
             ELASTICSEARCH_PORT: 9200
