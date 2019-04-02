@@ -120,16 +120,7 @@ services:
         expose:
         - 9042
         - 9160
-        command: bash -c 'while true
-            do
-            rt=$(nc -z -w 1 cassandra 9042)
-            if [ $? -eq 0 ]; then
-            echo "CASSANDRA is UP"
-            break
-            fi
-            echo "CASSANDRA is not yet reachable;sleep for 10s before retry"
-            sleep 10
-            done && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
+        command: bash -c 'while true do rt=$(nc -z -w 1 cassandra 9042) if [ $? -eq 0 ]; then echo "CASSANDRA is UP" break fi echo "CASSANDRA is not yet reachable;sleep for 10s before retry" sleep 10 done && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
         volumes:
         - ./graph/janus/conf/gremlin-server/gremlin-server-configuration.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server/gremlin-server-configuration.yaml
         - ./graph/janus/conf/gremlin-server/scripts/startup.groovy:/app/janusgraph-0.2.2-hadoop2/scripts/startup.groovy
