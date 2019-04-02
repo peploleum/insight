@@ -68,17 +68,79 @@ services:
         depends_on:
         - elasticsearch
     #NIFI
-#    nifi:
-#        image: apache/nifi:latest
-#        ports:
-#        - "8090:8080"
-#        volumes:
-#        - ./feeder/templates/:/opt/nifi/nifi-current/conf/templates/
-#        networks:
-#        - insight
+    nifi:
+        image: apache/nifi:latest
+        ports:
+        - "8090:8080"
+        volumes:
+        - ./feeder/templates/:/opt/nifi/nifi-current/conf/templates/
+        networks:
+        - insight
+    #GRAPH DB
+    cassandra:
+        container_name: cassandra
+        image: cassandra:latest
+        #command: /bin /bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
+        #environment :
+        # - "HEAP_NEWSIZE:4096M"
+        # - "MAX_HEAP_SIZE:4096M"
+        environment:
+            JAVA_OPTS: -Xms256m -Xmx2048m
+        expose:
+        - 7000
+        - 7001
+        - 7199
+        - 9042
+        - 9160
+        volumes:
+        - ./cassandra/data:/var/lib/cassandra
+        - ./graph/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml
+        command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
+        # Cassandra ulimt recommended settings
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        networks:
+        - insight
+    janusgraph:
+        image: janusgraph:0.2.2-hadoop2
+        build:
+            dockerfile: Dockerfile
+            args:
+                version: 0.2.2
+                hadoop: hadoop2
+            context: janus
+        container_name: janusgraph
+        #command: ["tail", "-f", "/dev/null"]
+        ports:
+        - "8182:8182"
+        - "9160:9160"
+        - "9042:9042"
+        expose:
+        - 9042
+        - 9160
+        command: bash -c 'while true
+            do
+            rt=$(nc -z -w 1 cassandra 9042)
+            if [ $? -eq 0 ]; then
+            echo "CASSANDRA is UP"
+            break
+            fi
+            echo "CASSANDRA is not yet reachable;sleep for 10s before retry"
+            sleep 10
+            done && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
+        volumes:
+        - ./graph/janus/conf/gremlin-server/gremlin-server-configuration.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server/gremlin-server-configuration.yaml
+        - ./graph/janus/conf/gremlin-server/scripts/startup.groovy:/app/janusgraph-0.2.2-hadoop2/scripts/startup.groovy
+        - ./graph/janus/conf/janusgraph.properties:/app/janusgraph-0.2.2-hadoop2/conf/janusgraph.properties
+        networks:
+        - insight
     #APP
     insight-mongodb:
         image: mongo:4.0.2
+         volumes:
+             - ~/volumes/jhipster/insight/mongodb/:/data/db/
         ports:
         - "27017:27017"
         networks:
@@ -86,20 +148,17 @@ services:
     insight-app:
         image: insight
         environment:
-        # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+        - _JAVA_OPTIONS=-Xmx512m -Xms256m
         - SPRING_PROFILES_ACTIVE=prod,swagger
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://insight-postgresql:5432/insight
+        - SPRING_DATA_MONGODB_URI=mongodb://insight-mongodb:27017
+        - SPRING_DATA_MONGODB_DATABASE=insight
         - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
-        - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
-        - SPRING_DATA_ELASTICSEARCH_CLUSTER_NAME=insight
-        - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka
-        - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES=zookeeper
-        - SPRING_DATA_JEST_URI=elasticsearch:9200
-        - APPLICATION_KIBANA_URI=http://kibana:5601/
+        - SPRING_DATA_JEST_URI=http://elasticsearch:9200
+        - APPLICATION_KIBANA_URI=http://kibana:5601
         ports:
         - 8080:8080
         networks:
-          - insight
+        - insight
 networks:
     insight:
         driver: bridge
