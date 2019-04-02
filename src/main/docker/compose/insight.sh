@@ -29,7 +29,7 @@ install)
 echo "stopping insight if running"
 docker-compose -f insight.yml down
 echo "installing insight .. deleting bound volumes"
-for DIR in graph/cassandra/data mongodb/data
+for DIR in graph/cassandra/data mongodb/data feeder/templates
 do
 	echo "recreating data directory: $DIR"
 	sudo rm -rf $DIR

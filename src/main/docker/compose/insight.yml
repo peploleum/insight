@@ -11,7 +11,7 @@ services:
     kafka:
         image: wurstmeister/kafka:latest
         environment:
-            KAFKA_ADVERTISED_HOST_NAME: 10.71.2.85
+            KAFKA_ADVERTISED_HOST_NAME: 192.168.0.132
             KAFKA_ADVERTISED_PORT: 8092
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_CREATE_TOPICS: "topic:1:1"
@@ -129,7 +129,80 @@ services:
         networks:
         - insight
     #APPs
+    #NER
+    wrapper:
+        image: cwolff/opener-docker-wrapper
+        build:
+            context: ./ner/wrapper
+        environment:
+            SANIC_OPENER_IDENTIFY_LANGUAGE_URL: http://language_identifier
+            SANIC_OPENER_TOKENIZE_URL: http://tokenizer
+            SANIC_OPENER_POS_URL: http://pos_tagger
+            SANIC_OPENER_NER_URL: http://ner
+            SANIC_OPENER_KAF2JSON_URL: http://kaf2json
+        ports:
+        - 9999:80
+        depends_on:
+        - language_identifier
+        - tokenizer
+        - pos_tagger
+        - ner
+        - kaf2json
+        networks:
+        - insight
+
+    language_identifier:
+        image: cwolff/opener-docker-language-identifier
+        networks:
+        - insight
+
+    tokenizer:
+        image: cwolff/opener-docker-tokenizer
+        networks:
+        - insight
+
+    pos_tagger:
+        image: cwolff/opener-docker-pos-tagger
+        networks:
+        - insight
+
+    ner:
+        image: cwolff/opener-docker-ner
+        networks:
+        - insight
+
+    kaf2json:
+        image: cwolff/opener-docker-kaf2json
+        networks:
+        - insight
     #yummy
+    yummy:
+        image: peploleum/yummy:latest
+        environment:
+            SPRING_MAIN_WEB_APPLICATION_TYPE: none
+            SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: kafka:9092
+            SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES: kafka
+            SPRING_CLOUD_STREAM_BINDINGS_INPUT_BINDER: kafka
+            SPRING_CLOUD_STREAM_BINDINGS_INPUT_DESTINATION: topicrss
+            SPRING_CLOUD_STREAM_BINDINGS_OUTPUT_BINDER: kafka
+            SPRING_CLOUD_STREAM_BINDINGS_OUTPUT_DESTINATION: topicrss
+            FORMAT: dd/MM/YYYY hh:mm:ss
+            FIXED_DELAY: 3000
+            URLNER: http://insight-ner:80/opener
+            URLINSIGHT: http://insight:8080/api/
+            NER: false
+            MOCK: false
+            JAVA_OPTS:  -Xmx2048m -Xms256m
+            GRAPH_ENABLED: false
+            GRAPH_HOST: http://insight:8080/api/
+            ELASTICSEARCH_ENABLED: false
+            ELASTICSEARCH_INDEX_NAME: gazetter
+            ELASTICSEARCH_HOST: elasticsearch
+            ELASTICSEARCH_PORT: 9200
+            ELASTICSEARCH_NODE_PORT: 9300
+            ELASTICSEARCH_CLUSTERNAME: insight
+        networks:
+        - insight
     #insight
     insight-mongodb:
         image: mongo:4.0.2
