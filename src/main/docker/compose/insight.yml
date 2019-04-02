@@ -136,7 +136,9 @@ services:
         - ./graph/janus/conf/janusgraph.properties:/app/janusgraph-0.2.2-hadoop2/conf/janusgraph.properties
         networks:
         - insight
-    #APP
+    #APPs
+    #yummy
+    #insight
     insight-mongodb:
         image: mongo:4.0.2
          volumes:
@@ -146,7 +148,7 @@ services:
         networks:
           - insight
     insight-app:
-        image: insight
+        image: peploleum/insight:latest
         environment:
         - _JAVA_OPTIONS=-Xmx512m -Xms256m
         - SPRING_PROFILES_ACTIVE=prod,swagger
