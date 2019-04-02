@@ -37,13 +37,13 @@ do
 	sudo echo '*.*' > $DIR/.gitignore
 	sudo echo '/**' >> $DIR/.gitignore
 done
-docker-compose -f insight.yml up -d --build
+docker-compose -f insight.yml -p insight up -d --build
 ;;
 
 run)
 
 echo "starting insight .. using bound volumes"
-docker-compose -f insight.yml up -d
+docker-compose -f insight.yml -p insight up -d
 ;;
 
 stop)
