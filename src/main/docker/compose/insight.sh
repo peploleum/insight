@@ -37,6 +37,8 @@ do
 	sudo echo '*.*' > $DIR/.gitignore
 	sudo echo '/**' >> $DIR/.gitignore
 done
+echo "copying NiFi templates"
+cp ././../kubernetes/feeder/* feeder/templates
 docker-compose -f insight.yml -p insight up -d --build
 ;;
 
@@ -49,6 +51,6 @@ docker-compose -f insight.yml -p insight up -d
 stop)
 
 echo "stopping insight .. keeping bound volumes"
-docker-compose -f insight.yml down
+docker-compose -f insight.yml -p insight down
 ;;
 esac
