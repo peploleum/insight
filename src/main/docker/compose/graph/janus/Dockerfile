@@ -5,7 +5,9 @@ RUN mkdir /app
 #COPY janusgraph-0.2.2-hadoop2.zip /app
 RUN cd app && wget https://github.com/JanusGraph/janusgraph/releases/download/v0.2.2/janusgraph-0.2.2-hadoop2.zip
 RUN apt-get update && apt-get install -y \
-    unzip
+    unzip \
+    netcat \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN cd app && unzip janusgraph-0.2.2-hadoop2.zip && rm janusgraph-0.2.2-hadoop2.zip && cd janusgraph-0.2.2-hadoop2
 
