@@ -37,7 +37,7 @@ do
 	sudo echo '*.*' > $DIR/.gitignore
 	sudo echo '/**' >> $DIR/.gitignore
 done
-docker-compose -f insight.yml up -d
+docker-compose -f insight.yml up -d --build
 ;;
 
 run)
