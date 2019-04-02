@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ $# -lt 4 ]; then
+if [ $# -lt 1 ]; then
   echo "Usage: freeipa.sh VERB"
   echo
   echo VERB must be one of:
