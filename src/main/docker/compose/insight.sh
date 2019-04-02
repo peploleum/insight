@@ -39,6 +39,8 @@ do
 done
 echo "copying NiFi templates"
 cp ././../kubernetes/feeder/* feeder/templates
+echo "adding exec rights to janus init script"
+chmod +x graph/janus/init.sh
 docker-compose -f insight.yml -p insight up -d --build
 ;;
 
