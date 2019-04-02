@@ -110,7 +110,7 @@ services:
             args:
                 version: 0.2.2
                 hadoop: hadoop2
-            context: janus
+            context: graph/janus
         container_name: janusgraph
         #command: ["tail", "-f", "/dev/null"]
         ports:
