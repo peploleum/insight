@@ -190,7 +190,7 @@ services:
             FORMAT: dd/MM/YYYY hh:mm:ss
             FIXED_DELAY: 3000
             URLNER: http://insight-ner:80/opener
-            URLINSIGHT: http://insight:8080/api/
+            URLINSIGHT: http://insight-app:8080/api/
             NER: 'false'
             MOCK: 'false'
             JAVA_OPTS:  -Xmx2048m -Xms256m
