@@ -4,7 +4,7 @@ import com.peploleum.insight.service.TraversalService;
 import com.peploleum.insight.service.dto.NodeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/graph")
-@ConditionalOnExpression("#{environment.getProperty('spring.profiles.active').contains('graphy')}")
+// @ConditionalOnExpression("#{environment.getProperty('spring.profiles.active').contains('graphy')}")
+@ConditionalOnProperty(value = "application.graphy.enabled", havingValue = "true")
 public class TraversalResource {
     private final Logger log = LoggerFactory.getLogger(TraversalResource.class);
     private final TraversalService traversalService;

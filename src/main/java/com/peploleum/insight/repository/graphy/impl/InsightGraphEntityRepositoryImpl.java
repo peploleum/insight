@@ -41,7 +41,6 @@ public class InsightGraphEntityRepositoryImpl implements InsightGraphEntityCusto
             mappingContext.setInitialEntitySet(new EntityScanner(this.context).scan(Persistent.class));
             final MappingGremlinConverter converter = new MappingGremlinConverter(mappingContext);
             this.template = new GremlinTemplate(this.gremlinFactory, converter);
-            this.template.getGremlinClient();
         } catch (ClassNotFoundException e) {
             this.log.error("Erreur lors de l'instanciation du InsightGraphEntityRepositoryImpl", e);
         }

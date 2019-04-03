@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,8 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         log.debug("Request to save InsightGraphEntity : {}");
 
         InsightGraphEntity entity = new InsightGraphEntity();
+        if (entity.getProperties() == null)
+            entity.setProperties(new HashMap<>());
         entity.getProperties().put("rawDataName", name);
         entity.setIdMongo(idMongo);
         entity.setEntityType(type);

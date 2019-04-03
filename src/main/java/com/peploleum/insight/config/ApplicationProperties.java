@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
     private final ApplicationProperties.Kibana kibana = new ApplicationProperties.Kibana();
-    private final ApplicationProperties.Graph graph = new ApplicationProperties.Graph();
     private final ApplicationProperties.Graphy graphy = new ApplicationProperties.Graphy();
 
     public ApplicationProperties() {
@@ -19,10 +18,6 @@ public class ApplicationProperties {
 
     public ApplicationProperties.Kibana getKibana() {
         return this.kibana;
-    }
-
-    public ApplicationProperties.Graph getGraph() {
-        return this.graph;
     }
 
     public ApplicationProperties.Graphy getGraphy() {
@@ -44,12 +39,14 @@ public class ApplicationProperties {
         }
     }
 
-    public static class Graph {
+
+    public static class Graphy {
         private String host = "localhost";
         private String port = "8090";
         private boolean enabled = false;
+        private Integer vertexThreshold = 3;
 
-        public Graph() {
+        public Graphy() {
         }
 
         public String getHost() {
@@ -64,23 +61,16 @@ public class ApplicationProperties {
             return port;
         }
 
+        public void setPort(String port) {
+            this.port = port;
+        }
+
         public boolean isEnabled() {
             return enabled;
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
-        }
-
-        public void setPort(String port) {
-            this.port = port;
-        }
-    }
-
-    public static class Graphy {
-        private Integer vertexThreshold = 3;
-
-        public Graphy() {
         }
 
         public Integer getVertexThreshold() {

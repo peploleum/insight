@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { DEBUG_INFO_ENABLED } from 'app/app.constants';
+import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { BehaviorSubject, forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
 import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
@@ -15,7 +15,7 @@ import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
-    private _resourceUrl;
+    private _resourceUrl = SERVER_API_URL + 'api/graph/';
     JSONFileSelected: Subject<File> = new Subject();
     networkState: BehaviorSubject<NetworkState> = new BehaviorSubject({
         LAYOUT_DIR: 'UD',
@@ -105,11 +105,11 @@ export class NetworkService {
     }
 
     constructor(private http: HttpClient, private rds: RawDataService) {
-        if (DEBUG_INFO_ENABLED) {
-            this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
-        } else {
-            this._resourceUrl = 'http://192.168.0.120:30200/';
-        }
+        /* if (DEBUG_INFO_ENABLED) {
+         this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
+         } else {
+         this._resourceUrl = 'http://192.168.0.120:30200/';
+         }*/
     }
 
     updateRawData(rawDataId: string, symbole: string): Observable<HttpResponse<IRawData>> {
@@ -137,7 +137,7 @@ export class NetworkService {
 
     getGraphData(janusIdOrigin: IdType): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
-        const url = 'api/graph/traversal/';
+        const url = 'traversal/';
         return this.http.get(`${this._resourceUrl}` + url + `${janusIdOrigin}`, { headers, observe: 'response' }).pipe(
             catchError(error => {
                 if (DEBUG_INFO_ENABLED) {
@@ -174,7 +174,7 @@ export class NetworkService {
 
     getNodeProperties(janusIdOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
-        const url = DEBUG_INFO_ENABLED ? 'api/graph/traversal/janus/' : 'api/graph/traversal/janus/';
+        const url = 'traversal/janus/';
         return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
             headers,
             observe: 'response'

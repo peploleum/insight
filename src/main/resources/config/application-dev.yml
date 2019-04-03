@@ -37,16 +37,16 @@ spring:
             indent-output: true
     data:
         mongodb:
-            uri: mongodb://localhost:27017
+            uri: mongodb://192.168.0.132:27017
             database: insight
         elasticsearch:
             properties:
                 path:
                     home: target/elasticsearch
         jest:
-            uri: http://localhost:9200
+            uri: http://192.168.0.132:9200
         gremlin:
-            endpoint: localhost
+            endpoint: 192.168.0.132
             port: 8182
             username: capgemini
             password: root
@@ -117,9 +117,7 @@ jhipster:
 
 application:
     kibana:
-        uri: http://localhost:5601
+        uri: http://192.168.0.132:5601
     graphy:
-        host: localhost
-        port: 8090
-        enabled: false
+        enabled: true
         vertex-threshold: 3

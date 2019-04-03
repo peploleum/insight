@@ -34,6 +34,7 @@
         <!-- These remain empty unless the corresponding profile is active -->
         <profile.swagger />
         <profile.tls />
+        <profile.graphy />
 
         <!-- Dependency versions -->
         <jhipster-dependencies.version>2.0.29</jhipster-dependencies.version>
@@ -696,6 +697,12 @@
             </properties>
         </profile>
         <profile>
+            <id>graphy</id>
+            <properties>
+                <profile.graphy>,graphy</profile.graphy>
+            </properties>
+        </profile>
+        <profile>
             <id>webpack</id>
             <activation>
                 <file>
@@ -810,6 +817,7 @@
             <properties>
                 <!-- default Spring profiles -->
                 <spring.profiles.active>dev${profile.tls}</spring.profiles.active>
+                <spring.profiles.active>dev${profile.graphy}</spring.profiles.active>
             </properties>
         </profile>
         <profile>
