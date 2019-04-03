@@ -33,7 +33,7 @@ for DIR in graph/cassandra/data mongodb/data feeder/templates
 do
 	echo "recreating data directory: $DIR"
 	sudo rm -rf $DIR
-	mkdir $DIR
+	mkdir -p $DIR
 	sudo echo '*.*' > $DIR/.gitignore
 	sudo echo '/**' >> $DIR/.gitignore
 done
