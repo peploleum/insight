@@ -189,7 +189,7 @@ services:
             SPRING_CLOUD_STREAM_BINDINGS_OUTPUT_DESTINATION: topicrss
             FORMAT: dd/MM/YYYY hh:mm:ss
             FIXED_DELAY: 3000
-            URLNER: http://ner:80/opener
+            URLNER: http://wrapper:80/opener
             URLINSIGHT: http://insight-app:8080/api/
             NER: 'true'
             MOCK: 'false'
