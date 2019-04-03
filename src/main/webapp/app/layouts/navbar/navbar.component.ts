@@ -14,12 +14,14 @@ import { ProfileService } from '../profiles/profile.service';
     styleUrls: ['navbar.scss']
 })
 export class NavbarComponent implements OnInit {
-    inProduction: boolean;
     isNavbarCollapsed: boolean;
     languages: any[];
-    swaggerEnabled: boolean;
     modalRef: NgbModalRef;
     version: string;
+
+    swaggerEnabled: boolean;
+    inProduction: boolean;
+    applicationName: string;
 
     constructor(
         private loginService: LoginService,
@@ -43,6 +45,7 @@ export class NavbarComponent implements OnInit {
         this.profileService.getProfileInfo().then(profileInfo => {
             this.inProduction = profileInfo.inProduction;
             this.swaggerEnabled = profileInfo.swaggerEnabled;
+            this.applicationName = profileInfo.reachEnabled ? 'Reach' : 'Insight';
         });
     }
 

@@ -29,6 +29,7 @@ export class ProfileService {
                             }
                             pi.inProduction = pi.activeProfiles.includes('prod');
                             pi.swaggerEnabled = pi.activeProfiles.includes('swagger');
+                            pi.reachEnabled = pi.activeProfiles.includes('reach');
                         }
                         return pi;
                     })

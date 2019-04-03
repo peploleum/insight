@@ -69,12 +69,20 @@ Logo styles
 .navbar-brand {
     &.logo {
         padding: 5px 15px;
-        .logo-img {
+        .logo-img-insight {
             height: 45px;
             width: 70px;
             display: inline-block;
             vertical-align: middle;
             background: url('../../../content/images/insight.png') no-repeat center center;
+            background-size: contain;
+        }
+        .logo-img-reach {
+            height: 45px;
+            width: 70px;
+            display: inline-block;
+            vertical-align: middle;
+            background: url('../../../content/images/reach.svg') no-repeat center center;
             background-size: contain;
         }
     }

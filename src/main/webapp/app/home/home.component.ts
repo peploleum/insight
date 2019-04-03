@@ -3,6 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
+import { ProfileService } from '../layouts/profiles/profile.service';
 
 @Component({
     selector: 'jhi-home',
@@ -13,16 +14,21 @@ import { LoginModalService, AccountService, Account } from 'app/core';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    applicationName: string;
 
     constructor(
         private accountService: AccountService,
         private loginModalService: LoginModalService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private profileService: ProfileService
     ) {}
 
     ngOnInit() {
         this.accountService.identity().then(account => {
             this.account = account;
+        });
+        this.profileService.getProfileInfo().then(profileInfo => {
+            this.applicationName = profileInfo.reachEnabled ? 'Reach' : 'Insight';
         });
         this.registerAuthenticationSuccess();
     }
