@@ -85,7 +85,7 @@ spec:
               - name: SPRING_DATA_GREMLIN_ENDPOINT
                 value: insight-janusgraph
               - name: SPRING_DATA_GREMLIN_PORT
-                value: 8182
+                value: "8182"
               - name: SPRING_DATA_GREMLIN_USERNAME
                 value: capgemini
               - name: SPRING_DATA_GREMLIN_PASSWORD
