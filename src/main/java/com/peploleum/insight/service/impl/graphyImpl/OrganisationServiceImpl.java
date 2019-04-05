@@ -55,9 +55,11 @@ public class OrganisationServiceImpl implements OrganisationService {
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
         organisation = organisationRepository.save(organisation);
         organisationSearchRepository.save(organisation);
-        Long externalId = this.insightGraphEntityRepository.save(organisation.getOrganisationName(), organisation.getId(), InsightEntityType.Organisation);
-        organisation.setExternalId(String.valueOf(externalId));
-        organisation = organisationRepository.save(organisation);
+        if (organisation.getExternalId() == null) {
+            Long externalId = this.insightGraphEntityRepository.save(organisation.getOrganisationName(), organisation.getId(), InsightEntityType.Organisation);
+            organisation.setExternalId(String.valueOf(externalId));
+            organisation = organisationRepository.save(organisation);
+        }
         return organisationMapper.toDto(organisation);
     }
 

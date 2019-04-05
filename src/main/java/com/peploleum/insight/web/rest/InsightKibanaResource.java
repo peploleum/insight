@@ -2,7 +2,7 @@ package com.peploleum.insight.web.rest;
 
 import com.peploleum.insight.domain.kibana.EntityMappingInfo;
 import com.peploleum.insight.domain.kibana.KibanaDashboardGenerationParameters;
-import com.peploleum.insight.service.ElasticClientService;
+import com.peploleum.insight.service.InsightKibanaService;
 import com.peploleum.insight.service.dto.KibanaObjectReferenceDTO;
 import com.peploleum.insight.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -20,13 +20,13 @@ import java.util.Set;
  * ElasticClientResource controller
  */
 @RestController
-@RequestMapping("/api/elastic-client-resource")
-public class ElasticClientResource {
+@RequestMapping("/api/insight-kibana")
+public class InsightKibanaResource {
 
-    private final Logger log = LoggerFactory.getLogger(ElasticClientResource.class);
+    private final Logger log = LoggerFactory.getLogger(InsightKibanaResource.class);
 
     @Autowired
-    private ElasticClientService esClientService;
+    private InsightKibanaService insKibanaService;
 
     /**
      * POST  /KibanaDashboardGenerationParameters : Parametres pour la generation d'un dashboard.
@@ -38,8 +38,8 @@ public class ElasticClientResource {
     @PostMapping("/post-dashboard")
     public ResponseEntity<List<KibanaObjectReferenceDTO>> createDashboard(@RequestBody KibanaDashboardGenerationParameters dashboardParameters) throws URISyntaxException {
         log.debug("REST request to generate KibanaDashboardGenerationParameters : {}", dashboardParameters);
-        this.esClientService.generateAndPostKibanaDashboard(dashboardParameters);
-        List<KibanaObjectReferenceDTO> dashboardRefs = this.esClientService.getDashboardRef();
+        this.insKibanaService.generateAndPostKibanaDashboard(dashboardParameters);
+        List<KibanaObjectReferenceDTO> dashboardRefs = this.insKibanaService.getDashboardRef();
         return ResponseEntity.ok()
             .headers(HeaderUtil.createDashboardCreationAlert(dashboardParameters.getDashboardTitle()))
             .body(dashboardRefs);
@@ -61,7 +61,7 @@ public class ElasticClientResource {
         log.debug("REST getDashboardRef request");
         return ResponseEntity.ok()
             .headers(new HttpHeaders())
-            .body(this.esClientService.getDashboardRef());
+            .body(this.insKibanaService.getDashboardRef());
     }
 
     /**
@@ -72,7 +72,7 @@ public class ElasticClientResource {
         log.debug("REST request to get EntitiesSchema");
         return ResponseEntity.ok()
             .headers(new HttpHeaders())
-            .body(this.esClientService.getEntitiesMappingInfo());
+            .body(this.insKibanaService.getEntitiesMappingInfo());
     }
 
     /**
@@ -80,7 +80,7 @@ public class ElasticClientResource {
      */
     @DeleteMapping("/delete-all-dashboard")
     public ResponseEntity<Void> deleteAllDashboard() {
-        this.esClientService.deleteAllDashboard();
+        this.insKibanaService.deleteAllDashboard();
         return ResponseEntity.ok().headers(new HttpHeaders()).build();
     }
 
@@ -91,7 +91,7 @@ public class ElasticClientResource {
      */
     @DeleteMapping("/delete-single-kibana-object/{id}")
     public ResponseEntity<Void> deleteSingleKibanaObject(@PathVariable String id) {
-        this.esClientService.deleteSingleKibanaObject(id);
+        this.insKibanaService.deleteSingleKibanaObject(id);
         return ResponseEntity.ok().headers(new HttpHeaders()).build();
     }
 

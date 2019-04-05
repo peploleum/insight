@@ -55,9 +55,11 @@ public class EventServiceImpl implements EventService {
         Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
         eventSearchRepository.save(event);
-        Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), InsightEntityType.Event);
-        event.setExternalId(String.valueOf(externalId));
-        event = eventRepository.save(event);
+        if (event.getExternalId() == null) {
+            Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), InsightEntityType.Event);
+            event.setExternalId(String.valueOf(externalId));
+            event = eventRepository.save(event);
+        }
         return eventMapper.toDto(event);
     }
 

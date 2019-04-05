@@ -55,9 +55,11 @@ public class EquipmentServiceImpl implements EquipmentService {
         Equipment equipment = equipmentMapper.toEntity(equipmentDTO);
         equipment = equipmentRepository.save(equipment);
         equipmentSearchRepository.save(equipment);
-        Long externalId = this.insightGraphEntityRepository.save(equipment.getEquipmentName(), equipment.getId(), InsightEntityType.Equipment);
-        equipment.setExternalId(String.valueOf(externalId));
-        equipment = equipmentRepository.save(equipment);
+        if (equipment.getExternalId() == null) {
+            Long externalId = this.insightGraphEntityRepository.save(equipment.getEquipmentName(), equipment.getId(), InsightEntityType.Equipment);
+            equipment.setExternalId(String.valueOf(externalId));
+            equipment = equipmentRepository.save(equipment);
+        }
         return equipmentMapper.toDto(equipment);
     }
 

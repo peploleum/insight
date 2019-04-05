@@ -17,9 +17,12 @@ import { RouterModule } from '@angular/router';
 import { DropZoneDirective } from './util/drop-zone.directive';
 import { DraggableElementDirective } from './util/draggable-element.directive';
 import { OrderListByValuePipe } from './util/sort-list.pipe';
+import { InsightSearchComponent } from './search/insight-search.component';
+import { InsightSearchDirective } from './search/insight-search.directive';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule],
+    imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule, ReactiveFormsModule],
     declarations: [
         JhiLoginModalComponent,
         HasAnyAuthorityDirective,
@@ -36,7 +39,9 @@ import { OrderListByValuePipe } from './util/sort-list.pipe';
         TextHighlightDirective,
         DropZoneDirective,
         DraggableElementDirective,
-        OrderListByValuePipe
+        OrderListByValuePipe,
+        InsightSearchComponent,
+        InsightSearchDirective
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
@@ -57,7 +62,9 @@ import { OrderListByValuePipe } from './util/sort-list.pipe';
         TextHighlightDirective,
         DropZoneDirective,
         DraggableElementDirective,
-        OrderListByValuePipe
+        OrderListByValuePipe,
+        InsightSearchComponent,
+        InsightSearchDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

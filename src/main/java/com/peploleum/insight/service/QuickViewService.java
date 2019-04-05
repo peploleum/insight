@@ -34,7 +34,7 @@ public class QuickViewService {
      * @return the entity
      */
     public Optional<InsightEntity> findEntityById(String id) {
-        log.debug("Request to get RawData : {}", id);
+        log.debug("Request to get Entity : {}", id);
 
         Class[] classArray = {RawData.class, Event.class, Biographics.class, Equipment.class, Location.class, Organisation.class};
         List<Class> classCollection = Arrays.asList(classArray);

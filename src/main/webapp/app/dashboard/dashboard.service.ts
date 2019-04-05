@@ -15,7 +15,7 @@ type EntityResponseType = HttpResponse<KibanaDashboardReference[]>;
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-    private resourceUrl = SERVER_API_URL + '/api/elastic-client-resource';
+    private resourceUrl = SERVER_API_URL + '/api/insight-kibana';
     private _getDashboardId = '/get-dashboard-ids';
     private _regenerateDashboard = '/regenerate-dashboard';
     private _deleteAllDashboard = '/delete-all-dashboard';

@@ -2,6 +2,7 @@ package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.Gender;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,6 +32,7 @@ public class Biographics extends InsightEntity implements Serializable {
 
     @NotNull
     @Field("biographics_name")
+    @CompletionField
     private String biographicsName;
 
     @Field("biographics_age")

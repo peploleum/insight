@@ -1,9 +1,10 @@
-package com.peploleum.insight.service;
+package com.peploleum.insight.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peploleum.insight.domain.RawData;
 import com.peploleum.insight.domain.kibana.*;
+import com.peploleum.insight.service.InsightKibanaService;
 import com.peploleum.insight.service.dto.KibanaObjectReferenceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ElasticClientService {
+public class InsightKibanaServiceImpl implements InsightKibanaService {
 
-    private final Logger log = LoggerFactory.getLogger(ElasticClientService.class);
+    private final Logger log = LoggerFactory.getLogger(InsightKibanaServiceImpl.class);
 
     @Value("${application.kibana.uri}")
     private String KIBANA_ENTRY_URI;
@@ -37,9 +38,10 @@ public class ElasticClientService {
 
     private Set<EntityMappingInfo> entitiesMappingInfo = new HashSet<>();
 
-    public ElasticClientService() {
+    public InsightKibanaServiceImpl() {
     }
 
+    @Override
     public List<KibanaObjectReferenceDTO> getDashboardRef() {
         // Refresh dashboards list
         Set<KibanaObject> kibanaObjects = getAllKibanaObjects();
@@ -121,6 +123,7 @@ public class ElasticClientService {
         }
     }
 
+    @Override
     public void generateAndPostKibanaDashboard(final KibanaDashboardGenerationParameters dashboardParameters) {
         try {
             KibanaObjectsBundle objectBundle = new KibanaObjectsBundle();
@@ -144,6 +147,7 @@ public class ElasticClientService {
         }
     }
 
+    @Override
     public void deleteSingleKibanaObject(final String objectId) {
         if (!this.kibanaVisualization.isEmpty()) {
             try {
@@ -169,6 +173,7 @@ public class ElasticClientService {
     /**
      * Supprime de Kibana, tous les dashboards et visualisations créés
      */
+    @Override
     public void deleteAllDashboard() {
         if (!this.kibanaVisualization.isEmpty()) {
             kibanaVisualization.stream().forEach(ko -> {
@@ -375,6 +380,7 @@ public class ElasticClientService {
         }
     }
 
+    @Override
     public Set<EntityMappingInfo> getEntitiesMappingInfo() {
         return entitiesMappingInfo;
     }

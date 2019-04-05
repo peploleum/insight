@@ -1,0 +1,6 @@
+<div class="side-input-container">
+    <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Bobby..."/>
+    <div *ngIf="(suggestion$ | async).length">
+        <span *ngFor="let suggest of suggestion$ | async">{{suggest}}</span>
+    </div>
+</div>

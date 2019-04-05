@@ -55,9 +55,11 @@ public class BiographicsServiceImpl implements BiographicsService {
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
         biographics = biographicsRepository.save(biographics);
         biographicsSearchRepository.save(biographics);
-        Long externalId = this.insightGraphEntityRepository.save(biographics.getBiographicsName(), biographics.getId(), InsightEntityType.Biographics);
-        biographics.setExternalId(String.valueOf(externalId));
-        biographics = biographicsRepository.save(biographics);
+        if (biographics.getExternalId() == null) {
+            Long externalId = this.insightGraphEntityRepository.save(biographics.getBiographicsName(), biographics.getId(), InsightEntityType.Biographics);
+            biographics.setExternalId(String.valueOf(externalId));
+            biographics = biographicsRepository.save(biographics);
+        }
         return biographicsMapper.toDto(biographics);
     }
 
