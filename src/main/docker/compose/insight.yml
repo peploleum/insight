@@ -194,9 +194,9 @@ services:
             NER: 'true'
             MOCK: 'false'
             JAVA_OPTS:  -Xmx2048m -Xms256m
-            GRAPH_ENABLED: 'false'
+            GRAPH_ENABLED: 'true'
             GRAPH_HOST: http://insight:8080/api/
-            ELASTICSEARCH_ENABLED: 'false'
+            ELASTICSEARCH_ENABLED: 'true'
             ELASTICSEARCH_INDEX_NAME: gazetter
             ELASTICSEARCH_HOST: elasticsearch
             ELASTICSEARCH_PORT: 9200
