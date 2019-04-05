@@ -204,6 +204,8 @@ services:
             ELASTICSEARCH_CLUSTERNAME: insight
         networks:
         - insight
+        depends_on:
+        - insight-app
     #insight
     insight-mongodb:
         image: mongo:4.0.2
@@ -217,6 +219,7 @@ services:
         image: peploleum/insight:latest
         environment:
         - _JAVA_OPTIONS=-Xmx512m -Xms256m
+        - JHIPSTER_SLEEP=30
         - SPRING_PROFILES_ACTIVE=prod,swagger,graphy,reach
         - SPRING_DATA_MONGODB_URI=mongodb://insight-mongodb:27017
         - SPRING_DATA_MONGODB_DATABASE=insight
@@ -231,6 +234,10 @@ services:
         - 8080:8080
         networks:
         - insight
+        depends_on:
+        - elasticsearch
+        - kibana
+        - insight-mongodb
 networks:
     insight:
         driver: bridge
