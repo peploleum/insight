@@ -36,6 +36,8 @@ spring:
             port: 8182
             username: capgemini
             password: root
+            sslEnabled: false
+            telemetryAllowed: false
     mail:
         host: localhost
         port: 25
