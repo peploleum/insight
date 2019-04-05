@@ -23,6 +23,17 @@ public interface InsightGraphEntityService {
     Long save(String name, String idMongo, InsightEntityType type);
 
     /**
+     * Update or save a InsightGraphEntity Vertex
+     *
+     * @param graphId id Janus of the Entity element
+     * @param name    name of the Entity element
+     * @param idMongo unique Identifier in mongo database
+     * @param type    Type of Entity
+     * @return unique identifier in graph db
+     */
+    Long update(Long graphId, String name, String idMongo, InsightEntityType type);
+
+    /**
      * Get one entity by id.
      *
      * @param id the id of the entity

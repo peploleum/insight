@@ -5,8 +5,10 @@ import com.microsoft.spring.data.gremlin.conversion.MappingGremlinConverter;
 import com.microsoft.spring.data.gremlin.conversion.script.GremlinScriptLiteralVertex;
 import com.microsoft.spring.data.gremlin.mapping.GremlinMappingContext;
 import com.microsoft.spring.data.gremlin.query.GremlinTemplate;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.TraversalService;
 import com.peploleum.insight.service.dto.NodeDTO;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
@@ -67,7 +69,7 @@ public class TraversalServiceImpl implements TraversalService {
             neighbor.setType(type);
             final String idMongo = smartOpenProperties(resultObject, "idMongo");
             neighbor.setId(graphId);
-            String searchKey = findSearchKey(type);
+            final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(type));
             if (searchKey != null) {
                 neighbor.setIdMongo(idMongo);
                 final String label = smartOpenProperties(resultObject, searchKey);
@@ -123,7 +125,7 @@ public class TraversalServiceImpl implements TraversalService {
         foundNode.setId(id);
         foundNode.setType(type);
         foundNode.setIdMongo(smartOpenProperties(resultObject, "idMongo"));
-        final String searchKey = findSearchKey(type);
+        final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(type));
         this.log.info("Searching key: " + searchKey);
         if (searchKey != null) {
             final String label = smartOpenProperties(resultObject, searchKey);
@@ -133,33 +135,6 @@ public class TraversalServiceImpl implements TraversalService {
             }
         }
         return foundNode;
-    }
-
-    private String findSearchKey(String type) {
-        String searchKey = null;
-        switch (type) {
-            case "Biographics":
-                searchKey = "biographicsName";
-                break;
-            case "Event":
-                searchKey = "eventName";
-                break;
-            case "Equipment":
-                searchKey = "equipmentName";
-                break;
-            case "Location":
-                searchKey = "locationName";
-                break;
-            case "RawData":
-                searchKey = "rawDataName";
-                break;
-            case "Organisation":
-                searchKey = "organisationName";
-                break;
-            default:
-                break;
-        }
-        return searchKey;
     }
 
     private String smartOpenProperties(LinkedHashMap object, String key) {

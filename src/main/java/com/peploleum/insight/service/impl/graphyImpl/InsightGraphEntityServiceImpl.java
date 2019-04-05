@@ -5,6 +5,7 @@ import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.repository.graphy.InsightGraphEntityRepository;
 import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.CriteriaDTO;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,12 +37,32 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
 
     @Override
     public Long save(String name, String idMongo, InsightEntityType type) {
-        log.debug("Request to save InsightGraphEntity : {}");
+        log.debug("Request to save InsightGraphEntity");
 
         InsightGraphEntity entity = new InsightGraphEntity();
         if (entity.getProperties() == null)
             entity.setProperties(new HashMap<>());
-        entity.getProperties().put("rawDataName", name);
+        entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
+        entity.setIdMongo(idMongo);
+        entity.setEntityType(type);
+        entity = this.insightGraphEntityRepository.save(entity);
+
+        this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());
+        return entity.getGraphId();
+    }
+
+    @Override
+    public Long update(Long graphId, String name, String idMongo, InsightEntityType type) {
+        log.debug("Request to update InsightGraphEntity : {}", graphId);
+
+        Optional<InsightGraphEntity> optEntity = this.findOne(graphId);
+        if (!optEntity.isPresent()) {
+            return this.save(name, idMongo, type);
+        }
+        InsightGraphEntity entity = optEntity.get();
+        if (entity.getProperties() == null)
+            entity.setProperties(new HashMap<>());
+        entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
         entity.setIdMongo(idMongo);
         entity.setEntityType(type);
         log.warn("gremlin endpoint " + this.endpoint);

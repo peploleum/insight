@@ -3,7 +3,7 @@ package com.peploleum.insight.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.InsightElasticService;
-import com.peploleum.insight.web.rest.util.InsightUtil;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

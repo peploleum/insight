@@ -1,4 +1,4 @@
-package com.peploleum.insight.web.rest.util;
+package com.peploleum.insight.service.util;
 
 import com.peploleum.insight.domain.*;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
@@ -23,6 +23,25 @@ public class InsightUtil {
                 return RawData.class;
             default:
                 return InsightEntity.class;
+        }
+    }
+
+    public static String getEntityFieldNameFromType(InsightEntityType type) {
+        switch (type) {
+            case Biographics:
+                return "biographicsName";
+            case Equipment:
+                return "equipmentName";
+            case Event:
+                return "eventName";
+            case Location:
+                return "locationName";
+            case Organisation:
+                return "organisationName";
+            case RawData:
+                return "rawDataName";
+            default:
+                return null;
         }
     }
 }
