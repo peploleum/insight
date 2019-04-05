@@ -32,7 +32,7 @@ spring:
         jest:
             uri: http://localhost:9200
         gremlin:
-            endpoint: localhost
+            endpoint: janusgraph
             port: 8182
             username: capgemini
             password: root

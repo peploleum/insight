@@ -7,6 +7,7 @@ import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.CriteriaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,10 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
 
     private final Logger log = LoggerFactory.getLogger(InsightGraphEntityServiceImpl.class);
     private final InsightGraphEntityRepository insightGraphEntityRepository;
+    @Value("${spring.data.gremlin.endpoint}")
+    private String endpoint;
+    @Value("${spring.data.gremlin.port}")
+    private int port;
 
     public InsightGraphEntityServiceImpl(InsightGraphEntityRepository insightGraphEntityRepository) {
         this.insightGraphEntityRepository = insightGraphEntityRepository;
@@ -39,6 +44,8 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         entity.getProperties().put("rawDataName", name);
         entity.setIdMongo(idMongo);
         entity.setEntityType(type);
+        log.warn("gremlin endpoint " + this.endpoint);
+        log.warn("gremlin port " + this.port);
         entity = this.insightGraphEntityRepository.save(entity);
 
         this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());
