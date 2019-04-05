@@ -219,11 +219,10 @@ services:
         image: peploleum/insight:latest
         environment:
         - _JAVA_OPTIONS=-Xmx512m -Xms256m
-        - JHIPSTER_SLEEP=30
         - SPRING_PROFILES_ACTIVE=prod,swagger,graphy,reach
         - SPRING_DATA_MONGODB_URI=mongodb://insight-mongodb:27017
         - SPRING_DATA_MONGODB_DATABASE=insight
-        - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        - JHIPSTER_SLEEP=30 # gives time for the database to boot before the application
         - SPRING_DATA_JEST_URI=http://elasticsearch:9200
         - APPLICATION_KIBANA_URI=http://kibana:5601
         - SPRING_DATA_GREMLIN_ENDPOINT=janusgraph
