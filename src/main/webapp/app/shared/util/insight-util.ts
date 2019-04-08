@@ -86,3 +86,7 @@ export class DragParameter {
         this.event = event;
     }
 }
+
+export const BASE64URI = (base64Content: string, fileType?: string): string => {
+    return `data:image/${fileType || 'png'};base64,${base64Content}`;
+};

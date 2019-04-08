@@ -11,18 +11,20 @@ import java.util.List;
  */
 public interface InsightElasticService {
     /**
-     * Search for the InsightEntities corresponding to the query.
+     * Search for the InsightEntities matching the query.
      *
      * @param query    the query of the search
      * @param clazz    the class of the searched entities (Es index)
      * @param pageable the pagination information
      * @return the list of entities
      */
-    <T extends InsightEntity> Page<T> search(String query, Class<T> clazz, Pageable pageable);
+    <T extends InsightEntity> Page<InsightEntity> search(String query, Class<T> clazz, Pageable pageable);
 
     /**
      * Autocomplete based on a search keyword
-     * Suggestion only works on fields annotated @CompletionField
+     * Suggestion only works on fields of Type Completion annotated @CompletionField
+     * autoComplete ne fonctionne pas pour le moment, pas certain que le paramètre "suggest"
+     * des requêtes ES soient prévu avec la library Jest que l'on utilise => c'est bien dommage
      *
      * @param query the keyword of the search
      * @param clazz the class of the searched entities (Es index)

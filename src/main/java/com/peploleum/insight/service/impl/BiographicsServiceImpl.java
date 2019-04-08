@@ -1,11 +1,9 @@
 package com.peploleum.insight.service.impl;
 
 import com.peploleum.insight.domain.Biographics;
-import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.BiographicsRepository;
 import com.peploleum.insight.repository.search.BiographicsSearchRepository;
 import com.peploleum.insight.service.BiographicsService;
-import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.BiographicsDTO;
 import com.peploleum.insight.service.mapper.BiographicsMapper;
 import org.slf4j.Logger;

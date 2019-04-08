@@ -1,0 +1,44 @@
+@import '../../../content/scss/custom-insight-variables';
+
+.insSearchComponent {
+    width: 100%;
+
+    > input {
+        width: inherit;
+    }
+}
+
+.search-suggestion-container {
+    position: absolute;
+    z-index: 1000;
+    width: auto;
+
+    border: 1px solid red;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.search-suggestion {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    font-size: 1rem;
+    padding: 0.3rem 0.3rem;
+    border-bottom: 1px solid blue;
+
+    > .search-img-ctn {
+        flex: 1 1 20%;
+        display: flex;
+        justify-content: center;
+    }
+
+    > div {
+        flex: 1 1 auto;
+        padding: 0.3rem;
+        > img {
+            max-height: 2.5rem;
+        }
+    }
+}

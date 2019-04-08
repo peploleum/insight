@@ -34,6 +34,7 @@ public class InsightGraphManagementServiceImpl implements InsightGraphManagement
             mappingContext.setInitialEntitySet(new EntityScanner(this.context).scan(Persistent.class));
             final MappingGremlinConverter converter = new MappingGremlinConverter(mappingContext);
             this.template = new GremlinTemplate(this.gremlinFactory, converter);
+            this.log.info("Instanciation InsightGraphManagementServiceImpl avec GremlinConfig suivante: {}", this.gremlinFactory.getGremlinClient().getSettings().toString());
         } catch (ClassNotFoundException e) {
             this.log.error("Erreur lors de l'instanciation du TraversalServiceImpl", e);
         }

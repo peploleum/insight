@@ -20,6 +20,7 @@ import { OrderListByValuePipe } from './util/sort-list.pipe';
 import { InsightSearchComponent } from './search/insight-search.component';
 import { InsightSearchDirective } from './search/insight-search.directive';
 import { ReactiveFormsModule } from '@angular/forms';
+import { InsightSearchSuggestionComponent } from './search/insight-search-suggestion.component';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule, ReactiveFormsModule],
@@ -41,10 +42,11 @@ import { ReactiveFormsModule } from '@angular/forms';
         DraggableElementDirective,
         OrderListByValuePipe,
         InsightSearchComponent,
-        InsightSearchDirective
+        InsightSearchDirective,
+        InsightSearchSuggestionComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
-    entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent],
+    entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent, InsightSearchSuggestionComponent],
     exports: [
         InsightSharedCommonModule,
         JhiLoginModalComponent,
@@ -64,7 +66,8 @@ import { ReactiveFormsModule } from '@angular/forms';
         DraggableElementDirective,
         OrderListByValuePipe,
         InsightSearchComponent,
-        InsightSearchDirective
+        InsightSearchDirective,
+        InsightSearchSuggestionComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

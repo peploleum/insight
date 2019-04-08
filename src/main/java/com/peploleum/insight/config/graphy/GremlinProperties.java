@@ -16,9 +16,9 @@ public class GremlinProperties {
 
     private String password;
 
-    private boolean sslEnabled;
+    private boolean sslEnabled = false;
 
-    private boolean telemetryAllowed = true;
+    private boolean telemetryAllowed = false;
 
     private String serializer = Serializers.GRAPHSON.toString();
 

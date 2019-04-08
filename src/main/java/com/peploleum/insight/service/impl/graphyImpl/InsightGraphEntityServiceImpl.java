@@ -26,10 +26,6 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
 
     private final Logger log = LoggerFactory.getLogger(InsightGraphEntityServiceImpl.class);
     private final InsightGraphEntityRepository insightGraphEntityRepository;
-    @Value("${spring.data.gremlin.endpoint}")
-    private String endpoint;
-    @Value("${spring.data.gremlin.port}")
-    private int port;
 
     public InsightGraphEntityServiceImpl(InsightGraphEntityRepository insightGraphEntityRepository) {
         this.insightGraphEntityRepository = insightGraphEntityRepository;
@@ -65,8 +61,6 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
         entity.setIdMongo(idMongo);
         entity.setEntityType(type);
-        log.warn("gremlin endpoint " + this.endpoint);
-        log.warn("gremlin port " + this.port);
         entity = this.insightGraphEntityRepository.save(entity);
 
         this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());

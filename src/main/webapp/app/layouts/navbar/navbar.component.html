@@ -32,6 +32,15 @@
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" [routerLink]="[{outlets: { primary: ['card'], side: null }}]"
+                   (click)="collapseNavbar()">
+                    <span placement="bottom" ngbTooltip="Cards">
+                        <fa-icon [icon]="'street-view'"></fa-icon>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link"
                    [routerLink]="[{outlets: { primary: ['network'], side: ['ins-network-side-panel'] }}]"
                    (click)="collapseNavbar()">

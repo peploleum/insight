@@ -1,29 +1,53 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
 import { SearchService } from './search.service';
-import { Observable } from 'rxjs/index';
+import { GenericModel } from '../model/quick-view.model';
+import { InsightSearchDirective } from './insight-search.directive';
 
 @Component({
     selector: 'ins-insight-search',
     templateUrl: './insight-search.component.html',
-    styles: []
+    styleUrls: ['insight-search.scss']
 })
 export class InsightSearchComponent implements OnInit {
-    @Input() targetEntity: string;
+    @Input()
+    targetEntity: string;
+    @Input()
+    textFields: string[];
+    @Input()
+    symbolField: string;
     searchForm: FormControl = new FormControl('');
 
-    suggestion$: Observable<string[]>;
+    suggestions: GenericModel[];
+
+    @ViewChild(InsightSearchDirective) suggestDirective: InsightSearchDirective;
 
     constructor(private _ss: SearchService) {}
 
     ngOnInit() {
-        this.suggestion$ = this.searchForm.valueChanges.pipe(
-            debounceTime(100),
-            distinctUntilChanged(),
-            switchMap((value: string) => {
-                return this._ss.autoComplete(this.targetEntity, value);
-            })
-        );
+        this.searchForm.valueChanges
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged(),
+                switchMap((value: string) => {
+                    return this._ss.search(this.targetEntity, value);
+                })
+            )
+            .subscribe((entities: GenericModel[]) => {
+                this.suggestions = entities;
+                this.displaySuggestions(!(!entities || entities.length === 0));
+            });
+    }
+
+    displaySuggestions(display: boolean) {
+        if (this.suggestDirective) {
+            if (display) {
+                this.suggestDirective.suggestions = this.suggestions;
+                this.suggestDirective.display();
+            } else {
+                this.suggestDirective.hide();
+            }
+        }
     }
 }

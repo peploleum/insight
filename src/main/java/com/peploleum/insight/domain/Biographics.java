@@ -32,7 +32,6 @@ public class Biographics extends InsightEntity implements Serializable {
 
     @NotNull
     @Field("biographics_name")
-    @CompletionField
     private String biographicsName;
 
     @Field("biographics_age")

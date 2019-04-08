@@ -66,6 +66,7 @@ import {
     faSortDown,
     faSortUp,
     faSquare,
+    faStreetView,
     faSync,
     faSyncAlt,
     faTachometerAlt,
@@ -169,5 +170,6 @@ library.add(faWindowMaximize);
 library.add(faWindowMinimize);
 library.add(faDirections);
 library.add(faBookmark);
+library.add(faStreetView);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

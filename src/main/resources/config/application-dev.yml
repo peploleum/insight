@@ -25,7 +25,7 @@ spring:
         include:
         - swagger
         - reach
-        - graphy
+        #- graphy
         # Uncomment to activate TLS for the dev profile
         #- tls
     devtools:
@@ -38,21 +38,20 @@ spring:
             indent-output: true
     data:
         mongodb:
-            uri: mongodb://192.168.0.132:27017
+            uri: mongodb://localhost:27017
             database: insight
         elasticsearch:
             properties:
                 path:
                     home: target/elasticsearch
         jest:
-            uri: http://192.168.0.132:9200
+            uri: http://localhost:9200
         gremlin:
             endpoint: 192.168.0.132
             port: 8182
-            username: capgemini
-            password: root
-            telemetry-allowed: false
             telemetryAllowed: false
+            # username: capgemini
+            # password: root
     mail:
         host: localhost
         port: 25
@@ -120,7 +119,7 @@ jhipster:
 
 application:
     kibana:
-        uri: http://192.168.0.132:5601
+        uri: http://localhost:5601
     graphy:
         enabled: true
         vertex-threshold: 3

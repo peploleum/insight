@@ -1,0 +1,10 @@
+<div class="search-suggestion-container" [style.top.px]="dimension.top"
+     [style.left.px]="dimension.left" [style.width.px]="dimension.width">
+    <div class="search-suggestion" *ngFor="let suggest of suggestions">
+        <div *ngIf="suggest[symbolField] !== null; else noPhoto" class="search-img-ctn"><img [src]="getBase64(suggest[symbolField])"/></div>
+        <ng-template #noPhoto>
+            <div class="search-img-ctn"><fa-icon [icon]="'image'"></fa-icon></div>
+        </ng-template>
+        <div *ngFor="let field of textFields"><a (click)="onClick(suggest['id'])">{{suggest[field]}}</a></div>
+    </div>
+</div>

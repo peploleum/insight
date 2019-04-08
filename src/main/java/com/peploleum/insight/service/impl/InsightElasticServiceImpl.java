@@ -4,6 +4,7 @@ import com.peploleum.insight.domain.InsightEntity;
 import com.peploleum.insight.service.InsightElasticService;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.Suggest.Suggestion;
@@ -42,10 +43,10 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     }
 
     @Override
-    public <T extends InsightEntity> Page<T> search(String query, Class<T> clazz, Pageable pageable) {
+    public <T extends InsightEntity> Page<InsightEntity> search(String query, Class<T> clazz, Pageable pageable) {
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
         NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
-        return this.esOps.queryForPage(esQuery, clazz);
+        return (Page<InsightEntity>) this.esOps.queryForPage(esQuery, clazz);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class InsightElasticServiceImpl implements InsightElasticService {
         SearchRequest searchRequest = new SearchRequest(clazz.getName().toLowerCase());
         CompletionSuggestionBuilder suggestBuilder = new CompletionSuggestionBuilder(getAutoCompleteField(clazz.getSimpleName()));
         suggestBuilder.size(NUMBER_SUGGESTION_TO_RETURN)
-            .prefix(query, Fuzziness.TWO)
+            .prefix(query, Fuzziness.AUTO)
             .analyzer("standard");
 
         final String suggestionName = "suggestion-name";
@@ -63,7 +64,9 @@ public class InsightElasticServiceImpl implements InsightElasticService {
 
         List<String> results = new ArrayList<>();
         try {
-            SearchResponse response = this.esOps.getClient().search(searchRequest).get();
+            // getClient => fonction non implémentée avec JestElasticsearchTemplate
+            Client client = this.esOps.getClient();
+            SearchResponse response = client.search(searchRequest).get();
             Suggestion<Entry<Option>> suggestion = response.getSuggest().getSuggestion(suggestionName);
             for (Entry<Option> entry : suggestion.getEntries()) {
                 for (Option option : entry.getOptions()) {
@@ -79,7 +82,7 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     static String getAutoCompleteField(String entityType) {
         switch (entityType) {
             case "Biographics":
-                return "biographics_name";
+                return "suggest";
             default:
                 return null;
         }
