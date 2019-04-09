@@ -13,7 +13,7 @@ export class InsightSearchSuggestionComponent implements OnInit {
     symbolField: string;
     dimension: { top: number; left: number; width: number } = { top: 0, left: 0, width: 0 };
 
-    constructor(@Inject('directiveSelectionEmitter') private _selectionEmitter: EventEmitter<string>) {}
+    constructor(@Inject('directiveSelectionEmitter') private _selectionEmitter: EventEmitter<any>) {}
 
     ngOnInit() {}
 
@@ -21,7 +21,7 @@ export class InsightSearchSuggestionComponent implements OnInit {
         return BASE64URI(content);
     }
 
-    onClick(selectedEntityId: string) {
-        this._selectionEmitter.emit(selectedEntityId);
+    onClick(selectedEntity: GenericModel) {
+        this._selectionEmitter.emit(selectedEntity);
     }
 }

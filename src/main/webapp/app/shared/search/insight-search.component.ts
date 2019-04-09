@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
 import { SearchService } from './search.service';
@@ -22,6 +22,9 @@ export class InsightSearchComponent implements OnInit {
     suggestions: GenericModel[];
 
     @ViewChild(InsightSearchDirective) suggestDirective: InsightSearchDirective;
+
+    @Output()
+    selectionEmitter: EventEmitter<any> = new EventEmitter();
 
     constructor(private _ss: SearchService) {}
 
@@ -49,5 +52,30 @@ export class InsightSearchComponent implements OnInit {
                 this.suggestDirective.hide();
             }
         }
+    }
+
+    onNewSelection(data: GenericModel) {
+        this.selectionEmitter.emit(data);
+    }
+
+    closeOnExternalAction(target?: HTMLElement) {
+        if (this.suggestDirective) {
+            if (target && this.suggestDirective.suggestComp && !this.suggestDirective.suggestComp.location.nativeElement.contains(target)) {
+                this.suggestDirective.hide();
+            } else if (!target) {
+                this.suggestDirective.hide();
+            }
+        }
+    }
+
+    @HostListener('document:click', ['$event'])
+    onMouseGlobalClick(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+        this.closeOnExternalAction(target);
+    }
+
+    @HostListener('document:wheel', ['$event'])
+    onMouseGlobalWheel(event: WheelEvent) {
+        this.closeOnExternalAction();
     }
 }

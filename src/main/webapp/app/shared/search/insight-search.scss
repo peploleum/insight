@@ -1,20 +1,14 @@
 @import '../../../content/scss/custom-insight-variables';
+@import '../../../content/scss/global.scss';
 
 .insSearchComponent {
-    width: 100%;
-
     > input {
-        width: inherit;
+        width: 100%;
     }
 }
 
 .search-suggestion-container {
-    position: absolute;
-    z-index: 1000;
-    width: auto;
-
-    border: 1px solid red;
-
+    @include popover();
     display: flex;
     flex-direction: column;
 }
@@ -26,19 +20,34 @@
 
     font-size: 1rem;
     padding: 0.3rem 0.3rem;
-    border-bottom: 1px solid blue;
 
     > .search-img-ctn {
-        flex: 1 1 20%;
+        flex: 0 0 35%;
+        max-width: 35%;
         display: flex;
         justify-content: center;
-    }
 
-    > div {
-        flex: 1 1 auto;
-        padding: 0.3rem;
         > img {
             max-height: 2.5rem;
         }
     }
+
+    > div:not(.search-img-ctn) {
+        flex: 1 1 auto;
+        padding: 0.3rem;
+    }
+}
+
+.search-suggestion:first-child {
+    border-radius: 1rem 1rem 0 0;
+}
+
+.search-suggestion:last-child {
+    border-radius: 0 0 1rem 1rem;
+}
+
+.search-suggestion:hover {
+    background-color: $popover-button-background-color-hover;
+    color: $a-color-hover;
+    cursor: pointer;
 }

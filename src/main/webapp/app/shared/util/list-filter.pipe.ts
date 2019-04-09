@@ -19,6 +19,22 @@ export class ListFilterPipe implements PipeTransform {
 }
 
 /**
+ * Renvoie une liste des propriétés d'un objet dont les valeurs nulles sont filtrées
+ * Possibilité d'ajouter une liste de propriétés à retirer
+ * */
+@Pipe({ name: 'objectFilterNullPipe' })
+export class ObjectFilterNullPipe implements PipeTransform {
+    transform(value: {}, propertiesToRemove: string[]): {} {
+        if (value == null || typeof value === 'undefined') {
+            return null;
+        }
+        return Object.keys(value).filter(
+            key => value[key] !== null && typeof value[key] !== 'undefined' && propertiesToRemove.indexOf(key) === -1
+        );
+    }
+}
+
+/**
  * Filtre la liste en input sur la valeur des propriétés des objets spécifiée (propriétés: string[], keyword: string)
  * */
 @Pipe({ name: 'listFilterByStringPipe' })

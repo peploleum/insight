@@ -1,4 +1,4 @@
 <div class="insSearchComponent">
     <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Bobby..."/>
-    <div insInsightSearch [symbolField]="symbolField" [textFields]="textFields"></div>
+    <div insInsightSearch [symbolField]="symbolField" [textFields]="textFields" (selectionEmitter)="onNewSelection($event)"></div>
 </div>

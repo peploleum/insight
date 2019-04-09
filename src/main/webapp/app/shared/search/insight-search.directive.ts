@@ -26,7 +26,7 @@ export class InsightSearchDirective implements OnChanges {
     symbolField: string;
 
     @Output()
-    selectionEmitter: EventEmitter<string> = new EventEmitter();
+    selectionEmitter: EventEmitter<any> = new EventEmitter();
 
     suggestComp: ComponentRef<InsightSearchSuggestionComponent>;
 

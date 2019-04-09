@@ -1,5 +1,40 @@
-<div class="row" style="border: 1px solid red;">
+<div class="card-main row">
 
-    <ins-insight-search [targetEntity]="'Biographics'" [textFields]="['biographicsName']"
-                        [symbolField]="'biographicsImage'"></ins-insight-search>
+    <div class="card-view col-8 h-100">
+        <div class="ins-card-header">
+            <ins-insight-search [targetEntity]="'Biographics'" [textFields]="['biographicsName']"
+                                [symbolField]="'biographicsImage'"
+                                (selectionEmitter)="onDataSelected($event)"></ins-insight-search>
+        </div>
+
+        <div class="ins-card-body" *ngIf="entity">
+
+            <div class="card">
+                <img *ngIf="entity['biographicsImage']; else noPhoto" class="card-img-top"
+                     [src]="getBase64(entity['biographicsImage'])" alt="Aucune photo associée">
+                <ng-template #noPhoto>
+                    <img class="card-img-top" src="" alt="Aucune photo associée">
+                </ng-template>
+                <div class="card-body">
+                    <h5 class="card-title">{{entity['biographicsName']}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{entity['biographicsFirstname']}}</h6>
+                </div>
+            </div>
+
+            <div class="ins-card-content">
+                <div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">
+                    <small class="text-muted">{{key}}</small>
+                    <p>{{entity[key] | stringTruncate:100}}</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-side col-4">
+        <div class="row h-50"></div>
+        <div class="row h-50"></div>
+    </div>
+
 </div>
