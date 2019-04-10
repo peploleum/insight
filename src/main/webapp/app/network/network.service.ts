@@ -175,10 +175,25 @@ export class NetworkService {
     getNodeProperties(janusIdOrigin: IdType): Observable<HttpResponse<IGraphyNodeDTO>> {
         const headers = new HttpHeaders();
         const url = 'traversal/janus/';
-        return this.http.get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
-            headers,
-            observe: 'response'
-        });
+        return this.http
+            .get<IGraphyNodeDTO>(`${this._resourceUrl}` + url + `${janusIdOrigin}`, {
+                headers,
+                observe: 'response'
+            })
+            .pipe(
+                catchError(error => {
+                    if (DEBUG_INFO_ENABLED) {
+                        const fakeResponse: HttpResponse<IGraphyNodeDTO> = new HttpResponse({
+                            body: this.getRamdomizedMockData().nodes[0],
+                            headers: new HttpHeaders(),
+                            status: 200
+                        });
+                        return of(fakeResponse);
+                    } else {
+                        return throwError(error);
+                    }
+                })
+            );
     }
 
     getUpdatedEventThreadToolbar(): ToolbarButtonParameters[] {

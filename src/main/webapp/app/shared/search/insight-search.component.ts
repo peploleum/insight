@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
 import { SearchService } from './search.service';
-import { GenericModel } from '../model/quick-view.model';
+import { GenericModel } from '../model/generic.model';
 import { InsightSearchDirective } from './insight-search.directive';
 
 @Component({

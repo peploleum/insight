@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SideMediatorService } from './side-mediator.service';
 import { QuickViewService } from './quick-view.service';
-import { GenericModel } from '../shared/model/quick-view.model';
+import { GenericModel } from '../shared/model/generic.model';
 import { Subscription } from 'rxjs/index';
 import { HttpResponse } from '@angular/common/http';
 

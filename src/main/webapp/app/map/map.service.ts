@@ -24,6 +24,7 @@ import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
+import { CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD } from '../shared/model/generic.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -81,6 +82,19 @@ export class MapService {
             coord = str.map(i => parseFloat(i));
         }
         return new MapDataDTO(raw.id, raw.rawDataName, 'RawData', raw.rawDataContent, coord);
+    }
+
+    static getMapDataFromGeneric(item: GenericModel): IMapDataDTO {
+        let coord: number[] = null;
+        const nonNullKeys: string[] = Object.keys(item).filter(key => item[key] !== null && typeof item[key] !== 'undefined');
+        const name: string[] = nonNullKeys.filter(key => NAME_FIELD.indexOf(key) !== -1).map(key => item[key]);
+        const coordinate: string[] = nonNullKeys.filter(key => COORDINATE_FIELD.indexOf(key) !== -1).map(key => item[key]);
+        const content: string[] = nonNullKeys.filter(key => CONTENT_FIELD.indexOf(key) !== -1).map(key => item[key]);
+        if (coordinate[0]) {
+            const str: string[] = coordinate[0].split(',');
+            coord = str.map(i => parseFloat(i));
+        }
+        return new MapDataDTO(item['id'], name[0] || 'defaultName', 'RawData', content[0] || 'defaultContent', coord);
     }
 
     static getGeoJsonFromDto(dto: IMapDataDTO): Feature {

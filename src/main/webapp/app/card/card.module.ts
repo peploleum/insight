@@ -4,9 +4,10 @@ import { CardComponent } from './card.component';
 import { InsightSharedModule } from '../shared/shared.module';
 import { CardRoutingModule } from './card-routing.module';
 import { CardNetworkComponent } from './network/card-network.component';
+import { CardMapComponent } from './map/card-map.component';
 
 @NgModule({
     imports: [CommonModule, InsightSharedModule, CardRoutingModule],
-    declarations: [CardComponent, CardNetworkComponent]
+    declarations: [CardComponent, CardNetworkComponent, CardMapComponent]
 })
 export class CardModule {}

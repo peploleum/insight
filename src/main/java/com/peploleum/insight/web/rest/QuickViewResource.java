@@ -12,6 +12,8 @@ import com.peploleum.insight.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +63,20 @@ public class QuickViewResource {
         log.debug("REST request to get entity : {}", id);
         Optional<InsightEntity> entity = quickViewService.findEntityById(id);
         return ResponseUtil.wrapOrNotFound(entity);
+    }
+
+    /**
+     * POST  /entities : get entities by id.
+     *
+     * @param ids the ids of the entities to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the entity, or with status 404 (Not Found)
+     */
+    @PostMapping("/entities")
+    @Timed
+    public ResponseEntity<List<InsightEntity>> getEntitiesById(@RequestBody List<String> ids) throws URISyntaxException {
+        log.debug("REST request to get entities by Id");
+        List<InsightEntity> entitiesById = quickViewService.findEntitiesById(ids);
+        return new ResponseEntity<>(entitiesById, new HttpHeaders(), HttpStatus.OK);
     }
 
     /**

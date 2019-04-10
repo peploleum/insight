@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { GenericModel } from '../model/quick-view.model';
+import { GenericModel } from '../model/generic.model';
 import { BASE64URI } from '../util/insight-util';
 
 @Component({

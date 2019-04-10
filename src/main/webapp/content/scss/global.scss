@@ -384,6 +384,15 @@ Custom card css
     }
 }
 
+.ins-card-network {
+    height: 100%;
+    border: 1px solid $card-background-color;
+}
+
+.ins-card-map {
+    border: 1px solid $card-background-color;
+}
+
 /* ==========================================================================
 Custom popover css
 ========================================================================== */
@@ -524,6 +533,7 @@ Custom map css
 .map-container {
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden;
 }
 
 /* ==========================================================================

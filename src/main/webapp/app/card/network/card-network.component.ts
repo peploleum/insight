@@ -5,11 +5,12 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
-    HostListener,
+    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
+    Output,
     SimpleChanges,
     ViewChild
 } from '@angular/core';
@@ -29,12 +30,15 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
     network: Network;
     networkData: GraphDataSet;
 
+    @Output()
+    nodeMongoIds: EventEmitter<string[]> = new EventEmitter();
+
     constructor(private _ns: NetworkService) {}
 
     ngOnInit() {}
 
-    ngOnChanges(change: SimpleChanges) {
-        // this.getNetworkData();
+    ngOnChanges(changes: SimpleChanges) {
+        this.getNetworkData();
     }
 
     ngAfterViewInit() {
@@ -59,6 +63,8 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
                     this.addNodes([nodeDTO], []);
                     this.getNodesNeighbours(nodeDTO.id);
                 });
+        } else {
+            this.clearDatasets();
         }
     }
 
@@ -76,9 +82,10 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
             width: '100%',
             layout: this.getLayoutOption(),
             physics: {
-                enabled: false
+                enabled: true
             },
             interaction: {
+                selectable: false,
                 hideEdgesOnDrag: true,
                 hover: true,
                 hoverConnectedEdges: true,
@@ -114,6 +121,8 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
         this._ns.getGraphData(idOrigin).subscribe(
             (data: GraphDataCollection) => {
                 this.addNodes(data.nodes, data.edges);
+                const mongoIds: string[] = this.networkData.nodes.map(node => (<NodeDTO>node).mongoId);
+                this.nodeMongoIds.emit(mongoIds);
             },
             error => {
                 console.log('[NETWORK] Error lors de la récupération des voisins.');
@@ -122,7 +131,9 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
     clearDatasets() {
-        this.networkData.nodes.clear();
-        this.networkData.edges.clear();
+        if (this.networkData) {
+            this.networkData.nodes.clear();
+            this.networkData.edges.clear();
+        }
     }
 }

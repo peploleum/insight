@@ -13,7 +13,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { InsightSearchSuggestionComponent } from './insight-search-suggestion.component';
-import { GenericModel } from '../model/quick-view.model';
+import { GenericModel } from '../model/generic.model';
 
 @Directive({
     selector: '[insInsightSearch]'

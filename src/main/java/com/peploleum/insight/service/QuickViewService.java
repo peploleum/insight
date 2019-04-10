@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,32 @@ public class QuickViewService {
             }
         }
         return Optional.ofNullable(result);
+    }
+
+    /**
+     * Get entities by list of ids.
+     *
+     * @param ids the ids of the entities
+     * @return the list of entities
+     */
+    public List<InsightEntity> findEntitiesById(List<String> ids) {
+        log.debug("Request to get Entities");
+        Class[] classArray = {RawData.class, Event.class, Biographics.class, Equipment.class, Location.class, Organisation.class};
+        List<Class> classCollection = Arrays.asList(classArray);
+        List<InsightEntity> result = new ArrayList<>();
+        for (String id : ids) {
+            collectionLoop:
+            for (Class coll : classCollection) {
+                AggregationResults<InsightEntity> aggr = this.mongoOperations.aggregate(
+                    Aggregation.newAggregation(Aggregation.match(Criteria.where("_id").is(id))), coll, InsightEntity.class);
+                if (!CollectionUtils.isEmpty(aggr.getMappedResults())) {
+                    result.add(aggr.getMappedResults().get(0));
+                    break collectionLoop;
+                }
+            }
+
+        }
+        return result;
     }
 
 
