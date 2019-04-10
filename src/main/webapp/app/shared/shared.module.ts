@@ -21,6 +21,7 @@ import { InsightSearchComponent } from './search/insight-search.component';
 import { InsightSearchDirective } from './search/insight-search.directive';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InsightSearchSuggestionComponent } from './search/insight-search-suggestion.component';
+import { ResizeHelperDirective } from './util/resize-helper.directive';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule, ReactiveFormsModule],
@@ -44,7 +45,8 @@ import { InsightSearchSuggestionComponent } from './search/insight-search-sugges
         InsightSearchComponent,
         InsightSearchDirective,
         InsightSearchSuggestionComponent,
-        ObjectFilterNullPipe
+        ObjectFilterNullPipe,
+        ResizeHelperDirective
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent, InsightSearchSuggestionComponent],
@@ -69,7 +71,8 @@ import { InsightSearchSuggestionComponent } from './search/insight-search-sugges
         InsightSearchComponent,
         InsightSearchDirective,
         InsightSearchSuggestionComponent,
-        ObjectFilterNullPipe
+        ObjectFilterNullPipe,
+        ResizeHelperDirective
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

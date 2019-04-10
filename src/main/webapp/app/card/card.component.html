@@ -33,8 +33,10 @@
     </div>
 
     <div class="card-side col-4">
-        <div class="row h-50"></div>
-        <div class="row h-50"></div>
+        <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;" id="card-network-container">
+            <ins-card-network *ngIf="entity" [externalId]="entity['externalId']"></ins-card-network>
+        </div>
+        <div class="row h-50" style="max-height: 50%;"></div>
     </div>
 
 </div>
