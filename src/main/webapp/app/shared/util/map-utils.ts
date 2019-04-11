@@ -2,6 +2,23 @@
  * Created by gFolgoas on 22/01/2019.
  */
 import { IRawData } from '../model/raw-data.model';
+import Style from 'ol/style/style';
+import Feature from 'ol/feature';
+import Fill from 'ol/style/fill';
+import Text from 'ol/style/text';
+import Stroke from 'ol/style/stroke';
+import Circle from 'ol/style/circle';
+import Icon from 'ol/style/icon';
+import Extent from 'ol/extent';
+import {
+    IMAGE_URL_BIO,
+    IMAGE_URL_DEFAULT,
+    IMAGE_URL_EQUIP,
+    IMAGE_URL_GEOMARKER,
+    IMAGE_URL_RAW,
+    IMAGE_URL_SELECTED_GEOMARKER,
+    IMAGE_URL_SELECTED_RAW
+} from '../../network/network.service';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -109,3 +126,243 @@ export class ZoomToFeatureRequest {
         this.featureId = featureId;
     }
 }
+
+/**
+ * Fonction de style principale, maxFeatureCount est utile au calcul de la color des clusters
+ * */
+export const insStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
+    let style: Style[] = [];
+    const isCluster: boolean = feature.get('features').length > 1;
+    if (isCluster) {
+        style = insClusterStyleFunction(feature, maxFeatureCount);
+    } else {
+        const originalFeature = feature.get('features')[0];
+        style.push(insBaseStyleFunction(originalFeature));
+    }
+    return style;
+};
+
+/**
+ * Fonction de style des clusters
+ * */
+export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
+    const clusterSize = feature.get('features').length;
+    const style = new Style({
+        image: new Circle({
+            radius: feature.get('radius'),
+            fill: new Fill({
+                color: [255, 153, 0, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
+            })
+        }),
+        text: new Text({
+            text: clusterSize.toString(),
+            fill: new Fill({
+                color: '#fff'
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 0, 0, 0.6)',
+                width: 3
+            })
+        })
+    });
+    return [style];
+};
+
+/**
+ * Set le radius des features en entrée et renvoie la valeur maximale des clusters
+ * */
+export const setClusterRadius = (features: Feature[], resolution: number): number => {
+    let maxFeatureCount = 0;
+    for (let i = features.length - 1; i >= 0; --i) {
+        const feature = features[i];
+        let radius;
+        const originalFeatures = feature.get('features');
+        const extent = Extent.createEmpty();
+
+        // Void évalue une expression et renvoie undefined
+        let j = void 0;
+        let jj = void 0;
+        for (j = 0, jj = originalFeatures.length; j < jj; ++j) {
+            Extent.extend(extent, originalFeatures[j].getGeometry().getExtent());
+        }
+        maxFeatureCount = Math.max(maxFeatureCount, jj);
+        radius = (0.65 * (Extent.getWidth(extent) + Extent.getHeight(extent))) / resolution;
+        feature.set('radius', radius);
+    }
+    return maxFeatureCount;
+};
+
+/**
+ * Fonction de style de base selon la geometry de la feature
+ * */
+export const insBaseStyleFunction = (feature: Feature): Style => {
+    const geometryType = feature.getGeometry().getType();
+
+    switch (geometryType) {
+        case 'Point':
+            const objectType = feature.get('objectType');
+            const src: string = getImageIconUrl(objectType);
+            return new Style({
+                image:
+                    src === null
+                        ? new Circle({
+                              radius: 14,
+                              fill: new Fill({
+                                  color: 'rgba(230, 240, 255, 1)'
+                              }),
+                              stroke: new Stroke({ color: '#ffc600', width: 3 })
+                          })
+                        : new Icon({
+                              anchor: [0.5, 0.5],
+                              scale: 0.05,
+                              src: `${src}`
+                          }),
+                text: new Text({
+                    font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+                    placement: 'point',
+                    textBaseline: 'top',
+                    offsetY: 10,
+                    fill: new Fill({
+                        color: 'black'
+                    })
+                })
+            });
+            break;
+        case 'LineString':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'green',
+                    width: 1
+                })
+            });
+            break;
+        case 'MultiLineString':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'green',
+                    width: 1
+                })
+            });
+            break;
+        case 'MultiPoint':
+            return new Style({
+                image: new Circle({
+                    radius: 14,
+                    fill: new Fill({
+                        color: 'rgba(230, 240, 255, 1)'
+                    }),
+                    stroke: new Stroke({ color: '#ffc600', width: 3 })
+                })
+            });
+            break;
+        case 'MultiPolygon':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'yellow',
+                    width: 1
+                }),
+                fill: new Fill({
+                    color: 'rgba(255, 255, 0, 0.1)'
+                })
+            });
+            break;
+        case 'Polygon':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'blue',
+                    lineDash: [4],
+                    width: 3
+                }),
+                fill: new Fill({
+                    color: 'rgba(0, 0, 255, 0.1)'
+                })
+            });
+            break;
+        case 'GeometryCollection':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'magenta',
+                    width: 2
+                }),
+                fill: new Fill({
+                    color: 'magenta'
+                }),
+                image: new Circle({
+                    radius: 10,
+                    fill: null,
+                    stroke: new Stroke({
+                        color: 'magenta'
+                    })
+                })
+            });
+            break;
+        default:
+            return new Style({
+                stroke: new Stroke({
+                    color: 'red',
+                    width: 2
+                }),
+                fill: new Fill({
+                    color: 'rgba(255,0,0,0.2)'
+                })
+            });
+            break;
+    }
+};
+
+/**
+ * Fonction de style des clusters
+ * */
+export const expandClusterStyleFunction = (feature: Feature): Style[] => {
+    const styles: Style[] = [];
+    styles.push(
+        new Style({
+            image: new Circle({
+                radius: feature.get('radius'),
+                fill: new Fill({
+                    color: 'rgba(255, 255, 255, 0.01)'
+                })
+            })
+        })
+    );
+
+    const originalFeatures = feature.get('features');
+    for (let i = originalFeatures.length - 1; i >= 0; --i) {
+        const originalFeature = originalFeatures[i];
+        styles.push(insBaseStyleFunction(originalFeature));
+    }
+
+    return styles;
+};
+
+export const getImageIconUrl = (objectType: string): string => {
+    switch (objectType) {
+        case 'RawData':
+            return IMAGE_URL_RAW;
+        case 'Equipment':
+            return IMAGE_URL_EQUIP;
+        case 'Location':
+            return IMAGE_URL_RAW;
+        case 'Biographics':
+            return IMAGE_URL_BIO;
+        case 'Organisation':
+            return IMAGE_URL_DEFAULT;
+        case 'Event':
+            return IMAGE_URL_DEFAULT;
+        case 'geoMarker':
+            return IMAGE_URL_GEOMARKER;
+        default:
+            return null;
+    }
+};
+
+export const getSelectedImageIconUrl = (objectType: string): string => {
+    switch (objectType) {
+        case 'geoMarker':
+            return IMAGE_URL_SELECTED_GEOMARKER;
+        case 'RawData':
+            return IMAGE_URL_SELECTED_RAW;
+        default:
+            return getImageIconUrl(objectType);
+    }
+};

@@ -10,14 +10,11 @@ import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
 import control from 'ol/control';
 import Feature from 'ol/feature';
-
-import Circle from 'ol/style/circle';
-import Stroke from 'ol/style/stroke';
-import Style from 'ol/style/style';
-import Fill from 'ol/style/fill';
-import Text from 'ol/style/text';
+import SelectInteration from 'ol/interaction/select';
+import Cluster from 'ol/source/cluster';
 import { GenericModel } from '../../shared/model/generic.model';
 import { MapService } from '../../map/map.service';
+import { expandClusterStyleFunction, insStyleFunction, setClusterRadius } from '../../shared/util/map-utils';
 
 @Component({
     selector: 'ins-card-map',
@@ -29,13 +26,36 @@ export class CardMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
 
     _map: Map;
     featureSource: VectorSource = new VectorSource({ wrapX: false });
+    clusterSource: Cluster;
     featureLayer: VectorLayer;
 
+    currentResolution: number;
+    maxClusterCount: number;
+
+    selectInteraction: SelectInteration;
+
     constructor() {
-        this.featureLayer = new VectorLayer({
+        this.clusterSource = new Cluster({
+            distance: 40,
             source: this.featureSource,
-            style: (feature: Feature) => this.getStyle(feature.getGeometry().getType()),
+            wrapX: false
+        });
+        this.featureLayer = new VectorLayer({
+            source: this.clusterSource,
+            style: (feature: Feature, resolution: number) => {
+                if (resolution !== this.currentResolution) {
+                    this.maxClusterCount = setClusterRadius(this.clusterSource.getFeatures(), resolution);
+                    this.currentResolution = resolution;
+                }
+                return insStyleFunction(feature, resolution, this.maxClusterCount || 1);
+            },
             zIndex: 1
+        });
+        this.selectInteraction = new SelectInteration({
+            condition: evt => {
+                return evt.type === 'pointermove' || evt.type === 'singleclick';
+            },
+            style: (feature: Feature) => expandClusterStyleFunction(feature)
         });
     }
 
@@ -85,45 +105,10 @@ export class CardMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
                 source: new OSM({ wrapX: false })
             })
         );
+        this._map.addInteraction(this.selectInteraction);
     }
 
     clearFeatureSource() {
         this.featureSource.clear();
-    }
-
-    getStyle(geometryType: string): Style {
-        switch (geometryType) {
-            case 'Point':
-                return new Style({
-                    image: new Circle({
-                        radius: 14,
-                        fill: new Fill({
-                            color: 'rgba(230, 240, 255, 1)'
-                        }),
-                        stroke: new Stroke({ color: '#ffc600', width: 3 })
-                    }),
-                    text: new Text({
-                        font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
-                        placement: 'point',
-                        textBaseline: 'top',
-                        offsetY: 10,
-                        fill: new Fill({
-                            color: 'black'
-                        })
-                    })
-                });
-                break;
-            default:
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'red',
-                        width: 2
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(255,0,0,0.2)'
-                    })
-                });
-                break;
-        }
     }
 }

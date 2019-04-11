@@ -235,7 +235,8 @@ export const IMAGE_URL_BIO = '../../../content/images/biographics.png';
 export const IMAGE_URL_EVENT = '../../../content/images/event.png';
 export const IMAGE_URL_EQUIP = '../../../content/images/equipement.png';
 export const IMAGE_URL_DEFAULT = '../../../content/images/default.png';
-export const IMAGE_URL_RAW = '../../../content/images/rawdata.svg';
+// export const IMAGE_URL_RAW = '../../../content/images/rawdata.svg';
+export const IMAGE_URL_RAW = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_RAW = '../../../content/images/rawdata_selected.svg';
 export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
@@ -246,11 +247,11 @@ export const MOCK_GRAPH_DATA = {
         { id: 3, mongoId: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
         { id: 4, mongoId: '5c90fa1b5e365c06ac7e187c', label: 'Brian', title: 'Personne', type: 'Biographics' },
         { id: 5, mongoId: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
-        { id: 6, mongoId: '6a', label: 'Attentat', title: 'Evenement', type: 'Event' },
+        { id: 6, mongoId: '5caf3cc4b0b4d23fc041e953', label: 'Attentat', title: 'Evenement', type: 'Event' },
         { id: 7, mongoId: '5c911d434a45de0e0ca2556b', label: 'Raoul', title: 'Personne', type: 'Biographics' },
-        { id: 8, mongoId: '8a', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
-        { id: 9, mongoId: '9a', label: 'Rencontre', title: 'Evenement', type: 'Event' },
-        { id: 10, mongoId: '10a', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
+        { id: 8, mongoId: '5cab0fef4f5f0c0688f6c4a8', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
+        { id: 9, mongoId: '5caf3ca6b0b4d23fc041e952', label: 'Rencontre', title: 'Evenement', type: 'Event' },
+        { id: 10, mongoId: '5caf3c86b0b4d23fc041e951', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
     ],
     edges: [
         { from: 1, to: 3 },

@@ -82,9 +82,11 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
             width: '100%',
             layout: this.getLayoutOption(),
             physics: {
-                enabled: true
+                enabled: true,
+                stabilization: false
             },
             interaction: {
+                dragNodes: false,
                 selectable: false,
                 hideEdgesOnDrag: true,
                 hover: true,
