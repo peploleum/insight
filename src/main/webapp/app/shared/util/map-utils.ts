@@ -10,6 +10,9 @@ import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
 import Icon from 'ol/style/icon';
 import Extent from 'ol/extent';
+import GeometryCollection from 'ol/geom/geometrycollection';
+import LineString from 'ol/geom/linestring';
+import Point from 'ol/geom/point';
 import {
     IMAGE_URL_BIO,
     IMAGE_URL_DEFAULT,
@@ -137,7 +140,7 @@ export const insStyleFunction = (feature: Feature, resolution: number, maxFeatur
         style = insClusterStyleFunction(feature, maxFeatureCount);
     } else {
         const originalFeature = feature.get('features')[0];
-        style.push(insBaseStyleFunction(originalFeature));
+        style.push(insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
     }
     return style;
 };
@@ -195,12 +198,10 @@ export const setClusterRadius = (features: Feature[], resolution: number): numbe
 /**
  * Fonction de style de base selon la geometry de la feature
  * */
-export const insBaseStyleFunction = (feature: Feature): Style => {
-    const geometryType = feature.getGeometry().getType();
-
+export const insBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
     switch (geometryType) {
         case 'Point':
-            const objectType = feature.get('objectType');
+            const objectType = feature ? feature.get('objectType') : '';
             const src: string = getImageIconUrl(objectType);
             return new Style({
                 image:
@@ -313,7 +314,7 @@ export const insBaseStyleFunction = (feature: Feature): Style => {
 /**
  * Fonction de style des clusters
  * */
-export const expandClusterStyleFunction = (feature: Feature): Style[] => {
+export const expandClusterStyleFunction = (feature: Feature, resolution: number): Style[] => {
     const styles: Style[] = [];
     styles.push(
         new Style({
@@ -326,13 +327,43 @@ export const expandClusterStyleFunction = (feature: Feature): Style[] => {
         })
     );
 
+    const originalClusterCoord: [number, number] = (<Point>feature.getGeometry()).getCoordinates();
     const originalFeatures = feature.get('features');
+    const vectors = expandedClusterTranslationVectors(originalFeatures.length, 40);
     for (let i = originalFeatures.length - 1; i >= 0; --i) {
-        const originalFeature = originalFeatures[i];
-        styles.push(insBaseStyleFunction(originalFeature));
+        const originalFeature: Feature = originalFeatures[i];
+        const newCoord: [number, number] = [
+            originalClusterCoord[0] + vectors[i].x * resolution,
+            originalClusterCoord[1] + vectors[i].y * resolution
+        ];
+
+        const style = insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature);
+        style.setGeometry(new Point(newCoord));
+        styles.push(style);
+
+        const lineStyle = insBaseStyleFunction('LineString');
+        lineStyle.setGeometry(new LineString([originalClusterCoord, newCoord]));
+        styles.push(lineStyle);
     }
 
     return styles;
+};
+
+/**
+ * Donne la répartition d'éléments sur un cercle centré sur 0
+ * */
+export const expandedClusterTranslationVectors = (numberFeatures: number, radius: number): { i: number; x: number; y: number }[] => {
+    const coords = [];
+    const width = radius * 2;
+    let angle, xn, yn, j;
+    for (j = 0; j < numberFeatures; j++) {
+        angle = (j / (numberFeatures / 2)) * Math.PI; // Calculate the angle at which the element will be placed.
+        // For a semicircle, we would use (i / numberFeatures) * Math.PI.
+        xn = radius * Math.cos(angle) + width / 2; // Calculate the x position of the element.
+        yn = radius * Math.sin(angle) + width / 2; // Calculate the y position of the element.
+        coords.push({ i: j, x: xn - radius, y: yn - radius }); // - radius to translate the element to a 0 centered graph
+    }
+    return coords;
 };
 
 export const getImageIconUrl = (objectType: string): string => {

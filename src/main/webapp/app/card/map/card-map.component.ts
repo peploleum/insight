@@ -55,7 +55,7 @@ export class CardMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
             condition: evt => {
                 return evt.type === 'pointermove' || evt.type === 'singleclick';
             },
-            style: (feature: Feature) => expandClusterStyleFunction(feature)
+            style: (feature: Feature, resolution: number) => expandClusterStyleFunction(feature, resolution)
         });
     }
 
