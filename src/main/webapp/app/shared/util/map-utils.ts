@@ -146,6 +146,21 @@ export const insStyleFunction = (feature: Feature, resolution: number, maxFeatur
 };
 
 /**
+ * Fonction de style de sélection, maxFeatureCount est utile au calcul de la color des clusters
+ * */
+export const insSelectedStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
+    let style: Style[] = [];
+    const isCluster: boolean = feature.get('features').length > 1;
+    if (isCluster) {
+        style = expandClusterStyleFunction(feature, resolution);
+    } else {
+        const originalFeature = feature.get('features')[0];
+        style.push(insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
+    }
+    return style;
+};
+
+/**
  * Fonction de style des clusters
  * */
 export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
@@ -212,6 +227,119 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
                                   color: 'rgba(230, 240, 255, 1)'
                               }),
                               stroke: new Stroke({ color: '#ffc600', width: 3 })
+                          })
+                        : new Icon({
+                              anchor: [0.5, 0.5],
+                              scale: 0.05,
+                              src: `${src}`
+                          }),
+                text: new Text({
+                    font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+                    placement: 'point',
+                    textBaseline: 'top',
+                    offsetY: 10,
+                    fill: new Fill({
+                        color: 'black'
+                    })
+                })
+            });
+            break;
+        case 'LineString':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'green',
+                    width: 1
+                })
+            });
+            break;
+        case 'MultiLineString':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'green',
+                    width: 1
+                })
+            });
+            break;
+        case 'MultiPoint':
+            return new Style({
+                image: new Circle({
+                    radius: 14,
+                    fill: new Fill({
+                        color: 'rgba(230, 240, 255, 1)'
+                    }),
+                    stroke: new Stroke({ color: '#ffc600', width: 3 })
+                })
+            });
+            break;
+        case 'MultiPolygon':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'yellow',
+                    width: 1
+                }),
+                fill: new Fill({
+                    color: 'rgba(255, 255, 0, 0.1)'
+                })
+            });
+            break;
+        case 'Polygon':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'blue',
+                    lineDash: [4],
+                    width: 3
+                }),
+                fill: new Fill({
+                    color: 'rgba(0, 0, 255, 0.1)'
+                })
+            });
+            break;
+        case 'GeometryCollection':
+            return new Style({
+                stroke: new Stroke({
+                    color: 'magenta',
+                    width: 2
+                }),
+                fill: new Fill({
+                    color: 'magenta'
+                }),
+                image: new Circle({
+                    radius: 10,
+                    fill: null,
+                    stroke: new Stroke({
+                        color: 'magenta'
+                    })
+                })
+            });
+            break;
+        default:
+            return new Style({
+                stroke: new Stroke({
+                    color: 'red',
+                    width: 2
+                }),
+                fill: new Fill({
+                    color: 'rgba(255,0,0,0.2)'
+                })
+            });
+            break;
+    }
+};
+
+export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
+    switch (geometryType) {
+        case 'Point':
+            const objectType = feature ? feature.get('objectType') : '';
+            const src: string = getSelectedImageIconUrl(objectType);
+            return new Style({
+                image:
+                    src === null
+                        ? new Circle({
+                              radius: 14,
+                              fill: new Fill({
+                                  color: 'rgba(230, 240, 255, 1)'
+                              }),
+                              stroke: new Stroke({ color: '#cb412a', width: 4 })
                           })
                         : new Icon({
                               anchor: [0.5, 0.5],

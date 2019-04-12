@@ -23,7 +23,16 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
-import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
+import {
+    FigureStyle,
+    getImageIconUrl,
+    getSelectedImageIconUrl,
+    insBaseStyleFunction,
+    insSelectedBaseStyleFunction,
+    MapLayer,
+    MapState,
+    ZoomToFeatureRequest
+} from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
@@ -491,41 +500,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     mainStyleFunction(feature: Feature, isSelected: boolean) {
-        const mainStyle: Style = this.getStyle(feature.getGeometry().getType());
-        if (isSelected) {
-            mainStyle.setImage(this.selectedCircleImage);
-        }
-        // if (feature.getGeometry().getType() === 'Point') {
-        //     const iconStyle: Style = this.getIconStyle(feature);
-        //     if (iconStyle !== null) {
-        //         const zoom = this._map.getView().getZoom();
-        //         if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
-        //             mainStyle.getText().setText(feature.get('label'));
-        //         } else {
-        //             mainStyle.getText().setText('');
-        //         }
-        //         return [mainStyle, iconStyle];
-        //     }
-        // }
+        const mainStyle: Style = isSelected
+            ? insSelectedBaseStyleFunction(feature.getGeometry().getType(), feature)
+            : insBaseStyleFunction(feature.getGeometry().getType(), feature);
+
         if (feature.getGeometry().getType() === 'Point') {
-            const iconStyle: Style = this.getIconStyle(feature, isSelected);
-            if (iconStyle !== null) {
-                const zoom = this._map.getView().getZoom();
-                if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
-                    iconStyle.setText(
-                        new Text({
-                            font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
-                            placement: 'point',
-                            textBaseline: 'top',
-                            offsetY: 10,
-                            fill: new Fill({
-                                color: 'black'
-                            }),
-                            text: feature.get('label')
-                        })
-                    );
-                }
-                return [iconStyle];
+            const zoom = this._map.getView().getZoom();
+            if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
+                mainStyle.setText(
+                    new Text({
+                        font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
+                        placement: 'point',
+                        textBaseline: 'top',
+                        offsetY: 10,
+                        fill: new Fill({
+                            color: 'black'
+                        }),
+                        text: feature.get('label')
+                    })
+                );
             }
         }
         return [mainStyle];
@@ -551,12 +544,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 return [iconStyle];
             }
         }
-        return this.getStyle(feature.getGeometry().getType());
+        return insBaseStyleFunction(feature.getGeometry().getType());
     }
 
     getIconStyle(feature: Feature, selected?: boolean, scale?: number): Style {
         const objectType = feature.get('objectType');
-        const src: string = selected ? MapService.getSelectedImageIconUrl(objectType) : MapService.getImageIconUrl(objectType);
+        const src: string = selected ? getSelectedImageIconUrl(objectType) : getImageIconUrl(objectType);
         return src === null
             ? null
             : new Style({
@@ -566,98 +559,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                       src: `${src}`
                   })
               });
-    }
-
-    getStyle(geometryType: string): Style {
-        switch (geometryType) {
-            case 'Point':
-                return new Style({
-                    image: this.circleImage,
-                    text: new Text({
-                        font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
-                        placement: 'point',
-                        textBaseline: 'top',
-                        offsetY: 10,
-                        fill: new Fill({
-                            color: 'black'
-                        })
-                    })
-                });
-                break;
-            case 'LineString':
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'green',
-                        width: 1
-                    })
-                });
-                break;
-            case 'MultiLineString':
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'green',
-                        width: 1
-                    })
-                });
-                break;
-            case 'MultiPoint':
-                return new Style({
-                    image: this.circleImage
-                });
-                break;
-            case 'MultiPolygon':
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'yellow',
-                        width: 1
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(255, 255, 0, 0.1)'
-                    })
-                });
-                break;
-            case 'Polygon':
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'blue',
-                        lineDash: [4],
-                        width: 3
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(0, 0, 255, 0.1)'
-                    })
-                });
-                break;
-            case 'GeometryCollection':
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'magenta',
-                        width: 2
-                    }),
-                    fill: new Fill({
-                        color: 'magenta'
-                    }),
-                    image: new Circle({
-                        radius: 10,
-                        fill: null,
-                        stroke: new Stroke({
-                            color: 'magenta'
-                        })
-                    })
-                });
-                break;
-            default:
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'red',
-                        width: 2
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(255,0,0,0.2)'
-                    })
-                });
-                break;
-        }
     }
 
     onActionReceived(action: string) {

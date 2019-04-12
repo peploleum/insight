@@ -11,15 +11,6 @@ import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
-import {
-    IMAGE_URL_BIO,
-    IMAGE_URL_DEFAULT,
-    IMAGE_URL_EQUIP,
-    IMAGE_URL_GEOMARKER,
-    IMAGE_URL_RAW,
-    IMAGE_URL_SELECTED_GEOMARKER,
-    IMAGE_URL_SELECTED_RAW
-} from '../network/network.service';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
@@ -42,38 +33,6 @@ export class MapService {
     mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
     zoomToLayer: Subject<string> = new Subject();
     zoomToFeature: Subject<ZoomToFeatureRequest> = new Subject();
-
-    static getImageIconUrl(objectType: string): string {
-        switch (objectType) {
-            case 'RawData':
-                return IMAGE_URL_RAW;
-            case 'Equipment':
-                return IMAGE_URL_EQUIP;
-            case 'Location':
-                return IMAGE_URL_RAW;
-            case 'Biographics':
-                return IMAGE_URL_BIO;
-            case 'Organisation':
-                return IMAGE_URL_DEFAULT;
-            case 'Event':
-                return IMAGE_URL_DEFAULT;
-            case 'geoMarker':
-                return IMAGE_URL_GEOMARKER;
-            default:
-                return null;
-        }
-    }
-
-    static getSelectedImageIconUrl(objectType: string): string {
-        switch (objectType) {
-            case 'geoMarker':
-                return IMAGE_URL_SELECTED_GEOMARKER;
-            case 'RawData':
-                return IMAGE_URL_SELECTED_RAW;
-            default:
-                return MapService.getImageIconUrl(objectType);
-        }
-    }
 
     static getMapDataFromRaw(raw: IRawData): IMapDataDTO {
         let coord: number[] = null;
