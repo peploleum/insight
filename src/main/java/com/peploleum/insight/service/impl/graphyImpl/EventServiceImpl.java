@@ -53,6 +53,7 @@ public class EventServiceImpl implements EventService {
         log.debug("Request to save Event : {}", eventDTO);
 
         Event event = eventMapper.toEntity(eventDTO);
+        event.setEntityType(InsightEntityType.Event);
         event = eventRepository.save(event);
         eventSearchRepository.save(event);
         if (event.getExternalId() == null || event.getExternalId().isEmpty()) {

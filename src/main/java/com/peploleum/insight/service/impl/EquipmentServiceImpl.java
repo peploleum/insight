@@ -50,6 +50,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public EquipmentDTO save(EquipmentDTO equipmentDTO) {
         log.debug("Request to save Equipment : {}", equipmentDTO);
         Equipment equipment = equipmentMapper.toEntity(equipmentDTO);
+        equipment.setEntityType(InsightEntityType.Equipment);
         equipment = equipmentRepository.save(equipment);
         equipmentSearchRepository.save(equipment);
         return equipmentMapper.toDto(equipment);

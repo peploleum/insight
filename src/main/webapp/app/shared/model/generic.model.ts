@@ -7,7 +7,11 @@ import { IEvent } from './event.model';
 import { ILocation } from './location.model';
 import { IOrganisation } from './organisation.model';
 import { IRawData } from './raw-data.model';
-export class GenericModel implements IBiographics, IEquipment, IEvent, ILocation, IOrganisation, IRawData {
+export interface IGenericModel {
+    entityType?: string;
+}
+
+export class GenericModel implements IBiographics, IEquipment, IEvent, ILocation, IOrganisation, IRawData, IGenericModel {
     constructor() {}
 }
 

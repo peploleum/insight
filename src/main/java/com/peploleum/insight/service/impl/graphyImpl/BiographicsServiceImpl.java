@@ -53,6 +53,7 @@ public class BiographicsServiceImpl implements BiographicsService {
         log.debug("Request to save Biographics : {}", biographicsDTO);
 
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
+        biographics.setEntityType(InsightEntityType.Biographics);
         biographics = biographicsRepository.save(biographics);
         biographicsSearchRepository.save(biographics);
         if (biographics.getExternalId() == null || biographics.getExternalId().isEmpty()) {

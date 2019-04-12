@@ -51,6 +51,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     public OrganisationDTO save(OrganisationDTO organisationDTO) {
         log.debug("Request to save Organisation : {}", organisationDTO);
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
+        organisation.setEntityType(InsightEntityType.Organisation);
         organisation = organisationRepository.save(organisation);
         organisationSearchRepository.save(organisation);
         return organisationMapper.toDto(organisation);

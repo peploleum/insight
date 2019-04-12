@@ -43,7 +43,7 @@
                 </dd>
                 <dt><span jhiTranslate="insightApp.rawData.rawDataSymbol">Raw Data Symbol</span></dt>
                 <dd>
-                    <span>{{rawData.rawDataSymbol}}</span>
+                    <span>{{rawData.rawDataSymbol | stringTruncate : 30}}</span>
                 </dd>
                 <dt><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span></dt>
                 <dd>

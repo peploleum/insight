@@ -5,7 +5,7 @@ import { NgbDateMomentAdapter } from './util/datepicker-adapter';
 import { HasAnyAuthorityDirective, InsightSharedCommonModule, InsightSharedLibsModule, JhiLoginModalComponent } from './';
 import { PaginationDirective } from './util/pagination.directive';
 import { StringTruncatePipe } from './util/string-truncate.pipe';
-import { ListFilterByStringPipe, ListFilterPipe, ObjectFilterNullPipe } from './util/list-filter.pipe';
+import { ListFilterByStringPipe, ListFilterPipe, ObjectFilterNullPipe } from './util/insight-filter.pipe';
 import { TextExpanderDirective } from './util/text-expander.directive';
 import { RawdataHyperlinkComponent } from './hyperlink/rawdata-hyperlink.component';
 import { HyperlinkDirective } from './hyperlink/hyperlink.directive';

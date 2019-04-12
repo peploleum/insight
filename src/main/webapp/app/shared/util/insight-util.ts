@@ -2,9 +2,12 @@
  * Created by gFolgoas on 16/01/2019.
  */
 /* tslint:disable:no-bitwise */
-import { IRawData } from '../model/raw-data.model';
+import { IRawData, RawData } from '../model/raw-data.model';
 import { HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
+import { Biographics } from '../model/biographics.model';
+import { Equipment } from '../model/equipment.model';
+import { Organisation } from '../model/organisation.model';
 export const UUID = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0,

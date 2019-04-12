@@ -53,6 +53,7 @@ public class OrganisationServiceImpl implements OrganisationService {
         log.debug("Request to save Organisation : {}", organisationDTO);
 
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
+        organisation.setEntityType(InsightEntityType.Organisation);
         organisation = organisationRepository.save(organisation);
         organisationSearchRepository.save(organisation);
         if (organisation.getExternalId() == null || organisation.getExternalId().isEmpty()) {

@@ -12,6 +12,7 @@ export class CardComponent implements OnInit {
     entity: GenericModel;
     entityExternalId: string;
     entityAndNeighbors: GenericModel[];
+    currentTab = 'info';
 
     constructor(private _qv: QuickViewService) {}
 

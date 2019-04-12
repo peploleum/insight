@@ -63,6 +63,7 @@ public class RawDataServiceImpl implements RawDataService {
         log.debug("Request to save RawData : {}", rawDataDTO);
 
         RawData rawData = rawDataMapper.toEntity(rawDataDTO);
+        rawData.setEntityType(InsightEntityType.RawData);
         rawData = rawDataRepository.save(rawData);
         rawDataSearchRepository.save(rawData);
         if (rawData.getExternalId() == null || rawData.getExternalId().isEmpty()) {

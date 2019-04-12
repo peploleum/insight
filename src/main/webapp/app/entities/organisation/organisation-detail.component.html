@@ -32,7 +32,7 @@
                 </dd>
                 <dt><span jhiTranslate="insightApp.organisation.organisationSymbol">Organisation Symbol</span></dt>
                 <dd>
-                    <span>{{organisation.organisationSymbol}}</span>
+                    <span>{{organisation.organisationSymbol | stringTruncate : 30}}</span>
                 </dd>
                 <dt><span jhiTranslate="insightApp.organisation.externalId">External Id</span></dt>
                 <dd>

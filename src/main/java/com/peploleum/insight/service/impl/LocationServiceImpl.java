@@ -50,6 +50,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationDTO save(LocationDTO locationDTO) {
         log.debug("Request to save Location : {}", locationDTO);
         Location location = locationMapper.toEntity(locationDTO);
+        location.setEntityType(InsightEntityType.Location);
         location = locationRepository.save(location);
         locationSearchRepository.save(location);
         return locationMapper.toDto(location);

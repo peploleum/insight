@@ -53,6 +53,7 @@ public class LocationServiceImpl implements LocationService {
         log.debug("Request to save Location : {}", locationDTO);
 
         Location location = locationMapper.toEntity(locationDTO);
+        location.setEntityType(InsightEntityType.Location);
         location = locationRepository.save(location);
         locationSearchRepository.save(location);
         if (location.getExternalId() == null || location.getExternalId().isEmpty()) {

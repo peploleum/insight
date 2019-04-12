@@ -21,10 +21,35 @@
                 </div>
             </div>
 
-            <div class="ins-card-content">
-                <div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">
-                    <small class="text-muted">{{key}}</small>
-                    <p>{{entity[key] | stringTruncate:100}}</p>
+            <div class="ins-card-content" [ngSwitch]="currentTab">
+                <div class="ins-card-nav">
+                    <span (click)="currentTab = 'info'" [ngClass]="{'nav-selected selected' : currentTab === 'info'}"><fa-icon
+                        [icon]="'info'"></fa-icon></span>
+                    <span (click)="currentTab = 'bio-img'"
+                          [ngClass]="{'nav-selected selected' : currentTab === 'bio-img'}"><fa-icon
+                        [icon]="'camera'"></fa-icon></span>
+                    <span (click)="currentTab = 'media-img'"
+                          [ngClass]="{'nav-selected selected' : currentTab === 'media-img'}"><fa-icon
+                        [icon]="'image'"></fa-icon></span>
+                </div>
+                <div class="ins-card-info" *ngSwitchCase="'info'">
+                    <div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">
+                        <small class="text-muted">{{key}}</small>
+                        <p>{{entity[key] | stringTruncate:100}}</p>
+                    </div>
+                </div>
+                <div class="ins-card-images" *ngSwitchCase="'bio-img'">
+                    <div *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData');"
+                         class="ins-card-image-item">
+                        <img [src]="getBase64(item['rawDataData'])"/>
+                    </div>
+                </div>
+                <div class="ins-card-images" *ngSwitchCase="'media-img'">
+                    <div
+                        *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData'|listFilterPipe:'rawDataSubType':'media-img');"
+                        class="ins-card-image-item">
+                        <img [src]="getBase64(item['rawDataData'])"/>
+                    </div>
                 </div>
             </div>
 
@@ -35,7 +60,8 @@
     <div class="card-side col-4">
         <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
              id="card-network-container">
-            <ins-card-network *ngIf="entity" [externalId]="entityExternalId" (nodeMongoIds)="setEntities($event)"></ins-card-network>
+            <ins-card-network *ngIf="entity" [externalId]="entityExternalId"
+                              (nodeMongoIds)="setEntities($event)"></ins-card-network>
         </div>
         <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
              id="card-map-container">

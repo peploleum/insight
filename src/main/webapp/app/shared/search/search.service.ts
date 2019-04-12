@@ -4,6 +4,7 @@ import { SERVER_API_URL } from '../../app.constants';
 import { Observable } from 'rxjs/index';
 import { createRequestOption } from '../util/request-util';
 import { filter, map } from 'rxjs/internal/operators';
+import { GenericModel } from '../model/generic.model';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +28,7 @@ export class SearchService {
             );
     }
 
-    search(entityType: string, search: string): Observable<string[]> {
+    search(entityType: string, search: string): Observable<GenericModel[]> {
         const options = createRequestOption({
             page: -1,
             size: 5,
@@ -41,8 +42,8 @@ export class SearchService {
                 observe: 'response'
             })
             .pipe(
-                filter((res: HttpResponse<string[]>) => res.ok),
-                map((res: HttpResponse<string[]>) => res.body)
+                filter((res: HttpResponse<GenericModel[]>) => res.ok),
+                map((res: HttpResponse<GenericModel[]>) => res.body)
             );
     }
 }

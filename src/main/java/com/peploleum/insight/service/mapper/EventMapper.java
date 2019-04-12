@@ -1,6 +1,7 @@
 package com.peploleum.insight.service.mapper;
 
 import com.peploleum.insight.domain.*;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.dto.EventDTO;
 
 import org.mapstruct.*;
@@ -12,7 +13,6 @@ import org.mapstruct.*;
 public interface EventMapper extends EntityMapper<EventDTO, Event> {
 
 
-
     default Event fromId(String id) {
         if (id == null) {
             return null;
@@ -21,4 +21,5 @@ public interface EventMapper extends EntityMapper<EventDTO, Event> {
         event.setId(id);
         return event;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.peploleum.insight.service.impl;
 
 import com.peploleum.insight.domain.Biographics;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.BiographicsRepository;
 import com.peploleum.insight.repository.search.BiographicsSearchRepository;
 import com.peploleum.insight.service.BiographicsService;
@@ -48,6 +49,7 @@ public class BiographicsServiceImpl implements BiographicsService {
     public BiographicsDTO save(BiographicsDTO biographicsDTO) {
         log.debug("Request to save Biographics : {}", biographicsDTO);
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
+        biographics.setEntityType(InsightEntityType.Biographics);
         biographics = biographicsRepository.save(biographics);
         biographicsSearchRepository.save(biographics);
         return biographicsMapper.toDto(biographics);

@@ -1,6 +1,7 @@
 package com.peploleum.insight.service.mapper;
 
 import com.peploleum.insight.domain.*;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.dto.LocationDTO;
 
 import org.mapstruct.*;
@@ -10,7 +11,6 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface LocationMapper extends EntityMapper<LocationDTO, Location> {
-
 
 
     default Location fromId(String id) {

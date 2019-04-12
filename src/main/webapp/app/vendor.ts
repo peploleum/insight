@@ -21,6 +21,7 @@ import {
     faBookReader,
     faBullseye,
     faCalendarAlt,
+    faCamera,
     faChartArea,
     faChartBar,
     faChartPie,
@@ -44,6 +45,7 @@ import {
     faHeart,
     faHome,
     faImage,
+    faInfo,
     faList,
     faMagic,
     faMapMarkedAlt,
@@ -171,5 +173,7 @@ library.add(faWindowMinimize);
 library.add(faDirections);
 library.add(faBookmark);
 library.add(faStreetView);
+library.add(faCamera);
+library.add(faInfo);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
