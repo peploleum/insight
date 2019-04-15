@@ -12,6 +12,7 @@ import { SideMediatorService } from '../side/side-mediator.service';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
 import { DEBUG_INFO_ENABLED } from '../app.constants';
+import { GenericModel } from '../shared/model/generic.model';
 
 @Component({
     selector: 'ins-network',
@@ -47,10 +48,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         this.initNetworkEventListener();
         this.activatedRoute.data.subscribe(({ originNode }) => {
             if (originNode) {
-                const theRawData: RawData = <RawData>originNode;
-                if (theRawData.externalId != null) {
+                const data: GenericModel = <GenericModel>originNode;
+                if (data['externalId'] != null) {
                     this._ns
-                        .getNodeProperties(theRawData.externalId)
+                        .getNodeProperties(data['externalId'])
                         .pipe(
                             filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
                             map((response: HttpResponse<IGraphyNodeDTO>) => {

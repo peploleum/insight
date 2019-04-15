@@ -39,6 +39,7 @@ import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
 import { IRawData } from '../shared/model/raw-data.model';
+import { GenericModel } from '../shared/model/generic.model';
 
 @Component({
     selector: 'jhi-map',
@@ -156,7 +157,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.rawDataSource.addFeatures(features);
         });
         this.newDataReceivedSubs = this.sms._onNewDataReceived.subscribe((data: any[]) => {
-            this.ms.getFeaturesFromRawData(<IRawData[]>data);
+            this.ms.getFeaturesFromGeneric(<GenericModel[]>data);
         });
         this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
             features.forEach(feat => {

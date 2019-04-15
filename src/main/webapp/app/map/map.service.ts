@@ -72,11 +72,11 @@ export class MapService {
     constructor(private http: HttpClient) {}
 
     /**
-     * Transforme les RawData et les envoie dans featureSource
+     * Transforme les GenericModel et les envoie dans featureSource
      * */
-    getFeaturesFromRawData(source: IRawData[]): void {
+    getFeaturesFromGeneric(source: GenericModel[]): void {
         if (source && source.length) {
-            this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromRaw(item)));
+            this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
         }
     }
 

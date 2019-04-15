@@ -32,11 +32,11 @@ export class OverlayPositionDirective implements AfterViewInit {
                     this._renderer.setStyle(this._el.nativeElement, 'top', `${rect.top + 20}px`);
                     break;
                 case 'TOP-RIGHT':
-                    this._renderer.setStyle(this._el.nativeElement, 'right', `${document.body.clientWidth - (rect.right + 20)}px`);
+                    this._renderer.setStyle(this._el.nativeElement, 'right', `${document.body.clientWidth - rect.right + 20}px`);
                     this._renderer.setStyle(this._el.nativeElement, 'top', `${rect.top + 20}px`);
                     break;
                 case 'BOTTOM-RIGHT':
-                    this._renderer.setStyle(this._el.nativeElement, 'right', `${document.body.clientWidth - (rect.right + 20)}px`);
+                    this._renderer.setStyle(this._el.nativeElement, 'right', `${document.body.clientWidth - rect.right + 20}px`);
                     this._renderer.setStyle(this._el.nativeElement, 'top', `${rect.top + rect.height - 20}px`);
                     break;
                 case 'BOTTOM-LEFT':

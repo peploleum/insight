@@ -516,6 +516,13 @@ Custom popover css
         border-right: none;
     }
 
+    > a:only-child,
+    > span:only-child {
+        border-radius: 1rem;
+        border-left: none;
+        border-right: none;
+    }
+
     > a:hover,
     > span:hover {
         background-color: $popover-button-background-color-hover;
@@ -994,44 +1001,4 @@ Modal window custom CSS
 
 .modal-hidden {
     height: auto !important;
-}
-
-/* ==========================================================================
-Toolbar overlay custom CSS
-========================================================================== */
-
-.toolbar-overlay {
-    @include popover();
-
-    > [overlay-toolbar-content] {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    > [overlay-toolbar-content] > * {
-        padding: 0.3rem 1.5rem;
-        flex: 1 1 auto;
-        cursor: pointer;
-        border-right: 1px solid rgba(65, 75, 88, 0.2);
-        border-left: 1px solid rgba(65, 75, 88, 0.2);
-    }
-
-    > [overlay-toolbar-content] > a:first-child,
-    > [overlay-toolbar-content] > span:first-child {
-        border-radius: 1rem 0 0 1rem;
-        border-left: none;
-    }
-
-    > [overlay-toolbar-content] > a:last-child,
-    > [overlay-toolbar-content] > span:last-child {
-        border-radius: 0 1rem 1rem 0;
-        border-right: none;
-    }
-
-    > [overlay-toolbar-content] > a:hover,
-    > [overlay-toolbar-content] > span:hover {
-        background-color: $popover-button-background-color-hover;
-        color: $a-color-hover;
-    }
 }

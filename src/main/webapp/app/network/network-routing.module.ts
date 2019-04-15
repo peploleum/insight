@@ -1,25 +1,36 @@
 import { Injectable, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterModule, RouterStateSnapshot, Routes } from '@angular/router';
 import { NetworkComponent } from 'app/network/network.component';
-import { NetworkService } from './network.service';
 import { Observable, of } from 'rxjs/index';
-import { RawData } from 'app/shared/model/raw-data.model';
+import { QuickViewService } from '../side/quick-view.service';
+import { filter, map } from 'rxjs/internal/operators';
+import { GenericModel } from '../shared/model/generic.model';
+
+/*@Injectable({ providedIn: 'root' })
+ export class NetworkResolve implements Resolve<RawData> {
+ constructor(private service: NetworkService) {}
+
+ resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RawData> {
+ const id = route.params['id'] ? route.params['id'] : null;
+ if (id) {
+ return this.service.getRawDataById(id);
+ } else {
+ return of(null);
+ }
+ }
+ }*/
 
 @Injectable({ providedIn: 'root' })
-export class NetworkResolve implements Resolve<RawData> {
-    constructor(private service: NetworkService) {}
+export class NetworkResolve implements Resolve<GenericModel> {
+    constructor(private _qvs: QuickViewService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RawData> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<GenericModel> {
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.getRawDataById(id);
-            // return this.service.getNodeProperties(id).pipe(
-            //     filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
-            //     map((response: HttpResponse<IGraphyNodeDTO>) => {
-            //         const rawData: IGraphyNodeDTO = response.body;
-            //         return NetworkService.getNodeDto(rawData.label, rawData.type, rawData.id);
-            //     })
-            // );
+            return this._qvs.find(id).pipe(
+                filter(res => res.ok),
+                map(res => res.body)
+            );
         } else {
             return of(null);
         }
