@@ -106,9 +106,4 @@ jhipster:
 application:
     kibana:
         uri: http://localhost:5601
-    graphy:
-        host: localhost
-        port: 8090
-        enabled: false
-        vertex-threshold: 3
 
