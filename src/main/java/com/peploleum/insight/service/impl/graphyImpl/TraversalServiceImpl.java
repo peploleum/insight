@@ -69,17 +69,19 @@ public class TraversalServiceImpl implements TraversalService {
             final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
             neighbor.setType(type);
             neighbor.setId(graphId);
+            neighbor.setIdMongo(idMongo);
 
-            final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(type));
+            // final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(type));
+            final String searchKey = "properties";
             if (searchKey != null) {
-                neighbor.setIdMongo(idMongo);
                 final String label = smartOpenProperties(resultObject, searchKey);
                 if (label != null) {
                     neighbor.setLabel(label);
-                    nodeList.add(neighbor);
-                    this.log.info("adding node: " + neighbor.toString());
                 }
             }
+
+            nodeList.add(neighbor);
+            this.log.info("adding node: " + neighbor.toString());
         });
         return nodeList;
     }
@@ -126,7 +128,8 @@ public class TraversalServiceImpl implements TraversalService {
         foundNode.setIdMongo(smartOpenProperties(resultObject, "idMongo"));
         foundNode.setType(smartOpenProperties(resultObject, "entityType").replace("\"", ""));
 
-        final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(foundNode.getType()));
+        // final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(foundNode.getType()));
+        final String searchKey = "properties";
         this.log.info("Searching key: " + searchKey);
         if (searchKey != null) {
             final String label = smartOpenProperties(resultObject, searchKey);

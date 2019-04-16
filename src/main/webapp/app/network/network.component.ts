@@ -60,7 +60,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                                     rawData.label,
                                     rawData.type,
                                     rawData.id,
-                                    rawData.mongoId,
+                                    rawData.idMongo,
                                     '',
                                     rawData.image
                                 );
@@ -300,7 +300,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
             const data = new GraphDataCollection([], []);
             data.nodes = graphyDatas.map((item: IGraphyNodeDTO) =>
-                NetworkService.getNodeDto(item.label, item.type, item.id, item.mongoId, '', item.image)
+                NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.image)
             );
             data.edges = graphyDatas
                 .map(item => NetworkService.getEdgeCollection(item.id, item.to))

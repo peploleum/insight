@@ -1,7 +1,7 @@
 import { DataSet, Edge, IdType, Node } from 'vis';
 export interface IGraphyNodeDTO {
     id?: string;
-    mongoId?: string;
+    idMongo?: string;
     label?: string;
     type?: string;
     title?: string;
@@ -11,7 +11,7 @@ export interface IGraphyNodeDTO {
 
 /**
  * @Param: id: string
- * @Param: mongoId: string
+ * @Param: idMongo: string
  * @Param: label: string, label principal du node
  * @Param: type: string, type d'objet
  * @Param: title: string, légende optionnelle du node (affichée au onHover par exemple)
@@ -20,7 +20,7 @@ export interface IGraphyNodeDTO {
 export class GraphyNodeDTO implements IGraphyNodeDTO {
     constructor(
         public id?: string,
-        mongoId?: string,
+        idMongo?: string,
         public label?: string,
         public type?: string,
         public title?: string,
@@ -31,7 +31,7 @@ export class GraphyNodeDTO implements IGraphyNodeDTO {
 
 /**
  * @Param: id: string, Id de l'objet cible
- * @Param: mongoId: string, MongoId de l'objet cible
+ * @Param: idMongo: string, MongoId de l'objet cible
  * @Param: label: string, label de la relation
  * */
 export interface IGraphyRelationDTO {

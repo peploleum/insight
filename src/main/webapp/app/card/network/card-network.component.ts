@@ -55,7 +55,7 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
                     filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
                     map((response: HttpResponse<IGraphyNodeDTO>) => {
                         const data: IGraphyNodeDTO = response.body;
-                        return NetworkService.getNodeDto(data.label, data.type, data.id, data.mongoId, '', data.image);
+                        return NetworkService.getNodeDto(data.label, data.type, data.id, data.idMongo, '', data.image);
                     })
                 )
                 .subscribe((nodeDTO: NodeDTO) => {
