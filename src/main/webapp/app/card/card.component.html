@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="ins-card-images" *ngSwitchCase="'bio-img'">
-                    <div *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData');"
+                    <div *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData'|listFilterPipe:'rawDataSubType':'bio-img');"
                          class="ins-card-image-item">
                         <img [src]="getBase64(item['rawDataData'])"/>
                     </div>

@@ -26,6 +26,7 @@ spring:
         - swagger
         - genius
         - graphy
+        # - reach
         # Uncomment to activate TLS for the dev profile
         #- tls
     devtools:

@@ -217,7 +217,7 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
     switch (geometryType) {
         case 'Point':
             const objectType = feature ? feature.get('objectType') : '';
-            const src: string = getImageIconUrl(objectType);
+            const src: string = getMapImageIconUrl(objectType);
             return new Style({
                 image:
                     src === null
@@ -494,7 +494,7 @@ export const expandedClusterTranslationVectors = (numberFeatures: number, radius
     return coords;
 };
 
-export const getImageIconUrl = (objectType: string): string => {
+export const getMapImageIconUrl = (objectType: string): string => {
     switch (objectType) {
         case 'RawData':
             return IMAGE_URL_RAW;
@@ -522,6 +522,6 @@ export const getSelectedImageIconUrl = (objectType: string): string => {
         case 'RawData':
             return IMAGE_URL_SELECTED_RAW;
         default:
-            return getImageIconUrl(objectType);
+            return getMapImageIconUrl(objectType);
     }
 };

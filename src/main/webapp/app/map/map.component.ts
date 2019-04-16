@@ -25,7 +25,7 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import {
     FigureStyle,
-    getImageIconUrl,
+    getMapImageIconUrl,
     getSelectedImageIconUrl,
     insBaseStyleFunction,
     insSelectedBaseStyleFunction,
@@ -564,7 +564,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getIconStyle(feature: Feature, selected?: boolean, scale?: number): Style {
         const objectType = feature.get('objectType');
-        const src: string = selected ? getSelectedImageIconUrl(objectType) : getImageIconUrl(objectType);
+        const src: string = selected ? getSelectedImageIconUrl(objectType) : getMapImageIconUrl(objectType);
         return src === null
             ? null
             : new Style({

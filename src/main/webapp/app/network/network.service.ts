@@ -97,7 +97,7 @@ export class NetworkService {
                 return IMAGE_URL_EQUIP;
                 break;
             case 'RawData':
-                return IMAGE_URL_RAW;
+                return IMAGE_URL_RAW_BIS;
                 break;
             default:
                 return IMAGE_URL_DEFAULT;
@@ -229,9 +229,9 @@ export const IMAGE_URL_BIO = '../../../content/images/biographics.png';
 export const IMAGE_URL_EVENT = '../../../content/images/event.png';
 export const IMAGE_URL_EQUIP = '../../../content/images/equipement.png';
 export const IMAGE_URL_DEFAULT = '../../../content/images/default.png';
-// export const IMAGE_URL_RAW = '../../../content/images/rawdata.svg';
+export const IMAGE_URL_RAW_BIS = '../../../content/images/rawdata.svg';
 export const IMAGE_URL_RAW = '../../../content/images/geo-marker.svg';
-// export const IMAGE_URL_SELECTED_RAW = '../../../content/images/rawdata_selected.svg';
+export const IMAGE_URL_SELECTED_RAW_BIS = '../../../content/images/rawdata_selected.svg';
 export const IMAGE_URL_SELECTED_RAW = '../../../content/images/geo-marker-selected.svg';
 export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
