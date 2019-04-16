@@ -35,7 +35,7 @@ public class InsightGraphRelationServiceImpl implements InsightGraphRelationServ
 
         InsightGraphEntity entitySource = this.insightGraphEntityRepository.findById(idSource).get();
         relation.setObjectFrom(entitySource);
-        InsightGraphEntity entityCible = this.insightGraphEntityRepository.findById(idSource).get();
+        InsightGraphEntity entityCible = this.insightGraphEntityRepository.findById(idCible).get();
         relation.setObjectTo(entityCible);
         relation.setName(name);
         relation = this.insightGraphRelationRepository.save(relation);
