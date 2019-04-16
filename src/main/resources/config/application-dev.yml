@@ -24,7 +24,7 @@ spring:
         active: dev
         include:
         - swagger
-        - reach
+        - genius
         - graphy
         # Uncomment to activate TLS for the dev profile
         #- tls

@@ -8,6 +8,7 @@
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
             <span *ngIf="applicationName === 'Insight'" class="logo-img-insight"></span>
             <span *ngIf="applicationName === 'Reach'" class="logo-img-reach"></span>
+            <span *ngIf="applicationName === 'Genius'" class="logo-img-genius"></span>
             <span class="navbar-title">{{applicationName}}</span> <span class="navbar-version">{{version}}</span>
         </a>
     </div>

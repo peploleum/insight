@@ -59,7 +59,7 @@ spec:
               imagePullPolicy: Always
               env:
               - name: SPRING_PROFILES_ACTIVE
-                value: prod,swagger,graph
+                value: prod,swagger,graph,genius
               - name: SPRING_DATA_MONGODB_DATABASE
                 value: insight
               - name: SPRING_DATA_MONGODB_URI

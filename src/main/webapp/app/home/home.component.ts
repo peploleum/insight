@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
             this.account = account;
         });
         this.profileService.getProfileInfo().then(profileInfo => {
-            this.applicationName = profileInfo.reachEnabled ? 'Reach' : 'Insight';
+            this.applicationName = profileInfo.reachEnabled ? 'Reach' : profileInfo.geniusEnabled ? 'Genius' : 'Insight';
         });
         this.registerAuthenticationSuccess();
     }

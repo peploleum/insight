@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit {
         this.profileService.getProfileInfo().then(profileInfo => {
             this.inProduction = profileInfo.inProduction;
             this.swaggerEnabled = profileInfo.swaggerEnabled;
-            this.applicationName = profileInfo.reachEnabled ? 'Reach' : 'Insight';
+            this.applicationName = profileInfo.reachEnabled ? 'Reach' : profileInfo.geniusEnabled ? 'Genius' : 'Insight';
         });
     }
 

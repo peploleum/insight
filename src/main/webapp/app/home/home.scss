@@ -18,6 +18,14 @@ Main page styles
     background-size: contain;
 }
 
+.genius {
+    display: inline-block;
+    width: 347px;
+    height: 497px;
+    background: url('../../content/images/insight.png') no-repeat center top;
+    background-size: contain;
+}
+
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
     only screen and (-moz-min-device-pixel-ratio: 2),
@@ -31,6 +39,11 @@ Main page styles
 
     .reach {
         background: url('../../content/images/reach.svg') no-repeat center top;
+        background-size: contain;
+    }
+
+    .genius {
+        background: url('../../content/images/genius.png') no-repeat center top;
         background-size: contain;
     }
 }
