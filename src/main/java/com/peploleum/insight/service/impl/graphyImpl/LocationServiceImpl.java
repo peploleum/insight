@@ -55,7 +55,6 @@ public class LocationServiceImpl implements LocationService {
         Location location = locationMapper.toEntity(locationDTO);
         location.setEntityType(InsightEntityType.Location);
         location = locationRepository.save(location);
-        locationSearchRepository.save(location);
         if (location.getExternalId() == null || location.getExternalId().isEmpty()) {
             Long externalId = this.insightGraphEntityRepository.save(location.getLocationName(), location.getId(), InsightEntityType.Location);
             location.setExternalId(String.valueOf(externalId));
@@ -64,6 +63,7 @@ public class LocationServiceImpl implements LocationService {
             this.insightGraphEntityRepository.update(Long.valueOf(location.getExternalId()), location.getLocationName(),
                 location.getId(), InsightEntityType.Location);
         }
+        locationSearchRepository.save(location);
         return locationMapper.toDto(location);
     }
 
