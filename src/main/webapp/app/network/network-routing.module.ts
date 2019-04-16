@@ -6,20 +6,6 @@ import { QuickViewService } from '../side/quick-view.service';
 import { filter, map } from 'rxjs/internal/operators';
 import { GenericModel } from '../shared/model/generic.model';
 
-/*@Injectable({ providedIn: 'root' })
- export class NetworkResolve implements Resolve<RawData> {
- constructor(private service: NetworkService) {}
-
- resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RawData> {
- const id = route.params['id'] ? route.params['id'] : null;
- if (id) {
- return this.service.getRawDataById(id);
- } else {
- return of(null);
- }
- }
- }*/
-
 @Injectable({ providedIn: 'root' })
 export class NetworkResolve implements Resolve<GenericModel> {
     constructor(private _qvs: QuickViewService) {}

@@ -69,14 +69,16 @@
         </div>
     </div>
 
-    <div class="ins-popover" insOverlayPosition [idTargetElement]="'card-network-container'" [position]="'TOP-RIGHT'">
+    <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-network-container'"
+         [position]="'TOP-RIGHT'">
         <a [routerLink]="['/',{outlets: { primary: ['network', entity['id']], side: ['ins-network-side-panel'] }}]"
            title="Envoyer en réseau">
             <fa-icon [icon]="'sitemap'"></fa-icon>
         </a>
     </div>
-    <div class="ins-popover" insOverlayPosition [idTargetElement]="'card-map-container'" [position]="'TOP-RIGHT'">
-        <a [routerLink]="[{outlets: { primary: ['map'], side: ['ins-map-side-panel']}}]"
+    <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-map-container'"
+         [position]="'TOP-RIGHT'">
+        <a [routerLink]="['/',{outlets: { primary: ['map', 'neighbors', entity['id']], side: ['ins-map-side-panel']}}]"
            title="Envoyer en cartographie">
             <fa-icon [icon]="'globe'"></fa-icon>
         </a>

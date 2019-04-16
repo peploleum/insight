@@ -38,8 +38,8 @@ import { pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
-import { IRawData } from '../shared/model/raw-data.model';
 import { GenericModel } from '../shared/model/generic.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'jhi-map',
@@ -93,7 +93,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.internalOnResize();
     }
 
-    constructor(private er: ElementRef, private cdr: ChangeDetectorRef, private ms: MapService, private sms: SideMediatorService) {
+    constructor(
+        private er: ElementRef,
+        private cdr: ChangeDetectorRef,
+        private ms: MapService,
+        private sms: SideMediatorService,
+        private _activatedRoute: ActivatedRoute
+    ) {
         this.featureLayer = new VectorLayer({
             source: this.rawDataSource,
             style: (feature: Feature) => this.mainStyleFunction(feature, false),
@@ -125,6 +131,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.initMap();
         this.initMapLayerListener();
+
         this.mapStatesSubs = this.ms.mapStates
             .pipe(
                 startWith(null),
@@ -199,6 +206,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         });
         this.initDessinTools();
+
+        this._activatedRoute.data.subscribe(({ inputData }) => {
+            if (inputData) {
+                const data: GenericModel[] = <GenericModel[]>inputData;
+                this.ms.getFeaturesFromGeneric(data);
+            }
+        });
     }
 
     ngOnDestroy() {

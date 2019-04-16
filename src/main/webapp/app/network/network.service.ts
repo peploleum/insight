@@ -104,13 +104,7 @@ export class NetworkService {
         }
     }
 
-    constructor(private http: HttpClient, private rds: RawDataService) {
-        /* if (DEBUG_INFO_ENABLED) {
-         this._resourceUrl = 'http://' + window.location.hostname + ':8090/';
-         } else {
-         this._resourceUrl = 'http://192.168.0.120:30200/';
-         }*/
-    }
+    constructor(private http: HttpClient, private rds: RawDataService) {}
 
     updateRawData(rawDataId: string, symbole: string): Observable<HttpResponse<IRawData>> {
         return this.rds.find(rawDataId).pipe(
