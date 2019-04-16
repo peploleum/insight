@@ -3,13 +3,10 @@ package com.peploleum.insight.config.graphy;
 import com.microsoft.spring.data.gremlin.common.GremlinConfig;
 import com.microsoft.spring.data.gremlin.config.AbstractGremlinConfiguration;
 import com.microsoft.spring.data.gremlin.repository.config.EnableGremlinRepositories;
-import com.microsoft.spring.data.gremlin.telemetry.TelemetryTracker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 
 /**
  * Created by GFOLGOAS on 29/03/2019.
