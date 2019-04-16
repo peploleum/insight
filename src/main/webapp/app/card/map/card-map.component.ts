@@ -89,8 +89,10 @@ export class CardMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
                 .map(data => MapService.getMapDataFromGeneric(data))
                 .map(dto => MapService.getGeoJsonFromDto(dto))
                 .filter(geo => geo !== null);
-            this.featureSource.addFeatures(features);
-            this._map.getView().fit(this.featureSource.getExtent());
+            if (features && features.length > 0) {
+                this.featureSource.addFeatures(features);
+                this._map.getView().fit(this.featureSource.getExtent());
+            }
         }
     }
 

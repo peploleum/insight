@@ -13,7 +13,9 @@
                 <img *ngIf="entity['biographicsImage']; else noPhoto" class="card-img-top"
                      [src]="getBase64(entity['biographicsImage'])" alt="Aucune photo associée">
                 <ng-template #noPhoto>
-                    <img class="card-img-top" src="" alt="Aucune photo associée">
+                    <span class="card-img-top"
+                          style="display: flex;justify-content: center; align-items: center; padding: 2rem; font-size: 2rem;">
+                        <fa-icon [icon]="'image'"></fa-icon></span>
                 </ng-template>
                 <div class="card-body">
                     <h5 class="card-title">{{entity['biographicsName']}}</h5>
@@ -39,8 +41,9 @@
                     </div>
                 </div>
                 <div class="ins-card-images" *ngSwitchCase="'bio-img'">
-                    <div *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData'|listFilterPipe:'rawDataSubType':'bio-img');"
-                         class="ins-card-image-item">
+                    <div
+                        *ngFor="let item of (entityAndNeighbors|listFilterPipe:'entityType':'RawData'|listFilterPipe:'rawDataSubType':'bio-img');"
+                        class="ins-card-image-item">
                         <img [src]="getBase64(item['rawDataData'])"/>
                     </div>
                 </div>
