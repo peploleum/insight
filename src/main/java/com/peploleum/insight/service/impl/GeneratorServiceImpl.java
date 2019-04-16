@@ -33,9 +33,6 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final EquipmentService equipmentService;
     private final OrganisationService organisationService;
 
-    @Value("${application.graphy.enabled}")
-    private boolean graphEnabled;
-
     private static final int GEN_THRESHOLD = 20;
     private static final int SINGLE_GEN_THRESHOLD = 20;
 
