@@ -71,13 +71,11 @@ public class TraversalServiceImpl implements TraversalService {
             neighbor.setId(graphId);
             neighbor.setIdMongo(idMongo);
 
-            // final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(type));
-            final String searchKey = "properties";
-            if (searchKey != null) {
-                final String label = smartOpenProperties(resultObject, searchKey);
-                if (label != null) {
-                    neighbor.setLabel(label);
-                }
+            try {
+                final String name = smartOpenProperties(resultObject, "name");
+                neighbor.setLabel(name);
+            } catch (Exception e) {
+                this.log.warn("failed to extract name of janus entity");
             }
 
             nodeList.add(neighbor);
@@ -127,17 +125,22 @@ public class TraversalServiceImpl implements TraversalService {
         foundNode.setId(id);
         foundNode.setIdMongo(smartOpenProperties(resultObject, "idMongo"));
         foundNode.setType(smartOpenProperties(resultObject, "entityType").replace("\"", ""));
-
-        // final String searchKey = InsightUtil.getEntityFieldNameFromType(InsightEntityType.valueOf(foundNode.getType()));
-        final String searchKey = "properties";
-        this.log.info("Searching key: " + searchKey);
-        if (searchKey != null) {
-            final String label = smartOpenProperties(resultObject, searchKey);
-            if (label != null) {
-                foundNode.setLabel(label);
-                this.log.info("found node: " + foundNode.toString());
+        try {
+            final String name = smartOpenProperties(resultObject, "name");
+            foundNode.setLabel(name);
+        } catch (Exception e) {
+            this.log.warn("failed to extract name of janus entity");
+            final String searchKey = "properties";
+            this.log.info("Searching key: " + searchKey);
+            if (searchKey != null) {
+                final String label = smartOpenProperties(resultObject, searchKey);
+                if (label != null) {
+                    foundNode.setLabel(label);
+                    this.log.info("found node: " + foundNode.toString());
+                }
             }
         }
+
         return foundNode;
     }
 
