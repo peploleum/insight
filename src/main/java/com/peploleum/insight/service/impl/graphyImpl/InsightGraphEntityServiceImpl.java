@@ -40,6 +40,7 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
             entity.setProperties(new HashMap<>());
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
         entity.setIdMongo(idMongo);
+        entity.setName(name);
         entity.setEntityType(type);
         entity = this.insightGraphEntityRepository.save(entity);
 
@@ -60,6 +61,7 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
             entity.setProperties(new HashMap<>());
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
         entity.setIdMongo(idMongo);
+        entity.setName(name);
         entity.setEntityType(type);
         entity = this.insightGraphEntityRepository.save(entity);
 

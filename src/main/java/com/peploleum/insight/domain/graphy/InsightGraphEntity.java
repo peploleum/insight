@@ -18,6 +18,7 @@ public class InsightGraphEntity extends InsightEntity implements Serializable {
     @GeneratedValue
     private Long graphId;
     private String idMongo;
+    private String name;
     private Map<String, String> properties;
 
     public Long getGraphId() {
@@ -34,6 +35,14 @@ public class InsightGraphEntity extends InsightEntity implements Serializable {
 
     public void setIdMongo(String idMongo) {
         this.idMongo = idMongo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Map<String, String> getProperties() {
