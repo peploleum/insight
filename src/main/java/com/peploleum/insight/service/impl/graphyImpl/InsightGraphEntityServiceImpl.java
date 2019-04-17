@@ -8,7 +8,6 @@ import com.peploleum.insight.service.dto.CriteriaDTO;
 import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import java.util.Optional;
 @Service
 @Profile("graphy")
 public class InsightGraphEntityServiceImpl implements InsightGraphEntityService {
-    private static final int AGE_THRESHOLD = 100;
 
     private final Logger log = LoggerFactory.getLogger(InsightGraphEntityServiceImpl.class);
     private final InsightGraphEntityRepository insightGraphEntityRepository;
