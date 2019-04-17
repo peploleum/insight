@@ -4,7 +4,7 @@
 
     <groupId>com.peploleum.insight</groupId>
     <artifactId>insight</artifactId>
-    <version>1.0.0-BETA</version>
+    <version>1.0.0-EXPLORE</version>
     <packaging>war</packaging>
     <name>Insight</name>
 
