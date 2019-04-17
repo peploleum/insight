@@ -38,7 +38,7 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "2048Mi"
+            memory: "4096Mi"
             cpu: "4"
           limits:
             memory: "8192Mi"
@@ -105,7 +105,7 @@ data:
     java.arg.1=-Dorg.apache.jasper.compiler.disablejsr199=true
 
     # JVM memory settings
-    java.arg.2=-Xms512m
+    java.arg.2=-Xms2048m
     java.arg.3=-Xmx8192m
 
     # Enable Remote Debugging
