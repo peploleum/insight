@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
-import { BehaviorSubject, forkJoin, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
 import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
 import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
@@ -157,6 +157,18 @@ export class NetworkService {
                 return data;
             })
         );
+    }
+
+    createRelation(sourceId: IdType, targetId: IdType): Observable<HttpResponse<string>> {
+        const headers = new HttpHeaders();
+        const url = 'relation/';
+        const payload = {
+            idJanusSource: sourceId,
+            idJanusCible: targetId,
+            name: 'linkedTo'
+        };
+        const postUrl = this._resourceUrl + url;
+        return this.http.post<string>(postUrl, payload, { headers, observe: 'response' });
     }
 
     getRawDataById(idOrigin: string): Observable<RawData> {

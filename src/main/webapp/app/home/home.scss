@@ -20,9 +20,9 @@ Main page styles
 
 .genius {
     display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url('../../content/images/genius.png') no-repeat center top;
+    width: 512px;
+    height: 512px;
+    background: url('../../content/images/genius.svg') no-repeat center top;
     background-size: contain;
 }
 
@@ -43,7 +43,7 @@ Main page styles
     }
 
     .genius {
-        background: url('../../content/images/genius.png') no-repeat center top;
+        background: url('../../content/images/genius.svg') no-repeat center top;
         background-size: contain;
     }
 }

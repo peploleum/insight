@@ -4,9 +4,9 @@ import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
 import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
-import { IRawData, RawData } from 'app/shared/model/raw-data.model';
+import { IRawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
@@ -372,6 +372,10 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                     this.clusterNodes();
                 }
                 break;
+            case 'CREATE_RELATIONS':
+                networkState.CREATE_RELATIONS = !networkState.CREATE_RELATIONS;
+                this.createMesh();
+                break;
             case 'PHYSICS_ENABLED':
                 networkState.PHYSICS_ENABLED = !networkState.PHYSICS_ENABLED;
                 this.network.setOptions({ physics: this.getPhysicsOption() });
@@ -419,5 +423,40 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 break;
         }
         this._ns.networkState.next(networkState);
+    }
+
+    private createMesh() {
+        console.log('creating mesh');
+        console.log('for ' + this.network.getSelectedNodes().length + ' selected objects');
+        this.network.getSelectedNodes().forEach((sourceId: IdType) => {
+            this.network.getSelectedNodes().forEach((targetId: IdType) => {
+                this.doCreateRelation(sourceId, targetId);
+            });
+        });
+    }
+
+    private doCreateRelation(sourceId: IdType, targetId: IdType) {
+        this._ns
+            .createRelation(sourceId, targetId)
+            .subscribe(
+                (res: HttpResponse<string>) => this.onSuccess(),
+                (res: HttpErrorResponse) => this.onCreated(res, sourceId, targetId)
+            );
+    }
+
+    private onSuccess() {
+        console.log('ok');
+    }
+
+    private onCreated(res: HttpErrorResponse, sourceId: IdType, targetId: IdType) {
+        if (res.status === 201) {
+            // created
+            const data = new GraphDataCollection([], []);
+            data.nodes = [];
+            data.edges = [NetworkService.getEdgeDto(sourceId, targetId)];
+            this.addNodes(data.nodes, data.edges);
+        } else {
+            console.log('failed to create relation');
+        }
     }
 }

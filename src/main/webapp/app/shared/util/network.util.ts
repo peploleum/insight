@@ -11,6 +11,7 @@ export class NetworkState {
     CLUSTER_NODES?: boolean;
     AUTO_REFRESH?: boolean;
     DISPLAY_RELATION?: boolean;
+    CREATE_RELATIONS?: boolean;
 
     constructor(
         LAYOUT_DIR: string,
@@ -20,7 +21,8 @@ export class NetworkState {
         ADD_NEIGHBOURS?: boolean,
         CLUSTER_NODES?: boolean,
         AUTO_REFRESH?: boolean,
-        DISPLAY_RELATION?: boolean
+        DISPLAY_RELATION?: boolean,
+        CREATE_RELATIONS?: boolean
     ) {
         this.LAYOUT_DIR = LAYOUT_DIR;
         this.LAYOUT_FREE = LAYOUT_FREE;
@@ -30,6 +32,7 @@ export class NetworkState {
         this.CLUSTER_NODES = CLUSTER_NODES;
         this.AUTO_REFRESH = AUTO_REFRESH;
         this.DISPLAY_RELATION = DISPLAY_RELATION;
+        this.CREATE_RELATIONS = CREATE_RELATIONS;
     }
 }
 

@@ -15,9 +15,8 @@
                 [icon]="'code-branch'"></fa-icon></span>
             <span title="Supprimer des Nodes" (click)="sendAction('DELETE_NODES')"><fa-icon
                 [icon]="'times'"></fa-icon></span>
-            <span title="Activer le clustering" (click)="sendAction('CLUSTER_NODES')"
-                  [ngClass]="{'selected': networkStates['CLUSTER_NODES']}"><fa-icon
-                [icon]="'dot-circle'"></fa-icon></span>
+            <span title="Créer des relations" (click)="sendAction('CREATE_RELATIONS')"><fa-icon
+                [icon]="'network-wired'"></fa-icon></span>
             <span title="Activer la physique" (click)="sendAction('PHYSICS_ENABLED')"
                   [ngClass]="{'selected': networkStates['PHYSICS_ENABLED']}"><fa-icon
                 [icon]="'magic'"></fa-icon></span>
