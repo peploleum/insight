@@ -40,6 +40,7 @@ docker-build-private:
     - docker build --tag $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $PRIVATE_CONTAINER_IMAGE:latest .
     - docker push $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker push $PRIVATE_CONTAINER_IMAGE:latest
+  allow_failure: true
 
 docker-build-public:
   stage: build-docker-public
