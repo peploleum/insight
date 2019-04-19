@@ -6,6 +6,7 @@ services:
     
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
+  DOCKER_DRIVER: overlay2
   APP_NAME: insight
   CI_DOCKER_PUBLIC_REGISTRY: registry.hub.docker.com
   CI_DOCKER_PRIVATE_REGISTRY: http://192.168.0.111:9082
