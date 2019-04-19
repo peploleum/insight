@@ -1,7 +1,7 @@
 image: docker:latest
 services:
   - name: docker:dind
-    command: ["--insecure-registry=http://192.168.0.111:9080"]
+    command: ["--insecure-registry=$CI_DOCKER_PRIVATE_REGISTRY"]
     
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
