@@ -6,15 +6,19 @@ services:
 variables:
   DOCKER_DRIVER: overlay2
   APP_NAME: insight
-  CI_DOCKER_REGISTRY: http://192.168.0.111:9082
+  CI_DOCKER_PUBLIC_REGISTRY: registry.hub.docker.com
+  CI_DOCKER_PRIVATE_REGISTRY: 192.168.0.111:9082
+  CI_DOCKER_PUSH_REGISTRY: 192.168.0.111:9080
   CI_DOCKER_IMAGE: insight
-  CONTAINER_IMAGE: $CI_DOCKER_REGISTRY/$CI_BUILD_USER/$CI_DOCKER_IMAGE
+  PRIVATE_CONTAINER_IMAGE: $CI_DOCKER_PUSH_REGISTRY/$CI_DOCKER_IMAGE
+  PUBLIC_CONTAINER_IMAGE: $CI_DOCKER_PUBLIC_REGISTRY/$CI_BUILD_USER/$CI_DOCKER_IMAGE
   KUBECTL_VERSION: v1.13.3
 
 stages:
   - build-war
-  - build-docker
-  - deploy-k8s 
+  - build-docker-private
+  - build-docker-public
+  - deploy-k8s
 
 maven-build:
   image: magnarox/insight-build
@@ -28,15 +32,23 @@ maven-build:
       - target/*.sh
       - target/Dockerfile
 
-docker-build:
-  stage: build-docker 
+docker-build-private:
+  stage: build-docker-private
   script:
-    - docker login -u $CI_BUILD_USER -p $CI_BUILD_TOKEN $CI_DOCKER_REGISTRY
-    - docker pull $CONTAINER_IMAGE:latest || true
+    - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PRIVATE_REGISTRY
     - cd target
-    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CONTAINER_IMAGE:latest .
-    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker push $CONTAINER_IMAGE:latest
+    - docker build --tag $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $PRIVATE_CONTAINER_IMAGE:latest .
+    - docker push $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $PRIVATE_CONTAINER_IMAGE:latest
+
+docker-build-public:
+  stage: build-docker-public
+  script:
+    - docker login -u $CI_BUILD_PUBLIC_USER -p $CI_BUILD_PUBLIC_TOKEN $CI_DOCKER_PUBLIC_REGISTRY
+    - cd target
+    - docker build --tag $PUBLIC_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $PUBLIC_CONTAINER_IMAGE:latest .
+    - docker push $PUBLIC_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $PUBLIC_CONTAINER_IMAGE:latest
 
 kubernetes_deploy:
   stage: deploy-k8s
