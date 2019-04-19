@@ -54,10 +54,10 @@ spec:
         resources:
           requests:
             memory: "4096Mi"
-            cpu: "1"
+            cpu: "2"
           limits:
-            memory: "4096Mi"
-            cpu: "1"
+            memory: "8192Mi"
+            cpu: "2"
         volumeMounts:
         - name: storage
           mountPath: /app/janusgraph-0.2.2-hadoop2/log
