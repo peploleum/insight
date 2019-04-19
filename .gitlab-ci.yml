@@ -34,6 +34,7 @@ maven-build:
 
 docker-build-private:
   stage: build-docker-private
+  command: ["dockerd-entrypoint.sh", "--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY --insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY"]
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PRIVATE_REGISTRY
     - cd target
