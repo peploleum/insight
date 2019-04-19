@@ -1,12 +1,7 @@
 image: docker:latest
 
-services:
-  - docker:dind
-    docker:command ["dockerd-entrypoint.sh", "--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY --insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY"]
-
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
-  DOCKER_DRIVER: overlay2
   APP_NAME: insight
   CI_DOCKER_PUBLIC_REGISTRY: registry.hub.docker.com
   CI_DOCKER_PRIVATE_REGISTRY: 192.168.0.111:9082
@@ -17,14 +12,13 @@ variables:
   KUBECTL_VERSION: v1.13.3
 
 stages:
-  - build-war
-  - build-docker-private
-  - build-docker-public
-  - deploy-k8s
+  - build
+  - build-docker
+  - deploy
 
 maven-build:
   image: magnarox/insight-build
-  stage: build-war
+  stage: build
   script: 
     - npm install
     - mvn package -DskipTests -Pprod
@@ -35,7 +29,9 @@ maven-build:
       - target/Dockerfile
 
 docker-build-private:
-  stage: build-docker-private
+  stage: build-docker
+  services:
+    - docker:command ["dockerd-entrypoint.sh", "--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY --insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY"]
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PRIVATE_REGISTRY
     - cd target
@@ -45,7 +41,7 @@ docker-build-private:
   allow_failure: true
 
 docker-build-public:
-  stage: build-docker-public
+  stage: build-docker
   script:
     - docker login -u $CI_BUILD_PUBLIC_USER -p $CI_BUILD_PUBLIC_TOKEN $CI_DOCKER_PUBLIC_REGISTRY
     - cd target
@@ -54,7 +50,7 @@ docker-build-public:
     - docker push $PUBLIC_CONTAINER_IMAGE:latest
 
 kubernetes_deploy:
-  stage: deploy-k8s
+  stage: deploy
   image: alpine
   script:
     - apk add --no-cache curl
@@ -66,4 +62,4 @@ kubernetes_deploy:
     - kubectl config set-credentials $KUBE_USER --token=$KUBE_TOKEN
     - kubectl config set-context $KUBE_CONTEXT --user=$KUBE_USER
     - kubectl config use-context $KUBE_CONTEXT
-    - kubectl set image deployment/insight insight-app=$CI_BUILD_USER/$CI_DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA --namespace=insight
+    - kubectl set image deployment/insight insight-app=$CI_BUILD_PUBLIC_USER/$CI_DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA --namespace=insight
