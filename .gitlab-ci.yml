@@ -4,8 +4,8 @@ image: docker:latest
 variables:
   APP_NAME: insight
   CI_DOCKER_PUBLIC_REGISTRY: registry.hub.docker.com
-  CI_DOCKER_PRIVATE_REGISTRY: 192.168.0.111:9082
-  CI_DOCKER_PUSH_REGISTRY: 192.168.0.111:9080
+  CI_DOCKER_PRIVATE_REGISTRY: http://192.168.0.111:9082
+  CI_DOCKER_PUSH_REGISTRY: http://192.168.0.111:9080
   CI_DOCKER_IMAGE: insight
   PRIVATE_CONTAINER_IMAGE: $CI_DOCKER_PUSH_REGISTRY/$CI_DOCKER_IMAGE
   PUBLIC_CONTAINER_IMAGE: $CI_DOCKER_PUBLIC_REGISTRY/$CI_BUILD_USER/$CI_DOCKER_IMAGE
@@ -31,7 +31,7 @@ maven-build:
 docker-build-private:
   stage: build-docker
   services:
-    - docker:command ["dockerd-entrypoint.sh", "--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY --insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY"]
+    - docker:command ["dockerd-entrypoint.sh", "--insecure-registry=$CI_DOCKER_PRIVATE_REGISTRY --insecure-registry=$CI_DOCKER_PUSH_REGISTRY"]
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PRIVATE_REGISTRY
     - cd target
