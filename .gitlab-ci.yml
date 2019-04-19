@@ -2,7 +2,7 @@ image: docker:latest
 services:
   - name: docker:dind
     entrypoint: ["dockerd-entrypoint.sh"]
-    command: ["--insecure-registry","$CI_DOCKER_PRIVATE_REGISTRY","--insecure-registry","$CI_DOCKER_PUSH_REGISTRY"]
+    command: ["--insecure-registry","$CI_DOCKER_PUSH_REGISTRY"]
     
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
@@ -35,7 +35,7 @@ maven-build:
 docker-build-private:
   stage: build-docker
   script:
-    - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PRIVATE_REGISTRY
+    - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
     - cd target
     - docker build --tag $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $PRIVATE_CONTAINER_IMAGE:latest .
     - docker push $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
