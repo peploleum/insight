@@ -131,7 +131,8 @@ export class ZoomToFeatureRequest {
 }
 
 /**
- * Fonction de style principale, maxFeatureCount est utile au calcul de la color des clusters
+ * Fonction de style principale, maxFeatureCount est utile au calcul de la color des clusters,
+ * Si gestion de la selection hors d'une selectInteraction => utiliser la property selected sur les features
  * */
 export const insStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
     let style: Style[] = [];
@@ -205,6 +206,10 @@ export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: numbe
             radius: feature.get('radius'),
             fill: new Fill({
                 color: [255, 153, 0, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
+            }),
+            stroke: new Stroke({
+                color: [255, 153, 0, 1],
+                width: 3
             })
         }),
         text: new Text({
@@ -230,10 +235,10 @@ export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCoun
         image: new Circle({
             radius: feature.get('radius'),
             fill: new Fill({
-                color: [255, 153, 0, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
+                color: [128, 255, 128, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
             }),
             stroke: new Stroke({
-                color: 'red',
+                color: [128, 255, 128, 1],
                 width: 3
             })
         }),
@@ -259,7 +264,7 @@ export const setClusterRadius = (features: Feature[], resolution: number): numbe
     for (let i = features.length - 1; i >= 0; --i) {
         const feature = features[i];
         let radius;
-        const originalFeatures = feature.get('features');
+        const originalFeatures: Feature[] = feature.get('features');
         const extent = Extent.createEmpty();
 
         // Void évalue une expression et renvoie undefined
@@ -312,7 +317,7 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
         case 'LineString':
             return new Style({
                 stroke: new Stroke({
-                    color: 'green',
+                    color: [255, 153, 0, 0.8],
                     width: 1
                 })
             });
@@ -320,7 +325,7 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
         case 'MultiLineString':
             return new Style({
                 stroke: new Stroke({
-                    color: 'green',
+                    color: [255, 153, 0, 0.8],
                     width: 1
                 })
             });
@@ -514,7 +519,7 @@ export const expandClusterStyleFunction = (feature: Feature, resolution: number)
             image: new Circle({
                 radius: feature.get('radius'),
                 fill: new Fill({
-                    color: 'rgba(255, 255, 255, 0.01)'
+                    color: 'rgba(255, 153, 0, 0.2)'
                 })
             })
         })
@@ -530,7 +535,9 @@ export const expandClusterStyleFunction = (feature: Feature, resolution: number)
             originalClusterCoord[1] + vectors[i].y * resolution
         ];
 
-        const style = insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature);
+        const style = originalFeature.get('selected')
+            ? insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
+            : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature);
         style.setGeometry(new Point(newCoord));
         styles.push(style);
 

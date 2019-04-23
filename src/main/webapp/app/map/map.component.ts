@@ -18,6 +18,7 @@ import KML from 'ol/format/kml';
 import TileWMS from 'ol/source/tilewms';
 import Cluster from 'ol/source/cluster';
 import MapBrowserEvent from 'ol/mapbrowserevent';
+import Condition from 'ol/events/condition';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -31,7 +32,6 @@ import {
     getSelectedImageIconUrl,
     insBaseStyleFunction,
     insHoveredStyleFunction,
-    insSelectedStyleFunction,
     insSetTextStyleFunction,
     insStyleFunction,
     MapLayer,
@@ -104,7 +104,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.featureLayer = new VectorLayer({
             source: this.clusterSource,
             style: (feature: Feature, resolution: number) => {
-                if (resolution !== this.currentResolution) {
+                if (resolution !== this.currentResolution || !feature.get('radius')) {
                     this.maxClusterCount = setClusterRadius(this.clusterSource.getFeatures(), resolution);
                     this.currentResolution = resolution;
                 }
@@ -125,7 +125,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.hoverInteraction = new SelectInteration({
             condition: evt => {
-                return evt.type === 'pointermove';
+                return Condition.pointerMove(evt) && Condition.noModifierKeys(evt);
             },
             filter: (feature: Feature, layer: VectorLayer) => {
                 return feature.get('features').length > 1;
@@ -299,7 +299,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         });
-        // this._map.addInteraction(this.selectInteraction);
         this._map.addInteraction(this.hoverInteraction);
         this._map.addInteraction(this.dragAndDropInteraction);
 
@@ -321,6 +320,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ms.mapLayers.next(this.ms.mapLayers.getValue().concat(newMapLayer));
         });
 
+        // Utilisé pour une sélection custom, selectInteraction n'est pas satisfaisante avec les clusters
         this._map.on('singleclick', (event: MapBrowserEvent) => {
             if (!this.getMapStates().DESSIN_ENABLED) {
                 const feat: any = this._map.getFeaturesAtPixel(event.pixel);

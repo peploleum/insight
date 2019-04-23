@@ -242,11 +242,11 @@ export const IMAGE_URL_EVENT = '../../../content/images/event.png';
 export const IMAGE_URL_EQUIP = '../../../content/images/equipement.png';
 export const IMAGE_URL_DEFAULT = '../../../content/images/default.png';
 export const IMAGE_URL_RAW_BIS = '../../../content/images/rawdata.svg';
-export const IMAGE_URL_RAW = '../../../content/images/geo-marker.svg';
+export const IMAGE_URL_RAW = '../../../content/images/geo-marker-selected.svg';
 export const IMAGE_URL_SELECTED_RAW_BIS = '../../../content/images/rawdata_selected.svg';
-export const IMAGE_URL_SELECTED_RAW = '../../../content/images/geo-marker-selected.svg';
-export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
-export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
+export const IMAGE_URL_SELECTED_RAW = '../../../content/images/geo-marker.svg';
+export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
+export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const MOCK_GRAPH_DATA = {
     nodes: [
         { id: 1, idMongo: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
