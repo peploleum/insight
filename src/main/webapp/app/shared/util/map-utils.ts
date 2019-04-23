@@ -135,12 +135,18 @@ export class ZoomToFeatureRequest {
  * */
 export const insStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
     let style: Style[] = [];
-    const isCluster: boolean = feature.get('features').length > 1;
+    const features: Feature[] = feature.get('features');
+    const isCluster: boolean = features.length > 1;
+    const selected: boolean = isCluster ? !!features.find(f => f.get('selected')) : features[0].get('selected');
     if (isCluster) {
-        style = insClusterStyleFunction(feature, maxFeatureCount);
+        style = selected ? insSelectedClusterStyleFunction(feature, maxFeatureCount) : insClusterStyleFunction(feature, maxFeatureCount);
     } else {
-        const originalFeature = feature.get('features')[0];
-        style.push(insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
+        const originalFeature = features[0];
+        style.push(
+            selected
+                ? insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
+                : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
+        );
     }
     return style;
 };
@@ -149,6 +155,21 @@ export const insStyleFunction = (feature: Feature, resolution: number, maxFeatur
  * Fonction de style de sélection, maxFeatureCount est utile au calcul de la color des clusters
  * */
 export const insSelectedStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
+    let style: Style[] = [];
+    const isCluster: boolean = feature.get('features').length > 1;
+    if (isCluster) {
+        style = insSelectedClusterStyleFunction(feature, maxFeatureCount);
+    } else {
+        const originalFeature = feature.get('features')[0];
+        style.push(insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
+    }
+    return style;
+};
+
+/**
+ * Fonction de style on hover, maxFeatureCount est utile au calcul de la color des clusters
+ * */
+export const insHoveredStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
     let style: Style[] = [];
     const isCluster: boolean = feature.get('features').length > 1;
     if (isCluster) {
@@ -161,6 +182,20 @@ export const insSelectedStyleFunction = (feature: Feature, resolution: number, m
 };
 
 /**
+ * Applique le text de la feature: label (uniquement si non cluster) à ses fonctions de style
+ * */
+export const insSetTextStyleFunction = (feature: Feature, styles: Style[]): Style[] => {
+    if (feature.get('features').length === 1 && feature.get('features')[0].get('label')) {
+        styles.forEach(s => {
+            if (s.getText() !== null && typeof s.getText() !== 'undefined') {
+                s.getText().setText(feature.get('features')[0].get('label'));
+            }
+        });
+    }
+    return styles;
+};
+
+/**
  * Fonction de style des clusters
  * */
 export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
@@ -170,6 +205,36 @@ export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: numbe
             radius: feature.get('radius'),
             fill: new Fill({
                 color: [255, 153, 0, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
+            })
+        }),
+        text: new Text({
+            text: clusterSize.toString(),
+            fill: new Fill({
+                color: '#fff'
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 0, 0, 0.6)',
+                width: 3
+            })
+        })
+    });
+    return [style];
+};
+
+/**
+ * Fonction de style des clusters selected
+ * */
+export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
+    const clusterSize = feature.get('features').length;
+    const style = new Style({
+        image: new Circle({
+            radius: feature.get('radius'),
+            fill: new Fill({
+                color: [255, 153, 0, Math.min(0.8, 0.4 + clusterSize / maxFeatureCount)]
+            }),
+            stroke: new Stroke({
+                color: 'red',
+                width: 3
             })
         }),
         text: new Text({

@@ -15,7 +15,7 @@ import Cluster from 'ol/source/cluster';
 import Style from 'ol/style/style';
 import { GenericModel } from '../../shared/model/generic.model';
 import { MapService } from '../../map/map.service';
-import { insSelectedStyleFunction, insStyleFunction, setClusterRadius } from '../../shared/util/map-utils';
+import { insHoveredStyleFunction, insStyleFunction, setClusterRadius } from '../../shared/util/map-utils';
 
 @Component({
     selector: 'ins-card-map',
@@ -57,7 +57,7 @@ export class CardMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
                 return evt.type === 'pointermove' || evt.type === 'singleclick';
             },
             style: (feature: Feature, resolution: number) => {
-                const styles: Style[] = insSelectedStyleFunction(feature, resolution, this.maxClusterCount || 1);
+                const styles: Style[] = insHoveredStyleFunction(feature, resolution, this.maxClusterCount || 1);
                 if (feature.get('features').length === 1 && feature.get('features')[0].get('label')) {
                     styles.forEach(s => {
                         if (s.getText() !== null && typeof s.getText() !== 'undefined') {

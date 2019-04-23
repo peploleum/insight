@@ -16,6 +16,8 @@ import ModifyInteraction from 'ol/interaction/modify';
 import DragAndDropInteraction from 'ol/interaction/draganddrop';
 import KML from 'ol/format/kml';
 import TileWMS from 'ol/source/tilewms';
+import Cluster from 'ol/source/cluster';
+import MapBrowserEvent from 'ol/mapbrowserevent';
 
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
@@ -28,9 +30,13 @@ import {
     getMapImageIconUrl,
     getSelectedImageIconUrl,
     insBaseStyleFunction,
-    insSelectedBaseStyleFunction,
+    insHoveredStyleFunction,
+    insSelectedStyleFunction,
+    insSetTextStyleFunction,
+    insStyleFunction,
     MapLayer,
     MapState,
+    setClusterRadius,
     ZoomToFeatureRequest
 } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
@@ -47,34 +53,25 @@ import { ActivatedRoute } from '@angular/router';
     styles: [':host { flex-grow: 1 }']
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
-    rawDataSource: VectorSource = new VectorSource({ wrapX: false });
+    featureSource: VectorSource = new VectorSource({ wrapX: false });
     geoMarkerSource: VectorSource = new VectorSource({ wrapX: false });
+    clusterSource: Cluster;
     featureLayer: VectorLayer;
     geoMarkerLayer: VectorLayer;
     _map: Map;
 
     selectInteraction: SelectInteration;
+    hoverInteraction: SelectInteration;
     drawInteraction: DrawInteraction;
     snapInteraction: SnapInteraction;
     modifyInteraction: ModifyInteraction;
     dragAndDropInteraction: DragAndDropInteraction;
 
-    private circleImage = new Circle({
-        radius: 14,
-        fill: new Fill({
-            color: 'rgba(230, 240, 255, 1)'
-        }),
-        stroke: new Stroke({ color: '#ffc600', width: 3 })
-    });
-    private selectedCircleImage = new Circle({
-        radius: 14,
-        fill: new Fill({
-            color: 'rgba(230, 240, 255, 1)'
-        }),
-        stroke: new Stroke({ color: '#cb412a', width: 4 })
-    });
-
     computedHeight = 0;
+
+    currentResolution: number;
+    maxClusterCount: number;
+    selectedIds: any[] = [];
 
     featureSourceSubs: Subscription;
     geoMarkerSourceSubs: Subscription;
@@ -100,9 +97,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         private sms: SideMediatorService,
         private _activatedRoute: ActivatedRoute
     ) {
+        this.clusterSource = new Cluster({
+            distance: 40,
+            source: this.featureSource,
+            wrapX: false
+        });
         this.featureLayer = new VectorLayer({
-            source: this.rawDataSource,
-            style: (feature: Feature) => this.mainStyleFunction(feature, false),
+            source: this.clusterSource,
+            style: (feature: Feature, resolution: number) => {
+                if (resolution !== this.currentResolution) {
+                    this.maxClusterCount = setClusterRadius(this.clusterSource.getFeatures(), resolution);
+                    this.currentResolution = resolution;
+                }
+                const styles: Style[] = insStyleFunction(feature, resolution, this.maxClusterCount || 1);
+                const zoom = this._map.getView().getZoom();
+                if (zoom > 5 && this.getMapStates().DISPLAY_LABEL) {
+                    insSetTextStyleFunction(feature, styles);
+                }
+                return styles;
+            },
             zIndex: 1
         });
         this.geoMarkerLayer = new VectorLayer({
@@ -112,7 +125,29 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this.selectInteraction = new SelectInteration({
-            style: (feature: Feature) => this.mainStyleFunction(feature, true),
+            condition: evt => {
+                return evt.type === 'singleclick';
+            },
+            filter: (feature: Feature, layer: VectorLayer) => {
+                return feature.get('features').length <= 1;
+            },
+            style: (feature: Feature, resolution: number) => {
+                const styles: Style[] = insSelectedStyleFunction(feature, resolution, this.maxClusterCount || 1);
+                insSetTextStyleFunction(feature, styles);
+                return styles;
+            },
+            multi: true
+        });
+        this.hoverInteraction = new SelectInteration({
+            condition: evt => {
+                return evt.type === 'pointermove';
+            },
+            filter: (feature: Feature, layer: VectorLayer) => {
+                return feature.get('features').length > 1;
+            },
+            style: (feature: Feature, resolution: number) => {
+                return insHoveredStyleFunction(feature, resolution, this.maxClusterCount || 1);
+            },
             multi: true
         });
         this.dragAndDropInteraction = new DragAndDropInteraction({
@@ -161,7 +196,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.sms._sideAction.next(sideActions);
             });
         this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
-            this.rawDataSource.addFeatures(features);
+            this.featureSource.addFeatures(features);
         });
         this.newDataReceivedSubs = this.sms._onNewDataReceived.subscribe((data: any[]) => {
             this.ms.getFeaturesFromGeneric(<GenericModel[]>data);
@@ -260,7 +295,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private initMap() {
-        // const readFeatures = new GeoJSON().readFeatures(GEO_JSON_OBJECT);
         this._map = new Map({
             layers: [this.featureLayer, this.geoMarkerLayer],
             target: 'map',
@@ -280,7 +314,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         });
-        this._map.addInteraction(this.selectInteraction);
+        // this._map.addInteraction(this.selectInteraction);
+        this._map.addInteraction(this.hoverInteraction);
         this._map.addInteraction(this.dragAndDropInteraction);
 
         this.dragAndDropInteraction.on('addfeatures', (event: DragAndDropInteraction.Event) => {
@@ -301,15 +336,46 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ms.mapLayers.next(this.ms.mapLayers.getValue().concat(newMapLayer));
         });
 
+        this._map.on('singleclick', (event: MapBrowserEvent) => {
+            if (!this.getMapStates().DESSIN_ENABLED) {
+                const feat: any = this._map.getFeaturesAtPixel(event.pixel);
+                const feats: Feature[] = feat ? (Array.isArray(feat) ? feat : [feat]) : [];
+                this.onNewFeaturesSelected(feats);
+            }
+            event.preventDefault();
+        });
+
         this.selectInteraction.on('select', (event: SelectInteration.Event) => {
             const selectedIds: any[] = this.selectInteraction
                 .getFeatures()
                 .getArray()
-                .map(feat => {
-                    return feat.getId();
-                });
+                .map(feat => (<Feature[]>feat.get('features')).map(f => f.getId()))
+                .reduce((x, y) => {
+                    return x.concat(y);
+                }, []);
             this.sms._selectedData.next(selectedIds);
         });
+    }
+
+    private onNewFeaturesSelected(features: Feature[]) {
+        this.selectedIds.forEach(id => {
+            this.featureSource.getFeatureById(id).set('selected', false);
+        });
+        this.selectedIds =
+            features && features.length > 0
+                ? features
+                      .map(feat => (<Feature[]>feat.get('features')).map(f => f.getId()))
+                      .reduce((x, y) => {
+                          return x.concat(y);
+                      }, [])
+                : [];
+        if (features) {
+            features.forEach((feat: Feature) => {
+                feat.set('selected', true);
+                feat.get('features').forEach(f => f.set('selected', true));
+            });
+        }
+        this.sms._selectedData.next(this.selectedIds);
     }
 
     private initMapLayerListener() {
@@ -496,47 +562,28 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     selectAndGoTo(objectId: string) {
-        this.selectInteraction.getFeatures().clear();
-        const selectedFeat: Feature = this.rawDataSource.getFeatureById(objectId);
+        /*this.selectInteraction.getFeatures().clear();
+         const selectedFeat: Feature = this.featureSource.getFeatureById(objectId);
+         if (selectedFeat) {
+         this.selectInteraction.getFeatures().push(selectedFeat);
+         this.selectInteraction.dispatchEvent({
+         type: 'select',
+         selected: [selectedFeat],
+         deselected: [],
+         mapBrowserEvent: null
+         });
+         this._map.getView().fit(selectedFeat.getGeometry().getExtent(), {duration: 1500});
+         }*/
+
+        const selectedFeat: Feature = this.featureSource.getFeatureById(objectId);
         if (selectedFeat) {
-            this.selectInteraction.getFeatures().push(selectedFeat);
-            this.selectInteraction.dispatchEvent({
-                type: 'select',
-                selected: [selectedFeat],
-                deselected: [],
-                mapBrowserEvent: null
-            });
+            this.onNewFeaturesSelected([selectedFeat]);
             this._map.getView().fit(selectedFeat.getGeometry().getExtent(), { duration: 1500 });
         }
     }
 
     getMapStates(): MapState {
         return this.ms.mapStates.getValue();
-    }
-
-    mainStyleFunction(feature: Feature, isSelected: boolean) {
-        const mainStyle: Style = isSelected
-            ? insSelectedBaseStyleFunction(feature.getGeometry().getType(), feature)
-            : insBaseStyleFunction(feature.getGeometry().getType(), feature);
-
-        if (feature.getGeometry().getType() === 'Point') {
-            const zoom = this._map.getView().getZoom();
-            if (zoom > 5 && this.getMapStates().DISPLAY_LABEL && feature.get('label')) {
-                mainStyle.setText(
-                    new Text({
-                        font: 'bold 11px "Open Sans", "Arial Unicode MS", "sans-serif"',
-                        placement: 'point',
-                        textBaseline: 'top',
-                        offsetY: 10,
-                        fill: new Fill({
-                            color: 'black'
-                        }),
-                        text: feature.get('label')
-                    })
-                );
-            }
-        }
-        return [mainStyle];
     }
 
     geoMarkerStyleFunction(feature: Feature, isSelected: boolean) {
@@ -608,9 +655,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 mapState.DESSIN_ENABLED = !mapState.DESSIN_ENABLED;
                 if (!mapState.DESSIN_ENABLED && this.drawInteraction) {
                     this.removeDrawInteraction();
-                    this._map.addInteraction(this.selectInteraction);
+                    // this._map.addInteraction(this.selectInteraction);
                 } else if (mapState.DESSIN_ENABLED) {
-                    this._map.removeInteraction(this.selectInteraction);
+                    // this._map.removeInteraction(this.selectInteraction);
                     this.addDrawInteraction();
                 }
                 break;
@@ -630,6 +677,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     clearRawDataSource() {
-        this.rawDataSource.clear();
+        this.featureSource.clear();
     }
 }

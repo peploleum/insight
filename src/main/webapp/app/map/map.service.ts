@@ -81,7 +81,7 @@ export class MapService {
     }
 
     /**
-     * Envoie les geoMarker dans geoMarkerSource
+     * Envoie les geoMarkers dans geoMarkerSource
      * */
     getFeaturesFromGeoMarker(source: IMapDataDTO[]): void {
         if (source) {
