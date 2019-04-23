@@ -60,7 +60,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     geoMarkerLayer: VectorLayer;
     _map: Map;
 
-    selectInteraction: SelectInteration;
     hoverInteraction: SelectInteration;
     drawInteraction: DrawInteraction;
     snapInteraction: SnapInteraction;
@@ -124,20 +123,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             zIndex: 1
         });
 
-        this.selectInteraction = new SelectInteration({
-            condition: evt => {
-                return evt.type === 'singleclick';
-            },
-            filter: (feature: Feature, layer: VectorLayer) => {
-                return feature.get('features').length <= 1;
-            },
-            style: (feature: Feature, resolution: number) => {
-                const styles: Style[] = insSelectedStyleFunction(feature, resolution, this.maxClusterCount || 1);
-                insSetTextStyleFunction(feature, styles);
-                return styles;
-            },
-            multi: true
-        });
         this.hoverInteraction = new SelectInteration({
             condition: evt => {
                 return evt.type === 'pointermove';
@@ -343,17 +328,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.onNewFeaturesSelected(feats);
             }
             event.preventDefault();
-        });
-
-        this.selectInteraction.on('select', (event: SelectInteration.Event) => {
-            const selectedIds: any[] = this.selectInteraction
-                .getFeatures()
-                .getArray()
-                .map(feat => (<Feature[]>feat.get('features')).map(f => f.getId()))
-                .reduce((x, y) => {
-                    return x.concat(y);
-                }, []);
-            this.sms._selectedData.next(selectedIds);
         });
     }
 
