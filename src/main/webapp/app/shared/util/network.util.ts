@@ -39,15 +39,15 @@ export class NetworkState {
 export class DataContentInfo {
     label: string;
     id: IdType;
-    mongoId: string;
+    idMongo: string;
     objectType: string;
     title?: string;
     image?: string;
 
-    constructor(label: string, id: IdType, mongoId: string, objectType: string, title?: string, image?: string) {
+    constructor(label: string, id: IdType, idMongo: string, objectType: string, title?: string, image?: string) {
         this.label = label;
         this.id = id;
-        this.mongoId = mongoId;
+        this.idMongo = idMongo;
         this.objectType = objectType;
         this.title = title;
         this.image = image;

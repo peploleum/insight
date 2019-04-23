@@ -249,16 +249,16 @@ export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker.svg';
 export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
 export const MOCK_GRAPH_DATA = {
     nodes: [
-        { id: 1, mongoId: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
-        { id: 2, mongoId: '2a', label: 'Explosion', title: 'Evenement', type: 'Event' },
-        { id: 3, mongoId: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
-        { id: 4, mongoId: '5c90fa1b5e365c06ac7e187c', label: 'Brian', title: 'Personne', type: 'Biographics' },
-        { id: 5, mongoId: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
-        { id: 6, mongoId: '5caf3cc4b0b4d23fc041e953', label: 'Attentat', title: 'Evenement', type: 'Event' },
-        { id: 7, mongoId: '5c911d434a45de0e0ca2556b', label: 'Raoul', title: 'Personne', type: 'Biographics' },
-        { id: 8, mongoId: '5cab0fef4f5f0c0688f6c4a8', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
-        { id: 9, mongoId: '5caf3ca6b0b4d23fc041e952', label: 'Rencontre', title: 'Evenement', type: 'Event' },
-        { id: 10, mongoId: '5caf3c86b0b4d23fc041e951', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
+        { id: 1, idMongo: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
+        { id: 2, idMongo: '2a', label: 'Explosion', title: 'Evenement', type: 'Event' },
+        { id: 3, idMongo: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
+        { id: 4, idMongo: '5c90fa1b5e365c06ac7e187c', label: 'Brian', title: 'Personne', type: 'Biographics' },
+        { id: 5, idMongo: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
+        { id: 6, idMongo: '5caf3cc4b0b4d23fc041e953', label: 'Attentat', title: 'Evenement', type: 'Event' },
+        { id: 7, idMongo: '5c911d434a45de0e0ca2556b', label: 'Raoul', title: 'Personne', type: 'Biographics' },
+        { id: 8, idMongo: '5cab0fef4f5f0c0688f6c4a8', label: 'RawData', title: 'Donnee brute', type: 'RawData' },
+        { id: 9, idMongo: '5caf3ca6b0b4d23fc041e952', label: 'Rencontre', title: 'Evenement', type: 'Event' },
+        { id: 10, idMongo: '5caf3c86b0b4d23fc041e951', label: 'RawData', title: 'Donnee brute', type: 'RawData' }
     ],
     edges: [
         { from: 1, to: 3 },
