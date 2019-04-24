@@ -1,0 +1,33 @@
+<div class="overlay-container card" *ngIf="mapper; else noEntity">
+    <div class="card-img-top event-thread-header"><img
+        *ngIf="mapper.image" class="event-thread-image"
+        [src]="getBase64(mapper.image)">
+    </div>
+    <div class="card-body">
+        <a class="card-title event-thread-title" *ngIf="mapper.title">
+            <fa-icon [icon]="'rss-square'"></fa-icon>
+            {{mapper.title | stringTruncate : 30}}
+        </a>
+        <h6 *ngIf="mapper.subTitle" class="card-subtitle mb-1 text-muted">{{mapper.subTitle}}</h6>
+        <p class="card-text" *ngIf="mapper.content">
+            <small>{{mapper.content | stringTruncate : 40}}</small>
+        </p>
+        <a class="card-link" *ngIf="mapper.date">
+            <fa-icon [icon]="'rss-square'"></fa-icon>
+            <span>{{mapper.date | date:'short':'':'fr-FR'}}</span>
+        </a>
+    </div>
+</div>
+
+<ng-template class="card event-thread-card" #noEntity>
+    <div class="card-img-top event-thread-header">
+        <span style="display: flex;justify-content: center; align-items: center; padding: 2rem; font-size: 2rem;"><fa-icon
+            [icon]="'image'"></fa-icon>
+        </span>
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            <small>No entity could be resolved from the input Id.</small>
+        </p>
+    </div>
+</ng-template>

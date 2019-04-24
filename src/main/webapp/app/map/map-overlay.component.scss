@@ -1,0 +1,13 @@
+@import '../../content/scss/custom-insight-variables';
+@import '../../content/scss/global.scss';
+
+.overlay-container {
+    background-color: $popover-background-color;
+    border: rgb(65, 75, 88);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+
+    max-height: 250px;
+    width: 220px;
+}

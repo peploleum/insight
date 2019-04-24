@@ -10,10 +10,12 @@ import { DessinComponent } from './side/dessin.component';
 import { QuickStatsComponent } from './side/quick-stats.component';
 import { LayerControlComponent } from './side/layer-control.component';
 import { MapSearchComponent } from './side/map-search.component';
+import { MapOverlayComponent } from './map-overlay.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
-    declarations: [MapComponent, DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent],
+    declarations: [MapComponent, DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent, MapOverlayComponent],
+    entryComponents: [MapOverlayComponent],
     exports: [DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent]
 })
 export class MapModule {}

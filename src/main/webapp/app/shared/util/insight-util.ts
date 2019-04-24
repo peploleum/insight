@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { Biographics } from '../model/biographics.model';
 import { Equipment } from '../model/equipment.model';
 import { Organisation } from '../model/organisation.model';
+import { GenericModel } from '../model/generic.model';
 export const UUID = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0,
@@ -92,4 +93,47 @@ export class DragParameter {
 
 export const BASE64URI = (base64Content: string, fileType?: string): string => {
     return `data:image/${fileType || 'png'};base64,${base64Content}`;
+};
+
+export const getSourceTypeIcon = (sourceType: string): string => {
+    switch (sourceType) {
+        case 'TWITTER':
+            return 'apple-alt';
+        case 'RSS':
+            return 'rss-square';
+        case 'SYSLOG':
+            return 'shield-alt';
+        default:
+            return 'rss-square';
+    }
+};
+
+export const getDataTypeIcon = (dataType: string): string => {
+    switch (dataType) {
+        case 'CYBER':
+            return 'user-secret';
+        case 'OSINT':
+            return 'wifi';
+        default:
+            return 'rss-square';
+    }
+};
+
+export const getGenericContentProperty = (entity: GenericModel): string => {
+    switch (entity['entityType']) {
+        case 'Biographics':
+            break;
+        case 'Equipment':
+            break;
+        case 'Event':
+            break;
+        case 'Location':
+            break;
+        case 'Organisation':
+            break;
+        case 'RawData':
+            break;
+        default:
+            return null;
+    }
 };

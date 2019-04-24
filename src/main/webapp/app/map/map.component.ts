@@ -1,4 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ComponentFactory,
+    ComponentFactoryResolver,
+    ComponentRef,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Injector,
+    OnDestroy,
+    OnInit,
+    ViewContainerRef
+} from '@angular/core';
 import { MapService } from './map.service';
 import Map from 'ol/map';
 import View from 'ol/view';
@@ -19,7 +33,8 @@ import TileWMS from 'ol/source/tilewms';
 import Cluster from 'ol/source/cluster';
 import MapBrowserEvent from 'ol/mapbrowserevent';
 import Condition from 'ol/events/condition';
-
+import Overlay from 'ol/overlay';
+import Point from 'ol/geom/point';
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
 import Icon from 'ol/style/icon';
@@ -46,6 +61,11 @@ import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
 import { GenericModel } from '../shared/model/generic.model';
 import { ActivatedRoute } from '@angular/router';
+import { MapOverlayComponent } from './map-overlay.component';
+import { olx } from 'openlayers';
+import animation = olx.animation;
+
+import PanOptions = olx.animation.PanOptions;
 
 @Component({
     selector: 'jhi-map',
@@ -72,6 +92,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     maxClusterCount: number;
     selectedIds: any[] = [];
 
+    popup: Overlay;
+    popupContent: ComponentRef<MapOverlayComponent>;
+    popupInteract: EventEmitter<string> = new EventEmitter();
+
     featureSourceSubs: Subscription;
     geoMarkerSourceSubs: Subscription;
     outsideFeatureSelectorSubs: Subscription;
@@ -90,11 +114,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     constructor(
-        private er: ElementRef,
-        private cdr: ChangeDetectorRef,
-        private ms: MapService,
-        private sms: SideMediatorService,
-        private _activatedRoute: ActivatedRoute
+        private _er: ElementRef,
+        private _cdr: ChangeDetectorRef,
+        private _ms: MapService,
+        private _sms: SideMediatorService,
+        private _activatedRoute: ActivatedRoute,
+        private _resolver: ComponentFactoryResolver,
+        private _vcr: ViewContainerRef
     ) {
         this.clusterSource = new Cluster({
             distance: 40,
@@ -142,8 +168,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     internalOnResize() {
-        this.computedHeight = this.er.nativeElement.offsetHeight;
-        this.cdr.detectChanges();
+        this.computedHeight = this._er.nativeElement.offsetHeight;
+        this._cdr.detectChanges();
     }
 
     ngOnInit() {}
@@ -152,7 +178,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.initMap();
         this.initMapLayerListener();
 
-        this.mapStatesSubs = this.ms.mapStates
+        this.mapStatesSubs = this._ms.mapStates
             .pipe(
                 startWith(null),
                 pairwise()
@@ -165,10 +191,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     'EVENT_THREAD',
                     new EventThreadParameters(newState.AUTO_REFRESH, newState.FILTER_TYPE)
                 );
-                this.sms.updateSideParameters(newSideParameters);
+                this._sms.updateSideParameters(newSideParameters);
 
-                const updatedEventThreadToolbar: ToolbarButtonParameters[] = this.ms.getUpdatedEventThreadToolbar();
-                this.sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
+                const updatedEventThreadToolbar: ToolbarButtonParameters[] = this._ms.getUpdatedEventThreadToolbar();
+                this._sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
 
                 const sideActions: SideAction[] = [];
                 if (newState.AUTO_REFRESH) {
@@ -178,32 +204,32 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     sideActions.push(new SideAction('EVENT_THREAD', 'CLEAR'));
                     sideActions.push(new SideAction('EVENT_THREAD', 'LOAD_ALL'));
                 }
-                this.sms._sideAction.next(sideActions);
+                this._sms._sideAction.next(sideActions);
             });
-        this.featureSourceSubs = this.ms.featureSource.subscribe((features: Feature[]) => {
+        this.featureSourceSubs = this._ms.featureSource.subscribe((features: Feature[]) => {
             this.featureSource.addFeatures(features);
         });
-        this.newDataReceivedSubs = this.sms._onNewDataReceived.subscribe((data: any[]) => {
-            this.ms.getFeaturesFromGeneric(<GenericModel[]>data);
+        this.newDataReceivedSubs = this._sms._onNewDataReceived.subscribe((data: any[]) => {
+            this._ms.getFeaturesFromGeneric(<GenericModel[]>data);
         });
-        this.geoMarkerSourceSubs = this.ms.geoMarkerSource.subscribe((features: Feature[]) => {
+        this.geoMarkerSourceSubs = this._ms.geoMarkerSource.subscribe((features: Feature[]) => {
             features.forEach(feat => {
                 const featId: any = feat.getId();
-                feat.set('pinned', this.ms.pinnedGeoMarker.getValue().indexOf(featId) !== -1);
+                feat.set('pinned', this._ms.pinnedGeoMarker.getValue().indexOf(featId) !== -1);
             });
             this.removeUnpinnedMarker(this.geoMarkerSource);
             this.geoMarkerSource.addFeatures(features);
         });
-        this.actionEmitterSubs = this.sms._onNewActionClicked.subscribe(action => {
+        this.actionEmitterSubs = this._sms._onNewActionClicked.subscribe(action => {
             this.onActionReceived(action);
         });
-        this.outsideFeatureSelectorSubs = this.sms._onNewDataSelected.subscribe((ids: string[]) => {
+        this.outsideFeatureSelectorSubs = this._sms._onNewDataSelected.subscribe((ids: string[]) => {
             if (ids && ids.length) {
                 this.selectAndGoTo(ids[0]);
             }
         });
-        this.newEventThreadSearchValueSubs = this.sms._onNewSearchValue.subscribe(value => this.onActionReceived('CLEAR_RAW_DATA_SOURCE'));
-        this.zoomToLayerSubs = this.ms.zoomToLayer.subscribe(id => {
+        this.newEventThreadSearchValueSubs = this._sms._onNewSearchValue.subscribe(value => this.onActionReceived('CLEAR_RAW_DATA_SOURCE'));
+        this.zoomToLayerSubs = this._ms.zoomToLayer.subscribe(id => {
             const layerToZoom = this._map
                 .getLayers()
                 .getArray()
@@ -212,14 +238,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._map.getView().fit((<VectorLayer>layerToZoom).getSource().getExtent());
             }
         });
-        this.zoomToFeatureSubs = this.ms.zoomToFeature.subscribe((request: ZoomToFeatureRequest) => {
+        this.zoomToFeatureSubs = this._ms.zoomToFeature.subscribe((request: ZoomToFeatureRequest) => {
             const targetLayer: VectorLayer = request.targetLayer === 'geoMarkerLayer' ? this.geoMarkerLayer : this.featureLayer;
             const featureById: Feature = targetLayer.getSource().getFeatureById(request.featureId);
             if (featureById) {
                 this._map.getView().fit(featureById.getGeometry().getExtent());
             }
         });
-        this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((markerIds: string[]) => {
+        this.pinnedGeoMarkerSubs = this._ms.pinnedGeoMarker.subscribe((markerIds: string[]) => {
             this.geoMarkerSource.getFeatures().forEach((feat: Feature) => {
                 const featId: any = feat.getId();
                 feat.set('pinned', markerIds.indexOf(featId) !== -1);
@@ -230,7 +256,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._activatedRoute.data.subscribe(({ inputData }) => {
             if (inputData) {
                 const data: GenericModel[] = <GenericModel[]>inputData;
-                this.ms.getFeaturesFromGeneric(data);
+                this._ms.getFeaturesFromGeneric(data);
             }
         });
     }
@@ -317,7 +343,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             newVectorLayer.set('id', newMapLayer.layerId);
             this._map.addLayer(newVectorLayer);
             this._map.getView().fit(vectorSource.getExtent());
-            this.ms.mapLayers.next(this.ms.mapLayers.getValue().concat(newMapLayer));
+            this._ms.mapLayers.next(this._ms.mapLayers.getValue().concat(newMapLayer));
         });
 
         // Utilisé pour une sélection custom, selectInteraction n'est pas satisfaisante avec les clusters
@@ -326,6 +352,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 const feat: any = this._map.getFeaturesAtPixel(event.pixel);
                 const feats: Feature[] = feat ? (Array.isArray(feat) ? feat : [feat]) : [];
                 this.onNewFeaturesSelected(feats);
+                if (feats[0]) {
+                    let coord: [number, number] = event.coordinate;
+                    if (
+                        feats[0]
+                            .get('features')[0]
+                            .getGeometry()
+                            .getType() === 'Point'
+                    ) {
+                        coord = (<Point>feats[0].get('features')[0].getGeometry()).getCoordinates();
+                    }
+                    this.displayPopup(coord);
+                } else {
+                    this.closePopup();
+                }
             }
             event.preventDefault();
         });
@@ -349,11 +389,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 feat.get('features').forEach(f => f.set('selected', true));
             });
         }
-        this.sms._selectedData.next(this.selectedIds);
+        this._sms._selectedData.next(this.selectedIds);
     }
 
     private initMapLayerListener() {
-        this.layerSubs = this.ms.mapLayers.subscribe((update: MapLayer[]) => {
+        this.layerSubs = this._ms.mapLayers.subscribe((update: MapLayer[]) => {
             console.log(this._map.getLayers().getLength());
             // 2 correspond au 2 layers ajoutés obligatoirement (featureLayer et geoMarkerLayer) dans la fonction initMap
             if (this._map.getLayers().getLength() === 2) {
@@ -451,7 +491,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     private initDessinTools() {
         // pairwise permet de recevoir les items sous la forme [oldValue, newValue],
         // startWith initialise la premiere value
-        this.ms.dessinStates
+        this._ms.dessinStates
             .pipe(
                 startWith(null),
                 pairwise()
@@ -468,7 +508,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getSelectedDessinSource(): VectorSource {
-        const selectedLayer: MapLayer = this.ms.mapLayers.getValue().find(layer => layer.layerType === 'DESSIN' && layer.selected);
+        const selectedLayer: MapLayer = this._ms.mapLayers.getValue().find(layer => layer.layerType === 'DESSIN' && layer.selected);
         if (selectedLayer == null || typeof selectedLayer === 'undefined') {
             return null;
         }
@@ -508,7 +548,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getDessinStates(): FigureStyle {
-        return this.ms.dessinStates.getValue();
+        return this._ms.dessinStates.getValue();
     }
 
     getDessinStyle(): Style {
@@ -536,19 +576,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     selectAndGoTo(objectId: string) {
-        /*this.selectInteraction.getFeatures().clear();
-         const selectedFeat: Feature = this.featureSource.getFeatureById(objectId);
-         if (selectedFeat) {
-         this.selectInteraction.getFeatures().push(selectedFeat);
-         this.selectInteraction.dispatchEvent({
-         type: 'select',
-         selected: [selectedFeat],
-         deselected: [],
-         mapBrowserEvent: null
-         });
-         this._map.getView().fit(selectedFeat.getGeometry().getExtent(), {duration: 1500});
-         }*/
-
         const selectedFeat: Feature = this.featureSource.getFeatureById(objectId);
         if (selectedFeat) {
             this.onNewFeaturesSelected([selectedFeat]);
@@ -557,7 +584,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getMapStates(): MapState {
-        return this.ms.mapStates.getValue();
+        return this._ms.mapStates.getValue();
     }
 
     geoMarkerStyleFunction(feature: Feature, isSelected: boolean) {
@@ -646,11 +673,50 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
         }
         if (emitNewState) {
-            this.ms.mapStates.next(mapState);
+            this._ms.mapStates.next(mapState);
         }
     }
 
     clearRawDataSource() {
         this.featureSource.clear();
+    }
+
+    displayPopup(coord: [number, number]) {
+        this.closePopup();
+
+        this.popup = new Overlay({
+            position: coord,
+            positioning: 'top-center',
+            autoPan: true,
+            offset: [0, 13]
+        });
+
+        const factory: ComponentFactory<MapOverlayComponent> = this._resolver.resolveComponentFactory(MapOverlayComponent);
+        const injector = Injector.create({
+            providers: [
+                {
+                    provide: 'popupInteract',
+                    useValue: this.popupInteract
+                },
+                {
+                    provide: 'idList',
+                    useValue: this.selectedIds
+                }
+            ]
+        });
+        this.popupContent = this._vcr.createComponent(factory, 0, injector);
+        this.popup.setElement(this.popupContent.location.nativeElement);
+        this._map.addOverlay(this.popup);
+    }
+
+    closePopup() {
+        if (this.popup) {
+            this._map.removeOverlay(this.popup);
+        }
+        if (this.popupContent) {
+            this.popupContent.destroy();
+            this.popupContent = null;
+        }
+        this.popup = null;
     }
 }

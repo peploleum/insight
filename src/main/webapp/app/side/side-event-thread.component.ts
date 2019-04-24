@@ -10,7 +10,7 @@ import { JhiAlertService } from 'ng-jhipster';
 import { debounceTime, distinctUntilChanged, filter, map, takeWhile, tap } from 'rxjs/internal/operators';
 import { IRawData } from '../shared/model/raw-data.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { ToolbarButtonParameters } from '../shared/util/insight-util';
+import { BASE64URI, getDataTypeIcon, getSourceTypeIcon, ToolbarButtonParameters } from '../shared/util/insight-util';
 import { SideMediatorService } from './side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
 
@@ -246,31 +246,15 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     getImageBase64Src(content: string): string {
-        return `data:image/png;base64,${content}`;
+        return BASE64URI(content);
     }
 
     getSourceTypeIcon(sourceType: string): string {
-        switch (sourceType) {
-            case 'TWITTER':
-                return 'apple-alt';
-            case 'RSS':
-                return 'rss-square';
-            case 'SYSLOG':
-                return 'shield-alt';
-            default:
-                return 'rss-square';
-        }
+        return getSourceTypeIcon(sourceType);
     }
 
     getDataTypeIcon(dataType: string): string {
-        switch (dataType) {
-            case 'CYBER':
-                return 'user-secret';
-            case 'OSINT':
-                return 'wifi';
-            default:
-                return 'rss-square';
-        }
+        return getDataTypeIcon(dataType);
     }
 
     onNewPage(dir: number) {

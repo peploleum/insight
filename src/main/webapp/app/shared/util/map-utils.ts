@@ -22,6 +22,8 @@ import {
     IMAGE_URL_SELECTED_GEOMARKER,
     IMAGE_URL_SELECTED_RAW
 } from '../../network/network.service';
+import { GenericModel } from '../model/generic.model';
+import { Moment } from 'moment';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -127,6 +129,55 @@ export class ZoomToFeatureRequest {
     constructor(targetLayer: string, featureId: string) {
         this.targetLayer = targetLayer;
         this.featureId = featureId;
+    }
+}
+
+export class MapOverlayGenericMapper {
+    entityType?: string;
+    title?: string;
+    subTitle?: string;
+    image?: any;
+    content?: string;
+    date?: Moment;
+
+    static fromGeneric(entity: GenericModel): MapOverlayGenericMapper {
+        const mapper: MapOverlayGenericMapper = new MapOverlayGenericMapper();
+        mapper.entityType = entity['entityType'];
+        mapper.title =
+            entity['biographicsName'] ||
+            entity['equipmentName'] ||
+            entity['eventName'] ||
+            entity['locationName'] ||
+            entity['organisationName'] ||
+            entity['rawDataName'] ||
+            'noTitle';
+        mapper.subTitle = entity['biographicsFirstname'] || entity['rawDataSourceName'] || 'noSubTitle';
+        mapper.image =
+            entity['biographicsImage'] ||
+            entity['equipmentImage'] ||
+            entity['eventImage'] ||
+            entity['locationImage'] ||
+            entity['organisationImage'] ||
+            entity['rawDataData'];
+        mapper.content =
+            entity['biographicsName'] ||
+            entity['equipmentDescription'] ||
+            entity['eventDescription'] ||
+            entity['locationName'] ||
+            entity['organisationDescrption'] ||
+            entity['rawDataContent'] ||
+            'noContent';
+        mapper.date = entity['rawDataCreationDate'];
+        return mapper;
+    }
+
+    constructor(entityType?: string, title?: string, subTitle?: string, image?: any, content?: string, date?: Moment) {
+        this.entityType = entityType;
+        this.title = title;
+        this.subTitle = subTitle;
+        this.image = image;
+        this.content = content;
+        this.date = date;
     }
 }
 
