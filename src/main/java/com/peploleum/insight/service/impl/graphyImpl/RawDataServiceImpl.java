@@ -67,12 +67,12 @@ public class RawDataServiceImpl implements RawDataService {
         rawData = rawDataRepository.save(rawData);
 
         if (rawData.getExternalId() == null || rawData.getExternalId().isEmpty()) {
-            Long externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), InsightEntityType.RawData);
+            Long externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
             rawData.setExternalId(String.valueOf(externalId));
             rawData = rawDataRepository.save(rawData);
         } else {
             this.insightGraphEntityRepository.update(Long.valueOf(rawData.getExternalId()), rawData.getRawDataName(),
-                rawData.getId(), InsightEntityType.RawData);
+                rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
         }
         rawDataSearchRepository.save(rawData);
         return rawDataMapper.toDto(rawData);

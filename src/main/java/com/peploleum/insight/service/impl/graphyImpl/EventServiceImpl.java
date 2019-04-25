@@ -56,12 +56,12 @@ public class EventServiceImpl implements EventService {
         event.setEntityType(InsightEntityType.Event);
         event = eventRepository.save(event);
         if (event.getExternalId() == null || event.getExternalId().isEmpty()) {
-            Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), InsightEntityType.Event);
+            Long externalId = this.insightGraphEntityRepository.save(event.getEventName(), event.getId(), event.getEventSymbol(), InsightEntityType.Event);
             event.setExternalId(String.valueOf(externalId));
             event = eventRepository.save(event);
         } else {
             this.insightGraphEntityRepository.update(Long.valueOf(event.getExternalId()), event.getEventName(),
-                event.getId(), InsightEntityType.Event);
+                event.getId(), event.getEventSymbol(), InsightEntityType.Event);
         }
         eventSearchRepository.save(event);
         return eventMapper.toDto(event);

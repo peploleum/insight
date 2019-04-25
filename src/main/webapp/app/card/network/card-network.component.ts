@@ -19,6 +19,7 @@ import { DataSet, Edge, IdType, Network, Node, Options } from 'vis';
 import { NetworkService } from '../../network/network.service';
 import { HttpResponse } from '@angular/common/http';
 import { filter, map } from 'rxjs/internal/operators';
+import { addNodes } from '../../shared/util/network.util';
 
 @Component({
     selector: 'ins-card-network',
@@ -55,7 +56,7 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
                     filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
                     map((response: HttpResponse<IGraphyNodeDTO>) => {
                         const data: IGraphyNodeDTO = response.body;
-                        return NetworkService.getNodeDto(data.label, data.type, data.id, data.idMongo, '', data.image);
+                        return NetworkService.getNodeDto(data.label, data.type, data.id, data.idMongo, '', data.symbole);
                     })
                 )
                 .subscribe((nodeDTO: NodeDTO) => {
@@ -114,8 +115,7 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
     addNodes(nodes: Node[], edges: Edge[]) {
-        this.networkData.nodes.add(nodes);
-        this.networkData.edges.add(edges);
+        addNodes(this.networkData, nodes, edges);
         this.network.fit();
     }
 

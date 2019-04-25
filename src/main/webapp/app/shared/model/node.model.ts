@@ -6,7 +6,7 @@ export interface IGraphyNodeDTO {
     type?: string;
     title?: string;
     to?: IGraphyRelationDTO[];
-    image?: string;
+    symbole?: string;
 }
 
 /**
@@ -25,7 +25,7 @@ export class GraphyNodeDTO implements IGraphyNodeDTO {
         public type?: string,
         public title?: string,
         to?: IGraphyRelationDTO[],
-        public image?: string
+        public symbole?: string
     ) {}
 }
 

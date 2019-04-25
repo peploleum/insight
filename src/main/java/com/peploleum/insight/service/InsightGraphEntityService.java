@@ -20,7 +20,7 @@ public interface InsightGraphEntityService {
      * @param type    Type of Entity
      * @return unique identifier in graph db
      */
-    Long save(String name, String idMongo, InsightEntityType type);
+    Long save(String name, String idMongo, String symbole, InsightEntityType type);
 
     /**
      * Update or save a InsightGraphEntity Vertex
@@ -31,7 +31,7 @@ public interface InsightGraphEntityService {
      * @param type    Type of Entity
      * @return unique identifier in graph db
      */
-    Long update(Long graphId, String name, String idMongo, InsightEntityType type);
+    Long update(Long graphId, String name, String idMongo, String symbole, InsightEntityType type);
 
     /**
      * Get one entity by id.

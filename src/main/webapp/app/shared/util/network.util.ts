@@ -1,7 +1,8 @@
 /**
  * Created by gFolgoas on 22/02/2019.
  */
-import { IdType } from 'vis';
+import { Edge, IdType, Node } from 'vis';
+import { EdgeDTO, GraphDataSet } from '../model/node.model';
 export class NetworkState {
     LAYOUT_DIR: string;
     LAYOUT_FREE: boolean;
@@ -65,3 +66,48 @@ export class NetworkSymbol {
         this.isPresentInNetwork = isPresentInNetwork;
     }
 }
+
+/**
+ * Dédoublonnage avant ajout au network
+ * On évite de remplacer toute la liste de nodes du network pour ne pas perdre
+ * les positions de ceux déjà présents.
+ * */
+export const addNodes = (dataSet: GraphDataSet, nodes: Node[], edges: Edge[]) => {
+    const tempN = {};
+    const tempAddN = {};
+    dataSet.nodes.forEach(n => (tempN[n.id] = n));
+    nodes.forEach(node => {
+        if (!tempN[node.id]) {
+            tempAddN[node.id] = node;
+        }
+    });
+    nodes = Object.keys(tempAddN).map(key => tempAddN[key]);
+
+    const tempE = {};
+    const tempAddE: Edge[] = [];
+    dataSet.edges.forEach(e => {
+        const tempEdges: Edge[] = tempE[e.from] || [];
+        tempEdges.push(e);
+        tempE[e.from] = tempEdges;
+    });
+    edges.forEach((edge: EdgeDTO) => {
+        const tempEdges: EdgeDTO[] = tempE[edge.from] || [];
+        let isPresent = false;
+        for (let i = 0; i < tempEdges.length; i++) {
+            const e: EdgeDTO = tempEdges[i];
+            if (e.from === edge.from && e.to === edge.to) {
+                isPresent = true;
+                break;
+            }
+        }
+        if (!isPresent) {
+            tempEdges.push(edge);
+            tempE[edge.from] = tempEdges;
+            tempAddE.push(edge);
+        }
+    });
+    edges = Object.keys(tempAddE).map(key => tempAddE[key]);
+
+    dataSet.nodes.add(nodes);
+    dataSet.edges.add(edges);
+};

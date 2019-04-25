@@ -10,6 +10,7 @@ public class NodeDTO {
     private String idMongo;
     private String label;
     private String type;
+    private String symbole;
 
     public String getId() {
         return id;
@@ -41,6 +42,14 @@ public class NodeDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSymbole() {
+        return symbole;
+    }
+
+    public void setSymbole(String symbole) {
+        this.symbole = symbole;
     }
 
     @Override

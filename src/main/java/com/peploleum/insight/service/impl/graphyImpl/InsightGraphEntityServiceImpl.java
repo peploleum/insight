@@ -30,13 +30,14 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
     }
 
     @Override
-    public Long save(String name, String idMongo, InsightEntityType type) {
+    public Long save(String name, String idMongo, String symbole, InsightEntityType type) {
         log.debug("Request to save InsightGraphEntity");
 
         InsightGraphEntity entity = new InsightGraphEntity();
         if (entity.getProperties() == null)
             entity.setProperties(new HashMap<>());
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
+        entity.getProperties().put("symbole", symbole);
         entity.setIdMongo(idMongo);
         entity.setName(name);
         entity.setEntityType(type);
@@ -47,17 +48,18 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
     }
 
     @Override
-    public Long update(Long graphId, String name, String idMongo, InsightEntityType type) {
+    public Long update(Long graphId, String name, String idMongo, String symbole, InsightEntityType type) {
         log.debug("Request to update InsightGraphEntity : {}", graphId);
 
         Optional<InsightGraphEntity> optEntity = this.findOne(graphId);
         if (!optEntity.isPresent()) {
-            return this.save(name, idMongo, type);
+            return this.save(name, idMongo, symbole, type);
         }
         InsightGraphEntity entity = optEntity.get();
         if (entity.getProperties() == null)
             entity.setProperties(new HashMap<>());
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
+        entity.getProperties().put("symbole", symbole);
         entity.setIdMongo(idMongo);
         entity.setName(name);
         entity.setEntityType(type);

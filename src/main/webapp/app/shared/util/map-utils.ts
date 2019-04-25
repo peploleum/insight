@@ -151,7 +151,7 @@ export class MapOverlayGenericMapper {
             entity['organisationName'] ||
             entity['rawDataName'] ||
             'noTitle';
-        mapper.subTitle = entity['biographicsFirstname'] || entity['rawDataSourceName'] || 'noSubTitle';
+        mapper.subTitle = entity['biographicsFirstname'] || entity['rawDataSubType'] || 'noSubTitle';
         mapper.image =
             entity['biographicsImage'] ||
             entity['equipmentImage'] ||

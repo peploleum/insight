@@ -64,19 +64,18 @@ public class TraversalServiceImpl implements TraversalService {
                 this.log.info(key + " - " + resultObject.get(key).toString());
             }));
             final NodeDTO neighbor = new NodeDTO();
+
             final String graphId = resultObject.get("id").toString();
             final String idMongo = smartOpenProperties(resultObject, "idMongo");
             final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
+            final String symbole = smartOpenProperties(resultObject, "symbole");
+            final String name = smartOpenProperties(resultObject, "name");
+
             neighbor.setType(type);
             neighbor.setId(graphId);
             neighbor.setIdMongo(idMongo);
-
-            try {
-                final String name = smartOpenProperties(resultObject, "name");
-                neighbor.setLabel(name);
-            } catch (Exception e) {
-                this.log.warn("failed to extract name of janus entity");
-            }
+            neighbor.setSymbole(symbole);
+            neighbor.setLabel(name);
 
             nodeList.add(neighbor);
             this.log.info("adding node: " + neighbor.toString());
@@ -125,6 +124,7 @@ public class TraversalServiceImpl implements TraversalService {
         foundNode.setId(id);
         foundNode.setIdMongo(smartOpenProperties(resultObject, "idMongo"));
         foundNode.setType(smartOpenProperties(resultObject, "entityType").replace("\"", ""));
+        foundNode.setSymbole(smartOpenProperties(resultObject, "symbole"));
         try {
             final String name = smartOpenProperties(resultObject, "name");
             foundNode.setLabel(name);
@@ -147,9 +147,9 @@ public class TraversalServiceImpl implements TraversalService {
     private String smartOpenProperties(LinkedHashMap object, String key) {
         final LinkedHashMap properties = (LinkedHashMap) object.get("properties");
         if (properties != null) {
-            final Object idMongo = properties.get(key);
-            if (idMongo != null) {
-                final LinkedHashMap propertyList = (LinkedHashMap) ((ArrayList) idMongo).get(0);
+            final Object prop = properties.get(key);
+            if (prop != null) {
+                final LinkedHashMap propertyList = (LinkedHashMap) ((ArrayList) prop).get(0);
                 if (propertyList != null) {
                     final String value = propertyList.get("value").toString();
                     return value;

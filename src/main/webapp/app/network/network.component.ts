@@ -9,7 +9,7 @@ import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
-import { DataContentInfo, NetworkState } from '../shared/util/network.util';
+import { addNodes, DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
 import { DEBUG_INFO_ENABLED } from '../app.constants';
 import { GenericModel } from '../shared/model/generic.model';
@@ -62,7 +62,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                                     rawData.id,
                                     rawData.idMongo,
                                     '',
-                                    rawData.image
+                                    rawData.symbole
                                 );
                             })
                         )
@@ -234,47 +234,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
 
     addNodes(nodes: Node[], edges: Edge[]) {
         this.network.storePositions();
-
-        // Dédoublonnage avant ajout au network
-        // On évite de remplacer toute la liste de nodes du network pour ne pas perdre
-        // les positions de ceux déjà présents.
-        const tempN = {};
-        const tempAddN = {};
-        this.networkData.nodes.forEach(n => (tempN[n.id] = n));
-        nodes.forEach(node => {
-            if (!tempN[node.id]) {
-                tempAddN[node.id] = node;
-            }
-        });
-        nodes = Object.keys(tempAddN).map(key => tempAddN[key]);
-
-        const tempE = {};
-        const tempAddE: Edge[] = [];
-        this.networkData.edges.forEach(e => {
-            const tempEdges: Edge[] = tempE[e.from] || [];
-            tempEdges.push(e);
-            tempE[e.from] = tempEdges;
-        });
-        edges.forEach((edge: EdgeDTO) => {
-            const tempEdges: EdgeDTO[] = tempE[edge.from] || [];
-            let isPresent = false;
-            for (let i = 0; i < tempEdges.length; i++) {
-                const e: EdgeDTO = tempEdges[i];
-                if (e.from === edge.from && e.to === edge.to) {
-                    isPresent = true;
-                    break;
-                }
-            }
-            if (!isPresent) {
-                tempEdges.push(edge);
-                tempE[edge.from] = tempEdges;
-                tempAddE.push(edge);
-            }
-        });
-        edges = Object.keys(tempAddE).map(key => tempAddE[key]);
-
-        this.networkData.nodes.add(nodes);
-        this.networkData.edges.add(edges);
+        addNodes(this.networkData, nodes, edges);
     }
 
     removeNodes(idNodes: IdType[], idEdges: IdType[]) {
@@ -300,7 +260,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
             const data = new GraphDataCollection([], []);
             data.nodes = graphyDatas.map((item: IGraphyNodeDTO) =>
-                NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.image)
+                NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole)
             );
             data.edges = graphyDatas
                 .map(item => NetworkService.getEdgeCollection(item.id, item.to))
