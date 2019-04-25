@@ -7,7 +7,7 @@ import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } f
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { DragParameter, FileReaderEventTarget } from '../shared/util/insight-util';
+import { DragParameter, FileReaderEventTarget, getGenericSymbolProperty } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { addNodes, DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
@@ -301,13 +301,14 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             if (!targetNodeMongoId) {
                 return;
             }
-            this._ns.updateRawData(targetNodeMongoId, params.data).subscribe(
-                (res: HttpResponse<IRawData>) => {
+            this._ns.updateData(targetNodeMongoId, params.data).subscribe(
+                (data: GenericModel) => {
                     console.log('Update du symbole successful');
-                    this.networkData.nodes.update({ id: targetNodeId, image: params.data });
+                    const datum = data[getGenericSymbolProperty(data)];
+                    this.networkData.nodes.update({ id: targetNodeId, image: datum });
                 },
                 error => {
-                    console.log("Error lors de l'update du symbole du RawData, Id: " + targetNodeMongoId);
+                    console.log("Error lors de l'update du symbole de l'entity, Id: " + targetNodeMongoId);
                 }
             );
         }

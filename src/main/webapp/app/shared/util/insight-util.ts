@@ -8,6 +8,8 @@ import * as moment from 'moment';
 import { Biographics } from '../model/biographics.model';
 import { Equipment } from '../model/equipment.model';
 import { Organisation } from '../model/organisation.model';
+import { Event } from '../model/event.model';
+import { Location } from '../model/location.model';
 import { GenericModel } from '../model/generic.model';
 export const UUID = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -119,21 +121,87 @@ export const getDataTypeIcon = (dataType: string): string => {
     }
 };
 
-export const getGenericContentProperty = (entity: GenericModel): string => {
+export interface ITypeMap {
+    biographics?: Biographics;
+    equipment?: Equipment;
+    event?: Event;
+    location?: Location;
+    organisation?: Organisation;
+    rawdata?: RawData;
+}
+
+/*export class TypeMap implements ITypeMap {
+ static getInstance(): TypeMap {
+ const typeMap: TypeMap = new TypeMap();
+ typeMap['biographics'] = new Biographics();
+ typeMap['equipment'] = new Equipment();
+ typeMap['event'] = new Event();
+ typeMap['location'] = new Location();
+ typeMap['organisation'] = new Organisation();
+ typeMap['rawdata'] = new RawData();
+ return typeMap;
+ }
+
+ constructor(public biographics?: Biographics,
+ public equipment?: Equipment,
+ public event?: Event,
+ public location?: Location,
+ public organisation?: Organisation,
+ public rawdata?: RawData) {
+ }
+ }
+
+ export const assertInstanceOf = <N extends keyof ITypeMap>(expectedType: N, target: any): boolean => {
+ return target instanceof N;
+ };*/
+
+export const assertInstanceOf = (type: string, entity: GenericModel): boolean => {
+    switch (type) {
+        case 'Biographics':
+            return Object.keys(new Biographics()).every(key => entity.hasOwnProperty(key));
+        case 'Equipment':
+            return Object.keys(new Equipment()).every(key => entity.hasOwnProperty(key));
+        case 'Event':
+            return Object.keys(new Event()).every(key => entity.hasOwnProperty(key));
+        case 'Location':
+            return Object.keys(new Location()).every(key => entity.hasOwnProperty(key));
+        case 'Organisation':
+            return Object.keys(new Organisation()).every(key => entity.hasOwnProperty(key));
+        case 'RawData':
+            return Object.keys(new RawData()).every(key => entity.hasOwnProperty(key));
+        default:
+            return false;
+    }
+};
+
+export const getGenericSymbolProperty = (entity: GenericModel): string => {
     switch (entity['entityType']) {
         case 'Biographics':
-            break;
+            return 'biographicsSymbol';
         case 'Equipment':
-            break;
+            return 'equipmentSymbol';
         case 'Event':
-            break;
+            return 'eventSymbol';
         case 'Location':
-            break;
+            return 'locationSymbol';
         case 'Organisation':
-            break;
+            return 'organisationSymbol';
         case 'RawData':
-            break;
+            return 'rawDataSymbol';
         default:
             return null;
     }
+};
+
+/**
+ * Renseigne le type d'un GenericModel
+ * */
+export const genericTypeResolver = (entity: GenericModel): GenericModel => {
+    for (const i of ENTITY_TYPE_LIST) {
+        if (assertInstanceOf(i, entity)) {
+            entity['entityType'] = i;
+            break;
+        }
+    }
+    return entity;
 };

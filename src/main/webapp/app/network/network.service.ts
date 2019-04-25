@@ -11,7 +11,9 @@ import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeD
 import { RawDataService } from 'app/entities/raw-data';
 import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
-import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
+import { genericTypeResolver, getGenericSymbolProperty, ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
+import { GenericModel } from '../shared/model/generic.model';
+import { QuickViewService } from '../side/quick-view.service';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
@@ -104,7 +106,7 @@ export class NetworkService {
         }
     }
 
-    constructor(private http: HttpClient, private rds: RawDataService) {}
+    constructor(private http: HttpClient, private rds: RawDataService, private _qvs: QuickViewService) {}
 
     updateRawData(rawDataId: string, symbole: string): Observable<HttpResponse<IRawData>> {
         return this.rds.find(rawDataId).pipe(
@@ -112,6 +114,20 @@ export class NetworkService {
                 const data: IRawData = res.body;
                 data.rawDataSymbol = symbole;
                 return this.rds.update(data);
+            })
+        );
+    }
+
+    updateData(dataId: string, symbole: string): Observable<GenericModel> {
+        return this._qvs.find(dataId).pipe(
+            switchMap((res1: HttpResponse<GenericModel>) => {
+                const data: GenericModel = res1.body;
+                data[getGenericSymbolProperty(data)] = symbole;
+                return this._qvs.update(data).pipe(
+                    map((res2: HttpResponse<GenericModel>) => {
+                        return genericTypeResolver(res2.body);
+                    })
+                );
             })
         );
     }
@@ -252,7 +268,7 @@ export const MOCK_GRAPH_DATA = {
         { id: 1, idMongo: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
         { id: 2, idMongo: '2a', label: 'Explosion', title: 'Evenement', type: 'Event' },
         { id: 3, idMongo: '3a', label: 'Voiture', title: 'Equipement', type: 'Equipment' },
-        { id: 4, idMongo: '5c90fa1b5e365c06ac7e187c', label: 'Brian', title: 'Personne', type: 'Biographics' },
+        { id: 4, idMongo: '5c911b8c4a45de0e0ca2556a', label: 'Brian', title: 'Personne', type: 'Biographics' },
         { id: 5, idMongo: '5a', label: 'AK-47', title: 'Equipement', type: 'Equipment' },
         { id: 6, idMongo: '5caf3cc4b0b4d23fc041e953', label: 'Attentat', title: 'Evenement', type: 'Event' },
         { id: 7, idMongo: '5c911d434a45de0e0ca2556b', label: 'Raoul', title: 'Personne', type: 'Biographics' },
