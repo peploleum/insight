@@ -130,32 +130,7 @@ export interface ITypeMap {
     rawdata?: RawData;
 }
 
-/*export class TypeMap implements ITypeMap {
- static getInstance(): TypeMap {
- const typeMap: TypeMap = new TypeMap();
- typeMap['biographics'] = new Biographics();
- typeMap['equipment'] = new Equipment();
- typeMap['event'] = new Event();
- typeMap['location'] = new Location();
- typeMap['organisation'] = new Organisation();
- typeMap['rawdata'] = new RawData();
- return typeMap;
- }
-
- constructor(public biographics?: Biographics,
- public equipment?: Equipment,
- public event?: Event,
- public location?: Location,
- public organisation?: Organisation,
- public rawdata?: RawData) {
- }
- }
-
- export const assertInstanceOf = <N extends keyof ITypeMap>(expectedType: N, target: any): boolean => {
- return target instanceof N;
- };*/
-
-export const assertInstanceOf = (type: string, entity: GenericModel): boolean => {
+export const assertGenericType = (type: string, entity: GenericModel): boolean => {
     switch (type) {
         case 'Biographics':
             return Object.keys(new Biographics()).every(key => entity.hasOwnProperty(key));
@@ -198,7 +173,7 @@ export const getGenericSymbolProperty = (entity: GenericModel): string => {
  * */
 export const genericTypeResolver = (entity: GenericModel): GenericModel => {
     for (const i of ENTITY_TYPE_LIST) {
-        if (assertInstanceOf(i, entity)) {
+        if (assertGenericType(i, entity)) {
             entity['entityType'] = i;
             break;
         }
