@@ -378,7 +378,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedIds =
             features && features.length > 0
                 ? features
-                      .map(feat => (<Feature[]>feat.get('features')).map(f => f.getId()))
+                      .map(feat => {
+                          return feat.get('features') ? (<Feature[]>feat.get('features')).map(f => f.getId()) : feat.getId();
+                      })
                       .reduce((x, y) => {
                           return x.concat(y);
                       }, [])
@@ -386,7 +388,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (features) {
             features.forEach((feat: Feature) => {
                 feat.set('selected', true);
-                feat.get('features').forEach(f => f.set('selected', true));
+                if (feat.get('features')) {
+                    (<Feature[]>feat.get('features')).forEach(f => f.set('selected', true));
+                }
             });
         }
         this._sms._selectedData.next(this.selectedIds);

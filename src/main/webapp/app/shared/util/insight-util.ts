@@ -121,15 +121,6 @@ export const getDataTypeIcon = (dataType: string): string => {
     }
 };
 
-export interface ITypeMap {
-    biographics?: Biographics;
-    equipment?: Equipment;
-    event?: Event;
-    location?: Location;
-    organisation?: Organisation;
-    rawdata?: RawData;
-}
-
 export const assertGenericType = (type: string, entity: GenericModel): boolean => {
     switch (type) {
         case 'Biographics':
