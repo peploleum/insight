@@ -310,7 +310,7 @@ export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCoun
 /**
  * Set le radius des features en entrée et renvoie la valeur maximale des clusters
  * */
-export const setClusterRadius = (features: Feature[], resolution: number): number => {
+export const setClusterRadiusFromExtent = (features: Feature[], resolution: number): number => {
     let maxFeatureCount = 0;
     for (let i = features.length - 1; i >= 0; --i) {
         const feature = features[i];
@@ -326,6 +326,21 @@ export const setClusterRadius = (features: Feature[], resolution: number): numbe
         }
         maxFeatureCount = Math.max(maxFeatureCount, jj);
         radius = (0.65 * (Extent.getWidth(extent) + Extent.getHeight(extent))) / resolution;
+        feature.set('radius', radius);
+    }
+    return maxFeatureCount;
+};
+
+/**
+ * Set le radius des features en entrée et renvoie la valeur maximale des clusters
+ * */
+export const setClusterRadius = (features: Feature[], resolution: number): number => {
+    let maxFeatureCount = 0;
+    for (let i = features.length - 1; i >= 0; --i) {
+        const feature = features[i];
+        const originalFeatures: Feature[] = feature.get('features');
+        maxFeatureCount = Math.max(maxFeatureCount, originalFeatures.length);
+        const radius = Math.min(Math.log10(originalFeatures.length) * 10, 60);
         feature.set('radius', radius);
     }
     return maxFeatureCount;

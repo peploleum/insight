@@ -159,7 +159,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             style: (feature: Feature, resolution: number) => {
                 return insHoveredStyleFunction(feature, resolution, this.maxClusterCount || 1);
             },
-            multi: true
+            multi: true,
+            wrapX: false
         });
         this.dragAndDropInteraction = new DragAndDropInteraction({
             formatConstructors: [KML],
@@ -379,7 +380,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             features && features.length > 0
                 ? features
                       .map(feat => {
-                          return feat.get('features') ? (<Feature[]>feat.get('features')).map(f => f.getId()) : feat.getId();
+                          return feat.get('features') ? (<Feature[]>feat.get('features')).map(f => f.getId()) : [feat.getId()];
                       })
                       .reduce((x, y) => {
                           return x.concat(y);

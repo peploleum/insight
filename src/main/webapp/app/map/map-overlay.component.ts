@@ -4,7 +4,7 @@
 import { AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit } from '@angular/core';
 import { QuickViewService } from '../side/quick-view.service';
 import { GenericModel } from '../shared/model/generic.model';
-import { BASE64URI, getDataTypeIcon, getSourceTypeIcon } from '../shared/util/insight-util';
+import { BASE64URI, getDataTypeIcon, getSourceTypeIcon, toKebabCase } from '../shared/util/insight-util';
 import { MapOverlayGenericMapper } from '../shared/util/map-utils';
 
 @Component({
@@ -45,5 +45,10 @@ export class MapOverlayComponent implements OnInit, OnDestroy, AfterViewInit {
 
     getSourceTypeIcon(type: string): string {
         return getSourceTypeIcon(type);
+    }
+
+    getLink(str: string): string {
+        const i: string = toKebabCase(str);
+        return '/' + i;
     }
 }
