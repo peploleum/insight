@@ -321,6 +321,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                     console.log('Update du symbole successful');
                     const datum = data[getGenericSymbolProperty(data)];
                     this.networkData.nodes.update({ id: targetNodeId, image: datum });
+                    this.updateDataContent();
                 },
                 error => {
                     console.log("Error lors de l'update du symbole de l'entity, Id: " + targetNodeMongoId);
