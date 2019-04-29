@@ -7,12 +7,13 @@ import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } f
 import { IRawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { DragParameter, FileReaderEventTarget, getGenericSymbolProperty } from '../shared/util/insight-util';
+import { ContextElement, DragParameter, FileReaderEventTarget, getGenericSymbolProperty } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { addNodes, DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
 import { DEBUG_INFO_ENABLED } from '../app.constants';
 import { GenericModel } from '../shared/model/generic.model';
+import { UserContextService } from '../account/user-context/user-context.service';
 
 @Component({
     selector: 'ins-network',
@@ -29,7 +30,12 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     networkStateSubs: Subscription;
     dataSelectedSubs: Subscription;
 
-    constructor(private _ns: NetworkService, private activatedRoute: ActivatedRoute, private _sms: SideMediatorService) {}
+    constructor(
+        private _ns: NetworkService,
+        private activatedRoute: ActivatedRoute,
+        private _sms: SideMediatorService,
+        private _ucs: UserContextService
+    ) {}
 
     ngOnInit() {
         this._ns.JSONFileSelected.subscribe(
@@ -46,6 +52,14 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     ngAfterViewInit() {
         this.initNetwork();
         this.initNetworkEventListener();
+
+        const dataCtx: ContextElement = this._ucs.getTabContext('NETWORK').context.get('NETWORK_DATA');
+        if (dataCtx && dataCtx.value) {
+            const ctxDataSet = <GraphDataSet>dataCtx.value;
+            this.networkData.nodes.add(ctxDataSet.nodes.get());
+            this.networkData.edges.add(ctxDataSet.edges.get());
+        }
+
         this.activatedRoute.data.subscribe(({ originNode }) => {
             if (originNode) {
                 const data: GenericModel = <GenericModel>originNode;
@@ -92,6 +106,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     ngOnDestroy() {
+        this._ucs.updateContext('NETWORK', new ContextElement<GraphDataSet>('NETWORK_DATA', this.networkData));
         if (this.actionClickedSubs) {
             this.actionClickedSubs.unsubscribe();
         }

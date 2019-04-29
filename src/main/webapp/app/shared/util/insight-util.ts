@@ -43,6 +43,28 @@ export class ToolbarButtonParameters {
     }
 }
 
+export type TabTarget = 'MAP' | 'NETWORK' | 'DASHBOARD' | 'CARD' | 'SOURCES';
+
+export class TabContext {
+    tabTarget: TabTarget;
+    context: Map<string, ContextElement>;
+
+    constructor(tabTarget: TabTarget, context: Map<string, ContextElement>) {
+        this.tabTarget = tabTarget;
+        this.context = context;
+    }
+}
+
+export class ContextElement<T = {}> {
+    key: string;
+    value: T;
+
+    constructor(key: string, value: T) {
+        this.key = key;
+        this.value = value;
+    }
+}
+
 export const ENTITY_TYPE_LIST: string[] = ['Biographics', 'Equipment', 'Event', 'Location', 'Organisation', 'RawData'];
 
 export const toKebabCase = (str: string): string => {
