@@ -1,0 +1,434 @@
+<?xml version="1.0" ?>
+<kml>
+    <Document>
+        <Placemark>
+            <name>Explosion_terroriste_IED_EXPLOSION_7_MORTS</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Explosion_terroriste_IED_EXPLOSION_7_MORTS.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.217340,34.493690,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Explosion_terroriste_IED_EXPLOSION_3_MORTS</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Explosion_terroriste_IED_EXPLOSION_3_MORTS.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.161772,34.535170,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Kidnapping_KABOUL_KIDNAPPING</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Kidnapping_KABOUL_KIDNAPPING.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.138705,34.589424,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>APPROVISIONNEMENT_DROGUE_ZONE_BLANCHE</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>APPROVISIONNEMENT_DROGUE_ZONE_BLANCHE.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.311091,34.544494,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>BEN_VINCENT_VINCENT</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>BEN_VINCENT_VINCENT.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.171161,34.575369,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>CELLULE_DORMANTE_DALIBANS</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>CELLULE_DORMANTE_DALIBANS.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>-117.189214,35.520793,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Manifestation_civile__ill_gale_MANIFESTATION_PRO_DALIBAN</name>
+            <visibility>1</visibility>
+            <LineString>
+                <extrude>0</extrude>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.1815119795655,34.5221016975531 69.1800806277988,34.5202370619762
+                    69.175987582915,34.5219745098075 69.1742134474793,34.522869848423 69.174805832907,34.5247898644393
+                    69.1760853380761,34.5270064865153 69.1728961438704,34.5286703780677
+                    69.1686949513686,34.5310931104819 69.1656365224262,34.5329099392034
+                    69.1618595040486,34.5351244427021
+                </coordinates>
+            </LineString>
+        </Placemark>
+        <Placemark>
+            <name>Menace_PROPAGANDE_DALIBAN</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Menace_PROPAGANDE_DALIBAN.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.252724,34.550139,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Manifestation_civile__ill_gale_REUNION_DALIBAN_BEN_HASSAN_PREPARATION_MANIFESTATION</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Manifestation_civile__ill_gale_REUNION_DALIBAN_BEN_HASSAN_PREPARATION_MANIFESTATION.png
+                        </href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.123360,34.580278,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>BEN_HASSAN_HASSAN</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>BEN_HASSAN_HASSAN.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.149655,34.529341,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>BEN_ZEN_BEC</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>BEN_ZEN_BEC.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>9.122503,41.756387,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>KABOUL_42SWD_18641_23244</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>KABOUL_42SWD_18641_23244.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.203177,34.550754,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Incendie_PARKING_BRULE</name>
+            <visibility>1</visibility>
+            <Polygon>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>69.1596711083212,34.530455936071 69.1596711083212,34.530455936071
+                            69.160607868027,34.5302653271823 69.1608691820992,34.5301567657639
+                            69.161490592418,34.530309253841 69.1620039628116,34.5309398427327
+                            69.1615905969553,34.5313101334425 69.1611657397397,34.5313738216857
+                            69.1606864146433,34.5314465982488 69.1602172428927,34.531131580262
+                            69.1596711083212,34.530455936071
+                        </coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+            </Polygon>
+        </Placemark>
+        <Placemark>
+            <name>Incendie_VOITURE_308_BREAK_BRULEE</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Incendie_VOITURE_308_BREAK_BRULEE.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.165620,34.530177,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Kidnapping_KABOUL_KIDNAPPING_PRO_CARS_EYE</name>
+            <visibility>1</visibility>
+            <Polygon>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>69.1847594803991,34.5124925084966 69.1847075951751,34.5136649460921
+                            69.1845358466075,34.5148285464229 69.184265999662,34.5159742580252
+                            69.1838762604158,34.5171021130728 69.183388394851,34.5182030596208
+                            69.1827914648453,34.5192590766056 69.1820963822827,34.5202791643275
+                            69.1813031249159,34.5212543030305 69.1804334625168,34.5221754405368
+                            69.1794655832748,34.5230335891557 69.1784212781526,34.5238287147515
+                            69.177311424208,34.5245517814673 69.1761251265027,34.52520280325
+                            69.1748841597802,34.5257727285876 69.1735994227459,34.5262615403425
+                            69.1722709183569,34.5266692371438 69.1708986314047,34.5269867994665
+                            69.1695043585261,34.5272141955953 69.1680990004176,34.5273514097787
+                            69.1666825615662,34.5273984416268 69.1652550465316,34.5273552907432
+                            69.1638491313635,34.5272128947705 69.1624539596552,34.5269893051415
+                            69.1610912932407,34.5266664572477 69.159761171044,34.526262388368
+                            69.1584635964764,34.5257770995401 69.1572312441166,34.5252015315873
+                            69.1560532542482,34.5245537365997 69.154929611974,34.5238246980075
+                            69.1538930397823,34.5230324123319 69.1529217461493,34.5221769090488
+                            69.1520484180543,34.5212581490056 69.1512621751057,34.520285165893
+                            69.1505630158075,34.5192579613707 69.1499727610232,34.5181945464122
+                            69.1494805284369,34.5171039540461 69.1490971935435,34.5159771540254
+                            69.1488227684858,34.5148231654965 69.1486464024785,34.5136690568442
+                            69.148600742807,34.512496752483 69.1486531331555,34.5113243286088
+                            69.1488144956102,34.5101698081121 69.1490956876403,34.5090151410093
+                            69.1494858748442,34.5078964123796 69.1499741273285,34.5067955982969
+                            69.1505713675333,34.5057307204672 69.1512667149154,34.5047108089524
+                            69.1520492736896,34.5037358756638 69.1529299681851,34.5028239416119
+                            69.1538978875159,34.5019660002796 69.154931261599,34.5011710953951
+                            69.1560518766463,34.5004391974985 69.1572271053054,34.4997974007156
+                            69.1584677916295,34.4992186349157 69.1597630960086,34.4987299668125
+                            69.1610912364519,34.4983314234054 69.1624521992764,34.4980139854807
+                            69.1638459880543,34.4977776519444 69.1652617496313,34.4976404727034
+                            69.166677703916,34.4976024767055 69.1680938197391,34.4976456276352
+                            69.169510119469,34.4977789436202 69.1708939484253,34.4980114884887
+                            69.1722670593584,34.4983251963164 69.1735967969046,34.4987291320156
+                            69.1748831647459,34.4992232969733 69.1761261283542,34.4997896562445
+                            69.177303942533,34.5004462790211 69.1784165519367,34.5011661127371
+                            69.1794639767458,34.5019581772848 69.1804244314904,34.5028225064835
+                            69.1813087702263,34.503741049924 69.1820952053446,34.5047138417101
+                            69.1827837152928,34.5057318655835 69.1833851913198,34.5067951068336
+                            69.1838778236267,34.5078945813982 69.1842615887296,34.5090212724628
+                            69.1845364627389,34.5101661629295 69.1847024413735,34.5113292535369
+                            69.1847594803991,34.5124925084966
+                        </coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+            </Polygon>
+        </Placemark>
+        <Placemark>
+            <name>Kidnapping_KIDNAPPING_JOURNALISTE_PRO_COTS</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Kidnapping_KIDNAPPING_JOURNALISTE_PRO_COTS.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.134844,34.494016,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Kidnapping_KABOUL_KIDNAPPING</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Kidnapping_KABOUL_KIDNAPPING.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.115913,34.525419,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>SPEEDBOAT</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>SPEEDBOAT.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.702295,34.667848,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>TRAFIC_DISTRIBUTION</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>TRAFIC_DISTRIBUTION.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.702295,34.667848,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Menace_PROPAGANDE_DALIBAN</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Menace_PROPAGANDE_DALIBAN.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.248604,34.561104,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Incendie_VOITURE_LOTUS_ELISE_BRULEE</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>Incendie_VOITURE_LOTUS_ELISE_BRULEE.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.164889,34.529646,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>APPROVISIONNEMENT_DROGUE_ZONE_JAGUAR</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>APPROVISIONNEMENT_DROGUE_ZONE_JAGUAR.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.302196,34.547222,0.000000</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>APPROVISIONNEMENT_DROGUE</name>
+            <visibility>1</visibility>
+            <Style>
+                <IconStyle>
+                    <scale>1.0</scale>
+                    <Icon>
+                        <href>APPROVISIONNEMENT_DROGUE.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Point>
+                <extrude>0</extrude>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>69.307613,34.544106,0.000000</coordinates>
+            </Point>
+        </Placemark>
+    </Document>
+</kml>
