@@ -41,6 +41,10 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
+import { olx, source as olsource } from 'openlayers';
+import animation = olx.animation;
+import PanOptions = olx.animation.PanOptions;
+import VectorEvent = olsource.VectorEvent;
 import {
     FigureStyle,
     getMapImageIconUrl,
@@ -62,10 +66,6 @@ import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from 
 import { GenericModel } from '../shared/model/generic.model';
 import { ActivatedRoute } from '@angular/router';
 import { MapOverlayComponent } from './map-overlay.component';
-import { olx } from 'openlayers';
-import animation = olx.animation;
-
-import PanOptions = olx.animation.PanOptions;
 
 @Component({
     selector: 'jhi-map',
@@ -154,7 +154,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 return Condition.pointerMove(evt) && Condition.noModifierKeys(evt);
             },
             filter: (feature: Feature, layer: VectorLayer) => {
-                return feature.get('features').length > 1;
+                return feature.get('features') && feature.get('features').length > 1;
             },
             style: (feature: Feature, resolution: number) => {
                 return insHoveredStyleFunction(feature, resolution, this.maxClusterCount || 1);
@@ -544,6 +544,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             source: currentDessinSrc
         });
         this._map.addInteraction(this.modifyInteraction);
+
+        currentDessinSrc.on('addfeature', (event: VectorEvent) => {
+            event.feature.setStyle(this.getDessinStyle());
+        });
     }
 
     removeDrawInteraction() {
