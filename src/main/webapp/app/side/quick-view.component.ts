@@ -44,7 +44,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
                 });
                 this.entity = map;
             },
-            error => console.log('Error finding entity by id')
+            error => console.log('QuickViewComponent : Error finding entity by id')
         );
     }
 

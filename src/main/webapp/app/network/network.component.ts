@@ -60,37 +60,39 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             this.networkData.edges.add(ctxDataSet.edges.get());
         }
 
-        this.activatedRoute.data.subscribe(({ originNode }) => {
-            if (originNode) {
-                const data: GenericModel = <GenericModel>originNode;
-                if (data['externalId'] != null) {
-                    this._ns
-                        .getNodeProperties(data['externalId'])
-                        .pipe(
-                            filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
-                            map((response: HttpResponse<IGraphyNodeDTO>) => {
-                                const rawData: IGraphyNodeDTO = response.body;
-                                return NetworkService.getNodeDto(
-                                    rawData.label,
-                                    rawData.type,
-                                    rawData.id,
-                                    rawData.idMongo,
-                                    '',
-                                    rawData.symbole
-                                );
-                            })
-                        )
-                        .subscribe((nodeDTO: NodeDTO) => {
-                            this.addNodes([nodeDTO], []);
-                            this.getNodesNeighbours([nodeDTO.id]);
-                        });
-                    return;
+        if (!dataCtx || !dataCtx.value) {
+            this.activatedRoute.data.subscribe(({ originNode }) => {
+                if (originNode) {
+                    const data: GenericModel = <GenericModel>originNode;
+                    if (data['externalId'] != null) {
+                        this._ns
+                            .getNodeProperties(data['externalId'])
+                            .pipe(
+                                filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
+                                map((response: HttpResponse<IGraphyNodeDTO>) => {
+                                    const rawData: IGraphyNodeDTO = response.body;
+                                    return NetworkService.getNodeDto(
+                                        rawData.label,
+                                        rawData.type,
+                                        rawData.id,
+                                        rawData.idMongo,
+                                        '',
+                                        rawData.symbole
+                                    );
+                                })
+                            )
+                            .subscribe((nodeDTO: NodeDTO) => {
+                                this.addNodes([nodeDTO], []);
+                                this.getNodesNeighbours([nodeDTO.id]);
+                            });
+                        return;
+                    }
                 }
-            }
-            if (DEBUG_INFO_ENABLED) {
-                this.getMockData();
-            }
-        });
+                if (DEBUG_INFO_ENABLED) {
+                    this.getMockData();
+                }
+            });
+        }
         this.networkStateSubs = this._ns.networkState.subscribe(state => {
             const updatedEventThreadToolbar = this._ns.getUpdatedEventThreadToolbar();
             this._sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
@@ -319,8 +321,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             this._ns.updateData(targetNodeMongoId, params.data).subscribe(
                 (data: GenericModel) => {
                     console.log('Update du symbole successful');
-                    const datum = data[getGenericSymbolProperty(data)];
-                    this.networkData.nodes.update({ id: targetNodeId, image: datum });
+                    const dataSymbol = data[getGenericSymbolProperty(data)];
+                    this.networkData.nodes.update({ id: targetNodeId, image: dataSymbol });
                     this.updateDataContent();
                 },
                 error => {

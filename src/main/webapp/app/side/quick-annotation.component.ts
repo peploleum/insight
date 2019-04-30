@@ -49,7 +49,7 @@ export class QuickAnnotationComponent implements OnInit {
                 this.entity = res.body;
             },
             error => {
-                console.log('The entity with id: ' + id + ' is not a rawData or does not exist.');
+                console.log('QuickAnnotationComponent : The entity with id: ' + id + ' is not a rawData or does not exist.');
             }
         );
     }

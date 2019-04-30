@@ -17,13 +17,15 @@
             <ng-container *ngFor="let item of entity | keyvalue">
                 <div *ngIf="item.value" class="qv-property-container">
                     <div>{{item.key}}</div>
-                    <div *ngIf="item.key !== 'rawDataContent'; else rawDataAnnotations" insTextExpanderDirective
+                    <div style="word-break: break-all;" *ngIf="item.key !== 'rawDataContent'; else rawDataAnnotations"
+                         insTextExpanderDirective
                          [txtLimit]="100">{{item.value}}
                     </div>
                     <ng-template #rawDataAnnotations>
                         <div>
                             <ins-rawdata-hyperlink [data]="entity"
-                                                   [rawTextContent]="item.value" [useExpander]="true" [textLimit]="100"></ins-rawdata-hyperlink>
+                                                   [rawTextContent]="item.value" [useExpander]="true"
+                                                   [textLimit]="100"></ins-rawdata-hyperlink>
                         </div>
                     </ng-template>
                 </div>

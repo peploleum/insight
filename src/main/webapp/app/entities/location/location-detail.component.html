@@ -47,6 +47,12 @@
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
             </button>
+
+            <button type="button"
+                    [routerLink]="['/',{outlets: { primary: ['network', location.id], side: ['ins-network-side-panel'] }}]"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'sitemap'"></fa-icon>&nbsp;<span> Envoyer en réseau</span>
+            </button>
         </div>
     </div>
 </div>
