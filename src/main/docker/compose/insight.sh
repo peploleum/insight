@@ -37,17 +37,74 @@ do
 	sudo echo '*.*' > $DIR/.gitignore
 	sudo echo '/**' >> $DIR/.gitignore
 done
+
+echo "recreating data directory: ./elk/elasticsearch/data"
+sudo rm -rf ./elk/elasticsearch/data
+mkdir -p  ./elk/elasticsearch/data
+
+echo "./elk/elasticsearch/data dans .gitignore"
+touch ./elk/elasticsearch/data/.gitignore
+sudo echo '*.*' > ./elk/elasticsearch/data/.gitignore
+sudo echo '/**' >> ./elk/elasticsearch/data/.gitignore
+
+echo "./elk/logstash/in dans .gitignore"
+touch ./elk/logstash/in/.gitignore
+sudo echo '*.*' > ./elk/logstash/in/.gitignore
+sudo echo '/**' >> ./elk/logstash/in/.gitignore
+
 echo "copying NiFi templates"
 cp ././../kubernetes/feeder/* feeder/templates
 echo "adding exec rights to janus init script"
 chmod +x graph/janus/init.sh
+echo "demarrage insight"
 docker-compose -f insight.yml -p insight up -d --build
+
+echo "Arret logstash"
+tostop=$(docker ps -a | grep logstash | awk '{print $1}')
+echo container to stop $tostop
+docker stop $tostop
+
+
+echo "creation index gazetter"
+curl  -X PUT 'localhost:9200/gazetter?pretty' -H 'Content-Type: application/json' -d '{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings" : {
+        "doc" : {
+            "properties" : {
+                 "geonameid" : { "type" : "text" },
+        "asciiname" : { "type" : "text" },
+				"countrycode" : { "type" : "text" , "fields" : { "exact": { "type": "keyword"}}},
+				"fclass" : { "type" : "text" },
+				"fcode" : { "type" : "text" },
+				"latitude" : { "type" : "text" },
+				"longitude" : { "type" : "text" },
+				"name" : { "type" : "text" , "fields" : { "exact": { "type": "keyword"}}},
+				"population" : { "type" : "text" },
+				"location" : { "type" : "geo_point"}
+            }
+        }
+    }
+}' --trace-ascii dump.txt
+
+echo "Demarrage logstash"
+echo container to start $tostop
+docker start $tostop
+
+
 ;;
 
 run)
 
 echo "starting insight .. using bound volumes"
 docker-compose -f insight.yml -p insight up -d
+
+echo "Arret logstash pour eviter re index"
+tostop=$(docker ps -a | grep logstash | awk '{print $1}')
+echo container to stop $tostop
+docker stop $tostop
+
 ;;
 
 stop)
