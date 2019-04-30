@@ -1,6 +1,5 @@
 package com.peploleum.insight.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peploleum.insight.InsightApp;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -19,20 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InsightApp.class)
@@ -69,7 +59,7 @@ public class RawDataGeoSearchTest {
             "    }\n" +
             "}";
         final GeoShapeQueryBuilder region = QueryBuilders
-            .geoShapeQuery("region", ShapeBuilders.newEnvelope(
+            .geoShapeQuery("geometry", ShapeBuilders.newEnvelope(
                 new Coordinate(-6, 41),
                 new Coordinate(8, 51)))
             .relation(ShapeRelation.WITHIN);

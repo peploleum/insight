@@ -8,6 +8,7 @@ import com.peploleum.insight.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/api/insight-kibana")
+@Profile("kibana")
 public class InsightKibanaResource {
 
     private final Logger log = LoggerFactory.getLogger(InsightKibanaResource.class);

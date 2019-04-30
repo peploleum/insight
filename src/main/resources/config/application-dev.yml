@@ -25,6 +25,7 @@ spring:
         include:
         - swagger
         - genius
+        - kibana
         # - graphy
         # - reach
         # Uncomment to activate TLS for the dev profile
