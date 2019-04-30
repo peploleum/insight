@@ -93,6 +93,11 @@
                         [(ngModel)]="rawData.rawDataCoordinates" />
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="insightApp.rawData.geometry" for="field_geometry">Raw Data Geometry</label>
+                    <input type="text" class="form-control" name="rawDataCoordinates" id="field_geometry"
+                           [(ngModel)]="rawData.geometry" />
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="insightApp.rawData.rawDataAnnotations" for="field_rawDataAnnotations">Raw Data Annotations</label>
                     <input type="text" class="form-control" name="rawDataAnnotations" id="field_rawDataAnnotations"
                         [(ngModel)]="rawData.rawDataAnnotations" />

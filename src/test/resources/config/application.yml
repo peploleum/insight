@@ -86,7 +86,3 @@ jhipster:
 application:
     kibana:
         uri: http://localhost:5601
-    graph:
-        host: localhost
-        port: 8090
-        enabled: false

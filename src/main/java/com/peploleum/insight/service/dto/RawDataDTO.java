@@ -1,8 +1,8 @@
 package com.peploleum.insight.service.dto;
 
-import java.time.Instant;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -37,6 +37,8 @@ public class RawDataDTO implements Serializable {
     private String rawDataDataContentType;
 
     private String rawDataCoordinates;
+
+    private String geometry;
 
     private String rawDataAnnotations;
 
@@ -170,6 +172,14 @@ public class RawDataDTO implements Serializable {
         this.externalId = externalId;
     }
 
+    public String getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(String geometry) {
+        this.geometry = geometry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -207,6 +217,7 @@ public class RawDataDTO implements Serializable {
             ", rawDataSymbol='" + getRawDataSymbol() + "'" +
             ", rawDataData='" + getRawDataData() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
+            ", geometry='" + getGeometry() + "'" +
             ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
             ", externalId='" + getExternalId() + "'" +
             "}";

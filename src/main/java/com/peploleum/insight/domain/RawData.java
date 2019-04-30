@@ -73,6 +73,10 @@ public class RawData extends InsightEntity implements Serializable {
     @GeoPointField
     private String rawDataCoordinates;
 
+    @Field("raw_data_geometry")
+    @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
+    private String geometry;
+
     @Field("raw_data_annotations")
     private String rawDataAnnotations;
 
@@ -284,6 +288,15 @@ public class RawData extends InsightEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+
+    public String getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(String geometry) {
+        this.geometry = geometry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -321,6 +334,7 @@ public class RawData extends InsightEntity implements Serializable {
             ", rawDataData='" + getRawDataData() + "'" +
             ", rawDataDataContentType='" + getRawDataDataContentType() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
+            ", geometry='" + getGeometry() + "'" +
             ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
             ", externalId='" + getExternalId() + "'" +
             "}";
