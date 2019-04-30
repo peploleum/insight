@@ -60,39 +60,38 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             this.networkData.edges.add(ctxDataSet.edges.get());
         }
 
-        if (!dataCtx || !dataCtx.value) {
-            this.activatedRoute.data.subscribe(({ originNode }) => {
-                if (originNode) {
-                    const data: GenericModel = <GenericModel>originNode;
-                    if (data['externalId'] != null) {
-                        this._ns
-                            .getNodeProperties(data['externalId'])
-                            .pipe(
-                                filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
-                                map((response: HttpResponse<IGraphyNodeDTO>) => {
-                                    const rawData: IGraphyNodeDTO = response.body;
-                                    return NetworkService.getNodeDto(
-                                        rawData.label,
-                                        rawData.type,
-                                        rawData.id,
-                                        rawData.idMongo,
-                                        '',
-                                        rawData.symbole
-                                    );
-                                })
-                            )
-                            .subscribe((nodeDTO: NodeDTO) => {
-                                this.addNodes([nodeDTO], []);
-                                this.getNodesNeighbours([nodeDTO.id]);
-                            });
-                        return;
-                    }
+        this.activatedRoute.data.subscribe(({ originNode }) => {
+            if (originNode) {
+                const data: GenericModel = <GenericModel>originNode;
+                if (data['externalId'] != null) {
+                    this._ns
+                        .getNodeProperties(data['externalId'])
+                        .pipe(
+                            filter((response: HttpResponse<IGraphyNodeDTO>) => response.ok),
+                            map((response: HttpResponse<IGraphyNodeDTO>) => {
+                                const rawData: IGraphyNodeDTO = response.body;
+                                return NetworkService.getNodeDto(
+                                    rawData.label,
+                                    rawData.type,
+                                    rawData.id,
+                                    rawData.idMongo,
+                                    '',
+                                    rawData.symbole
+                                );
+                            })
+                        )
+                        .subscribe((nodeDTO: NodeDTO) => {
+                            this.addNodes([nodeDTO], []);
+                            this.getNodesNeighbours([nodeDTO.id]);
+                        });
+                    return;
                 }
-                if (DEBUG_INFO_ENABLED) {
-                    this.getMockData();
-                }
-            });
-        }
+            }
+            if (DEBUG_INFO_ENABLED) {
+                this.getMockData();
+            }
+        });
+
         this.networkStateSubs = this._ns.networkState.subscribe(state => {
             const updatedEventThreadToolbar = this._ns.getUpdatedEventThreadToolbar();
             this._sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
