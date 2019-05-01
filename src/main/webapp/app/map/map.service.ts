@@ -11,17 +11,22 @@ import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
+import GeoJSON from 'ol/format/GeoJSON';
 import { IRawData, RawData } from '../shared/model/raw-data.model';
 import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 import { CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD } from '../shared/model/generic.model';
+import { IInsightEntity } from 'app/shared/model/insight-entity.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
-
+    public searchResourceUrl = SERVER_API_URL + 'api/insight-elastic/_search/indices/geo/';
+    itemsPerPage = 50;
+    sort = ['id', 'asc'];
     featureSource: Subject<Feature[]> = new Subject();
+    searchSource: Subject<Feature[]> = new Subject();
 
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
@@ -64,6 +69,20 @@ export class MapService {
             feature.set('description', dto.description);
             feature.set('objectType', dto.objectType);
             feature.set('label', dto.label);
+            return feature;
+        }
+        return null;
+    }
+
+    static getGeoJsonFromInsightEntity(dto: IInsightEntity): Feature {
+        if (dto.geometry) {
+            // const feature1 = (new GeoJSON()).readFeature(dto.geometry);
+            const correctCoord = proj.fromLonLat([dto.geometry.coordinates[0], dto.geometry.coordinates[1]]);
+            const feature: Feature = new Feature(new Point(correctCoord));
+            feature.setId(dto.id);
+            feature.set('description', 'test');
+            feature.set('objectType', dto.entityType);
+            feature.set('label', dto.id);
             return feature;
         }
         return null;
@@ -117,6 +136,27 @@ export class MapService {
             );
     }
 
+    getSearchResults(search: string): Observable<IInsightEntity[]> {
+        const req = {
+            query: search,
+            page: -1,
+            size: this.itemsPerPage,
+            sort: this.sort,
+            indices: ['rawdata', 'biographics', 'event', 'location', 'equipment'],
+            envelope: [-4, 42, 12, 24]
+        };
+        const options = createRequestOption(req);
+        return this.http
+            .get<IInsightEntity[]>(`${this.searchResourceUrl}`, {
+                params: options,
+                observe: 'response'
+            })
+            .pipe(
+                filter((res: HttpResponse<any[]>) => res.ok),
+                map((res: HttpResponse<any[]>) => res.body)
+            );
+    }
+
     getUpdatedEventThreadToolbar(): ToolbarButtonParameters[] {
         const newToolbar = [];
         newToolbar.push(
@@ -160,6 +200,10 @@ export class MapService {
             )
         );
         return newToolbar;
+    }
+
+    getFeaturesFromInsightEntities(result: IInsightEntity[]) {
+        this.searchSource.next(result.map(item => MapService.getGeoJsonFromInsightEntity(item)).filter(dto => dto !== null));
     }
 }
 

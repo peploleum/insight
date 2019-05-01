@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/ope
 import { IMapDataDTO } from '../../shared/model/map.model';
 import { ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
+import { IInsightEntity } from 'app/shared/model/insight-entity.model';
 
 @Component({
     selector: 'ins-map-search',
@@ -45,6 +46,24 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
                 },
                 error => {
                     console.log('Error GeoRef');
+                }
+            );
+        this.searchForm.valueChanges
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap((value: string) => {
+                    return this.ms.getSearchResults(value);
+                })
+            )
+            .subscribe(
+                (result: IInsightEntity[]) => {
+                    // Garde les pinned points
+                    console.log('received ' + result.length);
+                    this.ms.getFeaturesFromInsightEntities(result);
+                },
+                error => {
+                    console.log('Error search geo');
                 }
             );
         this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((pinnedIds: string[]) => {

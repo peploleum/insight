@@ -42,9 +42,6 @@ import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { olx, source as olsource } from 'openlayers';
-import animation = olx.animation;
-import PanOptions = olx.animation.PanOptions;
-import VectorEvent = olsource.VectorEvent;
 import {
     FigureStyle,
     getMapImageIconUrl,
@@ -66,6 +63,7 @@ import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from 
 import { GenericModel } from '../shared/model/generic.model';
 import { ActivatedRoute } from '@angular/router';
 import { MapOverlayComponent } from './map-overlay.component';
+import VectorEvent = olsource.VectorEvent;
 
 @Component({
     selector: 'jhi-map',
@@ -75,9 +73,11 @@ import { MapOverlayComponent } from './map-overlay.component';
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     featureSource: VectorSource = new VectorSource({ wrapX: false });
     geoMarkerSource: VectorSource = new VectorSource({ wrapX: false });
+    searchSource: VectorSource = new VectorSource({ wrapX: false });
     clusterSource: Cluster;
     featureLayer: VectorLayer;
     geoMarkerLayer: VectorLayer;
+    searchLayer: VectorLayer;
     _map: Map;
 
     hoverInteraction: SelectInteration;
@@ -97,6 +97,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     popupInteract: EventEmitter<string> = new EventEmitter();
 
     featureSourceSubs: Subscription;
+    searchSourceSubs: Subscription;
     geoMarkerSourceSubs: Subscription;
     outsideFeatureSelectorSubs: Subscription;
     layerSubs: Subscription;
@@ -145,6 +146,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.geoMarkerLayer = new VectorLayer({
             source: this.geoMarkerSource,
+            style: (feature: Feature) => this.geoMarkerStyleFunction(feature, false),
+            zIndex: 1
+        });
+        this.searchLayer = new VectorLayer({
+            source: this.searchSource,
             style: (feature: Feature) => this.geoMarkerStyleFunction(feature, false),
             zIndex: 1
         });
@@ -209,6 +215,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         this.featureSourceSubs = this._ms.featureSource.subscribe((features: Feature[]) => {
             this.featureSource.addFeatures(features);
+        });
+        this.searchSourceSubs = this._ms.searchSource.subscribe((features: Feature[]) => {
+            this.searchSource.addFeatures(features);
         });
         this.newDataReceivedSubs = this._sms._onNewDataReceived.subscribe((data: any[]) => {
             this._ms.getFeaturesFromGeneric(<GenericModel[]>data);
@@ -308,7 +317,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private initMap() {
         this._map = new Map({
-            layers: [this.featureLayer, this.geoMarkerLayer],
+            layers: [this.featureLayer, this.geoMarkerLayer, this.searchLayer],
             target: 'map',
             controls: control.defaults({
                 attributionOptions: {
