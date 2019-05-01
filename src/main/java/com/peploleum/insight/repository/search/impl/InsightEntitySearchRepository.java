@@ -64,9 +64,7 @@ public class InsightEntitySearchRepository implements com.peploleum.insight.repo
         return this.elasticsearchTemplate.query(query, new JestResultsExtractor<Page<InsightEntity>>() {
             @Override
             public Page<InsightEntity> extract(SearchResult response) {
-
-
-                List<InsightEntity> result = new ArrayList<>();
+                final List<InsightEntity> result = new ArrayList<>();
                 // wrap the results in all required domain elements, and choose to add a hit in the page result depending on the source index
                 for (Class<?> domainDocumentClass : narrowedDomainElements) {
                     if (response.getHits(domainDocumentClass).size() <= 0) {
@@ -85,7 +83,6 @@ public class InsightEntitySearchRepository implements com.peploleum.insight.repo
                         }
                     }
                 }
-
                 if (result.size() > 0) {
                     return new AggregatedPageImpl<>(result);
                 }

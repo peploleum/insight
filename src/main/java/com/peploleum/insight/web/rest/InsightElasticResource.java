@@ -6,6 +6,9 @@ import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.InsightElasticService;
 import com.peploleum.insight.service.util.InsightUtil;
 import com.peploleum.insight.web.rest.util.PaginationUtil;
+import com.vividsolutions.jts.geom.Coordinate;
+import org.elasticsearch.common.geo.builders.EnvelopeBuilder;
+import org.elasticsearch.common.geo.builders.ShapeBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -66,9 +68,23 @@ public class InsightElasticResource {
     @GetMapping("/_search/indices/")
     @Timed
     public ResponseEntity<List<InsightEntity>> search(@RequestParam String query, @RequestParam("indices") List<String> indices, Pageable page) {
+        // http://localhost:9000/api/insight-elastic/_search/indices/?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event
         log.debug("REST request to get InsightEntities base on search query {}", query);
         log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
         Page<InsightEntity> search = this.elasticService.search(query, indices, page);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/indices");
+        return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_search/indices/geo/")
+    @Timed
+    public ResponseEntity<List<InsightEntity>> search(@RequestParam String query, @RequestParam("indices") List<String> indices, @RequestParam("envelope") List<Double> envelope, Pageable page) {
+        // http://localhost:9000/api/insight-elastic/_search/indices/geo/?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event&envelope=-6,42,12,24
+        log.debug("REST request to get InsightEntities base on search query {}", query);
+        log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
+        log.debug("REST request to get InsightEntities base in envelope {}", envelope.size());
+        final EnvelopeBuilder envelopeBuilder = ShapeBuilders.newEnvelope(new Coordinate(envelope.get(0), envelope.get(1)), new Coordinate(envelope.get(2), envelope.get(3)));
+        Page<InsightEntity> search = this.elasticService.search(query, indices, envelopeBuilder, page);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/indices");
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }

@@ -3,10 +3,16 @@ package com.peploleum.insight.service.impl;
 import com.peploleum.insight.domain.InsightEntity;
 import com.peploleum.insight.repository.search.InsightEntitySearchRepository;
 import com.peploleum.insight.service.InsightElasticService;
+import com.vividsolutions.jts.geom.Coordinate;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.geo.ShapeRelation;
+import org.elasticsearch.common.geo.builders.EnvelopeBuilder;
+import org.elasticsearch.common.geo.builders.ShapeBuilders;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.GeoShapeQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.Suggest.Suggestion;
 import org.elasticsearch.search.suggest.Suggest.Suggestion.Entry;
@@ -23,6 +29,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SourceFilter;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -58,6 +65,24 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     @Override
     public <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, Pageable pageable) {
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
+        searchQueryBuilder.withIndices(indices.toArray(new String[indices.size()]));
+        // exclude date from source results
+        searchQueryBuilder.withSourceFilter(customSourceFilter);
+        NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
+        return this.insightEntitySearchRepository.search(esQuery, indices);
+    }
+
+    @Override
+    public <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, EnvelopeBuilder envelopeBuilder, Pageable pageable) {
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
+        try {
+            final GeoShapeQueryBuilder region = QueryBuilders
+                .geoShapeQuery("geometry", envelopeBuilder)
+                .relation(ShapeRelation.WITHIN);
+            searchQueryBuilder.withFilter(region);
+        } catch (IOException e) {
+            this.log.warn(e.getMessage(), e);
+        }
         searchQueryBuilder.withIndices(indices.toArray(new String[indices.size()]));
         // exclude date from source results
         searchQueryBuilder.withSourceFilter(customSourceFilter);

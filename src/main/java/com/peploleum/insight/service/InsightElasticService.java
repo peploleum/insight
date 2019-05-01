@@ -1,6 +1,7 @@
 package com.peploleum.insight.service;
 
 import com.peploleum.insight.domain.InsightEntity;
+import org.elasticsearch.common.geo.builders.EnvelopeBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -41,4 +42,15 @@ public interface InsightElasticService {
      * @return the list of entities
      */
     <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, Pageable pageable);
+
+    /**
+     * Search for the InsightEntities matching the query.
+     *
+     * @param query           the query of the search
+     * @param pageable        the pagination information
+     * @param envelopeBuilder {@link EnvelopeBuilder} extent to geo search in
+     * @param indices         indices to search from
+     * @return the list of entities
+     */
+    <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, EnvelopeBuilder envelopeBuilder, Pageable pageable);
 }
