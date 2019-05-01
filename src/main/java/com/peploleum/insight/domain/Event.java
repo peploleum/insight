@@ -1,6 +1,7 @@
 package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.EventType;
+import com.peploleum.insight.domain.map.InsightShape;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -41,6 +42,10 @@ public class Event extends InsightEntity implements Serializable {
 
     @Field("event_coordinates")
     private String eventCoordinates;
+
+    @Field("geometry")
+    @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
+    private InsightShape geometry;
 
     @Field("event_image")
     private byte[] eventImage;
@@ -181,6 +186,14 @@ public class Event extends InsightEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -210,6 +223,7 @@ public class Event extends InsightEntity implements Serializable {
             ", eventType='" + getEventType() + "'" +
             ", eventDate='" + getEventDate() + "'" +
             ", eventCoordinates='" + getEventCoordinates() + "'" +
+            ", geometry='" + getGeometry().toString() + "'" +
             ", eventImage='" + getEventImage() + "'" +
             ", eventImageContentType='" + getEventImageContentType() + "'" +
             ", eventSymbol='" + getEventSymbol() + "'" +

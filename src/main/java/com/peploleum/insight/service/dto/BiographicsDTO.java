@@ -1,9 +1,11 @@
 package com.peploleum.insight.service.dto;
 
-import javax.validation.constraints.*;
+import com.peploleum.insight.domain.enumeration.Gender;
+import com.peploleum.insight.domain.map.InsightShape;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
-import com.peploleum.insight.domain.enumeration.Gender;
 
 /**
  * A DTO for the Biographics entity.
@@ -26,7 +28,7 @@ public class BiographicsDTO implements Serializable {
     private String biographicsImageContentType;
 
     private String biographicsCoordinates;
-
+    private InsightShape geometry;
     private String biographicsSymbol;
 
     private String externalId;
@@ -105,6 +107,14 @@ public class BiographicsDTO implements Serializable {
 
     public String getExternalId() {
         return externalId;
+    }
+
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
     }
 
     public void setExternalId(String externalId) {

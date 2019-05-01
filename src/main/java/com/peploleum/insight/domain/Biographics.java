@@ -1,8 +1,8 @@
 package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.Gender;
+import com.peploleum.insight.domain.map.InsightShape;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -49,11 +49,23 @@ public class Biographics extends InsightEntity implements Serializable {
     @Field("biographics_coordinates")
     private String biographicsCoordinates;
 
+    @Field("geometry")
+    @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
+    private InsightShape geometry;
+
     @Field("biographics_symbol")
     private String biographicsSymbol;
 
     @Field("external_id")
     private String externalId;
+
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getId() {
@@ -211,6 +223,7 @@ public class Biographics extends InsightEntity implements Serializable {
             ", biographicsAge=" + getBiographicsAge() +
             ", biographicsGender='" + getBiographicsGender() + "'" +
             ", biographicsImage='" + getBiographicsImage() + "'" +
+            ", geometry='" + getGeometry().toString() + "'" +
             ", biographicsImageContentType='" + getBiographicsImageContentType() + "'" +
             ", biographicsCoordinates='" + getBiographicsCoordinates() + "'" +
             ", biographicsSymbol='" + getBiographicsSymbol() + "'" +

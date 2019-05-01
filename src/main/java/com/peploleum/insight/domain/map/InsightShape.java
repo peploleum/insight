@@ -19,4 +19,9 @@ public class InsightShape {
     public void setCoordinates(Object[] coordinates) {
         this.coordinates = coordinates;
     }
+
+    @Override
+    public String toString() {
+        return this.type + super.toString();
+    }
 }

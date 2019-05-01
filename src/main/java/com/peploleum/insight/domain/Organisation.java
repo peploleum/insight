@@ -1,6 +1,7 @@
 package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.Size;
+import com.peploleum.insight.domain.map.InsightShape;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -37,6 +38,10 @@ public class Organisation extends InsightEntity implements Serializable {
 
     @Field("organisation_coordinates")
     private String organisationCoordinates;
+
+    @Field("geometry")
+    @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
+    private InsightShape geometry;
 
     @Field("organisation_image")
     private byte[] organisationImage;
@@ -164,6 +169,14 @@ public class Organisation extends InsightEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -192,6 +205,7 @@ public class Organisation extends InsightEntity implements Serializable {
             ", organisationDescrption='" + getOrganisationDescrption() + "'" +
             ", organisationSize='" + getOrganisationSize() + "'" +
             ", organisationCoordinates='" + getOrganisationCoordinates() + "'" +
+            ", geometry='" + getGeometry().toString() + "'" +
             ", organisationImage='" + getOrganisationImage() + "'" +
             ", organisationImageContentType='" + getOrganisationImageContentType() + "'" +
             ", organisationSymbol='" + getOrganisationSymbol() + "'" +

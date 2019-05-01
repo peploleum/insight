@@ -3,7 +3,9 @@ package com.peploleum.insight.service.dto;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
 import com.peploleum.insight.domain.enumeration.Size;
+import com.peploleum.insight.domain.map.InsightShape;
 
 /**
  * A DTO for the Organisation entity.
@@ -20,6 +22,7 @@ public class OrganisationDTO implements Serializable {
     private Size organisationSize;
 
     private String organisationCoordinates;
+    private InsightShape geometry;
 
     private byte[] organisationImage;
     private String organisationImageContentType;
@@ -66,6 +69,14 @@ public class OrganisationDTO implements Serializable {
 
     public void setOrganisationCoordinates(String organisationCoordinates) {
         this.organisationCoordinates = organisationCoordinates;
+    }
+
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
     }
 
     public byte[] getOrganisationImage() {

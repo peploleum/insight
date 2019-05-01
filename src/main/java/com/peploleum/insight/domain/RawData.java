@@ -74,7 +74,7 @@ public class RawData extends InsightEntity implements Serializable {
     @GeoPointField
     private String rawDataCoordinates;
 
-    @Field("raw_data_geometry")
+    @Field("geometry")
     @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
     private InsightShape geometry;
 

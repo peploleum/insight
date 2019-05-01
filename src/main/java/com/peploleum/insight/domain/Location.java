@@ -1,6 +1,7 @@
 package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.LocationType;
+import com.peploleum.insight.domain.map.InsightShape;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -34,6 +35,10 @@ public class Location extends InsightEntity implements Serializable {
 
     @Field("location_coordinates")
     private String locationCoordinates;
+
+    @Field("geometry")
+    @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
+    private InsightShape geometry;
 
     @Field("location_image")
     private byte[] locationImage;
@@ -148,6 +153,14 @@ public class Location extends InsightEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public InsightShape getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(InsightShape geometry) {
+        this.geometry = geometry;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -175,6 +188,7 @@ public class Location extends InsightEntity implements Serializable {
             ", locationName='" + getLocationName() + "'" +
             ", locationType='" + getLocationType() + "'" +
             ", locationCoordinates='" + getLocationCoordinates() + "'" +
+            ", geometry='" + getGeometry().toString() + "'" +
             ", locationImage='" + getLocationImage() + "'" +
             ", locationImageContentType='" + getLocationImageContentType() + "'" +
             ", locationSymbol='" + getLocationSymbol() + "'" +
