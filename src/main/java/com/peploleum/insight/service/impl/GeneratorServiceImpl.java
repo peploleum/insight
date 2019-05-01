@@ -10,8 +10,6 @@ import com.peploleum.insight.service.dto.*;
 import com.vividsolutions.jts.geom.Coordinate;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.elasticsearch.common.geo.builders.PointBuilder;
-import org.elasticsearch.common.geo.builders.ShapeBuilders;
-import org.elasticsearch.common.xcontent.ToXContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -118,13 +116,27 @@ public class GeneratorServiceImpl implements GeneratorService {
         biographicsDTO.setBiographicsAge(ThreadLocalRandom.current().nextInt(0, 120));
         biographicsDTO.setBiographicsFirstname(UUID.randomUUID().toString());
         biographicsDTO.setBiographicsName(UUID.randomUUID().toString());
-        biographicsDTO.setBiographicsCoordinates(generateLocationAttribute(this.generateLatitude(), this.generateLongitude()));
+        final double latitude = this.generateLatitude();
+        final double longitude = this.generateLongitude();
+        biographicsDTO.setBiographicsCoordinates(generateLocationAttribute(latitude, longitude));
+        final PointBuilder pointBuilder = new PointBuilder().coordinate(new Coordinate(longitude, latitude));
+        final InsightShape geometry = new InsightShape();
+        geometry.setType(pointBuilder.type().toString().toLowerCase());
+        geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
+        biographicsDTO.setGeometry(geometry);
         return biographicsDTO;
     }
 
     private LocationDTO generateLocationDTO() {
         final LocationDTO locationDTO = new LocationDTO();
-        locationDTO.setLocationCoordinates(generateLocationAttribute(this.generateLatitude(), this.generateLongitude()));
+        final double latitude = this.generateLatitude();
+        final double longitude = this.generateLongitude();
+        locationDTO.setLocationCoordinates(generateLocationAttribute(latitude, longitude));
+        final PointBuilder pointBuilder = new PointBuilder().coordinate(new Coordinate(longitude, latitude));
+        final InsightShape geometry = new InsightShape();
+        geometry.setType(pointBuilder.type().toString().toLowerCase());
+        geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
+        locationDTO.setGeometry(geometry);
         locationDTO.setLocationName(UUID.randomUUID().toString());
         locationDTO.setLocationType(LocationType.CITY);
         return locationDTO;
@@ -135,6 +147,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         eventDTO.setEventName(UUID.randomUUID().toString());
         eventDTO.setEventDate(generateRandomDateTime().toInstant());
         eventDTO.setEventType(EventType.TERRORIST);
+        final double latitude = this.generateLatitude();
+        final double longitude = this.generateLongitude();
+        eventDTO.setEventCoordinates(generateLocationAttribute(latitude, longitude));
+        final PointBuilder pointBuilder = new PointBuilder().coordinate(new Coordinate(longitude, latitude));
+        final InsightShape geometry = new InsightShape();
+        geometry.setType(pointBuilder.type().toString().toLowerCase());
+        geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
+        eventDTO.setGeometry(geometry);
         return eventDTO;
     }
 
@@ -142,6 +162,14 @@ public class GeneratorServiceImpl implements GeneratorService {
         EquipmentDTO equipmentDTO = new EquipmentDTO();
         equipmentDTO.setEquipmentName(UUID.randomUUID().toString());
         equipmentDTO.setEquipmentType(EquipmentType.WEAPON);
+        final double latitude = this.generateLatitude();
+        final double longitude = this.generateLongitude();
+        equipmentDTO.setEquipmentCoordinates(generateLocationAttribute(latitude, longitude));
+        final PointBuilder pointBuilder = new PointBuilder().coordinate(new Coordinate(longitude, latitude));
+        final InsightShape geometry = new InsightShape();
+        geometry.setType(pointBuilder.type().toString().toLowerCase());
+        geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
+        equipmentDTO.setGeometry(geometry);
         return equipmentDTO;
     }
 

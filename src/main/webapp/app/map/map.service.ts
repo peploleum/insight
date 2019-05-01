@@ -142,7 +142,7 @@ export class MapService {
             page: -1,
             size: this.itemsPerPage,
             sort: this.sort,
-            indices: ['rawdata', 'biographics', 'event', 'location', 'equipment'],
+            indices: ['rawdata', 'biographics', 'event', 'location', 'equipment', 'organisation'],
             envelope: [-4, 42, 12, 24]
         };
         const options = createRequestOption(req);
