@@ -1,6 +1,7 @@
 package com.peploleum.insight.service.impl;
 
 import com.peploleum.insight.domain.InsightEntity;
+import com.peploleum.insight.repository.search.InsightEntitySearchRepository;
 import com.peploleum.insight.service.InsightElasticService;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -19,12 +20,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SourceFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
@@ -37,9 +40,12 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     private final Logger log = LoggerFactory.getLogger(InsightElasticServiceImpl.class);
     private final Integer NUMBER_SUGGESTION_TO_RETURN = 5;
     private final ElasticsearchOperations esOps;
+    private final InsightEntitySearchRepository insightEntitySearchRepository;
+    private final CustomSourceFilter customSourceFilter = new CustomSourceFilter();
 
-    public InsightElasticServiceImpl(ElasticsearchOperations esOps) {
+    public InsightElasticServiceImpl(ElasticsearchOperations esOps, InsightEntitySearchRepository insightEntitySearchRepository) {
         this.esOps = esOps;
+        this.insightEntitySearchRepository = insightEntitySearchRepository;
     }
 
     @Override
@@ -47,6 +53,16 @@ public class InsightElasticServiceImpl implements InsightElasticService {
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
         NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
         return (Page<InsightEntity>) this.esOps.queryForPage(esQuery, clazz);
+    }
+
+    @Override
+    public <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, Pageable pageable) {
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
+        searchQueryBuilder.withIndices(indices.toArray(new String[indices.size()]));
+        // exclude date from source results
+        searchQueryBuilder.withSourceFilter(customSourceFilter);
+        NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
+        return this.insightEntitySearchRepository.search(esQuery, indices);
     }
 
     @Override

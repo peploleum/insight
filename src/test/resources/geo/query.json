@@ -1,0 +1,20 @@
+{
+    "query": {
+        "bool": {
+            "must": {
+                "match_all": {}
+            },
+            "filter": {
+                "geo_shape": {
+                    "region": {
+                        "shape": {
+                            "type": "envelope",
+                            "coordinates": [[75.0, 25.0], [80.1, 30.2]]
+                        },
+                        "relation": "within"
+                    }
+                }
+            }
+        }
+    }
+}

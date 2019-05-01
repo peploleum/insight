@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,6 +60,16 @@ public class InsightElasticResource {
         log.debug("REST request to get InsightEntities base on search query {}", query);
         Page<InsightEntity> search = this.elasticService.search(query, InsightUtil.getClassFromType(searchEntity), page);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/" + searchEntity);
+        return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_search/indices/")
+    @Timed
+    public ResponseEntity<List<InsightEntity>> search(@RequestParam String query, @RequestParam("indices") List<String> indices, Pageable page) {
+        log.debug("REST request to get InsightEntities base on search query {}", query);
+        log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
+        Page<InsightEntity> search = this.elasticService.search(query, indices, page);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/indices");
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }
 }

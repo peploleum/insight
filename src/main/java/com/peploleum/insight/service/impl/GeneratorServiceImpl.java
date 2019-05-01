@@ -6,9 +6,10 @@ import com.peploleum.insight.domain.enumeration.LocationType;
 import com.peploleum.insight.domain.enumeration.Size;
 import com.peploleum.insight.service.*;
 import com.peploleum.insight.service.dto.*;
+import org.elasticsearch.common.geo.builders.PointBuilder;
+import org.elasticsearch.common.geo.builders.ShapeBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,8 @@ public class GeneratorServiceImpl implements GeneratorService {
     private final EquipmentService equipmentService;
     private final OrganisationService organisationService;
 
-    private static final int GEN_THRESHOLD = 20;
-    private static final int SINGLE_GEN_THRESHOLD = 20;
+    private static final int GEN_THRESHOLD = 10;
+    private static final int SINGLE_GEN_THRESHOLD = 10;
 
     public GeneratorServiceImpl(final RawDataService rawDataService, final BiographicsService biographicsService,
                                 final LocationService locationService, final EventService eventService,
@@ -92,7 +93,12 @@ public class GeneratorServiceImpl implements GeneratorService {
         rawDataDTO.setRawDataName(name);
         rawDataDTO.setRawDataCreationDate(generateRandomDateTime().toInstant());
         rawDataDTO.setRawDataExtractedDate(generateRandomDateTime().toInstant());
-        rawDataDTO.setRawDataCoordinates(generateLocationAttribute());
+        final double latitude = this.generateLatitude();
+        final double longitude = this.generateLongitude();
+        rawDataDTO.setRawDataCoordinates(generateLocationAttribute(latitude, longitude));
+        final PointBuilder pointBuilder = ShapeBuilders.newPoint(longitude, latitude);
+        final String geoPointAsString = pointBuilder.toString();
+        rawDataDTO.setGeometry(geoPointAsString);
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
         rawDataDTO.setRawDataSubType(type);
 
@@ -104,13 +110,13 @@ public class GeneratorServiceImpl implements GeneratorService {
         biographicsDTO.setBiographicsAge(ThreadLocalRandom.current().nextInt(0, 120));
         biographicsDTO.setBiographicsFirstname(UUID.randomUUID().toString());
         biographicsDTO.setBiographicsName(UUID.randomUUID().toString());
-        biographicsDTO.setBiographicsCoordinates(generateLocationAttribute());
+        biographicsDTO.setBiographicsCoordinates(generateLocationAttribute(this.generateLatitude(), this.generateLongitude()));
         return biographicsDTO;
     }
 
     private LocationDTO generateLocationDTO() {
         final LocationDTO locationDTO = new LocationDTO();
-        locationDTO.setLocationCoordinates(generateLocationAttribute());
+        locationDTO.setLocationCoordinates(generateLocationAttribute(this.generateLatitude(), this.generateLongitude()));
         locationDTO.setLocationName(UUID.randomUUID().toString());
         locationDTO.setLocationType(LocationType.CITY);
         return locationDTO;
@@ -133,14 +139,14 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private OrganisationDTO generateOrganisationDTO() {
         final OrganisationDTO organisationDTO = new OrganisationDTO();
-        organisationDTO.setOrganisationCoordinates(generateLocationAttribute());
+        organisationDTO.setOrganisationCoordinates(generateLocationAttribute(this.generateLatitude(), this.generateLongitude()));
         organisationDTO.setOrganisationName(UUID.randomUUID().toString());
         organisationDTO.setOrganisationSize(Size.MEDIUM);
         return organisationDTO;
     }
 
-    private String generateLocationAttribute() {
-        return this.generateLatitude() + "," + this.generateLongitude();
+    private String generateLocationAttribute(double latitude, double longitude) {
+        return latitude + "," + longitude;
     }
 
     private String generateRandomType() {

@@ -31,4 +31,14 @@ public interface InsightElasticService {
      * @return the list of suggestions
      */
     <T extends InsightEntity> List<String> autoComplete(String query, Class<T> clazz);
+
+    /**
+     * Search for the InsightEntities matching the query.
+     *
+     * @param query    the query of the search
+     * @param pageable the pagination information
+     * @param indices  indices to search from
+     * @return the list of entities
+     */
+    <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, Pageable pageable);
 }
