@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IRawData } from 'app/shared/model/raw-data.model';
+import { Moment } from 'moment';
 
 type EntityResponseType = HttpResponse<IRawData>;
 type EntityArrayResponseType = HttpResponse<IRawData[]>;

@@ -335,7 +335,7 @@ public class RawData extends InsightEntity implements Serializable {
             ", rawDataData='" + getRawDataData() + "'" +
             ", rawDataDataContentType='" + getRawDataDataContentType() + "'" +
             ", rawDataCoordinates='" + getRawDataCoordinates() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            ", geometry='" + getGeometry() != null ? getGeometry().toString() : "null" + "'" +
             ", rawDataAnnotations='" + getRawDataAnnotations() + "'" +
             ", externalId='" + getExternalId() + "'" +
             "}";

@@ -48,7 +48,6 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     private final Integer NUMBER_SUGGESTION_TO_RETURN = 5;
     private final ElasticsearchOperations esOps;
     private final InsightEntitySearchRepository insightEntitySearchRepository;
-    private final CustomSourceFilter customSourceFilter = new CustomSourceFilter();
 
     public InsightElasticServiceImpl(ElasticsearchOperations esOps, InsightEntitySearchRepository insightEntitySearchRepository) {
         this.esOps = esOps;
@@ -66,8 +65,6 @@ public class InsightElasticServiceImpl implements InsightElasticService {
     public <T extends InsightEntity> Page<InsightEntity> search(String query, List<String> indices, Pageable pageable) {
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder().withQuery(queryStringQuery(query));
         searchQueryBuilder.withIndices(indices.toArray(new String[indices.size()]));
-        // exclude date from source results
-        searchQueryBuilder.withSourceFilter(customSourceFilter);
         NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
         return this.insightEntitySearchRepository.search(esQuery, indices);
     }
@@ -84,8 +81,6 @@ public class InsightElasticServiceImpl implements InsightElasticService {
             this.log.warn(e.getMessage(), e);
         }
         searchQueryBuilder.withIndices(indices.toArray(new String[indices.size()]));
-        // exclude date from source results
-        searchQueryBuilder.withSourceFilter(customSourceFilter);
         NativeSearchQuery esQuery = searchQueryBuilder.withPageable(pageable).build();
         return this.insightEntitySearchRepository.search(esQuery, indices);
     }

@@ -87,22 +87,22 @@ export const convertRawDataDateFromClient = (rawData: IRawData): IRawData => {
     return copy;
 };
 
-export const convertRawDataDateFromServer = (res: HttpResponse<IRawData>): HttpResponse<IRawData> => {
-    if (res.body) {
-        res.body.rawDataCreationDate = res.body.rawDataCreationDate != null ? moment(res.body.rawDataCreationDate) : null;
-        res.body.rawDataExtractedDate = res.body.rawDataExtractedDate != null ? moment(res.body.rawDataExtractedDate) : null;
+export const convertRawDataDateFromServer = (rawData: IRawData): IRawData => {
+    if (rawData) {
+        rawData.rawDataCreationDate = rawData.rawDataCreationDate != null ? moment(rawData.rawDataCreationDate) : null;
+        rawData.rawDataExtractedDate = rawData.rawDataExtractedDate != null ? moment(rawData.rawDataExtractedDate) : null;
     }
-    return res;
+    return rawData;
 };
 
-export const convertRawDataDateArrayFromServer = (res: HttpResponse<IRawData[]>): HttpResponse<IRawData[]> => {
-    if (res.body) {
-        res.body.forEach((rawData: IRawData) => {
+export const convertRawDataDateArrayFromServer = (rawDataList: IRawData[]): IRawData[] => {
+    if (rawDataList) {
+        rawDataList.forEach((rawData: IRawData) => {
             rawData.rawDataCreationDate = rawData.rawDataCreationDate != null ? moment(rawData.rawDataCreationDate) : null;
             rawData.rawDataExtractedDate = rawData.rawDataExtractedDate != null ? moment(rawData.rawDataExtractedDate) : null;
         });
     }
-    return res;
+    return rawDataList;
 };
 
 export class DragParameter {

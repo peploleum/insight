@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs/index';
 import { GenericModel } from '../shared/model/generic.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { IRawData } from '../shared/model/raw-data.model';
-import { convertRawDataDateFromClient, convertRawDataDateFromServer } from '../shared/util/insight-util';
+import { assertGenericType, convertRawDataDateFromClient, convertRawDataDateFromServer } from '../shared/util/insight-util';
 import { map } from 'rxjs/internal/operators';
 import { createRequestOption } from '../shared/util/request-util';
 import { RawDataService } from '../entities/raw-data/raw-data.service';
@@ -34,11 +34,27 @@ export class QuickViewService {
     ) {}
 
     find(id: string): Observable<EntityResponseType> {
-        return this.http.get<GenericModel>(`${this.resourceUrl}/entity/${id}`, { observe: 'response' });
+        return this.http.get<GenericModel>(`${this.resourceUrl}/entity/${id}`, { observe: 'response' }).pipe(
+            map((res: EntityResponseType) => {
+                if (assertGenericType('RawData', res.body)) {
+                    convertRawDataDateFromServer(res.body);
+                }
+                return res;
+            })
+        );
     }
 
     findMultiple(ids: string[]): Observable<EntitiesResponseType> {
-        return this.http.post<GenericModel[]>(`${this.resourceUrl}/entities`, ids, { observe: 'response' });
+        return this.http.post<GenericModel[]>(`${this.resourceUrl}/entities`, ids, { observe: 'response' }).pipe(
+            map((res: EntitiesResponseType) => {
+                (<GenericModel[]>res.body).forEach(model => {
+                    if (assertGenericType('RawData', model)) {
+                        convertRawDataDateFromServer(model);
+                    }
+                });
+                return res;
+            })
+        );
     }
 
     /**
@@ -74,8 +90,11 @@ export class QuickViewService {
     saveAnnotatedEntity(entityPos: any, rawDataToUpdate: IRawData): Observable<HttpResponse<IRawData>> {
         const options = createRequestOption(entityPos);
         const copy = convertRawDataDateFromClient(rawDataToUpdate);
-        return this.http
-            .put<IRawData>(`${this.resourceUrl}/updateAnnotation`, copy, { params: options, observe: 'response' })
-            .pipe(map((res: HttpResponse<IRawData>) => convertRawDataDateFromServer(res)));
+        return this.http.put<IRawData>(`${this.resourceUrl}/updateAnnotation`, copy, { params: options, observe: 'response' }).pipe(
+            map((res: HttpResponse<IRawData>) => {
+                convertRawDataDateFromServer(res.body);
+                return res;
+            })
+        );
     }
 }
