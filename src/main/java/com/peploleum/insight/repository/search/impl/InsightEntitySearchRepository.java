@@ -7,12 +7,12 @@ import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import io.searchbox.core.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Repository;
@@ -24,14 +24,17 @@ import java.util.stream.Collectors;
 @Repository
 public class InsightEntitySearchRepository implements com.peploleum.insight.repository.search.InsightEntitySearchRepository {
 
-    @Autowired
-    private JestElasticsearchTemplate elasticsearchTemplate;
+    private JestElasticsearchTemplate elasticsearchOperations;
 
     private final Logger log = LoggerFactory.getLogger(InsightEntitySearchRepository.class);
 
     private List<Class<?>> domainDocumentClasses = new ArrayList<>();
     private Map<String, Class<?>> domainIndexMatcher = new HashMap<>();
     private List<String> blackList = Arrays.asList(new String[]{"GeoRef", "User"});
+
+    public InsightEntitySearchRepository(ElasticsearchOperations elasticsearchOperations) {
+        this.elasticsearchOperations = (JestElasticsearchTemplate) elasticsearchOperations;
+    }
 
     /**
      * scans classpath for Domain documents
@@ -61,7 +64,7 @@ public class InsightEntitySearchRepository implements com.peploleum.insight.repo
     public Page<InsightEntity> search(final NativeSearchQuery query, final List<String> indices) {
         final List<Class<?>> narrowedDomainElements = this.domainDocumentClasses.stream().filter((clazz) -> indices.contains(clazz.getSimpleName().toLowerCase())).collect(Collectors.toList());
         // needs to be a JestResultExtractor
-        return this.elasticsearchTemplate.query(query, new JestResultsExtractor<Page<InsightEntity>>() {
+        return this.elasticsearchOperations.query(query, new JestResultsExtractor<Page<InsightEntity>>() {
             @Override
             public Page<InsightEntity> extract(SearchResult response) {
                 final List<InsightEntity> result = new ArrayList<>();
