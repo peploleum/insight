@@ -7,6 +7,7 @@ export interface IMapDataDTO {
     objectType?: string;
     description?: string;
     coordinate?: number[];
+    geometry?: any;
     properties?: any;
 }
 
@@ -17,6 +18,7 @@ export class MapDataDTO implements IMapDataDTO {
         public objectType?: string,
         public description?: string,
         public coordinate?: number[],
+        public geometry?: any,
         public properties?: any
     ) {}
 }

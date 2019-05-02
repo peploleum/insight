@@ -65,10 +65,10 @@ public class InsightElasticResource {
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/_search/indices/")
+    @GetMapping("/_search/indices")
     @Timed
     public ResponseEntity<List<InsightEntity>> search(@RequestParam String query, @RequestParam("indices") List<String> indices, Pageable page) {
-        // http://localhost:9000/api/insight-elastic/_search/indices/?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event
+        // http://localhost:9000/api/insight-elastic/_search/indices?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event
         log.debug("REST request to get InsightEntities base on search query {}", query);
         log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
         Page<InsightEntity> search = this.elasticService.search(query, indices, page);
@@ -76,10 +76,10 @@ public class InsightElasticResource {
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/_search/indices/geo/")
+    @GetMapping("/_search/indices/geo")
     @Timed
     public ResponseEntity<List<InsightEntity>> search(@RequestParam String query, @RequestParam("indices") List<String> indices, @RequestParam("envelope") List<Double> envelope, Pageable page) {
-        // http://localhost:9000/api/insight-elastic/_search/indices/geo/?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event&envelope=-6,42,12,24
+        // http://localhost:9000/api/insight-elastic/_search/indices/geo?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event&envelope=-6,42,12,24
         log.debug("REST request to get InsightEntities base on search query {}", query);
         log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
         log.debug("REST request to get InsightEntities base in envelope {}", envelope.size());

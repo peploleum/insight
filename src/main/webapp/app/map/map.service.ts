@@ -10,20 +10,18 @@ import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
+import Geometry from 'ol/geom/geometry';
 import proj from 'ol/proj';
-import { IRawData, RawData } from '../shared/model/raw-data.model';
+import { RawData } from '../shared/model/raw-data.model';
 import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 import { CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD } from '../shared/model/generic.model';
-import { IInsightEntity } from 'app/shared/model/insight-entity.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
-    public searchResourceUrl = SERVER_API_URL + 'api/insight-elastic/_search/indices/geo/';
-    itemsPerPage = 50;
-    sort = ['id', 'asc'];
+
     featureSource: Subject<Feature[]> = new Subject();
     searchSource: Subject<Feature[]> = new Subject();
 
@@ -38,15 +36,6 @@ export class MapService {
     zoomToLayer: Subject<string> = new Subject();
     zoomToFeature: Subject<ZoomToFeatureRequest> = new Subject();
 
-    static getMapDataFromRaw(raw: IRawData): IMapDataDTO {
-        let coord: number[] = null;
-        if (raw.rawDataCoordinates) {
-            const str: string[] = raw.rawDataCoordinates.split(',');
-            coord = str.map(i => parseFloat(i));
-        }
-        return new MapDataDTO(raw.id, raw.rawDataName, 'RawData', raw.rawDataContent, coord);
-    }
-
     static getMapDataFromGeneric(item: GenericModel): IMapDataDTO {
         let coord: number[] = null;
         const nonNullKeys: string[] = Object.keys(item).filter(key => item[key] !== null && typeof item[key] !== 'undefined');
@@ -57,13 +46,14 @@ export class MapService {
             const str: string[] = coordinate[0].split(',');
             coord = str.map(i => parseFloat(i));
         }
-        return new MapDataDTO(item['id'], name[0] || 'defaultName', 'RawData', content[0] || 'defaultContent', coord);
+        return new MapDataDTO(item['id'], name[0] || 'defaultName', 'RawData', content[0] || 'defaultContent', coord, item['geometry']);
     }
 
     static getGeoJsonFromDto(dto: IMapDataDTO): Feature {
-        if (dto.coordinate) {
-            const correctCoord = proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]);
-            const feature: Feature = new Feature(new Point(correctCoord));
+        if (dto.coordinate || dto.geometry) {
+            const featGeom: Geometry =
+                this.getFeatureGeometry(dto.geometry) || new Point(proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]));
+            const feature: Feature = new Feature(featGeom);
             feature.setId(dto.id);
             feature.set('description', dto.description);
             feature.set('objectType', dto.objectType);
@@ -73,18 +63,25 @@ export class MapService {
         return null;
     }
 
-    static getGeoJsonFromInsightEntity(dto: IInsightEntity): Feature {
-        if (dto.geometry) {
-            // const feature1 = (new GeoJSON()).readFeature(dto.geometry);
-            const correctCoord = proj.fromLonLat([dto.geometry.geometries[0].coordinates[0], dto.geometry.geometries[0].coordinates[1]]);
-            const feature: Feature = new Feature(new Point(correctCoord));
-            feature.setId(dto.id);
-            feature.set('description', 'test');
-            feature.set('objectType', dto.entityType);
-            feature.set('label', dto.id);
-            return feature;
+    /**
+     * geometry => DTO pour le mapping d'un InsightShape
+     * */
+    static getFeatureGeometry(geometry: any): Geometry {
+        let correctCoord;
+        let featGeometry: Geometry;
+        switch (geometry.type) {
+            case 'point':
+                correctCoord = proj.fromLonLat([geometry.geometries[0].coordinates[0], geometry.geometries[0].coordinates[1]]);
+                featGeometry = new Point(correctCoord);
+                break;
+            case 'linestring':
+                break;
+            case 'polygon':
+                break;
+            case 'geometrycollection':
+                break;
         }
-        return null;
+        return featGeometry;
     }
 
     constructor(private http: HttpClient) {}
@@ -126,27 +123,6 @@ export class MapService {
         const options = createRequestOption(req);
         return this.http
             .get<IMapDataDTO[]>(`${this.resourceUrl}/_search/georef`, {
-                params: options,
-                observe: 'response'
-            })
-            .pipe(
-                filter((res: HttpResponse<any[]>) => res.ok),
-                map((res: HttpResponse<any[]>) => res.body)
-            );
-    }
-
-    getSearchResults(search: string): Observable<IInsightEntity[]> {
-        const req = {
-            query: search,
-            page: -1,
-            size: this.itemsPerPage,
-            sort: this.sort,
-            indices: ['rawdata', 'biographics', 'event', 'location', 'equipment', 'organisation'],
-            envelope: [-4, 42, 12, 24]
-        };
-        const options = createRequestOption(req);
-        return this.http
-            .get<IInsightEntity[]>(`${this.searchResourceUrl}`, {
                 params: options,
                 observe: 'response'
             })
@@ -199,10 +175,6 @@ export class MapService {
             )
         );
         return newToolbar;
-    }
-
-    getFeaturesFromInsightEntities(result: IInsightEntity[]) {
-        this.searchSource.next(result.map(item => MapService.getGeoJsonFromInsightEntity(item)).filter(dto => dto !== null));
     }
 }
 

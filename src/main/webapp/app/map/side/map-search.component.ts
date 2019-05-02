@@ -10,6 +10,8 @@ import { IMapDataDTO } from '../../shared/model/map.model';
 import { ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { IInsightEntity } from 'app/shared/model/insight-entity.model';
+import { SearchService } from '../../shared/search/search.service';
+import { GenericModel } from '../../shared/model/generic.model';
 
 @Component({
     selector: 'ins-map-search',
@@ -23,7 +25,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     pinnedGeoMarkerSubs: Subscription;
 
-    constructor(protected ms: MapService) {
+    constructor(protected ms: MapService, private _ss: SearchService) {
         super();
     }
 
@@ -53,14 +55,13 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
                 debounceTime(400),
                 distinctUntilChanged(),
                 switchMap((value: string) => {
-                    return this.ms.getSearchResults(value);
+                    return this._ss.searchIndices(value, null, null, null, null, [-4, 42, 12, 24]);
                 })
             )
             .subscribe(
-                (result: IInsightEntity[]) => {
-                    // Garde les pinned points
+                (result: GenericModel[]) => {
                     console.log('received ' + result.length);
-                    this.ms.getFeaturesFromInsightEntities(result);
+                    this.ms.getFeaturesFromGeneric(result);
                 },
                 error => {
                     console.log('Error search geo');

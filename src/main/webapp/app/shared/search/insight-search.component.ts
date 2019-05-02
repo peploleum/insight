@@ -34,7 +34,7 @@ export class InsightSearchComponent implements OnInit {
                 debounceTime(300),
                 distinctUntilChanged(),
                 switchMap((value: string) => {
-                    return this._ss.search(this.targetEntity, value);
+                    return this._ss.searchIndice(this.targetEntity, value);
                 })
             )
             .subscribe((entities: GenericModel[]) => {

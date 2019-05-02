@@ -10,7 +10,13 @@ import { GenericModel } from '../model/generic.model';
     providedIn: 'root'
 })
 export class SearchService {
-    private _resourceUrl = SERVER_API_URL + 'api/insight-elastic/';
+    private _searchIndice = SERVER_API_URL + 'api/insight-elastic/';
+    private _searchIndices = SERVER_API_URL + 'api/insight-elastic/_search/indices';
+    private _searchGeo = SERVER_API_URL + 'api/insight-elastic/_search/indices/geo';
+
+    private itemsPerPage = 50;
+    private sort = ['id', 'asc'];
+    private indices = ['rawdata', 'biographics', 'event', 'location', 'equipment', 'organisation'];
 
     constructor(private http: HttpClient) {}
 
@@ -18,7 +24,7 @@ export class SearchService {
         const options = createRequestOption({ query: search });
         const url = '_autocomplete/';
         return this.http
-            .get(`${this._resourceUrl}` + url + `${entityType}`, {
+            .get(`${this._searchIndice}` + url + `${entityType}`, {
                 params: options,
                 observe: 'response'
             })
@@ -28,7 +34,7 @@ export class SearchService {
             );
     }
 
-    search(entityType: string, search: string): Observable<GenericModel[]> {
+    searchIndice(entityType: string, search: string): Observable<GenericModel[]> {
         const options = createRequestOption({
             page: -1,
             size: 5,
@@ -37,7 +43,28 @@ export class SearchService {
         });
         const url = '_search/';
         return this.http
-            .get(`${this._resourceUrl}` + url + `${entityType}`, {
+            .get(`${this._searchIndice}` + url + `${entityType}`, {
+                params: options,
+                observe: 'response'
+            })
+            .pipe(
+                filter((res: HttpResponse<GenericModel[]>) => res.ok),
+                map((res: HttpResponse<GenericModel[]>) => res.body)
+            );
+    }
+
+    searchIndices(search: string, page?: number, size?: number, sort?: any, indices?: string[], extent?: any): Observable<GenericModel[]> {
+        const req = {
+            query: search,
+            page: page || -1,
+            size: size || this.itemsPerPage,
+            sort: sort || this.sort,
+            indices: indices || this.indices,
+            envelope: extent
+        };
+        const options = createRequestOption(req);
+        return this.http
+            .get<GenericModel[]>(`${extent ? this._searchGeo : this._searchIndices}`, {
                 params: options,
                 observe: 'response'
             })
