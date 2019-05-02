@@ -4,6 +4,7 @@ import com.peploleum.insight.domain.enumeration.EquipmentType;
 import com.peploleum.insight.domain.enumeration.EventType;
 import com.peploleum.insight.domain.enumeration.LocationType;
 import com.peploleum.insight.domain.enumeration.Size;
+import com.peploleum.insight.domain.map.GeometryCollection;
 import com.peploleum.insight.domain.map.InsightShape;
 import com.peploleum.insight.service.*;
 import com.peploleum.insight.service.dto.*;
@@ -104,7 +105,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         final InsightShape geometry = new InsightShape();
         geometry.setType(pointBuilder.type().toString().toLowerCase());
         geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
-        rawDataDTO.setGeometry(geometry);
+        GeometryCollection geometryCollection = new GeometryCollection();
+        geometryCollection.setGeometries(new InsightShape[]{geometry});
+        rawDataDTO.setGeometry(geometryCollection);
         rawDataDTO.setRawDataType(UUID.randomUUID().toString());
         rawDataDTO.setRawDataSubType(type);
 
@@ -123,7 +126,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         final InsightShape geometry = new InsightShape();
         geometry.setType(pointBuilder.type().toString().toLowerCase());
         geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
-        biographicsDTO.setGeometry(geometry);
+        GeometryCollection geometryCollection = new GeometryCollection();
+        geometryCollection.setGeometries(new InsightShape[]{geometry});
+        biographicsDTO.setGeometry(geometryCollection);
         return biographicsDTO;
     }
 
@@ -136,7 +141,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         final InsightShape geometry = new InsightShape();
         geometry.setType(pointBuilder.type().toString().toLowerCase());
         geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
-        locationDTO.setGeometry(geometry);
+        GeometryCollection geometryCollection = new GeometryCollection();
+        geometryCollection.setGeometries(new InsightShape[]{geometry});
+        locationDTO.setGeometry(geometryCollection);
         locationDTO.setLocationName(UUID.randomUUID().toString());
         locationDTO.setLocationType(LocationType.CITY);
         return locationDTO;
@@ -154,7 +161,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         final InsightShape geometry = new InsightShape();
         geometry.setType(pointBuilder.type().toString().toLowerCase());
         geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
-        eventDTO.setGeometry(geometry);
+        GeometryCollection geometryCollection = new GeometryCollection();
+        geometryCollection.setGeometries(new InsightShape[]{geometry});
+        eventDTO.setGeometry(geometryCollection);
         return eventDTO;
     }
 
@@ -169,7 +178,9 @@ public class GeneratorServiceImpl implements GeneratorService {
         final InsightShape geometry = new InsightShape();
         geometry.setType(pointBuilder.type().toString().toLowerCase());
         geometry.setCoordinates(new Double[]{pointBuilder.longitude(), pointBuilder.latitude()});
-        equipmentDTO.setGeometry(geometry);
+        GeometryCollection geometryCollection = new GeometryCollection();
+        geometryCollection.setGeometries(new InsightShape[]{geometry});
+        equipmentDTO.setGeometry(geometryCollection);
         return equipmentDTO;
     }
 

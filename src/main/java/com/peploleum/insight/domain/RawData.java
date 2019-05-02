@@ -1,6 +1,6 @@
 package com.peploleum.insight.domain;
 
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
@@ -76,7 +76,7 @@ public class RawData extends InsightEntity implements Serializable {
 
     @Field("geometry")
     @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
-    private InsightShape geometry;
+    private GeometryCollection geometry;
 
     @Field("raw_data_annotations")
     private String rawDataAnnotations;
@@ -290,11 +290,11 @@ public class RawData extends InsightEntity implements Serializable {
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

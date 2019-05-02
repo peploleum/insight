@@ -1,7 +1,7 @@
 package com.peploleum.insight.domain;
 
 import com.peploleum.insight.domain.enumeration.EquipmentType;
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -41,7 +41,7 @@ public class Equipment extends InsightEntity implements Serializable {
 
     @Field("geometry")
     @Mapping(mappingPath = "/mappings/asset_geometry_mapping.json")
-    private InsightShape geometry;
+    private GeometryCollection geometry;
 
     @Field("equipment_symbol")
     private String equipmentSymbol;
@@ -169,11 +169,11 @@ public class Equipment extends InsightEntity implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

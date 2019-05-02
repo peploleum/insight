@@ -4,7 +4,7 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 import com.peploleum.insight.domain.enumeration.EquipmentType;
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 
 /**
  * A DTO for the Equipment entity.
@@ -21,7 +21,7 @@ public class EquipmentDTO implements Serializable {
     private EquipmentType equipmentType;
 
     private String equipmentCoordinates;
-    private InsightShape geometry;
+    private GeometryCollection geometry;
     private String equipmentSymbol;
 
     private byte[] equipmentImage;
@@ -93,11 +93,11 @@ public class EquipmentDTO implements Serializable {
         this.equipmentImageContentType = equipmentImageContentType;
     }
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

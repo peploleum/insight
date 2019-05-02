@@ -2,6 +2,7 @@ package com.peploleum.insight.service;
 
 import com.peploleum.insight.InsightApp;
 import com.peploleum.insight.domain.RawData;
+import com.peploleum.insight.domain.map.GeometryCollection;
 import com.peploleum.insight.domain.map.InsightShape;
 import com.peploleum.insight.repository.RawDataRepository;
 import com.peploleum.insight.repository.search.RawDataSearchRepository;
@@ -65,7 +66,7 @@ public class RawDataGeoSearchTest {
         rawData.setRawDataName(bidou);
         final InputStream pointStream = RawDataGeoSearchTest.class.getResourceAsStream("/geo/point.json");
         final String pointAsString = new String(StreamUtils.copyToByteArray(pointStream));
-        rawData.setGeometry(new InsightShape());
+        rawData.setGeometry(new GeometryCollection());
         this.rawDataRepository.save(rawData);
         final Page<RawData> search = mockRawDataSearchRepository.search(nativeSearchQuery);
     }

@@ -4,7 +4,7 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 import com.peploleum.insight.domain.enumeration.LocationType;
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 
 /**
  * A DTO for the Location entity.
@@ -19,7 +19,7 @@ public class LocationDTO implements Serializable {
     private LocationType locationType;
 
     private String locationCoordinates;
-    private InsightShape geometry;
+    private GeometryCollection geometry;
     private byte[] locationImage;
     private String locationImageContentType;
 
@@ -91,11 +91,11 @@ public class LocationDTO implements Serializable {
         this.externalId = externalId;
     }
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

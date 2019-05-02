@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.EventType;
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 
 /**
  * A DTO for the Event entity.
@@ -25,7 +25,7 @@ public class EventDTO implements Serializable {
     private Instant eventDate;
 
     private String eventCoordinates;
-    private InsightShape geometry;
+    private GeometryCollection geometry;
     private byte[] eventImage;
     private String eventImageContentType;
 
@@ -113,11 +113,11 @@ public class EventDTO implements Serializable {
         this.externalId = externalId;
     }
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

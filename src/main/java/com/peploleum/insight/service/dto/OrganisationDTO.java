@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.peploleum.insight.domain.enumeration.Size;
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 
 /**
  * A DTO for the Organisation entity.
@@ -22,7 +22,7 @@ public class OrganisationDTO implements Serializable {
     private Size organisationSize;
 
     private String organisationCoordinates;
-    private InsightShape geometry;
+    private GeometryCollection geometry;
 
     private byte[] organisationImage;
     private String organisationImageContentType;
@@ -71,11 +71,11 @@ public class OrganisationDTO implements Serializable {
         this.organisationCoordinates = organisationCoordinates;
     }
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 

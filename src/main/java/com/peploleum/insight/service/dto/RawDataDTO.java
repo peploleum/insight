@@ -1,6 +1,6 @@
 package com.peploleum.insight.service.dto;
 
-import com.peploleum.insight.domain.map.InsightShape;
+import com.peploleum.insight.domain.map.GeometryCollection;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class RawDataDTO implements Serializable {
 
     private String rawDataCoordinates;
 
-    private InsightShape geometry;
+    private GeometryCollection geometry;
 
     private String rawDataAnnotations;
 
@@ -174,11 +174,11 @@ public class RawDataDTO implements Serializable {
         this.externalId = externalId;
     }
 
-    public InsightShape getGeometry() {
+    public GeometryCollection getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(InsightShape geometry) {
+    public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
     }
 
