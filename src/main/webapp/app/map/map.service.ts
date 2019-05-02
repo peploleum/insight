@@ -1,25 +1,24 @@
 /**
  * Created by gFolgoas on 18/01/2019.
  */
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { SERVER_API_URL } from 'app/app.constants';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/internal/operators';
-import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {SERVER_API_URL} from 'app/app.constants';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {filter, map} from 'rxjs/internal/operators';
+import {IMapDataDTO, MapDataDTO} from '../shared/model/map.model';
 
 import Feature from 'ol/feature';
 import Point from 'ol/geom/point';
 import proj from 'ol/proj';
-import GeoJSON from 'ol/format/GeoJSON';
-import { IRawData, RawData } from '../shared/model/raw-data.model';
-import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
-import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
-import { createRequestOption } from '../shared/util/request-util';
-import { CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD } from '../shared/model/generic.model';
-import { IInsightEntity } from 'app/shared/model/insight-entity.model';
+import {IRawData, RawData} from '../shared/model/raw-data.model';
+import {FigureStyle, MapLayer, MapState, ZoomToFeatureRequest} from '../shared/util/map-utils';
+import {ToolbarButtonParameters, UUID} from '../shared/util/insight-util';
+import {createRequestOption} from '../shared/util/request-util';
+import {CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD} from '../shared/model/generic.model';
+import {IInsightEntity} from 'app/shared/model/insight-entity.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class MapService {
     public resourceUrl = SERVER_API_URL + 'api/map';
     public searchResourceUrl = SERVER_API_URL + 'api/insight-elastic/_search/indices/geo/';
@@ -88,7 +87,8 @@ export class MapService {
         return null;
     }
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     /**
      * Transforme les GenericModel et les envoie dans featureSource
@@ -123,7 +123,7 @@ export class MapService {
     }
 
     getGeoMarker(search: string): Observable<IMapDataDTO[]> {
-        const req = { query: search };
+        const req = {query: search};
         const options = createRequestOption(req);
         return this.http
             .get<IMapDataDTO[]>(`${this.resourceUrl}/_search/georef`, {
