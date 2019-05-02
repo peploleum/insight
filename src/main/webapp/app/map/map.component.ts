@@ -42,6 +42,9 @@ import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import { olx, source as olsource } from 'openlayers';
+import animation = olx.animation;
+import PanOptions = olx.animation.PanOptions;
+import VectorEvent = olsource.VectorEvent;
 import {
     FigureStyle,
     getMapImageIconUrl,
@@ -63,7 +66,6 @@ import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from 
 import { GenericModel } from '../shared/model/generic.model';
 import { ActivatedRoute } from '@angular/router';
 import { MapOverlayComponent } from './map-overlay.component';
-import VectorEvent = olsource.VectorEvent;
 
 @Component({
     selector: 'jhi-map',
