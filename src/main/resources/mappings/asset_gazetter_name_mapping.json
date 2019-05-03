@@ -1,0 +1,8 @@
+{
+    "type": "text",
+    "fields": {
+        "exact": {
+            "type": "keyword"
+        }
+    }
+}

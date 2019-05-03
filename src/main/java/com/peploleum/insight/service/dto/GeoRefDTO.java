@@ -12,6 +12,7 @@ public class GeoRefDTO implements Serializable {
 
     private String id;
     private String name;
+    private String countrycode;
     private String asciiname;
     private List<Double> location;
     private Map<String, String> properties;
@@ -23,6 +24,10 @@ public class GeoRefDTO implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getCountrycode() { return countrycode; }
+
+    public void setCountrycode(String countrycode) { this.countrycode = countrycode; }
 
     public String getName() {
         return name;
