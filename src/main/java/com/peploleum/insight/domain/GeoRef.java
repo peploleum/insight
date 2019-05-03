@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -24,8 +25,13 @@ public class GeoRef implements Serializable {
     @Id
     private String id;
 
-    @Field(type = FieldType.Text)
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Text)
+    @Mapping(mappingPath = "/mappings/asset_gazetter_name_mapping.json")
     private String name;
+
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Text)
+    @Mapping(mappingPath = "/mappings/asset_gazetter_countrycode_mapping.json")
+    private String countrycode;
 
     @Field(type = FieldType.Text)
     private String asciiname;
@@ -53,6 +59,10 @@ public class GeoRef implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getCountrycode() { return countrycode; }
+
+    public void setCountrycode(String countrycode) { this.countrycode = countrycode; }
 
     public String getAsciiname() {
         return asciiname;
