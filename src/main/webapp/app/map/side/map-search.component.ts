@@ -5,11 +5,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/internal/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/internal/operators';
 import { IMapDataDTO } from '../../shared/model/map.model';
-import { ZoomToFeatureRequest } from '../../shared/util/map-utils';
+import { MapState, ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
-import { IInsightEntity } from 'app/shared/model/insight-entity.model';
 import { SearchService } from '../../shared/search/search.service';
 import { GenericModel } from '../../shared/model/generic.model';
 
@@ -19,9 +18,11 @@ import { GenericModel } from '../../shared/model/generic.model';
 })
 export class MapSearchComponent extends SideInterface implements OnInit, AfterViewInit, OnDestroy {
     currentResult: IMapDataDTO[] = [];
-
     searchForm: FormControl = new FormControl('');
     pinnedIds: string[];
+
+    mapStates: MapState;
+    mapStatesSubs: Subscription;
 
     pinnedGeoMarkerSubs: Subscription;
 
@@ -30,8 +31,12 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     }
 
     ngOnInit() {
+        this.mapStatesSubs = this.ms.mapStates.subscribe(state => {
+            this.mapStates = state;
+        });
         this.searchForm.valueChanges
             .pipe(
+                filter(val => this.mapStates.SEARCH_GEOREF),
                 debounceTime(400),
                 distinctUntilChanged(),
                 switchMap((value: string) => {
@@ -52,10 +57,11 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
             );
         this.searchForm.valueChanges
             .pipe(
+                filter(val => !this.mapStates.SEARCH_GEOREF),
                 debounceTime(400),
                 distinctUntilChanged(),
                 switchMap((value: string) => {
-                    return this._ss.searchIndices(value, null, null, null, null, [-4, 42, 12, 24]);
+                    return this._ss.searchIndices(value, null, null, null, null, this.ms.mapProperties.viewExtent || [-4, 42, 12, 24]);
                 })
             )
             .subscribe(
@@ -77,6 +83,9 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     ngOnDestroy() {
         if (this.pinnedGeoMarkerSubs) {
             this.pinnedGeoMarkerSubs.unsubscribe();
+        }
+        if (this.mapStatesSubs) {
+            this.mapStatesSubs.unsubscribe();
         }
     }
 
@@ -104,5 +113,20 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     addSingleFeatureToMap(feat: IMapDataDTO) {
         this.ms.getFeaturesFromGeoMarker([feat]);
+    }
+
+    sendAction(action: string) {
+        const currentState: MapState = this.ms.mapStates.getValue();
+        switch (action) {
+            case 'SEARCH_GEOREF':
+                currentState.SEARCH_GEOREF = true;
+                break;
+            case 'SEARCH_INDICES':
+                currentState.SEARCH_GEOREF = false;
+                break;
+            default:
+                break;
+        }
+        this.ms.mapStates.next(currentState);
     }
 }

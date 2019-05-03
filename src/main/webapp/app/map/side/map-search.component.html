@@ -6,6 +6,14 @@
         </h4>
     </div>
     <div class="side-main side-element">
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <span title="Rechercher dans l'index GeoRef" (click)="sendAction('SEARCH_GEOREF')"
+                  [ngClass]="{'selected': (mapStates.SEARCH_GEOREF)}"><fa-icon
+                [icon]="'globe'"></fa-icon></span>
+            <span title="Rechercher dans les entités" (click)="sendAction('SEARCH_INDICES')"
+                  [ngClass]="{'selected': (!mapStates.SEARCH_GEOREF)}"><fa-icon
+                [icon]="'search'"></fa-icon></span>
+        </div>
         <div class="side-inline-form" style="flex: 0 1 5%; min-height: 2.5rem;">
             <div class="side-input-container">
                 <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Paris..."

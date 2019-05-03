@@ -41,10 +41,6 @@ import Icon from 'ol/style/icon';
 import Style from 'ol/style/style';
 import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
-import { olx, source as olsource } from 'openlayers';
-import animation = olx.animation;
-import PanOptions = olx.animation.PanOptions;
-import VectorEvent = olsource.VectorEvent;
 import {
     FigureStyle,
     getMapImageIconUrl,
@@ -90,8 +86,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     computedHeight = 0;
 
-    currentResolution: number;
-    maxClusterCount: number;
     selectedIds: any[] = [];
 
     popup: Overlay;
@@ -133,11 +127,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.featureLayer = new VectorLayer({
             source: this.clusterSource,
             style: (feature: Feature, resolution: number) => {
-                if (resolution !== this.currentResolution || !feature.get('radius')) {
-                    this.maxClusterCount = setClusterRadius(this.clusterSource.getFeatures(), resolution);
-                    this.currentResolution = resolution;
+                if (resolution !== this._ms.mapProperties.resolution || !feature.get('radius')) {
+                    this._ms.mapProperties.maxClusterCount = setClusterRadius(this.clusterSource.getFeatures(), resolution);
+                    this._ms.mapProperties.resolution = resolution;
                 }
-                const styles: Style[] = insStyleFunction(feature, resolution, this.maxClusterCount || 1);
+                const styles: Style[] = insStyleFunction(feature, resolution, this._ms.mapProperties.maxClusterCount || 1);
                 const zoom = this._map.getView().getZoom();
                 if (zoom > 5 && this.getMapStates().DISPLAY_LABEL) {
                     insSetTextStyleFunction(feature, styles);
@@ -165,7 +159,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 return feature.get('features') && feature.get('features').length > 1;
             },
             style: (feature: Feature, resolution: number) => {
-                return insHoveredStyleFunction(feature, resolution, this.maxClusterCount || 1);
+                return insHoveredStyleFunction(feature, resolution, this._ms.mapProperties.maxClusterCount || 1);
             },
             multi: true,
             wrapX: false
@@ -381,6 +375,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             event.preventDefault();
         });
+
+        this._map.on('moveend', (event: MapBrowserEvent) => {
+            const currentExtent = this._map.getView().calculateExtent(this._map.getSize());
+            this._ms.mapProperties.viewExtent = currentExtent;
+        });
     }
 
     private onNewFeaturesSelected(features: Feature[]) {
@@ -556,7 +555,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this._map.addInteraction(this.modifyInteraction);
 
-        currentDessinSrc.on('addfeature', (event: VectorEvent) => {
+        currentDessinSrc.on('addfeature', (event: any) => {
             event.feature.setStyle(this.getDessinStyle());
         });
     }
@@ -676,9 +675,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 mapState.DESSIN_ENABLED = !mapState.DESSIN_ENABLED;
                 if (!mapState.DESSIN_ENABLED && this.drawInteraction) {
                     this.removeDrawInteraction();
-                    // this._map.addInteraction(this.selectInteraction);
                 } else if (mapState.DESSIN_ENABLED) {
-                    // this._map.removeInteraction(this.selectInteraction);
                     this.addDrawInteraction();
                 }
                 break;

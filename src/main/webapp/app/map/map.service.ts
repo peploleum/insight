@@ -13,7 +13,7 @@ import Point from 'ol/geom/point';
 import Geometry from 'ol/geom/geometry';
 import proj from 'ol/proj';
 import { RawData } from '../shared/model/raw-data.model';
-import { FigureStyle, MapLayer, MapState, ZoomToFeatureRequest } from '../shared/util/map-utils';
+import { FigureStyle, MapLayer, MapState, OlMapProperties, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 import { CONTENT_FIELD, COORDINATE_FIELD, GenericModel, NAME_FIELD } from '../shared/model/generic.model';
@@ -28,13 +28,15 @@ export class MapService {
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
-    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false));
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false, true));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
         new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
     );
     mapLayers: BehaviorSubject<MapLayer[]> = new BehaviorSubject(DEFAULT_MAP_LAYERS);
     zoomToLayer: Subject<string> = new Subject();
     zoomToFeature: Subject<ZoomToFeatureRequest> = new Subject();
+
+    mapProperties: OlMapProperties = new OlMapProperties();
 
     static getMapDataFromGeneric(item: GenericModel): IMapDataDTO {
         let coord: number[] = null;

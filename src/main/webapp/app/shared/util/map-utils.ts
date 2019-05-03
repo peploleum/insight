@@ -31,19 +31,22 @@ export class MapState {
     FILTER_TYPE: string;
     DESSIN_ENABLED: boolean;
     AUTO_REFRESH: boolean;
+    SEARCH_GEOREF: boolean;
 
     constructor(
         DISPLAY_LABEL: boolean,
         DISPLAY_CONTENT_ON_HOVER: boolean,
         FILTER_TYPE: string,
         DESSIN_ENABLED: boolean,
-        AUTO_REFRESH: boolean
+        AUTO_REFRESH: boolean,
+        SEARCH_GEOREF: boolean
     ) {
         this.DISPLAY_LABEL = DISPLAY_LABEL;
         this.DISPLAY_CONTENT_ON_HOVER = DISPLAY_CONTENT_ON_HOVER;
         this.FILTER_TYPE = FILTER_TYPE;
         this.DESSIN_ENABLED = DESSIN_ENABLED;
         this.AUTO_REFRESH = AUTO_REFRESH;
+        this.SEARCH_GEOREF = SEARCH_GEOREF;
     }
 }
 
@@ -59,6 +62,18 @@ export class EventThreadResultSet {
     clearAll() {
         this.data = [];
         this.dataIds = [];
+    }
+}
+
+export class OlMapProperties {
+    resolution?: number;
+    viewExtent?: any;
+    maxClusterCount?: number;
+
+    constructor(resolution?: number, viewExtent?: any, maxClusterCount?: number) {
+        this.resolution = resolution;
+        this.viewExtent = viewExtent;
+        this.maxClusterCount = maxClusterCount;
     }
 }
 

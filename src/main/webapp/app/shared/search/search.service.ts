@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/index';
 import { createRequestOption } from '../util/request-util';
 import { filter, map } from 'rxjs/internal/operators';
 import { GenericModel } from '../model/generic.model';
+import Projection from 'ol/proj';
+import Extent from 'ol/extent';
 
 @Injectable({
     providedIn: 'root'
@@ -60,7 +62,7 @@ export class SearchService {
             size: size || this.itemsPerPage,
             sort: sort || this.sort,
             indices: indices || this.indices,
-            envelope: extent
+            envelope: this.formatExtentCoordinate(extent)
         };
         const options = createRequestOption(req);
         return this.http
@@ -72,5 +74,14 @@ export class SearchService {
                 filter((res: HttpResponse<GenericModel[]>) => res.ok),
                 map((res: HttpResponse<GenericModel[]>) => res.body)
             );
+    }
+
+    /**
+     * Transforme un ol.Extent en Array de coordinate compatible ES GeoQuery
+     * */
+    formatExtentCoordinate(extent: any): number[] {
+        const topLeft = Projection.toLonLat(Extent.getTopLeft(extent));
+        const bottomRight = Projection.toLonLat(Extent.getBottomRight(extent));
+        return [topLeft[0], topLeft[1], bottomRight[0], bottomRight[1]];
     }
 }
