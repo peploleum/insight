@@ -59,34 +59,12 @@ chmod +x graph/janus/init.sh
 echo "demarrage insight"
 docker-compose -f insight.yml -p insight up -d --build
 
-echo "Arret logstash"
+#echo "Arret logstash"
 tostop=$(docker ps -a | grep logstash | awk '{print $1}')
 echo container to stop $tostop
 docker stop $tostop
 
-
-echo "creation index gazetter"
-curl  -X PUT 'localhost:9200/gazetter?pretty' -H 'Content-Type: application/json' -d '{
-  "settings" : {
-    "number_of_shards" : 1
-  },
-  "mappings" : {
-        "doc" : {
-            "properties" : {
-                 "geonameid" : { "type" : "text" },
-        "asciiname" : { "type" : "text" },
-				"countrycode" : { "type" : "text" , "fields" : { "exact": { "type": "keyword"}}},
-				"fclass" : { "type" : "text" },
-				"fcode" : { "type" : "text" },
-				"latitude" : { "type" : "text" },
-				"longitude" : { "type" : "text" },
-				"name" : { "type" : "text" , "fields" : { "exact": { "type": "keyword"}}},
-				"population" : { "type" : "text" },
-				"location" : { "type" : "geo_point"}
-            }
-        }
-    }
-}' --trace-ascii dump.txt
+sleep 5
 
 echo "Demarrage logstash"
 echo container to start $tostop
