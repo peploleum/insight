@@ -60,6 +60,10 @@ public class GeoRef implements Serializable {
         this.name = name;
     }
 
+    public String getCountrycode() { return countrycode; }
+
+    public void setCountrycode(String countrycode) { this.countrycode = countrycode; }
+
     public String getAsciiname() {
         return asciiname;
     }
