@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { GenericModel } from '../model/generic.model';
-import { BASE64URI } from '../util/insight-util';
+import { BASE64URI, getGenericImageProperty, getGenericNameProperty } from '../util/insight-util';
 
 @Component({
     selector: 'ins-insight-search-suggestion',
@@ -10,7 +10,7 @@ import { BASE64URI } from '../util/insight-util';
 export class InsightSearchSuggestionComponent implements OnInit {
     suggestions: GenericModel[];
     textFields: string[];
-    symbolField: string;
+    imageField: string;
     dimension: { top: number; left: number; width: number } = { top: 0, left: 0, width: 0 };
 
     constructor(@Inject('directiveSelectionEmitter') private _selectionEmitter: EventEmitter<any>) {}
@@ -23,5 +23,13 @@ export class InsightSearchSuggestionComponent implements OnInit {
 
     onClick(selectedEntity: GenericModel) {
         this._selectionEmitter.emit(selectedEntity);
+    }
+
+    getTextFieldProperties(entity: GenericModel): string[] {
+        return this.textFields || [getGenericNameProperty(entity)];
+    }
+
+    getEntityImageProperty(entity: GenericModel): string {
+        return this.imageField || getGenericImageProperty(entity);
     }
 }

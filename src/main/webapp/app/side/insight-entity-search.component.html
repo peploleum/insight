@@ -1,0 +1,71 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'search'"></fa-icon>
+            <b> Search</b>
+        </h4>
+    </div>
+    <div class="side-main side-element">
+
+        <div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <span title="Biographics" (click)="onAction('ADD_BIOGRAPHICS')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('Biographics') !== -1)}"><fa-icon
+                [icon]="'user'"></fa-icon></span>
+            <span title="Event" (click)="onAction('ADD_EVENT')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('Event') !== -1)}"><fa-icon
+                [icon]="'calendar-alt'"></fa-icon></span>
+            <span title="Location" (click)="onAction('ADD_LOCATION')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('Location') !== -1)}"><fa-icon
+                [icon]="'map-marker-alt'"></fa-icon></span>
+            <span title="Equipment" (click)="onAction('ADD_EQUIPMENT')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('Equipment') !== -1)}"><fa-icon
+                [icon]="'toolbox'"></fa-icon></span>
+            <span title="Organisation" (click)="onAction('ADD_ORGANISATION')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('Organisation') !== -1)}"><fa-icon
+                [icon]="'users'"></fa-icon></span>
+            <span title="RawData" (click)="onAction('ADD_RAWDATA')"
+                  [ngClass]="{'selected': (selectedEntityTypes.indexOf('RawData') !== -1)}"><fa-icon
+                [icon]="'database'"></fa-icon></span>
+        </div>
+
+        <div class="side-inline-form" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <div class="side-input-container">
+                <ins-insight-search [targetEntity]="selectedEntityTypes" (selectionEmitter)="onDataSelected($event)"
+                                    (resultEmitter)="onResultQueryReceived($event)"></ins-insight-search>
+            </div>
+        </div>
+
+        <div *ngIf="queryResult" class="event-thread-container" style="flex: 1 1 auto;">
+            <div class="card event-thread-card"
+                 *ngFor="let data of queryResult;">
+                <div class="card-body d-flex align-items-center">
+
+                    <div style="flex: 1 1 20%;">
+                        <img *ngIf="data[getEntitySymbolProperty(data)]; else noPhoto" style="max-height: 3rem;"
+                             src="{{data[getEntitySymbolProperty(data)]}}"/>
+                        <ng-template #noPhoto>
+                            <span
+                                style="display: flex;justify-content: center; align-items: center; font-size: 2rem;">
+                                <fa-icon [icon]="'image'"></fa-icon>
+                            </span>
+                        </ng-template>
+                    </div>
+
+                    <div style="flex: 1 0 80%;">
+                        <p class="card-title event-thread-title">
+                            {{data[getEntityNameProperty(data)] | stringTruncate : 30}}</p>
+                        <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span> Voir en fiche</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+

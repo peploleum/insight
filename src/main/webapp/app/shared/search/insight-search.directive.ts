@@ -23,7 +23,7 @@ export class InsightSearchDirective implements OnChanges {
     @Input()
     textFields: string[];
     @Input()
-    symbolField: string;
+    imageField: string;
 
     @Output()
     selectionEmitter: EventEmitter<any> = new EventEmitter();
@@ -52,7 +52,7 @@ export class InsightSearchDirective implements OnChanges {
         this.suggestComp = this._vcr.createComponent(factory, 0, injector);
         this.suggestComp.instance.suggestions = this.suggestions;
         this.suggestComp.instance.textFields = this.textFields;
-        this.suggestComp.instance.symbolField = this.symbolField;
+        this.suggestComp.instance.imageField = this.imageField;
 
         const rect: ClientRect = this._el.nativeElement.getBoundingClientRect();
         this.suggestComp.instance.dimension.top = this._el.nativeElement.offsetTop;

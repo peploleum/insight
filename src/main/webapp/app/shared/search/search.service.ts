@@ -62,7 +62,7 @@ export class SearchService {
             size: size || this.itemsPerPage,
             sort: sort || this.sort,
             indices: indices || this.indices,
-            envelope: this.formatExtentCoordinate(extent)
+            envelope: extent ? this.formatExtentCoordinate(extent) : null
         };
         const options = createRequestOption(req);
         return this.http

@@ -77,6 +77,14 @@ export const toKebabCase = (str: string): string => {
     return null;
 };
 
+/**
+ * Return: nouvel array dont l'item est retiré si présent ou ajouté dans le cas contraire
+ * */
+export const updateUniqueElementArray = (arr: any[], item: any): any[] => {
+    const index: number = arr.indexOf(item);
+    return index !== -1 ? arr.slice(0, index).concat(arr.slice(index + 1)) : [...arr, item];
+};
+
 export const convertRawDataDateFromClient = (rawData: IRawData): IRawData => {
     const copy: IRawData = Object.assign({}, rawData, {
         rawDataCreationDate:
@@ -162,23 +170,42 @@ export const assertGenericType = (type: string, entity: GenericModel): boolean =
     }
 };
 
+/*export const getGenericSymbolProperty = (entity: GenericModel): string => {
+ switch (entity['entityType']) {
+ case 'Biographics':
+ return 'biographicsSymbol';
+ case 'Equipment':
+ return 'equipmentSymbol';
+ case 'Event':
+ return 'eventSymbol';
+ case 'Location':
+ return 'locationSymbol';
+ case 'Organisation':
+ return 'organisationSymbol';
+ case 'RawData':
+ return 'rawDataSymbol';
+ default:
+ return null;
+ }
+ };*/
+
 export const getGenericSymbolProperty = (entity: GenericModel): string => {
-    switch (entity['entityType']) {
-        case 'Biographics':
-            return 'biographicsSymbol';
-        case 'Equipment':
-            return 'equipmentSymbol';
-        case 'Event':
-            return 'eventSymbol';
-        case 'Location':
-            return 'locationSymbol';
-        case 'Organisation':
-            return 'organisationSymbol';
-        case 'RawData':
-            return 'rawDataSymbol';
-        default:
-            return null;
+    return Object.keys(entity).find(key => /^.*Symbol$/.test(key)) || '';
+};
+
+export const getGenericImageProperty = (entity: GenericModel): string => {
+    if (entity['entityType'] === 'RawData') {
+        return 'rawDataData';
     }
+    return Object.keys(entity).find(key => /^.*Image$/.test(key)) || '';
+};
+
+export const getGenericNameProperty = (entity: GenericModel): string => {
+    return Object.keys(entity).find(key => /^.*Name$/.test(key)) || '';
+};
+
+export const getGenericCoordinatesProperty = (entity: GenericModel): string => {
+    return Object.keys(entity).find(key => /^.*Coordinates$/.test(key)) || '';
 };
 
 /**

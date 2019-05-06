@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by GFOLGOAS on 04/04/2019.
@@ -71,7 +72,7 @@ public class InsightElasticResource {
         // http://localhost:9000/api/insight-elastic/_search/indices?page=-1&size=50&query=AL*&sort=id,asc&indices=rawdata,event
         log.debug("REST request to get InsightEntities base on search query {}", query);
         log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
-        Page<InsightEntity> search = this.elasticService.search(query, indices, page);
+        Page<InsightEntity> search = this.elasticService.search(query, indices.stream().map(String::toLowerCase).collect(Collectors.toList()), page);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/indices");
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }
@@ -84,7 +85,7 @@ public class InsightElasticResource {
         log.debug("REST request to get InsightEntities base on search indices {}", indices.size());
         log.debug("REST request to get InsightEntities base in envelope {}", envelope.size());
         final EnvelopeBuilder envelopeBuilder = ShapeBuilders.newEnvelope(new Coordinate(envelope.get(0), envelope.get(1)), new Coordinate(envelope.get(2), envelope.get(3)));
-        Page<InsightEntity> search = this.elasticService.search(query, indices, envelopeBuilder, page);
+        Page<InsightEntity> search = this.elasticService.search(query, indices.stream().map(String::toLowerCase).collect(Collectors.toList()), envelopeBuilder, page);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, search, "/api/insight-elastic/_search/indices");
         return new ResponseEntity<>(search.getContent(), headers, HttpStatus.OK);
     }

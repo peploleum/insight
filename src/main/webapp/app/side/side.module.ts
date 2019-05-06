@@ -15,9 +15,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { QuickViewComponent } from './quick-view.component';
 import { SideButtonsComponent } from './side-buttons.component';
 import { QuickAnnotationComponent } from './quick-annotation.component';
+import { InsightEntitySearchComponent } from './insight-entity-search.component';
 
 @NgModule({
     imports: [CommonModule, ReactiveFormsModule, InsightSharedModule, SideRoutingModule, MapModule, DashboardModule, NetworkModule],
-    declarations: [SideComponent, SideEventThreadComponent, QuickViewComponent, SideButtonsComponent, QuickAnnotationComponent]
+    declarations: [
+        SideComponent,
+        SideEventThreadComponent,
+        QuickViewComponent,
+        SideButtonsComponent,
+        QuickAnnotationComponent,
+        InsightEntitySearchComponent
+    ]
 })
 export class SideModule {}

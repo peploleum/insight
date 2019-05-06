@@ -31,6 +31,7 @@ import {
     faClock,
     faCloud,
     faCodeBranch,
+    faDatabase,
     faDirections,
     faDotCircle,
     faDrawPolygon,
@@ -50,6 +51,7 @@ import {
     faMagic,
     faMapMarkedAlt,
     faMapMarker,
+    faMapMarkerAlt,
     faMinus,
     faNetworkWired,
     faPencilAlt,
@@ -75,10 +77,12 @@ import {
     faTasks,
     faThList,
     faTimes,
+    faToolbox,
     faTrashAlt,
     faUser,
     faUserCircle,
     faUserPlus,
+    faUsers,
     faUserSecret,
     faWifi,
     faWindowMaximize,
@@ -175,5 +179,9 @@ library.add(faBookmark);
 library.add(faStreetView);
 library.add(faCamera);
 library.add(faInfo);
+library.add(faMapMarkerAlt);
+library.add(faToolbox);
+library.add(faUsers);
+library.add(faDatabase);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

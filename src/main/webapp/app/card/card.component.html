@@ -2,8 +2,8 @@
 
     <div class="card-view col-8 h-100">
         <div class="ins-card-header">
-            <ins-insight-search [targetEntity]="'Biographics'" [textFields]="['biographicsName']"
-                                [symbolField]="'biographicsImage'"
+            <ins-insight-search [targetEntity]="['Biographics']" [textFields]="['biographicsName']"
+                                [imageField]="'biographicsImage'"
                                 (selectionEmitter)="onDataSelected($event)"></ins-insight-search>
         </div>
 

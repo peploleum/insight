@@ -1,13 +1,13 @@
 <div class="search-suggestion-container" [style.top.px]="dimension.top"
-     [style.left.px]="dimension.left" [style.min-width.px]="dimension.width / 2">
+     [style.left]="'auto'" [style.min-width.px]="dimension.width / 2">
     <div class="search-suggestion" *ngFor="let suggest of suggestions" (click)="onClick(suggest)">
-        <div *ngIf="suggest[symbolField] !== null; else noPhoto" class="search-img-ctn"><img
-            [src]="getBase64(suggest[symbolField])"/></div>
+        <div *ngIf="suggest[getEntityImageProperty(suggest)]; else noPhoto" class="search-img-ctn"><img
+            [src]="getBase64(suggest[getEntityImageProperty(suggest)])"/></div>
         <ng-template #noPhoto>
             <div class="search-img-ctn">
                 <fa-icon [icon]="'image'"></fa-icon>
             </div>
         </ng-template>
-        <div *ngFor="let field of textFields"><a>{{suggest[field]}}</a></div>
+        <div *ngFor="let field of getTextFieldProperties(suggest)"><a>{{suggest[field]}}</a></div>
     </div>
 </div>
