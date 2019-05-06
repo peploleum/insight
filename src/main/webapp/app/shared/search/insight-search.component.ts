@@ -4,7 +4,7 @@ import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/inte
 import { SearchService } from './search.service';
 import { GenericModel } from '../model/generic.model';
 import { InsightSearchDirective } from './insight-search.directive';
-import { Observable } from 'rxjs/index';
+import { Observable, of } from 'rxjs/index';
 
 @Component({
     selector: 'ins-insight-search',
@@ -54,7 +54,7 @@ export class InsightSearchComponent implements OnInit, OnChanges {
         this.getFormChangeObservable()
             .pipe(
                 switchMap((value: string) => {
-                    return this._ss.searchIndice(this.targetEntity[0], value);
+                    return value && value.length > 0 ? this._ss.searchIndice(this.targetEntity[0], value) : of([]);
                 })
             )
             .subscribe((entities: GenericModel[]) => {
@@ -66,7 +66,7 @@ export class InsightSearchComponent implements OnInit, OnChanges {
         this.getFormChangeObservable()
             .pipe(
                 switchMap((value: string) => {
-                    return this._ss.searchIndices(value, null, 20, null, this.targetEntity, null);
+                    return value && value.length > 0 ? this._ss.searchIndices(value, null, 20, null, this.targetEntity, null) : of([]);
                 })
             )
             .subscribe((entities: GenericModel[]) => {
@@ -75,6 +75,7 @@ export class InsightSearchComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: any) {
+        // Update nécessaire pour prendre en compte la nouvelle valeur de targetEntity
         this.searchForm.updateValueAndValidity();
     }
 
