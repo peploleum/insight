@@ -92,9 +92,13 @@ export class MapService {
     /**
      * Transforme les GenericModel et les envoie dans featureSource
      * */
-    getFeaturesFromGeneric(source: GenericModel[]): void {
+    getFeaturesFromGeneric(source: GenericModel[], target?: 'SEARCH' | 'MAIN'): void {
         if (source && source.length) {
-            this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
+            if (!target || target === 'MAIN') {
+                this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
+            } else if (target === 'SEARCH') {
+                this.sendSearchToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
+            }
         }
     }
 
@@ -109,6 +113,18 @@ export class MapService {
 
     sendToMapFeatureSource(source: IMapDataDTO[]): void {
         this.featureSource.next(source.map(item => MapService.getGeoJsonFromDto(item)).filter(dto => dto !== null));
+    }
+
+    sendSearchToMapFeatureSource(source: IMapDataDTO[]): void {
+        this.featureSource.next(
+            source
+                .map(item => MapService.getGeoJsonFromDto(item))
+                .filter((feat: Feature) => feat !== null)
+                .map((feat: Feature) => {
+                    feat.set('SEARCH', true);
+                    return feat;
+                })
+        );
     }
 
     sendToMapGeoMarkerSource(source: IMapDataDTO[]): void {

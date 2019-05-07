@@ -11,6 +11,7 @@ import { MapState, ZoomToFeatureRequest } from '../../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
 import { SearchService } from '../../shared/search/search.service';
 import { GenericModel } from '../../shared/model/generic.model';
+import { SideMediatorService } from '../../side/side-mediator.service';
 
 @Component({
     selector: 'ins-map-search',
@@ -26,7 +27,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     pinnedGeoMarkerSubs: Subscription;
 
-    constructor(protected ms: MapService, private _ss: SearchService) {
+    constructor(protected ms: MapService, private _ss: SearchService, private _sms: SideMediatorService) {
         super();
     }
 
@@ -67,7 +68,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
             .subscribe(
                 (result: GenericModel[]) => {
                     console.log('received ' + result.length);
-                    this.ms.getFeaturesFromGeneric(result);
+                    this.ms.getFeaturesFromGeneric(result, 'SEARCH');
                 },
                 error => {
                     console.log('Error search geo');
@@ -115,7 +116,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         this.ms.getFeaturesFromGeoMarker([feat]);
     }
 
-    sendAction(action: string) {
+    modifyState(action: string) {
         const currentState: MapState = this.ms.mapStates.getValue();
         switch (action) {
             case 'SEARCH_GEOREF':
@@ -128,5 +129,9 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
                 break;
         }
         this.ms.mapStates.next(currentState);
+    }
+
+    sendAction(action: string) {
+        this._sms._onNewActionClicked.next(action);
     }
 }

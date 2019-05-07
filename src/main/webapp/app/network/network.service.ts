@@ -253,6 +253,9 @@ export class NetworkService {
     }
 }
 
+/**
+ * Les svg doivent être de taille 100x100 px
+ * */
 export const SYMBOL_URLS = {
     network: {
         IMAGE_URL_BIO: '../../../content/images/biographics.png',

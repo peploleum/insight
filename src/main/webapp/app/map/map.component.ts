@@ -311,9 +311,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    private clearSearchFeatures() {
+        const searchFeatures: Feature[] = this.featureSource.getFeatures().filter(feat => feat.get('SEARCH'));
+        searchFeatures.forEach(feat => this.featureSource.removeFeature(feat));
+    }
+
     private initMap() {
         this._map = new Map({
-            layers: [this.featureLayer, this.geoMarkerLayer, this.searchLayer],
+            layers: [this.featureLayer, this.geoMarkerLayer],
             target: 'map',
             controls: control.defaults({
                 attributionOptions: {
@@ -609,7 +614,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     geoMarkerStyleFunction(feature: Feature, isSelected: boolean) {
         if (feature.getGeometry().getType() === 'Point') {
             const isPinned = feature.get('pinned');
-            const iconStyle: Style = this.getIconStyle(feature, isPinned, 0.05);
+            const iconStyle: Style = this.getIconStyle(feature, isPinned, 0.3);
             if (iconStyle !== null) {
                 iconStyle.setText(
                     new Text({
@@ -637,7 +642,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             : new Style({
                   image: new Icon({
                       anchor: [0.5, 0.5],
-                      scale: scale ? scale : 0.01,
+                      scale: scale ? scale : 0.3,
                       src: `${src}`
                   })
               });
@@ -685,6 +690,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
             case 'AUTO_REFRESH':
                 mapState.AUTO_REFRESH = !mapState.AUTO_REFRESH;
+                break;
+            case 'CLEAR_SEARCH_FEATURE':
+                this.clearSearchFeatures();
                 break;
             default:
                 break;
