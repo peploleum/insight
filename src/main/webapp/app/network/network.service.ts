@@ -90,19 +90,19 @@ export class NetworkService {
     static getNodeImageUrl(objectType: string): string {
         switch (objectType) {
             case 'Biographics':
-                return IMAGE_URL_BIO;
-                break;
+                return SYMBOL_URLS.network.IMAGE_URL_BIO;
             case 'Event':
-                return IMAGE_URL_EVENT;
-                break;
+                return SYMBOL_URLS.network.IMAGE_URL_EVENT;
+            case 'Location':
+                return SYMBOL_URLS.network.IMAGE_URL_LOC;
+            case 'Organisation':
+                return SYMBOL_URLS.network.IMAGE_URL_ORGA;
             case 'Equipment':
-                return IMAGE_URL_EQUIP;
-                break;
+                return SYMBOL_URLS.network.IMAGE_URL_EQUIP;
             case 'RawData':
-                return IMAGE_URL_RAW_BIS;
-                break;
+                return SYMBOL_URLS.network.IMAGE_URL_RAW;
             default:
-                return IMAGE_URL_DEFAULT;
+                return SYMBOL_URLS.network.IMAGE_URL_DEFAULT;
         }
     }
 
@@ -253,16 +253,29 @@ export class NetworkService {
     }
 }
 
-export const IMAGE_URL_BIO = '../../../content/images/biographics.png';
-export const IMAGE_URL_EVENT = '../../../content/images/event.png';
-export const IMAGE_URL_EQUIP = '../../../content/images/equipement.png';
-export const IMAGE_URL_DEFAULT = '../../../content/images/default.png';
-export const IMAGE_URL_RAW_BIS = '../../../content/images/rawdata.svg';
-export const IMAGE_URL_RAW = '../../../content/images/geo-marker-selected.svg';
-export const IMAGE_URL_SELECTED_RAW_BIS = '../../../content/images/rawdata_selected.svg';
-export const IMAGE_URL_SELECTED_RAW = '../../../content/images/geo-marker.svg';
-export const IMAGE_URL_GEOMARKER = '../../../content/images/geo-marker-selected.svg';
-export const IMAGE_URL_SELECTED_GEOMARKER = '../../../content/images/geo-marker.svg';
+export const SYMBOL_URLS = {
+    network: {
+        IMAGE_URL_BIO: '../../../content/images/biographics.png',
+        IMAGE_URL_EVENT: '../../../content/images/event.png',
+        IMAGE_URL_EQUIP: '../../../content/images/equipement.png',
+        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
+        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
+        IMAGE_URL_DEFAULT: '../../../content/images/default.png',
+        IMAGE_URL_RAW: '../../../content/images/rawdata.svg'
+    },
+    map: {
+        IMAGE_URL_BIO: '../../../content/images/icons/hostage.svg',
+        IMAGE_URL_EVENT: '../../../content/images/icons/speech.svg',
+        IMAGE_URL_EQUIP: '../../../content/images/icons/supply.svg',
+        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
+        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
+        IMAGE_URL_DEFAULT: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_RAW: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_SELECTED_RAW: '../../../content/images/icons/flag-bis.svg',
+        IMAGE_URL_GEOMARKER: '../../../content/images/geo-marker.svg',
+        IMAGE_URL_SELECTED_GEOMARKER: '../../../content/images/geo-marker-selected.svg'
+    }
+};
 export const MOCK_GRAPH_DATA = {
     nodes: [
         { id: 1, idMongo: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },

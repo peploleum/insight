@@ -13,17 +13,10 @@ import Extent from 'ol/extent';
 import GeometryCollection from 'ol/geom/geometrycollection';
 import LineString from 'ol/geom/linestring';
 import Point from 'ol/geom/point';
-import {
-    IMAGE_URL_BIO,
-    IMAGE_URL_DEFAULT,
-    IMAGE_URL_EQUIP,
-    IMAGE_URL_GEOMARKER,
-    IMAGE_URL_RAW,
-    IMAGE_URL_SELECTED_GEOMARKER,
-    IMAGE_URL_SELECTED_RAW
-} from '../../network/network.service';
+import { SYMBOL_URLS } from '../../network/network.service';
 import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
+import { getGenericImageProperty, getGenericNameProperty } from './insight-util';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -158,22 +151,9 @@ export class MapOverlayGenericMapper {
     static fromGeneric(entity: GenericModel): MapOverlayGenericMapper {
         const mapper: MapOverlayGenericMapper = new MapOverlayGenericMapper();
         mapper.entityType = entity['entityType'];
-        mapper.title =
-            entity['biographicsName'] ||
-            entity['equipmentName'] ||
-            entity['eventName'] ||
-            entity['locationName'] ||
-            entity['organisationName'] ||
-            entity['rawDataName'] ||
-            'noTitle';
+        mapper.title = entity[getGenericNameProperty(entity)] || 'noTitle';
         mapper.subTitle = entity['biographicsFirstname'] || entity['rawDataSubType'] || 'noSubTitle';
-        mapper.image =
-            entity['biographicsImage'] ||
-            entity['equipmentImage'] ||
-            entity['eventImage'] ||
-            entity['locationImage'] ||
-            entity['organisationImage'] ||
-            entity['rawDataData'];
+        mapper.image = entity[getGenericImageProperty(entity)];
         mapper.content =
             entity['biographicsName'] ||
             entity['equipmentDescription'] ||
@@ -381,7 +361,7 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
                           })
                         : new Icon({
                               anchor: [0.5, 0.5],
-                              scale: 0.05,
+                              scale: 0.3,
                               src: `${src}`
                           }),
                 text: new Text({
@@ -494,7 +474,7 @@ export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Fea
                           })
                         : new Icon({
                               anchor: [0.5, 0.5],
-                              scale: 0.05,
+                              scale: 0.3,
                               src: `${src}`
                           }),
                 text: new Text({
@@ -650,19 +630,19 @@ export const expandedClusterTranslationVectors = (numberFeatures: number, radius
 export const getMapImageIconUrl = (objectType: string): string => {
     switch (objectType) {
         case 'RawData':
-            return IMAGE_URL_RAW;
+            return SYMBOL_URLS.map.IMAGE_URL_RAW;
         case 'Equipment':
-            return IMAGE_URL_EQUIP;
+            return SYMBOL_URLS.map.IMAGE_URL_EQUIP;
         case 'Location':
-            return IMAGE_URL_RAW;
+            return SYMBOL_URLS.map.IMAGE_URL_LOC;
         case 'Biographics':
-            return IMAGE_URL_BIO;
+            return SYMBOL_URLS.map.IMAGE_URL_BIO;
         case 'Organisation':
-            return IMAGE_URL_DEFAULT;
+            return SYMBOL_URLS.map.IMAGE_URL_ORGA;
         case 'Event':
-            return IMAGE_URL_DEFAULT;
+            return SYMBOL_URLS.map.IMAGE_URL_EVENT;
         case 'geoMarker':
-            return IMAGE_URL_GEOMARKER;
+            return SYMBOL_URLS.map.IMAGE_URL_GEOMARKER;
         default:
             return null;
     }
@@ -671,9 +651,9 @@ export const getMapImageIconUrl = (objectType: string): string => {
 export const getSelectedImageIconUrl = (objectType: string): string => {
     switch (objectType) {
         case 'geoMarker':
-            return IMAGE_URL_SELECTED_GEOMARKER;
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_GEOMARKER;
         case 'RawData':
-            return IMAGE_URL_SELECTED_RAW;
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_RAW;
         default:
             return getMapImageIconUrl(objectType);
     }

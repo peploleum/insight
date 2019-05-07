@@ -14,22 +14,3 @@ export interface IGenericModel {
 export class GenericModel implements IBiographics, IEquipment, IEvent, ILocation, IOrganisation, IRawData, IGenericModel {
     constructor() {}
 }
-
-export const COORDINATE_FIELD = [
-    'biographicsCoordinates',
-    'equipmentCoordinates',
-    'eventCoordinates',
-    'locationCoordinates',
-    'organisationCoordinates',
-    'rawDataCoordinates'
-];
-export const NAME_FIELD = ['biographicsName', 'equipmentName', 'eventName', 'locationName', 'organisationName', 'rawDataName'];
-export const SYMBOL_FIELD = [
-    'biographicsSymbol',
-    'equipmentSymbol',
-    'eventSymbol',
-    'locationSymbol',
-    'organisationSymbol',
-    'rawDataSymbol'
-];
-export const CONTENT_FIELD = ['equipmentDescription', 'eventDescription', 'organisationDescrption', 'rawDataContent'];

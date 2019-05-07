@@ -170,25 +170,6 @@ export const assertGenericType = (type: string, entity: GenericModel): boolean =
     }
 };
 
-/*export const getGenericSymbolProperty = (entity: GenericModel): string => {
- switch (entity['entityType']) {
- case 'Biographics':
- return 'biographicsSymbol';
- case 'Equipment':
- return 'equipmentSymbol';
- case 'Event':
- return 'eventSymbol';
- case 'Location':
- return 'locationSymbol';
- case 'Organisation':
- return 'organisationSymbol';
- case 'RawData':
- return 'rawDataSymbol';
- default:
- return null;
- }
- };*/
-
 export const getGenericSymbolProperty = (entity: GenericModel): string => {
     return Object.keys(entity).find(key => /^.*Symbol$/.test(key)) || '';
 };

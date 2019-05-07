@@ -13,6 +13,6 @@ public class CustomSourceFilter implements SourceFilter {
 
     @Override
     public String[] getExcludes() {
-        return new String[]{"*Date"};
+        return new String[]{"*Date", "*Image"};
     }
 }
