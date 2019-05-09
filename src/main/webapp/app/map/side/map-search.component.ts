@@ -1,7 +1,7 @@
 /**
  * Created by gFolgoas on 31/01/2019.
  */
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SideInterface } from '../../side/side.abstract';
 import { MapService } from '../map.service';
 import { FormControl } from '@angular/forms';
@@ -12,19 +12,25 @@ import { Subscription } from 'rxjs/index';
 import { SearchService } from '../../shared/search/search.service';
 import { GenericModel } from '../../shared/model/generic.model';
 import { SideMediatorService } from '../../side/side-mediator.service';
+import { ENTITY_TYPE_LIST, getGenericNameProperty, getGenericSymbolProperty, toKebabCase } from '../../shared/util/insight-util';
+import { InsightSearchComponent } from '../../shared/search/insight-search.component';
 
 @Component({
     selector: 'ins-map-search',
     templateUrl: './map-search.component.html'
 })
 export class MapSearchComponent extends SideInterface implements OnInit, AfterViewInit, OnDestroy {
-    currentResult: IMapDataDTO[] = [];
-    searchForm: FormControl = new FormControl('');
+    entityQueryResult: GenericModel[] = [];
+    selectedEntityTypes: string[] = ENTITY_TYPE_LIST;
+    @ViewChildren(InsightSearchComponent) entitySearchForm: QueryList<InsightSearchComponent>;
+
+    geoRefQueryResult: IMapDataDTO[] = [];
+    geoRefSearchForm: FormControl = new FormControl('');
     pinnedIds: string[];
 
     mapStates: MapState;
-    mapStatesSubs: Subscription;
 
+    mapStatesSubs: Subscription;
     pinnedGeoMarkerSubs: Subscription;
 
     constructor(protected ms: MapService, private _ss: SearchService, private _sms: SideMediatorService) {
@@ -35,9 +41,8 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         this.mapStatesSubs = this.ms.mapStates.subscribe(state => {
             this.mapStates = state;
         });
-        this.searchForm.valueChanges
+        this.geoRefSearchForm.valueChanges
             .pipe(
-                filter(val => this.mapStates.SEARCH_GEOREF),
                 debounceTime(400),
                 distinctUntilChanged(),
                 switchMap((value: string) => {
@@ -47,39 +52,34 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
             .subscribe(
                 (result: IMapDataDTO[]) => {
                     // Garde les pinned points
-                    const filteredResult = this.currentResult.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) !== -1);
+                    const filteredResult = this.geoRefQueryResult.filter(
+                        item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) !== -1
+                    );
                     // Remove doublon
                     result = result.filter(item => this.ms.pinnedGeoMarker.getValue().indexOf(item.id) === -1);
-                    this.currentResult = filteredResult.concat(result);
+                    this.geoRefQueryResult = filteredResult.concat(result);
                 },
                 error => {
                     console.log('Error GeoRef');
                 }
             );
-        this.searchForm.valueChanges
-            .pipe(
-                filter(val => !this.mapStates.SEARCH_GEOREF),
-                debounceTime(400),
-                distinctUntilChanged(),
-                switchMap((value: string) => {
-                    return this._ss.searchIndices(value, null, null, null, null, this.ms.mapProperties.viewExtent || [-4, 42, 12, 24]);
-                })
-            )
-            .subscribe(
-                (result: GenericModel[]) => {
-                    console.log('received ' + result.length);
-                    this.ms.getFeaturesFromGeneric(result, 'SEARCH');
-                },
-                error => {
-                    console.log('Error search geo');
-                }
-            );
+
         this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((pinnedIds: string[]) => {
             this.pinnedIds = pinnedIds;
         });
     }
 
-    ngAfterViewInit() {}
+    ngAfterViewInit() {
+        this.entitySearchForm.changes.subscribe(r => {
+            if (r.first) {
+                (<InsightSearchComponent>r.first).extentProvider = this.getExtent;
+            }
+        });
+    }
+
+    getExtent = (): any => {
+        return this.ms.mapProperties.viewExtent;
+    };
 
     ngOnDestroy() {
         if (this.pinnedGeoMarkerSubs) {
@@ -90,8 +90,18 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         }
     }
 
+    onResultQueryReceived(result: GenericModel[]) {
+        this.entityQueryResult = result;
+        this.ms.getFeaturesFromGeneric(this.entityQueryResult, 'SEARCH');
+    }
+
+    onDataSelected(select: GenericModel) {
+        this.entityQueryResult = [select];
+        this.ms.getFeaturesFromGeneric(this.entityQueryResult, 'SEARCH');
+    }
+
     onEnter(event) {
-        this.ms.getFeaturesFromGeoMarker(this.currentResult);
+        this.ms.getFeaturesFromGeoMarker(this.geoRefQueryResult);
     }
 
     zoomToFeature(featId: string) {
@@ -133,5 +143,18 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     sendAction(action: string) {
         this._sms._onNewActionClicked.next(action);
+    }
+
+    getEntityNameProperty(entity: GenericModel): string {
+        return getGenericNameProperty(entity);
+    }
+
+    getEntitySymbolProperty(entity: GenericModel): string {
+        return getGenericSymbolProperty(entity);
+    }
+
+    getLink(str: string): string {
+        const i: string = toKebabCase(str);
+        return '/' + i;
     }
 }

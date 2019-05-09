@@ -70,6 +70,9 @@ export class MapService {
      * geometry => DTO pour le mapping d'un InsightShape
      * */
     static getFeatureGeometry(geometry: any): Geometry {
+        if (!geometry) {
+            return null;
+        }
         let correctCoord;
         let featGeometry: Geometry;
         switch (geometry.type) {

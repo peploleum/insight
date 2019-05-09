@@ -19,6 +19,9 @@ export class InsightSearchComponent implements OnInit, OnChanges {
     @Input()
     imageField?: string;
 
+    // Function pouvant être définie depuis un composant parent (par ViewChild ou ViewChildren)
+    extentProvider?: Function;
+
     searchForm: FormControl = new FormControl('', [
         c => {
             if (!this.targetEntity || this.targetEntity.length === 0) {
@@ -47,6 +50,11 @@ export class InsightSearchComponent implements OnInit, OnChanges {
         this.closeOnExternalAction();
     }
 
+    @HostListener('document:keydown.enter', ['$event'])
+    onKeydownHandler(event: KeyboardEvent) {
+        this.closeOnExternalAction();
+    }
+
     constructor(private _ss: SearchService) {}
 
     ngOnInit() {
@@ -54,23 +62,21 @@ export class InsightSearchComponent implements OnInit, OnChanges {
         this.getFormChangeObservable()
             .pipe(
                 switchMap((value: string) => {
-                    return value && value.length > 0 ? this._ss.searchIndice(this.targetEntity[0], value) : of([]);
+                    return value && value.length > 0
+                        ? this._ss.searchIndices(
+                              value,
+                              null,
+                              5,
+                              null,
+                              this.targetEntity,
+                              this.extentProvider ? this.extentProvider() : null
+                          )
+                        : of([]);
                 })
             )
             .subscribe((entities: GenericModel[]) => {
                 this.suggestions = entities;
                 this.displaySuggestions(!(!entities || entities.length === 0));
-            });
-
-        // Search
-        this.getFormChangeObservable()
-            .pipe(
-                switchMap((value: string) => {
-                    return value && value.length > 0 ? this._ss.searchIndices(value, null, 20, null, this.targetEntity, null) : of([]);
-                })
-            )
-            .subscribe((entities: GenericModel[]) => {
-                this.resultEmitter.next(entities);
             });
     }
 
@@ -85,6 +91,19 @@ export class InsightSearchComponent implements OnInit, OnChanges {
             distinctUntilChanged(),
             filter(val => this.searchForm.valid)
         );
+    }
+
+    onInputEnter(event: any) {
+        const value = this.searchForm.value;
+        if (this.searchForm.valid && value && value.length > 0) {
+            this._ss
+                .searchIndices(value, null, 20, null, this.targetEntity, this.extentProvider ? this.extentProvider() : null)
+                .subscribe((entities: GenericModel[]) => {
+                    this.resultEmitter.next(entities);
+                });
+        } else {
+            this.resultEmitter.next([]);
+        }
     }
 
     displaySuggestions(display: boolean) {

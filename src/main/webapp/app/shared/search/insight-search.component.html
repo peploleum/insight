@@ -1,4 +1,4 @@
 <div class="insSearchComponent">
-    <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Bobby..."/>
+    <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Bobby..." (keyup.enter)="onInputEnter($event)"/>
     <div insInsightSearch [imageField]="imageField" [textFields]="textFields" (selectionEmitter)="onNewSelection($event)"></div>
 </div>

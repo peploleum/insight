@@ -18,13 +18,21 @@
         </div>
         <div class="side-inline-form" style="flex: 0 1 5%; min-height: 2.5rem;">
             <div class="side-input-container">
-                <input type="text" [formControl]="searchForm" class="form-control-sm" placeholder="ex: Paris..."
+                <input *ngIf="mapStates.SEARCH_GEOREF; else inputSearchEntity" type="text"
+                       [formControl]="geoRefSearchForm"
+                       class="form-control-sm"
+                       placeholder="ex: Paris..."
                        (keyup.enter)="onEnter($event)"/>
+                <ng-template #inputSearchEntity>
+                    <ins-insight-search [targetEntity]="selectedEntityTypes" (selectionEmitter)="onDataSelected($event)"
+                                        (resultEmitter)="onResultQueryReceived($event)"></ins-insight-search>
+                </ng-template>
             </div>
         </div>
 
-        <div class="side-list-container" style="flex: 1 1 auto;" *ngIf="currentResult">
-            <div *ngFor="let result of currentResult;">
+        <div class="side-list-container" style="flex: 1 1 auto;"
+             *ngIf="mapStates.SEARCH_GEOREF; else resultSearchEntity">
+            <div *ngFor="let result of geoRefQueryResult;">
                 <span *ngIf="result.properties && result.properties['ADDED_TO_MAP']; else notOnMap">
                     <fa-icon (click)="pinnedFeature(result)" [icon]="'map-marker'"
                              [style.color]="pinnedIds.indexOf(result.id) !== -1 ? 'red' : 'inherit'"></fa-icon>
@@ -39,6 +47,38 @@
                 </ng-template>
             </div>
         </div>
+
+        <ng-template #resultSearchEntity>
+            <div *ngIf="entityQueryResult" class="event-thread-container" style="flex: 1 1 auto;">
+                <div class="card event-thread-card"
+                     *ngFor="let data of entityQueryResult;">
+                    <div class="card-body d-flex align-items-center">
+
+                        <div style="flex: 1 1 20%;">
+                            <img *ngIf="data[getEntitySymbolProperty(data)]; else noPhoto" style="max-height: 3rem;"
+                                 src="{{data[getEntitySymbolProperty(data)]}}"/>
+                            <ng-template #noPhoto>
+                            <span
+                                style="display: flex;justify-content: center; align-items: center; font-size: 2rem;">
+                                <fa-icon [icon]="'image'"></fa-icon>
+                            </span>
+                            </ng-template>
+                        </div>
+
+                        <div style="flex: 1 0 80%;">
+                            <p class="card-title event-thread-title">
+                                {{data[getEntityNameProperty(data)] | stringTruncate : 30}}</p>
+                            <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                                <fa-icon [icon]="'eye'"></fa-icon>
+                                <span> Voir en fiche</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
     </div>
 
 </div>

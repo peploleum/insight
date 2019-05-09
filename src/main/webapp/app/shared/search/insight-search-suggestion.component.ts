@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { GenericModel } from '../model/generic.model';
-import { BASE64URI, getGenericImageProperty, getGenericNameProperty } from '../util/insight-util';
+import { BASE64URI, getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from '../util/insight-util';
+import { NetworkService } from '../../network/network.service';
 
 @Component({
     selector: 'ins-insight-search-suggestion',
@@ -19,6 +20,10 @@ export class InsightSearchSuggestionComponent implements OnInit {
 
     getBase64(content: string): string {
         return BASE64URI(content);
+    }
+
+    getDefaultEntitySymbol(entity: GenericModel): string {
+        return NetworkService.getNodeImageUrl(entity['entityType']);
     }
 
     onClick(selectedEntity: GenericModel) {

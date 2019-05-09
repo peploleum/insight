@@ -201,3 +201,41 @@ export const genericTypeResolver = (entity: GenericModel): GenericModel => {
     }
     return entity;
 };
+
+/**
+ * Les svg doivent être de taille 100x100 px
+ * */
+export const SYMBOL_URLS = {
+    network: {
+        IMAGE_URL_BIO: '../../../content/images/icons/hostage.svg',
+        IMAGE_URL_SELECTED_BIO: '../../../content/images/icons/hostage-bis.svg',
+        IMAGE_URL_EVENT: '../../../content/images/icons/speech.svg',
+        IMAGE_URL_SELECTED_EVENT: '../../../content/images/icons/speech-bis.svg',
+        IMAGE_URL_EQUIP: '../../../content/images/icons/supply.svg',
+        IMAGE_URL_SELECTED_EQUIP: '../../../content/images/icons/supply-bis.svg',
+        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
+        IMAGE_URL_SELECTED_LOC: '../../../content/images/icons/map-bis.svg',
+        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
+        IMAGE_URL_SELECTED_ORGA: '../../../content/images/icons/crowd-bis.svg',
+        IMAGE_URL_DEFAULT: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_RAW: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_SELECTED_RAW: '../../../content/images/icons/flag-bis.svg'
+    },
+    map: {
+        IMAGE_URL_BIO: '../../../content/images/icons/hostage.svg',
+        IMAGE_URL_SELECTED_BIO: '../../../content/images/icons/hostage-bis.svg',
+        IMAGE_URL_EVENT: '../../../content/images/icons/speech.svg',
+        IMAGE_URL_SELECTED_EVENT: '../../../content/images/icons/speech-bis.svg',
+        IMAGE_URL_EQUIP: '../../../content/images/icons/supply.svg',
+        IMAGE_URL_SELECTED_EQUIP: '../../../content/images/icons/supply-bis.svg',
+        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
+        IMAGE_URL_SELECTED_LOC: '../../../content/images/icons/map-bis.svg',
+        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
+        IMAGE_URL_SELECTED_ORGA: '../../../content/images/icons/crowd-bis.svg',
+        IMAGE_URL_DEFAULT: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_RAW: '../../../content/images/icons/flag.svg',
+        IMAGE_URL_SELECTED_RAW: '../../../content/images/icons/flag-bis.svg',
+        IMAGE_URL_GEOMARKER: '../../../content/images/geo-marker.svg',
+        IMAGE_URL_SELECTED_GEOMARKER: '../../../content/images/geo-marker-selected.svg'
+    }
+};

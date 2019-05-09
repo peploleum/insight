@@ -13,10 +13,9 @@ import Extent from 'ol/extent';
 import GeometryCollection from 'ol/geom/geometrycollection';
 import LineString from 'ol/geom/linestring';
 import Point from 'ol/geom/point';
-import { SYMBOL_URLS } from '../../network/network.service';
 import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
-import { getGenericImageProperty, getGenericNameProperty } from './insight-util';
+import { getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -652,6 +651,16 @@ export const getSelectedImageIconUrl = (objectType: string): string => {
     switch (objectType) {
         case 'geoMarker':
             return SYMBOL_URLS.map.IMAGE_URL_SELECTED_GEOMARKER;
+        case 'Biographics':
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_BIO;
+        case 'Event':
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_EVENT;
+        case 'Organisation':
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_ORGA;
+        case 'Location':
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_LOC;
+        case 'Equipment':
+            return SYMBOL_URLS.map.IMAGE_URL_SELECTED_EQUIP;
         case 'RawData':
             return SYMBOL_URLS.map.IMAGE_URL_SELECTED_RAW;
         default:

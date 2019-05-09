@@ -5,7 +5,7 @@
             [src]="getBase64(suggest[getEntityImageProperty(suggest)])"/></div>
         <ng-template #noPhoto>
             <div class="search-img-ctn">
-                <fa-icon [icon]="'image'"></fa-icon>
+                <img [src]="getDefaultEntitySymbol(suggest)"/>
             </div>
         </ng-template>
         <div *ngFor="let field of getTextFieldProperties(suggest)"><a>{{suggest[field]}}</a></div>

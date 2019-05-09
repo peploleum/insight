@@ -11,7 +11,7 @@ import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeD
 import { RawDataService } from 'app/entities/raw-data';
 import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
-import { genericTypeResolver, getGenericSymbolProperty, ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
+import { genericTypeResolver, getGenericSymbolProperty, SYMBOL_URLS, ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { GenericModel } from '../shared/model/generic.model';
 import { QuickViewService } from '../side/quick-view.service';
 
@@ -253,32 +253,6 @@ export class NetworkService {
     }
 }
 
-/**
- * Les svg doivent être de taille 100x100 px
- * */
-export const SYMBOL_URLS = {
-    network: {
-        IMAGE_URL_BIO: '../../../content/images/biographics.png',
-        IMAGE_URL_EVENT: '../../../content/images/event.png',
-        IMAGE_URL_EQUIP: '../../../content/images/equipement.png',
-        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
-        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
-        IMAGE_URL_DEFAULT: '../../../content/images/default.png',
-        IMAGE_URL_RAW: '../../../content/images/rawdata.svg'
-    },
-    map: {
-        IMAGE_URL_BIO: '../../../content/images/icons/hostage.svg',
-        IMAGE_URL_EVENT: '../../../content/images/icons/speech.svg',
-        IMAGE_URL_EQUIP: '../../../content/images/icons/supply.svg',
-        IMAGE_URL_LOC: '../../../content/images/icons/map.svg',
-        IMAGE_URL_ORGA: '../../../content/images/icons/crowd.svg',
-        IMAGE_URL_DEFAULT: '../../../content/images/icons/flag.svg',
-        IMAGE_URL_RAW: '../../../content/images/icons/flag.svg',
-        IMAGE_URL_SELECTED_RAW: '../../../content/images/icons/flag-bis.svg',
-        IMAGE_URL_GEOMARKER: '../../../content/images/geo-marker.svg',
-        IMAGE_URL_SELECTED_GEOMARKER: '../../../content/images/geo-marker-selected.svg'
-    }
-};
 export const MOCK_GRAPH_DATA = {
     nodes: [
         { id: 1, idMongo: '5c90f99b5e365c06ac7e187b', label: 'Bobby', title: 'Personne', type: 'Biographics' },
