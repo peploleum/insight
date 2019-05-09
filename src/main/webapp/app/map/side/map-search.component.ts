@@ -14,6 +14,7 @@ import { GenericModel } from '../../shared/model/generic.model';
 import { SideMediatorService } from '../../side/side-mediator.service';
 import { ENTITY_TYPE_LIST, getGenericNameProperty, getGenericSymbolProperty, toKebabCase } from '../../shared/util/insight-util';
 import { InsightSearchComponent } from '../../shared/search/insight-search.component';
+import { NetworkService } from '../../network/network.service';
 
 @Component({
     selector: 'ins-map-search',
@@ -72,6 +73,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     ngAfterViewInit() {
         this.entitySearchForm.changes.subscribe(r => {
             if (r.first) {
+                // Définie la fonction getExtent du searchComponent
                 (<InsightSearchComponent>r.first).extentProvider = this.getExtent;
             }
         });
@@ -156,5 +158,9 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     getLink(str: string): string {
         const i: string = toKebabCase(str);
         return '/' + i;
+    }
+
+    getDefaultEntitySymbol(entity: GenericModel): string {
+        return NetworkService.getNodeImageUrl(entity['entityType']);
     }
 }
