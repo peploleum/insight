@@ -76,7 +76,8 @@
                                    [routerLink]="['/',{outlets: { primary: ['network', data['id']], side: ['ins-network-side-panel'] }}]">
                                     <fa-icon [icon]="'sitemap'"></fa-icon>
                                 </a>
-                                <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                                <a class="card-link"
+                                   [routerLink]="['/',{outlets: { primary: [getLink(data['entityType']), data['id'], 'view'], side: ['ins-entities-side-panel']}}]">
                                     <fa-icon [icon]="'eye'"></fa-icon>
                                     <span> Voir en fiche</span>
                                 </a>

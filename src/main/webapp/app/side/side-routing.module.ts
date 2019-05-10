@@ -29,6 +29,14 @@ const routes: Routes = [
             target: 'network'
         },
         outlet: 'side'
+    },
+    {
+        path: 'ins-entities-side-panel',
+        component: SideComponent,
+        data: {
+            target: 'entities'
+        },
+        outlet: 'side'
     }
 ];
 

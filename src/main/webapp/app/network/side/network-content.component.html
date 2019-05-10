@@ -43,7 +43,8 @@
                         <a class="card-title event-thread-title" (click)="onDataClicked(data.idMongo)">
                             {{data.label | stringTruncate : 30}}</a>
                         <h6 class="card-subtitle mb-1 text-muted">{{data.title}}</h6>
-                        <a class="card-link" [routerLink]="[getLink(data.objectType), data.idMongo, 'view' ]">
+                        <a class="card-link"
+                           [routerLink]="['/',{outlets: { primary: [getLink(data.objectType), data.idMongo, 'view'], side: ['ins-entities-side-panel']}}]">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span> Voir en fiche</span>
                         </a>

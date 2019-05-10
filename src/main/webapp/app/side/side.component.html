@@ -18,6 +18,9 @@
         <ins-network-symbol-manager [hidden]="_sideElement !== 'SYMBOL_MANAGER'"></ins-network-symbol-manager>
         <ins-insight-entity-search [hidden]="_sideElement !== 'SEARCH'"></ins-insight-entity-search>
     </div>
+    <div *ngIf="target === 'entities'" class="h-100">
+        <ins-insight-entity-search></ins-insight-entity-search>
+    </div>
 </div>
 <ins-side-buttons [isClosed]="isHidden" [_sideElement]="_sideElement" [target]="target"
                   (closeEmitter)="displaySidePannel($event)"

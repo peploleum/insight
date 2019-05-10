@@ -58,8 +58,7 @@ export class InsightEntitySearchComponent implements OnInit {
     }
 
     getLink(str: string): string {
-        const i: string = toKebabCase(str);
-        return '/' + i;
+        return toKebabCase(str);
     }
 
     getDefaultEntitySymbol(entity: GenericModel): string {

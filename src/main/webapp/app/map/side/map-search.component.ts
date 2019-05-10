@@ -170,8 +170,7 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     }
 
     getLink(str: string): string {
-        const i: string = toKebabCase(str);
-        return '/' + i;
+        return toKebabCase(str);
     }
 
     getDefaultEntitySymbol(entity: GenericModel): string {

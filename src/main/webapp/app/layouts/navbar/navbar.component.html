@@ -79,7 +79,8 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['biographics'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['biographics'], side: ['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -87,7 +88,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['organisation'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['organisation'], side: ['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -95,7 +97,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['location'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['location'], side: ['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -103,7 +106,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['event'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['event'], side: ['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -111,7 +115,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['equipment'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['equipment'], side:['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -119,7 +124,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" [routerLink]="[{outlets: { primary: ['raw-data'], side: null }}]"
+                        <a class="dropdown-item"
+                           [routerLink]="[{outlets: { primary: ['raw-data'], side: ['ins-entities-side-panel']}}]"
                            routerLinkActive="active"
                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>

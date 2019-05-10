@@ -64,7 +64,7 @@
                                 <fa-icon [icon]="'globe'"></fa-icon>
                             </a>
                             <a class="card-link"
-                               [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                               [routerLink]="['/',{outlets: { primary: [getLink(data['entityType']), data['id'], 'view'], side: ['ins-entities-side-panel']}}]">
                                 <fa-icon [icon]="'eye'"></fa-icon>
                                 <span> Voir en fiche</span>
                             </a>
@@ -79,3 +79,5 @@
 
 </div>
 
+
+<!--[routerLink]="[getLink(data['entityType']), data['id'], 'view' ]"-->
