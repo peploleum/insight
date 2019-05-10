@@ -31,8 +31,11 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     mapStates: MapState;
 
+    selected_data_ids: string[] = [];
+
     mapStatesSubs: Subscription;
     pinnedGeoMarkerSubs: Subscription;
+    selectedDataSubs: Subscription;
 
     constructor(protected ms: MapService, private _ss: SearchService, private _sms: SideMediatorService) {
         super();
@@ -68,6 +71,10 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         this.pinnedGeoMarkerSubs = this.ms.pinnedGeoMarker.subscribe((pinnedIds: string[]) => {
             this.pinnedIds = pinnedIds;
         });
+
+        this.selectedDataSubs = this._sms._selectedData.subscribe((ids: string[]) => {
+            this.selected_data_ids = ids;
+        });
     }
 
     ngAfterViewInit() {
@@ -89,6 +96,10 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
         }
         if (this.mapStatesSubs) {
             this.mapStatesSubs.unsubscribe();
+        }
+
+        if (this.selectedDataSubs) {
+            this.selectedDataSubs.unsubscribe();
         }
     }
 
@@ -144,6 +155,9 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
     }
 
     sendAction(action: string) {
+        if (action === 'CLEAR_SEARCH_FEATURE' && this.entitySearchForm.first) {
+            (<InsightSearchComponent>this.entitySearchForm.first).clearSearchForm();
+        }
         this._sms._onNewActionClicked.next(action);
     }
 
@@ -162,5 +176,9 @@ export class MapSearchComponent extends SideInterface implements OnInit, AfterVi
 
     getDefaultEntitySymbol(entity: GenericModel): string {
         return NetworkService.getNodeImageUrl(entity['entityType']);
+    }
+
+    onEntityClick(id: string) {
+        this._sms._onNewDataSelected.next([id]);
     }
 }

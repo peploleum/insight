@@ -34,12 +34,9 @@
                         {{rawData.rawDataName | stringTruncate : 30}}</a>
                     <h6 class="card-subtitle mb-1 text-muted">{{rawData.rawDataSourceName}}</h6>
                     <p class="card-text">
-                        <!--<small>{{rawData.rawDataContent | stringTruncate : 140}}</small>-->
-                        <!--<small>-->
                             <ins-rawdata-hyperlink [data]="rawData"
                                                    [rawTextContent]="getTruncatedString(rawData.rawDataContent, 140)"
                                                    [useExpander]="false"></ins-rawdata-hyperlink>
-                        <!--</small>-->
                     </p>
                     <a class="card-link"
                        [routerLink]="['/',{outlets: { primary: ['network', rawData.id], side: ['ins-network-side-panel'] }}]">

@@ -51,7 +51,8 @@
         <ng-template #resultSearchEntity>
             <div *ngIf="entityQueryResult" class="event-thread-container" style="flex: 1 1 auto;">
                 <div class="card event-thread-card"
-                     *ngFor="let data of entityQueryResult;">
+                     *ngFor="let data of entityQueryResult;"
+                     [ngClass]="{'selected': selected_data_ids.indexOf(data['id']) !== -1}">
                     <div class="card-body d-flex align-items-center" style="padding: 1rem !important;">
 
                         <div style="flex: 1 1 20%;">
@@ -68,12 +69,18 @@
                         <div style="flex: 1 0 80%;" class="d-flex justify-content-center flex-column">
                             <img style="max-height: 1.5rem; align-self: flex-end; margin: -1rem -1rem 0 0;"
                                  [src]="getDefaultEntitySymbol(data)"/>
-                            <p class="event-thread-title" style="margin: 0;">
-                                {{data[getEntityNameProperty(data)] | stringTruncate : 30}}</p>
-                            <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
-                                <fa-icon [icon]="'eye'"></fa-icon>
-                                <span> Voir en fiche</span>
-                            </a>
+                            <a class="event-thread-title" style="margin: 0;" (click)="onEntityClick(data['id'])">
+                                {{data[getEntityNameProperty(data)] | stringTruncate : 30}}</a>
+                            <div class="flex-row-div justify-content-start">
+                                <a class="card-link"
+                                   [routerLink]="['/',{outlets: { primary: ['network', data['id']], side: ['ins-network-side-panel'] }}]">
+                                    <fa-icon [icon]="'sitemap'"></fa-icon>
+                                </a>
+                                <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                                    <fa-icon [icon]="'eye'"></fa-icon>
+                                    <span> Voir en fiche</span>
+                                </a>
+                            </div>
                         </div>
 
                     </div>

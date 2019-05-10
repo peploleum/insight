@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { getGenericNameProperty, getGenericSymbolProperty, toKebabCase, updateUniqueElementArray } from '../shared/util/insight-util';
 import { GenericModel } from '../shared/model/generic.model';
+import { NetworkService } from '../network/network.service';
 
 @Component({
     selector: 'ins-insight-entity-search',
@@ -59,5 +60,9 @@ export class InsightEntitySearchComponent implements OnInit {
     getLink(str: string): string {
         const i: string = toKebabCase(str);
         return '/' + i;
+    }
+
+    getDefaultEntitySymbol(entity: GenericModel): string {
+        return NetworkService.getNodeImageUrl(entity['entityType']);
     }
 }

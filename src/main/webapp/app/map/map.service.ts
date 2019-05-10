@@ -49,7 +49,14 @@ export class MapService {
             const str: string[] = coordinate.split(',');
             coord = str.map(i => parseFloat(i));
         }
-        return new MapDataDTO(item['id'], name || 'defaultName', 'RawData', content || 'defaultContent', coord, item['geometry']);
+        return new MapDataDTO(
+            item['id'],
+            name || 'defaultName',
+            item['entityType'] || 'RawData',
+            content || 'defaultContent',
+            coord,
+            item['geometry']
+        );
     }
 
     static getGeoJsonFromDto(dto: IMapDataDTO): Feature {

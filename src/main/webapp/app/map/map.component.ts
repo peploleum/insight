@@ -133,7 +133,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 const styles: Style[] = insStyleFunction(feature, resolution, this._ms.mapProperties.maxClusterCount || 1);
                 const zoom = this._map.getView().getZoom();
-                if (zoom > 5 && this.getMapStates().DISPLAY_LABEL) {
+                if (zoom > 8 && this.getMapStates().DISPLAY_LABEL) {
                     insSetTextStyleFunction(feature, styles);
                 }
                 return styles;
@@ -312,8 +312,18 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private clearSearchFeatures() {
-        const searchFeatures: Feature[] = this.featureSource.getFeatures().filter(feat => feat.get('SEARCH'));
-        searchFeatures.forEach(feat => this.featureSource.removeFeature(feat));
+        const features = this.featureSource.getFeatures();
+        const selectedFeat = [];
+        const removeFeat = [];
+        for (let i = 0; i < features.length; i++) {
+            if (features[i].get('SEARCH')) {
+                removeFeat.push(features[i]);
+            } else if (features[i].get('selected')) {
+                selectedFeat.push(features[i]);
+            }
+        }
+        this.onNewFeaturesSelected(selectedFeat);
+        removeFeat.forEach(feat => this.featureSource.removeFeature(feat));
     }
 
     private initMap() {

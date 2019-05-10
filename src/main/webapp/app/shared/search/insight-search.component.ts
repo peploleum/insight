@@ -85,6 +85,11 @@ export class InsightSearchComponent implements OnInit, OnChanges {
         this.searchForm.updateValueAndValidity();
     }
 
+    clearSearchForm() {
+        this.searchForm.reset();
+        this.resultEmitter.next([]);
+    }
+
     getFormChangeObservable(): Observable<any> {
         return this.searchForm.valueChanges.pipe(
             debounceTime(300),

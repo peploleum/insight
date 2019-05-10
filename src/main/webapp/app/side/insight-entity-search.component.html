@@ -38,28 +38,38 @@
         <div *ngIf="queryResult" class="event-thread-container" style="flex: 1 1 auto;">
             <div class="card event-thread-card"
                  *ngFor="let data of queryResult;">
-                <div class="card-body d-flex align-items-center">
-
+                <div class="card-body d-flex align-items-center" style="padding: 1rem !important;">
                     <div style="flex: 1 1 20%;">
                         <img *ngIf="data[getEntitySymbolProperty(data)]; else noPhoto" style="max-height: 3rem;"
                              src="{{data[getEntitySymbolProperty(data)]}}"/>
                         <ng-template #noPhoto>
-                            <span
-                                style="display: flex;justify-content: center; align-items: center; font-size: 2rem;">
-                                <fa-icon [icon]="'image'"></fa-icon>
-                            </span>
+                                <span
+                                    style="display: flex;justify-content: center; align-items: center; font-size: 2rem;">
+                                    <fa-icon [icon]="'image'"></fa-icon>
+                                </span>
                         </ng-template>
                     </div>
-
-                    <div style="flex: 1 0 80%;">
-                        <p class="card-title event-thread-title">
+                    <div style="flex: 1 0 80%;" class="d-flex justify-content-center flex-column">
+                        <img style="max-height: 1.5rem; align-self: flex-end; margin: -1rem -1rem 0 0;"
+                             [src]="getDefaultEntitySymbol(data)"/>
+                        <p class="event-thread-title" style="margin: 0;">
                             {{data[getEntityNameProperty(data)] | stringTruncate : 30}}</p>
-                        <a class="card-link" [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span> Voir en fiche</span>
-                        </a>
+                        <div class="flex-row-div justify-content-start">
+                            <a class="card-link"
+                               [routerLink]="['/',{outlets: { primary: ['network', data['id']], side: ['ins-network-side-panel'] }}]">
+                                <fa-icon [icon]="'sitemap'"></fa-icon>
+                            </a>
+                            <a class="card-link"
+                               [routerLink]="['/',{outlets: { primary: ['map', data['id']], side: ['ins-map-side-panel']}}]">
+                                <fa-icon [icon]="'globe'"></fa-icon>
+                            </a>
+                            <a class="card-link"
+                               [routerLink]="[getLink(data['entityType']), data['id'], 'view' ]">
+                                <fa-icon [icon]="'eye'"></fa-icon>
+                                <span> Voir en fiche</span>
+                            </a>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
