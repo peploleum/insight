@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { GenericModel } from '../shared/model/generic.model';
 import { BASE64URI } from '../shared/util/insight-util';
 import { QuickViewService } from '../side/quick-view.service';
+import { Observable } from 'rxjs/index';
+import { HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs/internal/operators';
 
 @Component({
     selector: 'ins-card',
@@ -20,6 +23,7 @@ export class CardComponent implements OnInit {
 
     onDataSelected(entity: GenericModel) {
         this.entity = entity;
+        this.getImage(this.entity['id']);
         this.entityAndNeighbors = [this.entity];
         this.entityExternalId = this.entity['externalId'];
     }
@@ -32,5 +36,15 @@ export class CardComponent implements OnInit {
         this._qv.findMultiple(ids).subscribe(res => {
             this.entityAndNeighbors = res.body;
         });
+    }
+
+    getImage(id: string) {
+        this._qv
+            .find(id)
+            .pipe(map((res: HttpResponse<GenericModel>) => res.body))
+            .subscribe(entity => {
+                this.entity['biographicsImage'] = entity['biographicsImage'];
+                this.entity['biographicsSymbol'] = entity['biographicsSymbol'];
+            });
     }
 }

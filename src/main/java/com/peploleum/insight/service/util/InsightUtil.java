@@ -2,6 +2,7 @@ package com.peploleum.insight.service.util;
 
 import com.peploleum.insight.domain.*;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
+import com.peploleum.insight.service.dto.*;
 
 /**
  * Created by GFOLGOAS on 04/04/2019.
