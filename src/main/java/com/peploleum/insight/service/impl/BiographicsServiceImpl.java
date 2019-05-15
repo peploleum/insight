@@ -7,6 +7,7 @@ import com.peploleum.insight.repository.search.BiographicsSearchRepository;
 import com.peploleum.insight.service.BiographicsService;
 import com.peploleum.insight.service.dto.BiographicsDTO;
 import com.peploleum.insight.service.mapper.BiographicsMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -48,6 +49,11 @@ public class BiographicsServiceImpl implements BiographicsService {
     @Override
     public BiographicsDTO save(BiographicsDTO biographicsDTO) {
         log.debug("Request to save Biographics : {}", biographicsDTO);
+        if (biographicsDTO.getGeometry() == null && biographicsDTO.getBiographicsCoordinates() != null && !biographicsDTO.getBiographicsCoordinates().isEmpty()) {
+            String[] coordinates = biographicsDTO.getBiographicsCoordinates().split(",");
+            biographicsDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
+
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
         biographics.setEntityType(InsightEntityType.Biographics);
         biographics = biographicsRepository.save(biographics);

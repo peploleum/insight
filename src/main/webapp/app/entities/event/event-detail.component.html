@@ -36,7 +36,7 @@
                 </dd>
                 <dt><span jhiTranslate="insightApp.event.eventSymbol">Event Symbol</span></dt>
                 <dd>
-                    <span>{{event.eventSymbol}}</span>
+                    <span>{{event.eventSymbol | stringTruncate : 30}}</span>
                 </dd>
                 <dt><span jhiTranslate="insightApp.event.externalId">External Id</span></dt>
                 <dd>

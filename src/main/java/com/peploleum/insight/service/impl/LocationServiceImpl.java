@@ -4,10 +4,10 @@ import com.peploleum.insight.domain.Location;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.LocationRepository;
 import com.peploleum.insight.repository.search.LocationSearchRepository;
-import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.LocationService;
 import com.peploleum.insight.service.dto.LocationDTO;
 import com.peploleum.insight.service.mapper.LocationMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -49,6 +49,11 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDTO save(LocationDTO locationDTO) {
         log.debug("Request to save Location : {}", locationDTO);
+        if (locationDTO.getGeometry() == null && locationDTO.getLocationCoordinates() != null && !locationDTO.getLocationCoordinates().isEmpty()) {
+            String[] coordinates = locationDTO.getLocationCoordinates().split(",");
+            locationDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
+
         Location location = locationMapper.toEntity(locationDTO);
         location.setEntityType(InsightEntityType.Location);
         location = locationRepository.save(location);

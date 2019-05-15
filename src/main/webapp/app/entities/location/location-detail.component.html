@@ -28,7 +28,7 @@
                 </dd>
                 <dt><span jhiTranslate="insightApp.location.locationSymbol">Location Symbol</span></dt>
                 <dd>
-                    <span>{{location.locationSymbol}}</span>
+                    <span>{{location.locationSymbol | stringTruncate : 30}}</span>
                 </dd>
                 <dt><span jhiTranslate="insightApp.location.externalId">External Id</span></dt>
                 <dd>

@@ -4,16 +4,19 @@
         [src]="getBase64(mapper.image)">
     </div>
     <div class="card-body">
-        <a class="card-title event-thread-title" [routerLink]="[getLink(entity['entityType']), entity['id'], 'view' ]"
+        <a class="card-title event-thread-title"
+           [routerLink]="['/',{outlets: { primary: [getLink(entity['entityType']), entity['id'], 'view'], side: ['ins-entities-side-panel']}}]"
            *ngIf="mapper.title">
             <fa-icon [icon]="'rss-square'"></fa-icon>
             {{mapper.title | stringTruncate : 30}}
         </a>
         <h6 *ngIf="mapper.subTitle" class="card-subtitle mb-1 text-muted">{{mapper.subTitle}}</h6>
         <p class="card-text" *ngIf="mapper.content">
-            <small>{{mapper.content | stringTruncate : 40}}</small>
+            <small>{{mapper.content | stringTruncate : 140}}</small>
         </p>
-        <a class="card-link" [routerLink]="[getLink(entity['entityType']), entity['id'], 'view' ]" *ngIf="mapper.date">
+        <a class="card-link"
+           [routerLink]="['/',{outlets: { primary: [getLink(entity['entityType']), entity['id'], 'view'], side: ['ins-entities-side-panel']}}]"
+           *ngIf="mapper.date">
             <fa-icon [icon]="'rss-square'"></fa-icon>
             <span>{{mapper.date | date:'short':'':'fr-FR'}}</span>
         </a>

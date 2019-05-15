@@ -1,16 +1,15 @@
 package com.peploleum.insight.service.impl;
 
-import com.peploleum.insight.domain.enumeration.InsightEntityType;
-import com.peploleum.insight.service.InsightGraphEntityService;
-import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.domain.Organisation;
+import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.OrganisationRepository;
 import com.peploleum.insight.repository.search.OrganisationSearchRepository;
+import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.service.dto.OrganisationDTO;
 import com.peploleum.insight.service.mapper.OrganisationMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * Service Implementation for managing Organisation.
@@ -50,6 +49,11 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public OrganisationDTO save(OrganisationDTO organisationDTO) {
         log.debug("Request to save Organisation : {}", organisationDTO);
+        if (organisationDTO.getGeometry() == null && organisationDTO.getOrganisationCoordinates() != null && !organisationDTO.getOrganisationCoordinates().isEmpty()) {
+            String[] coordinates = organisationDTO.getOrganisationCoordinates().split(",");
+            organisationDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
+
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
         organisation.setEntityType(InsightEntityType.Organisation);
         organisation = organisationRepository.save(organisation);

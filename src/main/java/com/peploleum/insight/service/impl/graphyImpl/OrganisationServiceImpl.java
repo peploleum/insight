@@ -8,6 +8,7 @@ import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.OrganisationService;
 import com.peploleum.insight.service.dto.OrganisationDTO;
 import com.peploleum.insight.service.mapper.OrganisationMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -51,6 +52,10 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public OrganisationDTO save(OrganisationDTO organisationDTO) {
         log.debug("Request to save Organisation : {}", organisationDTO);
+        if (organisationDTO.getGeometry() == null && organisationDTO.getOrganisationCoordinates() != null && !organisationDTO.getOrganisationCoordinates().isEmpty()) {
+            String[] coordinates = organisationDTO.getOrganisationCoordinates().split(",");
+            organisationDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
 
         Organisation organisation = organisationMapper.toEntity(organisationDTO);
         organisation.setEntityType(InsightEntityType.Organisation);

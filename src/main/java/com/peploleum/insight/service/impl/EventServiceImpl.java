@@ -5,9 +5,9 @@ import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.repository.EventRepository;
 import com.peploleum.insight.repository.search.EventSearchRepository;
 import com.peploleum.insight.service.EventService;
-import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.EventDTO;
 import com.peploleum.insight.service.mapper.EventMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -49,6 +49,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO save(EventDTO eventDTO) {
         log.debug("Request to save Event : {}", eventDTO);
+        if (eventDTO.getGeometry() == null && eventDTO.getEventCoordinates() != null && !eventDTO.getEventCoordinates().isEmpty()) {
+            String[] coordinates = eventDTO.getEventCoordinates().split(",");
+            eventDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
+
         Event event = eventMapper.toEntity(eventDTO);
         event.setEntityType(InsightEntityType.Event);
         event = eventRepository.save(event);

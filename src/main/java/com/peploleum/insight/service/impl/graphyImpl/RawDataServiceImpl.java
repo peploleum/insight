@@ -2,12 +2,17 @@ package com.peploleum.insight.service.impl.graphyImpl;
 
 import com.peploleum.insight.domain.RawData;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
+import com.peploleum.insight.domain.map.GeometryCollection;
+import com.peploleum.insight.domain.map.InsightShape;
 import com.peploleum.insight.repository.RawDataRepository;
 import com.peploleum.insight.repository.search.RawDataSearchRepository;
 import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.service.mapper.RawDataMapper;
+import com.peploleum.insight.service.util.InsightUtil;
+import com.vividsolutions.jts.geom.Coordinate;
+import org.elasticsearch.common.geo.builders.PointBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -61,6 +66,10 @@ public class RawDataServiceImpl implements RawDataService {
     @Override
     public RawDataDTO save(RawDataDTO rawDataDTO) {
         log.debug("Request to save RawData : {}", rawDataDTO);
+        if (rawDataDTO.getGeometry() == null && rawDataDTO.getRawDataCoordinates() != null && !rawDataDTO.getRawDataCoordinates().isEmpty()) {
+            String[] coordinates = rawDataDTO.getRawDataCoordinates().split(",");
+            rawDataDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
 
         RawData rawData = rawDataMapper.toEntity(rawDataDTO);
         rawData.setEntityType(InsightEntityType.RawData);

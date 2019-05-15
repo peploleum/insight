@@ -8,6 +8,7 @@ import com.peploleum.insight.service.EquipmentService;
 import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.EquipmentDTO;
 import com.peploleum.insight.service.mapper.EquipmentMapper;
+import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -51,6 +52,10 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public EquipmentDTO save(EquipmentDTO equipmentDTO) {
         log.debug("Request to save Equipment : {}", equipmentDTO);
+        if (equipmentDTO.getGeometry() == null && equipmentDTO.getEquipmentCoordinates() != null && !equipmentDTO.getEquipmentCoordinates().isEmpty()) {
+            String[] coordinates = equipmentDTO.getEquipmentCoordinates().split(",");
+            equipmentDTO.setGeometry(InsightUtil.getGeometryFromCoordinate(coordinates));
+        }
 
         Equipment equipment = equipmentMapper.toEntity(equipmentDTO);
         equipment.setEntityType(InsightEntityType.Equipment);
