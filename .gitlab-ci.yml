@@ -1,6 +1,6 @@
 image: docker:latest
 services:
-  - name: docker:dind
+  - name: 192.168.0.52:9082/docker:dind
     # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
     command: ["--insecure-registry=http://192.168.0.52:9080"]
     
@@ -22,7 +22,7 @@ stages:
   - deploy
 
 maven-build:
-  image: magnarox/insight-build
+  image: $CI_DOCKER_PRIVATE_REGISTRY/magnarox/insight-build
   stage: build
   script: 
     - npm install
