@@ -124,7 +124,7 @@
         "cleanup": "rimraf target/{aot,www}",
         "clean-www": "rimraf target//www/app/{src,target/}",
         "e2e": "protractor src/test/javascript/protractor.conf.js",
-        "postinstall": "webdriver-manager update --gecko false",
+        "postinstall": "webdriver-manager update --gecko false --ignore_ssl",
         "start": "npm run webpack:dev",
         "start-tls": "npm run webpack:dev -- --env.tls",
         "serve": "npm run start",
