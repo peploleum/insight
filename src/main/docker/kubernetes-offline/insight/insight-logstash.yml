@@ -10,8 +10,10 @@ spec:
       labels:
         app: insight-logstash
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: peploleum/logstash_py:1.0.0
+      - image: 192.168.0.52:9082/peploleum/logstash_py:1.0.0
         name: insight-logstash
         ports:
         - containerPort: 5000

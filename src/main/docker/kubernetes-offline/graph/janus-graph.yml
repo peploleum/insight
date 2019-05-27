@@ -10,9 +10,11 @@ spec:
       labels:
         app: insight-janusgraph
     spec:
+      imagePullSecrets:
+      - name: regcred
       initContainers:
       - name: init-ds
-        image: busybox
+        image: 192.168.0.52:9082/busybox
         command:
         - '/bin/sh'
         - '-c'
@@ -39,7 +41,7 @@ spec:
           done
       containers:
       - name: janusgraph
-        image: peploleum/janusgraph:1.0.0
+        image: 192.168.0.52:9082/peploleum/janusgraph:1.0.0
         ports:
         - containerPort: 8182
           name: gremlin

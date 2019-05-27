@@ -10,8 +10,10 @@ spec:
       labels:
         app: insight-ner-kaf2json
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: cwolff/opener-docker-kaf2json
+      - image: 192.168.0.52:9082/cwolff/opener-docker-kaf2json
         name: insight-ner-kaf2json
       restartPolicy: Always
 ---

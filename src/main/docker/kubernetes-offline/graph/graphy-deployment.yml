@@ -15,9 +15,11 @@ spec:
         app: insight-graphy
         version: "1.0"
     spec:
+      imagePullSecrets:
+      - name: regcred
       initContainers:
       - name: init-ds
-        image: busybox
+        image: 192.168.0.52:9082/busybox
         command:
         - '/bin/sh'
         - '-c'
@@ -34,7 +36,7 @@ spec:
           done
       containers:
       - name: graphy-app
-        image: peploleum/graphy:latest
+        image: 192.168.0.52:9082/peploleum/graphy:latest
         imagePullPolicy: Always
         env:
          - name: VERTEX_THRESHOLD

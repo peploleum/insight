@@ -10,9 +10,11 @@ spec:
       labels:
         app: insight-kibana
     spec:
+      imagePullSecrets:
+      - name: regcred
       initContainers:
       - name: init-ds
-        image: busybox
+        image: 192.168.0.52:9082/busybox
         command:
         - '/bin/sh'
         - '-c'
@@ -29,7 +31,7 @@ spec:
             done
 
       containers:
-      - image: docker.elastic.co/kibana/kibana-oss:6.4.2
+      - image: 192.168.0.52:9082/kibana/kibana-oss:6.4.2
         env:
         - name: server.name
           value: insight-kibana

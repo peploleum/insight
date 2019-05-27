@@ -10,9 +10,11 @@ spec:
             labels:
                 app: insight-rsyslog-server
         spec:
+            imagePullSecrets:
+            - name: regcred
             initContainers:
             - name: init-ds
-              image: busybox
+              image: 192.168.0.52:9082/busybox
               command:
               - '/bin/sh'
               - '-c'
@@ -29,7 +31,7 @@ spec:
                   done
             containers:
             - name: rsyslogserver
-              image: peploleum/rsyslog-server:1.0.0
+              image: 192.168.0.52:9082/peploleum/rsyslog-server:1.0.0
               ports:
               - containerPort: 22
                 name: ssh

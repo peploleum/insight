@@ -16,10 +16,12 @@ spec:
       labels:
         app: cassandra
     spec:
+      imagePullSecrets:
+      - name: regcred
       terminationGracePeriodSeconds: 1800
       containers:
       - name: cassandra
-        image: gcr.io/google-samples/cassandra:v13
+        image: 192.168.0.52:9082/google-samples/cassandra:v13
         imagePullPolicy: Always
         ports:
         - containerPort: 7000

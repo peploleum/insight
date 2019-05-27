@@ -10,9 +10,11 @@ spec:
       labels:
         app: insight-rsyslog-client
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: rsyslogclient
-        image: peploleum/rsyslog-server:1.0.0
+        image: 192.168.0.52:9082/peploleum/rsyslog-server:1.0.0
         ports:
         - containerPort: 22 
           name: ssh
@@ -134,7 +136,7 @@ data:
           #echo "objet observe " $compteur
           nombre=$RANDOM
           let "nombre %= $ECHELLE"
-          #echo "Nombre aleatoire inferieur à $ECHELLE  ---  $nombre"
+          #echo "Nombre aleatoire inferieur ï¿½ $ECHELLE  ---  $nombre"
           #echo "objet observe " ${tableau_type[$nombre]} TestBoucle$compteur 
           logger -p ${tableau_type[$nombre]} TestBoucle$compteur 
          ((compteur+=1))

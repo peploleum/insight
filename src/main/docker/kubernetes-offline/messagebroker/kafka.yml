@@ -18,9 +18,11 @@ spec:
       labels:
         app: insight-kafka
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: kafka
-        image: wurstmeister/kafka:latest
+        image: 192.168.0.52:9082/wurstmeister/kafka:latest
         env:
         - name: KAFKA_ADVERTISED_HOST_NAME
           value: insight-kafka.insight.svc.cluster.local
@@ -59,9 +61,11 @@ spec:
       labels:
         app: insight-zookeeper
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: zookeeper
-        image: wurstmeister/zookeeper:latest
+        image: 192.168.0.52:9082/wurstmeister/zookeeper:latest
         ports:
         - containerPort: 2181
 ---

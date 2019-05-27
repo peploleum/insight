@@ -10,8 +10,10 @@ spec:
       labels:
         app: insight-ner-tokenizer
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: cwolff/opener-docker-tokenizer
+      - image: 192.168.0.52:9082/cwolff/opener-docker-tokenizer
         name: insight-ner-tokenizer
       restartPolicy: Always
 ---

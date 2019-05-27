@@ -11,9 +11,11 @@ spec:
       labels:
         app: refgeo-import-gazetter
     spec:
+      imagePullSecrets:
+      - name: regcred
       initContainers:
       - name: init-es-check
-        image: busybox:latest
+        image: 192.168.0.52:9082/busybox:latest
         command:
             - '/bin/sh'
             - '-c'
@@ -29,7 +31,7 @@ spec:
                   sleep 10
                 done
       containers:
-      - image: docker.elastic.co/logstash/logstash-oss:6.4.2
+      - image: 192.168.0.52:9082/docker.elastic.co/logstash/logstash-oss:6.4.2
         name: refgeo-import-gazetter
         ports:
         - containerPort: 9600

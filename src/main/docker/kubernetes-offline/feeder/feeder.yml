@@ -10,9 +10,11 @@ spec:
       labels:
         app: insight-nifi
     spec:
+      imagePullSecrets:
+      - name: regcred
       initContainers:
         - name: config
-          image: busybox
+          image: 192.168.0.52:9082/busybox
           command:
             - "sh"
           args:
@@ -28,7 +30,7 @@ spec:
               mountPath: /opt/nifi/nifi-current/conf/
       containers:
       - name: nifi 
-        image: apache/nifi:latest
+        image: 192.168.0.52:9082/apache/nifi:latest
         ports:
         - containerPort: 8080
           name: front

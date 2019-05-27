@@ -10,8 +10,10 @@ spec:
       labels:
         app: insight-ner-language-identifier
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: cwolff/opener-docker-language-identifier
+      - image: 192.168.0.52:9082/cwolff/opener-docker-language-identifier
         name: insight-ner-language-identifier
       restartPolicy: Always
 ---

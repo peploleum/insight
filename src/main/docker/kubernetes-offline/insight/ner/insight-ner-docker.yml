@@ -10,8 +10,10 @@ spec:
       labels:
         app: insight-ner-docker
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-      - image: cwolff/opener-docker-ner
+      - image: 192.168.0.52:9082/cwolff/opener-docker-ner
         name: insight-ner-docker
       restartPolicy: Always
 ---

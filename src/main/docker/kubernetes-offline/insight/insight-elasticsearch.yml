@@ -10,13 +10,15 @@ spec:
       labels:
         app: insight-elasticsearch
     spec:
+      imagePullSecrets:
+      - name: regcred
       volumes:
       - name: data
         persistentVolumeClaim:
             claimName: insight-storage-elasticsearch-claim
       initContainers:
       - name: init-sysctl
-        image: busybox
+        image: 192.168.0.52:9082/busybox
         command:
         - sysctl
         - -w
@@ -25,7 +27,7 @@ spec:
           privileged: true
       containers:
       - name: elasticsearch
-        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.2
+        image: 192.168.0.52:9082/elasticsearch/elasticsearch-oss:6.4.2
         env:
         - name: cluster.name
           value: insight
