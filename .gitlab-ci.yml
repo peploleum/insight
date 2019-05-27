@@ -1,4 +1,4 @@
-image: docker:latest
+image: 192.168.0.52:9082/docker:latest
 services:
   - name: 192.168.0.52:9082/docker:dind
     # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
