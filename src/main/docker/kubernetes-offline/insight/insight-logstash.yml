@@ -1,0 +1,134 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-logstash
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-logstash
+    spec:
+      containers:
+      - image: peploleum/logstash_py:1.0.0
+        name: insight-logstash
+        ports:
+        - containerPort: 5000
+          protocol: UDP
+        - containerPort: 5000
+          protocol: TCP
+        env:
+        - name: CONFIG_RELOAD_AUTOMATIC
+          value: "true"
+        - name: CONFIG_RELOAD_INTERVAL
+          value: 3s 
+        resources: {}
+        volumeMounts:
+        - name: config 
+          mountPath: /usr/share/logstash/pipeline
+        - name: insight-logstash-rawdata-py
+          mountPath: /tmp/rawdata.py
+          subPath: rawdata.py
+      restartPolicy: Always
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: insight-storage-logstash-claim
+      - name: insight-logstash-rawdata-py
+        configMap:
+          name: insight-logstash-script
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-logstash-script
+  namespace: insight
+data:
+  rawdata.py: |
+      # -*- coding: UTF-8 -*-
+
+      import json
+      import sys
+      import requests
+      import datetime
+
+      try:
+          # print(" début script")
+          accountUrl = "http://insight.insight:8080/api/account"
+          authenticationUrl = "http://insight.insight:8080/api/authentication"
+          urlpostrawdata = "http://insight.insight:8080/api/raw-data"
+          payload = {
+              'j_username': 'admin',
+              'j_password': 'admin',
+              'remember-me': 'true',
+              'submit': 'Login'
+          }
+          with requests.Session() as session:
+              myResponse = session.get(accountUrl, verify=True)
+              # print(" Account")
+              if myResponse.status_code == 401:
+                  token = session.cookies.get("XSRF-TOKEN")
+                  headers = {
+                      'Accept': 'application/json',
+                      'Connection': 'keep-alive',
+                      'X-XSRF-TOKEN': token
+                  }
+                  # print(" Autentification " + token)
+                  authResponse = session.post(url=authenticationUrl, data=payload, verify=True, headers=headers)
+                  if authResponse.ok:
+                      date = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+                      headersRawData = {
+                          'Accept': 'application/json',
+                          'Content-type': 'application/json',
+                          'X-XSRF-TOKEN': authResponse.cookies.get("XSRF-TOKEN")
+                      }
+                      payloadRawData = {
+                          "rawDataType": sys.argv[1],
+                          "rawDataName": sys.argv[2],
+                          "rawDataContent": sys.argv[3],
+                          "rawDataSourceType": sys.argv[4],
+                          "rawDataSubType": sys.argv[5],
+                          "rawDataCreationDate": date
+                      }
+                      print("postDataRawResponse")
+                      postDataRawResponse = session.post(url=urlpostrawdata, json=payloadRawData, headers=headersRawData)
+                      print(postDataRawResponse.json())
+                  else:
+                      print("Auth failed")
+              else:
+                  # For successful API call, response code will be 200 (OK)
+                  if myResponse.ok:
+                      jData = json.loads(myResponse.content)
+                      print("The response contains {0} properties".format(len(jData)))
+                      print("\n")
+                      for key in jData:
+                          print(key + " : " + jData[key])
+                  else:
+                      # If response code is not ok (200), print the resulting http error code with description
+                      myResponse.raise_for_status()
+      finally:
+          # print(" Out ")
+          exit(0)
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-logstash
+  namespace: insight
+  labels:
+    app: insight-logstash
+spec:
+  ports:
+  - name: "udp"
+    port: 5000
+    protocol: UDP
+    targetPort: 5010
+  - name: "tcp"
+    port: 5000
+    protocol: TCP
+    targetPort: 5010
+  selector:
+    app: insight-logstash

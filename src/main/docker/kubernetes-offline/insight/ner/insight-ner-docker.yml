@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-ner-docker
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-ner-docker
+    spec:
+      containers:
+      - image: cwolff/opener-docker-ner
+        name: insight-ner-docker
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-ner-docker
+  namespace: insight
+  labels:
+    app: insight-ner-docker
+spec:
+  ports:
+  - name: http
+    port: 84
+    targetPort: 80
+  selector:
+    app: insight-ner-docker
+---

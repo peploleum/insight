@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: insight-storage-nifi-claim-json
+  namespace: insight
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Mi
+  selector:
+    matchLabels:
+      component: insight-nifi-volume-json
+---

@@ -1,0 +1,88 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-janusgraph
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-janusgraph
+    spec:
+      initContainers:
+      - name: init-ds
+        image: busybox
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 insight-cassandra 9042)
+            if [ $? -eq 0 ]; then
+              echo "CASSANDRA is UP"
+              break
+            fi
+            echo "CASSANDRA is not yet reachable;sleep for 10s before retry"
+            sleep 10
+          done
+          while true
+          do
+            rt=$(nc -z -w 1 insight-elasticsearch 9200)
+            if [ $? -eq 0 ]; then
+              echo "ELASTIC is UP"
+              break
+            fi
+            echo "ELASTIC is not yet reachable;sleep for 10s before retry"
+            sleep 10
+          done
+      containers:
+      - name: janusgraph
+        image: peploleum/janusgraph:1.0.0
+        ports:
+        - containerPort: 8182
+          name: gremlin
+          protocol: TCP
+        - containerPort: 9160
+          name: cassandra
+          protocol: TCP
+        - containerPort: 9042
+          name: janus
+          protocol: TCP
+        command: ["/bin/sh", "-c", "set -e; set -x; cp ./log/gremlin-server-configuration.yaml ./conf/gremlin-server/ && cp ./log/startup.groovy /app/janusgraph-0.2.2-hadoop2/scripts/ && cp ./log/janusgraph.properties /app/janusgraph-0.2.2-hadoop2/conf/ && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml"]
+        resources:
+          requests:
+            memory: "4096Mi"
+            cpu: "1"
+          limits:
+            memory: "8192Mi"
+            cpu: "1"
+        volumeMounts:
+        - name: storage
+          mountPath: /app/janusgraph-0.2.2-hadoop2/log
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: insight-storage-graph-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-janusgraph
+  namespace: insight
+spec:
+  selector:
+    app: insight-janusgraph
+  type: NodePort
+  ports:
+  - name: janus
+    port: 9042
+    targetPort: 9042
+  - name: cassandra
+    port: 9160
+    targetPort: 9160
+  - name: gremlin
+    port: 8182
+    targetPort: 8182
+

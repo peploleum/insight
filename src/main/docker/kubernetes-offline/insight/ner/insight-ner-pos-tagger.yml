@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-ner-pos-tagger
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-ner-pos-tagger
+    spec:
+      containers:
+      - image: cwolff/opener-docker-pos-tagger
+        name: insight-ner-pos-tagger
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-ner-pos-tagger
+  namespace: insight
+  labels:
+    app: insight-ner-pos-tagger
+spec:
+  ports:
+  - name: http
+    port: 83
+    targetPort: 80
+  selector:
+    app: insight-ner-pos-tagger
+---

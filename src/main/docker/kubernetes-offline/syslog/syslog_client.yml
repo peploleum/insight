@@ -1,0 +1,157 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: insight-rsyslog-client
+  namespace: insight
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: insight-rsyslog-client
+    spec:
+      containers:
+      - name: rsyslogclient
+        image: peploleum/rsyslog-server:1.0.0
+        ports:
+        - containerPort: 22 
+          name: ssh
+          protocol: TCP 
+        - containerPort: 23
+          name: tcp
+          protocol: TCP
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "256Mi"
+            cpu: "1"
+        volumeMounts:
+        - name: rsyslogclient-storage-conf
+          mountPath: /etc/rsyslog.conf
+          subPath: rsyslog.conf
+        - name: rsyslogclient-storage-boucle
+          mountPath: /tmp/boucle.sh
+          subPath: boucle.sh
+        command:
+            - '/bin/sh'
+            - '-c'
+            - 'service rsyslog start && cp /tmp/boucle.sh /home/boucle.sh && chmod +x /home/boucle.sh && /home/boucle.sh && /usr/sbin/sshd -D'
+      volumes:
+      - name: rsyslogclient-storage-conf
+        configMap:
+          name: insight-rsyslogclient-conf
+      - name: rsyslogclient-storage-boucle
+        configMap:
+          name: insight-rsyslogclient-boucle
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-rsyslogclient-conf
+  namespace: insight
+data:
+  rsyslog.conf: |
+    #  /etc/rsyslog.conf	Configuration file for rsyslog.
+    #
+    #      For more information see
+    #      /usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
+    #
+    #   Default logging rules can be found in /etc/rsyslog.d/50-default.conf
+    
+    
+    *.*    @@insight-rsyslog-server.insight:514
+  
+    #################
+    #### MODULES ####
+    #################
+  
+    module(load="imuxsock") # provides support for local system logging
+    #module(load="imklog")   # provides kernel logging support
+    #module(load="immark")  # provides --MARK-- message capability
+    
+    
+    # Enable non-kernel facility klog messages
+    #$KLogPermitNonKernelFacility on
+    
+    ###########################
+    #### GLOBAL DIRECTIVES ####
+    ###########################
+    
+    #
+    # Use traditional timestamp format.
+    # To enable high precision timestamps, comment out the following line.
+    #
+    $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+    
+    # Filter duplicated messages
+    $RepeatedMsgReduction on
+    
+    #
+    # Set the default permissions for all log files.
+    #
+    $FileOwner syslog
+    $FileGroup adm
+    $FileCreateMode 0640
+    $DirCreateMode 0755
+    $Umask 0022
+    $PrivDropToUser syslog
+    $PrivDropToGroup syslog
+    
+    #
+    # Where to place spool and state files
+    #
+    $WorkDirectory /var/spool/rsyslog
+    
+    #
+    # Include all config files in /etc/rsyslog.d/
+    #
+    $IncludeConfig /etc/rsyslog.d/*.conf
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insight-rsyslogclient-boucle
+  namespace: insight
+data:
+  boucle.sh: |
+    #!/bin/bash
+    compteur=0
+    nbrboucles=0
+    if test -Z $1
+          then nbrboucles=1000
+          else nbrboucles=$1
+    fi
+
+    echo "nombre boucles " $nbrboucles
+    tableau_type=( "EMERG" "ALERT" "CRIT" "ERROR" "WARNING" "NOTICE" "INFO" "DEBUG" )
+    ECHELLE=8
+
+    while (($compteur < $nbrboucles ))
+    do
+          #echo "objet observe " $compteur
+          nombre=$RANDOM
+          let "nombre %= $ECHELLE"
+          #echo "Nombre aleatoire inferieur à $ECHELLE  ---  $nombre"
+          #echo "objet observe " ${tableau_type[$nombre]} TestBoucle$compteur 
+          logger -p ${tableau_type[$nombre]} TestBoucle$compteur 
+         ((compteur+=1))
+    done
+    exit 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight-rsyslog-client
+  namespace: insight
+spec:
+  selector:
+    app: insight-rsyslog-client
+  type: NodePort
+  ports:
+  - name: ssh
+    port: 22
+  - name: tcp 
+    port: 23

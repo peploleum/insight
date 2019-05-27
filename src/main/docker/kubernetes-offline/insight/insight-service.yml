@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: insight
+  namespace: insight
+  labels:
+    app: insight
+spec:
+  selector:
+    app: insight
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    nodePort: 30102
