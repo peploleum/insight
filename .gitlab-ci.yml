@@ -18,12 +18,9 @@ variables:
   KUBECTL_VERSION: v1.13.3
 
 stages:
-  - build
+#  - build
   - build-docker
   - deploy
-
-before_script:
-  - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
 
 maven-build:
   image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
