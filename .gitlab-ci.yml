@@ -1,8 +1,8 @@
 
-services:
-  - name: 192.168.0.52:9082/docker:dind
+#services:
+#  - name: 192.168.0.52:9082/docker:dind
     # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
-    command: ["--insecure-registry=http://192.168.0.52:9080"]
+#    command: ["--insecure-registry=http://192.168.0.52:9080"]
     
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
