@@ -1,3 +1,5 @@
+image: 192.168.0.52:9082/docker:latest
+
 services:
   - name: 192.168.0.52:9082/docker:dind
     # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
@@ -20,6 +22,9 @@ stages:
   - build-docker
   - deploy
 
+before_script:
+  - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
+
 maven-build:
   image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
   stage: build
@@ -33,24 +38,12 @@ maven-build:
       - target/Dockerfile
 
 docker-build-private:
-  image: $CI_DOCKER_PRIVATE_REGISTRY/docker:latest
   stage: build-docker
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
     - cd target
     - docker build --tag $PRIVATE_CONTAINER_IMAGE:latest .
-    #- docker push $PRIVATE_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker push $PRIVATE_CONTAINER_IMAGE:latest
-#  allow_failure: true
-
-#docker-build-public:
-#  stage: build-docker
-#  script:
-#    - docker login -u $CI_BUILD_PUBLIC_USER -p $CI_BUILD_PUBLIC_TOKEN $CI_DOCKER_PUBLIC_REGISTRY
-#    - cd target
-#    - docker build --tag $PUBLIC_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA --tag $PUBLIC_CONTAINER_IMAGE:latest .
-#    - docker push $PUBLIC_CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
-#    - docker push $PUBLIC_CONTAINER_IMAGE:latest
 
 kubernetes_deploy:
   stage: deploy
