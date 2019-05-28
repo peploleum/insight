@@ -12,28 +12,26 @@ variables:
   KUBECTL_VERSION: v1.13.3
 
 stages:
-#  - build
+  - build
   - build-docker
   - deploy
 
-#maven-build:
-#  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
-#  stage: build
-#  script: 
-#    - npm install
-#    - mvn package -DskipTests -Pprod
-#  artifacts:
-#    paths:
-#      - target/*.war
-#      - target/*.sh
-#      - target/Dockerfile
+maven-build:
+  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
+  stage: build
+  script: 
+    - npm install
+    - mvn package -DskipTests -Pprod
+  artifacts:
+    paths:
+      - target/*.war
+      - target/*.sh
+      - target/Dockerfile
 
 docker-build-private:
-  image: $CI_DOCKER_PRIVATE_REGISTRY/artemis-docker:latest
   stage: build-docker
   services:
     - name: $CI_DOCKER_PRIVATE_REGISTRY/docker:dind
-      command: ["--insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY","--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY"]
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
     - cd target
@@ -53,4 +51,4 @@ kubernetes_deploy:
     - kubectl config set-credentials $KUBE_USER --token=$KUBE_TOKEN
     - kubectl config set-context $KUBE_CONTEXT --user=$KUBE_USER
     - kubectl config use-context $KUBE_CONTEXT
-    - kubectl set image deployment/insight insight-app=$CI_BUILD_PUBLIC_USER/$CI_DOCKER_IMAGE:$CI_COMMIT_SHORT_SHA --namespace=insight
+    - kubectl set image deployment/insight insight-app=$CI_DOCKER_PRIVATE_REGISTRY/$CI_DOCKER_IMAGE:latest --namespace=insight
