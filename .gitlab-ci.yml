@@ -1,4 +1,3 @@
-image: 192.168.0.52:9082/docker:latest
 services:
   - name: 192.168.0.52:9082/docker:dind
     # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
@@ -34,6 +33,7 @@ maven-build:
       - target/Dockerfile
 
 docker-build-private:
+  image: $CI_DOCKER_PRIVATE_REGISTRY/docker:latest
   stage: build-docker
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
