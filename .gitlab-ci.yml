@@ -1,4 +1,3 @@
-image: 192.168.0.52:9082/docker:latest
 
 services:
   - name: 192.168.0.52:9082/docker:dind
@@ -18,26 +17,27 @@ variables:
   KUBECTL_VERSION: v1.13.3
 
 stages:
-#  - build
+  - build
   - build-docker
   - deploy
 
-#maven-build:
-#  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
-#  stage: build
-#  script: 
-#    - npm install
-#    - mvn package -DskipTests -Pprod
-#  artifacts:
-#    paths:
-#      - target/*.war
-#      - target/*.sh
-#      - target/Dockerfile
+maven-build:
+  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
+  stage: build
+  script: 
+    - npm install
+    - mvn package -DskipTests -Pprod
+  artifacts:
+    paths:
+      - target/*.war
+      - target/*.sh
+      - target/Dockerfile
 
 docker-build-private:
+  image: $CI_DOCKER_PRIVATE_REGISTRY/docker:latest
   stage: build-docker
   script:
-    - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
+#    - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
     - cd target
     - docker build --tag $PRIVATE_CONTAINER_IMAGE:latest .
     - docker push $PRIVATE_CONTAINER_IMAGE:latest
