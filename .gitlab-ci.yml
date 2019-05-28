@@ -12,21 +12,21 @@ variables:
   KUBECTL_VERSION: v1.13.3
 
 stages:
-  - build
+#  - build
   - build-docker
   - deploy
 
-maven-build:
-  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
-  stage: build
-  script: 
-    - npm install
-    - mvn package -DskipTests -Pprod
-  artifacts:
-    paths:
-      - target/*.war
-      - target/*.sh
-      - target/Dockerfile
+#maven-build:
+#  image: $CI_DOCKER_PRIVATE_REGISTRY/java-node:jdk8-alpine3.9
+#  stage: build
+#  script: 
+#    - npm install
+#    - mvn package -DskipTests -Pprod
+#  artifacts:
+#    paths:
+#      - target/*.war
+#      - target/*.sh
+#      - target/Dockerfile
 
 docker-build-private:
   image: $CI_DOCKER_PRIVATE_REGISTRY/artemis-docker:latest
