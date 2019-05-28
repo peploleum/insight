@@ -1,8 +1,3 @@
-
-#services:
-#  - name: 192.168.0.52:9082/docker:dind
-    # Don't use $CI_DOCKER_PUSH_REGISTRY in this section
-#    command: ["--insecure-registry=http://192.168.0.52:9080"]
     
 # needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
 variables:
@@ -34,7 +29,11 @@ maven-build:
       - target/Dockerfile
 
 docker-build-private:
+  image: $CI_DOCKER_PRIVATE_REGISTRY/artemis-docker:latest
   stage: build-docker
+  services:
+    - name: $CI_DOCKER_PRIVATE_REGISTRY/docker:dind
+      command: ["--insecure-registry=http://$CI_DOCKER_PUSH_REGISTRY","--insecure-registry=http://$CI_DOCKER_PRIVATE_REGISTRY"]
   script:
     - docker login -u $CI_BUILD_PRIVATE_USER -p $CI_BUILD_PRIVATE_TOKEN $CI_DOCKER_PUSH_REGISTRY
     - cd target
