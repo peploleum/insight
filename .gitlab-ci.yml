@@ -1,5 +1,6 @@
     
-# needs CI_BUILD_USER: registry user, CI_BUILD_TOKEN: registry password for CI_BUILD_USER
+# needs CI_BUILD_PUBLIC_USER: registry user, CI_BUILD_PUBLIC_TOKEN: registry password for dockerhub
+# needs CI_BUILD_PRIVATE_USER: registry user, CI_BUILD_PRIVATE_TOKEN: registry password for internal registry
 variables:
   DOCKER_DRIVER: overlay2
   APP_NAME: insight
@@ -8,7 +9,7 @@ variables:
   CI_DOCKER_PUSH_REGISTRY: 192.168.0.52:9080
   CI_DOCKER_IMAGE: insight
   PRIVATE_CONTAINER_IMAGE: $CI_DOCKER_PUSH_REGISTRY/$CI_DOCKER_IMAGE
-  PUBLIC_CONTAINER_IMAGE: $CI_DOCKER_PUBLIC_REGISTRY/$CI_BUILD_USER/$CI_DOCKER_IMAGE
+  PUBLIC_CONTAINER_IMAGE: $CI_DOCKER_PUBLIC_REGISTRY/$CI_BUILD_PUBLIC_USER/$CI_DOCKER_IMAGE
   KUBECTL_VERSION: v1.13.3
 
 stages:
@@ -37,6 +38,17 @@ docker-build-private:
     - cd target
     - docker build --tag $PRIVATE_CONTAINER_IMAGE:latest .
     - docker push $PRIVATE_CONTAINER_IMAGE:latest
+
+docker-build-public:
+  stage: build-docker
+  services:
+    - name: $CI_DOCKER_PRIVATE_REGISTRY/docker:dind
+  script:
+    - docker login -u $CI_BUILD_PUBLIC_USER -p $CI_BUILD_PUBLIC_TOKEN $CI_DOCKER_PUBLIC_REGISTRY
+    - cd target
+    - docker build --tag $PUBLIC_CONTAINER_IMAGE:latest .
+    - docker push $PUBLIC_CONTAINER_IMAGE:latest
+  allow_failure: true
 
 kubernetes_deploy:
   stage: deploy
