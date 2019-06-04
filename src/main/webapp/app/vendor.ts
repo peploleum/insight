@@ -38,6 +38,7 @@ import {
     faExclamation,
     faEye,
     faFileImport,
+    faFilter,
     faFlag,
     faGlobe,
     faGripVertical,
@@ -183,5 +184,6 @@ library.add(faMapMarkerAlt);
 library.add(faToolbox);
 library.add(faUsers);
 library.add(faDatabase);
+library.add(faFilter);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

@@ -236,6 +236,14 @@ export const SYMBOL_URLS = {
         IMAGE_URL_RAW: '../../../content/images/icons/flag.svg',
         IMAGE_URL_SELECTED_RAW: '../../../content/images/icons/flag-bis.svg',
         IMAGE_URL_GEOMARKER: '../../../content/images/geo-marker.svg',
-        IMAGE_URL_SELECTED_GEOMARKER: '../../../content/images/geo-marker-selected.svg'
+        IMAGE_URL_SELECTED_GEOMARKER: '../../../content/images/geo-marker-selected.svg',
+
+        IMAGE_URL_BIO_BIS: '../../../content/images/icons/hostage-ter.svg',
+        IMAGE_URL_EVENT_BIS: '../../../content/images/icons/speech-ter.svg',
+        IMAGE_URL_EQUIP_BIS: '../../../content/images/icons/supply-ter.svg',
+        IMAGE_URL_LOC_BIS: '../../../content/images/icons/map-ter.svg',
+        IMAGE_URL_ORGA_BIS: '../../../content/images/icons/crowd-ter.svg',
+        IMAGE_URL_DEFAULT_BIS: '../../../content/images/icons/flag-ter.svg',
+        IMAGE_URL_RAW_BIS: '../../../content/images/icons/flag-ter.svg'
     }
 };

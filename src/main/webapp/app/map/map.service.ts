@@ -2,10 +2,10 @@
  * Created by gFolgoas on 18/01/2019.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { SERVER_API_URL } from 'app/app.constants';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/internal/operators';
+import { filter, map, switchMap } from 'rxjs/internal/operators';
 import { IMapDataDTO, MapDataDTO } from '../shared/model/map.model';
 
 import Feature from 'ol/feature';
@@ -17,10 +17,13 @@ import { FigureStyle, MapLayer, MapState, OlMapProperties, ZoomToFeatureRequest 
 import { getGenericCoordinatesProperty, getGenericNameProperty, ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 import { GenericModel } from '../shared/model/generic.model';
+import { IGraphyNodeDTO } from '../shared/model/node.model';
+import { QuickViewService } from '../side/quick-view.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
-    public resourceUrl = SERVER_API_URL + 'api/map';
+    public resourceUrlMap = SERVER_API_URL + 'api/map';
+    private resourceUrlGraph = SERVER_API_URL + 'api/graph/';
 
     featureSource: Subject<Feature[]> = new Subject();
     searchSource: Subject<Feature[]> = new Subject();
@@ -28,7 +31,7 @@ export class MapService {
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
-    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false, true));
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false, true, false));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
         new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
     );
@@ -55,7 +58,8 @@ export class MapService {
             item['entityType'] || 'RawData',
             content || 'defaultContent',
             coord,
-            item['geometry']
+            item['geometry'],
+            item['properties'] || null
         );
     }
 
@@ -68,6 +72,9 @@ export class MapService {
             feature.set('description', dto.description);
             feature.set('objectType', dto.objectType);
             feature.set('label', dto.label);
+            if (dto.properties && dto.properties.hasOwnProperty('relationOrder')) {
+                feature.set('relationOrder', dto.properties['relationOrder']);
+            }
             return feature;
         }
         return null;
@@ -97,14 +104,14 @@ export class MapService {
         return featGeometry;
     }
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private _qv: QuickViewService) {}
 
     /**
      * Transforme les GenericModel et les envoie dans featureSource
      * */
-    getFeaturesFromGeneric(source: GenericModel[], target?: 'SEARCH' | 'MAIN'): void {
+    getFeaturesFromGeneric(source: GenericModel[], target: 'SEARCH' | 'MAIN'): void {
         if (source && source.length) {
-            if (!target || target === 'MAIN') {
+            if (target === 'MAIN') {
                 this.sendToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
             } else if (target === 'SEARCH') {
                 this.sendSearchToMapFeatureSource(source.map(item => MapService.getMapDataFromGeneric(item)));
@@ -151,7 +158,7 @@ export class MapService {
         const req = { query: search };
         const options = createRequestOption(req);
         return this.http
-            .get<IMapDataDTO[]>(`${this.resourceUrl}/_search/georef`, {
+            .get<IMapDataDTO[]>(`${this.resourceUrlMap}/_search/georef`, {
                 params: options,
                 observe: 'response'
             })
@@ -159,6 +166,21 @@ export class MapService {
                 filter((res: HttpResponse<any[]>) => res.ok),
                 map((res: HttpResponse<any[]>) => res.body)
             );
+    }
+
+    getNeighbors(janusIdOrigins: string[]): Observable<GenericModel[]> {
+        const headers = new HttpHeaders();
+        return this.http.post(`${this.resourceUrlGraph}traversal`, janusIdOrigins, { headers, observe: 'response' }).pipe(
+            switchMap((res1: HttpResponse<IGraphyNodeDTO[]>) => {
+                return this._qv.findMultiple(res1.body.map(dto => dto.idMongo)).pipe(
+                    map((res2: HttpResponse<GenericModel[]>) => {
+                        return res2.body.map(generic => {
+                            generic['properties'] = { relationOrder: 2 };
+                        });
+                    })
+                );
+            })
+        );
     }
 
     getUpdatedEventThreadToolbar(): ToolbarButtonParameters[] {

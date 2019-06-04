@@ -3,7 +3,10 @@
 
     <ng-container *ngIf="!isClosed" [ngSwitch]="target">
         <ng-template [ngSwitchCase]="'map'">
-            <span (click)="changeSideElement('EVENT_THREAD')"
+            <span *ngIf="applicationName === 'Reach'" (click)="changeSideElement('FILTER')"
+                  [ngClass]="{'isDisplayed' : _sideElement === 'FILTER'}"><fa-icon
+                [icon]="'filter'"></fa-icon></span>
+            <span *ngIf="applicationName !== 'Reach'" (click)="changeSideElement('EVENT_THREAD')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'EVENT_THREAD'}"><fa-icon
                 [icon]="'wifi'"></fa-icon></span>
             <span (click)="changeSideElement('DESSIN')"

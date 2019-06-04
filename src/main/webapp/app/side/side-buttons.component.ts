@@ -14,6 +14,8 @@ export class SideButtonsComponent implements OnInit {
     _sideElement: string;
     @Input()
     target: string;
+    @Input()
+    applicationName: string;
 
     @Output()
     closeEmitter: EventEmitter<boolean> = new EventEmitter();

@@ -9,6 +9,7 @@ import { IOrganisation } from './organisation.model';
 import { IRawData } from './raw-data.model';
 export interface IGenericModel {
     entityType?: string;
+    properties?: any;
 }
 
 export class GenericModel implements IBiographics, IEquipment, IEvent, ILocation, IOrganisation, IRawData, IGenericModel {

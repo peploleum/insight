@@ -15,15 +15,18 @@ import LineString from 'ol/geom/linestring';
 import Point from 'ol/geom/point';
 import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
-import { getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
+import { ENTITY_TYPE_LIST, getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
     DISPLAY_CONTENT_ON_HOVER: boolean;
-    FILTER_TYPE: string;
+    FILTER_TYPE: string; // EventThread filter type
     DESSIN_ENABLED: boolean;
     AUTO_REFRESH: boolean;
     SEARCH_GEOREF: boolean;
+    // Défini les entities affichables sur la carte
+    FILTER_ENTITIES: string[] = ENTITY_TYPE_LIST;
+    DISPLAY_RELATION = true; // Display RawData Relations
 
     constructor(
         DISPLAY_LABEL: boolean,
@@ -31,7 +34,9 @@ export class MapState {
         FILTER_TYPE: string,
         DESSIN_ENABLED: boolean,
         AUTO_REFRESH: boolean,
-        SEARCH_GEOREF: boolean
+        SEARCH_GEOREF: boolean,
+        FILTER_ENTITIES: string[],
+        DISPLAY_RELATION: boolean
     ) {
         this.DISPLAY_LABEL = DISPLAY_LABEL;
         this.DISPLAY_CONTENT_ON_HOVER = DISPLAY_CONTENT_ON_HOVER;
@@ -39,6 +44,8 @@ export class MapState {
         this.DESSIN_ENABLED = DESSIN_ENABLED;
         this.AUTO_REFRESH = AUTO_REFRESH;
         this.SEARCH_GEOREF = SEARCH_GEOREF;
+        this.FILTER_ENTITIES = FILTER_ENTITIES;
+        this.DISPLAY_RELATION = DISPLAY_RELATION;
     }
 }
 
@@ -347,7 +354,8 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
     switch (geometryType) {
         case 'Point':
             const objectType = feature ? feature.get('objectType') : '';
-            const src: string = getMapImageIconUrl(objectType);
+            const relationOrder: number = feature ? feature.get('relationOrder') : 0;
+            const src: string = relationOrder === 2 ? getMapSecondOrderRelationImageIconUrl(objectType) : getMapImageIconUrl(objectType);
             return new Style({
                 image:
                     src === null
@@ -642,6 +650,25 @@ export const getMapImageIconUrl = (objectType: string): string => {
             return SYMBOL_URLS.map.IMAGE_URL_EVENT;
         case 'geoMarker':
             return SYMBOL_URLS.map.IMAGE_URL_GEOMARKER;
+        default:
+            return null;
+    }
+};
+
+export const getMapSecondOrderRelationImageIconUrl = (objectType: string): string => {
+    switch (objectType) {
+        case 'RawData':
+            return SYMBOL_URLS.map.IMAGE_URL_RAW_BIS;
+        case 'Equipment':
+            return SYMBOL_URLS.map.IMAGE_URL_EQUIP_BIS;
+        case 'Location':
+            return SYMBOL_URLS.map.IMAGE_URL_LOC_BIS;
+        case 'Biographics':
+            return SYMBOL_URLS.map.IMAGE_URL_BIO_BIS;
+        case 'Organisation':
+            return SYMBOL_URLS.map.IMAGE_URL_ORGA_BIS;
+        case 'Event':
+            return SYMBOL_URLS.map.IMAGE_URL_EVENT_BIS;
         default:
             return null;
     }

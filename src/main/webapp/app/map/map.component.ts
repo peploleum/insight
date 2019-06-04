@@ -55,7 +55,7 @@ import {
     ZoomToFeatureRequest
 } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
-import { pairwise, startWith } from 'rxjs/internal/operators';
+import { filter, pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
@@ -209,14 +209,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this._sms._sideAction.next(sideActions);
             });
-        this.featureSourceSubs = this._ms.featureSource.subscribe((features: Feature[]) => {
-            this.featureSource.addFeatures(features);
-        });
+        this.featureSourceSubs = this._ms.featureSource
+            .pipe(
+                filter((features: Feature[]) => {
+                    return features.filter(feat => this.getMapStates().FILTER_ENTITIES.indexOf(feat.get('objectType')) !== -1);
+                })
+            )
+            .subscribe((features: Feature[]) => {
+                this.featureSource.addFeatures(features);
+            });
         this.searchSourceSubs = this._ms.searchSource.subscribe((features: Feature[]) => {
             this.searchSource.addFeatures(features);
         });
         this.newDataReceivedSubs = this._sms._onNewDataReceived.subscribe((data: any[]) => {
-            this._ms.getFeaturesFromGeneric(<GenericModel[]>data);
+            this._ms.getFeaturesFromGeneric(<GenericModel[]>data, 'MAIN');
         });
         this.geoMarkerSourceSubs = this._ms.geoMarkerSource.subscribe((features: Feature[]) => {
             features.forEach(feat => {
@@ -262,7 +268,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._activatedRoute.data.subscribe(({ inputData }) => {
             if (inputData) {
                 const data: GenericModel[] = <GenericModel[]>inputData;
-                this._ms.getFeaturesFromGeneric(data);
+                this._ms.getFeaturesFromGeneric(data, 'MAIN');
             }
         });
     }

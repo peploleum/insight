@@ -4,7 +4,6 @@ import com.peploleum.insight.service.TraversalService;
 import com.peploleum.insight.service.dto.NodeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by GFOLGOAS on 01/04/2019.
@@ -46,6 +48,21 @@ public class TraversalResource {
         final List<NodeDTO> neighbors = this.traversalService.getNeighbors(sourceNode);
         return ResponseEntity.created(new URI("/api/traversal/"))
             .body(neighbors);
+    }
+
+    @PostMapping("/traversal")
+    public ResponseEntity<List<NodeDTO>> getNeighbors(@RequestBody List<String> ids) throws URISyntaxException {
+        log.debug("REST request to get neighbors for " + ids.size() + " ids");
+        Set<NodeDTO> setNeighbors = new HashSet<>();
+        for (String id : ids) {
+            final NodeDTO sourceNode = new NodeDTO();
+            sourceNode.setId(id);
+            sourceNode.setLabel("source");
+            sourceNode.setType("source");
+            setNeighbors.addAll(this.traversalService.getNeighbors(sourceNode));
+        }
+        return ResponseEntity.created(new URI("/api/traversal/"))
+            .body(setNeighbors.stream().collect(Collectors.toList()));
     }
 
     @GetMapping("/traversal/mock/{id}")
