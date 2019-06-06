@@ -5,10 +5,9 @@ import com.microsoft.spring.data.gremlin.conversion.MappingGremlinConverter;
 import com.microsoft.spring.data.gremlin.conversion.script.GremlinScriptLiteralVertex;
 import com.microsoft.spring.data.gremlin.mapping.GremlinMappingContext;
 import com.microsoft.spring.data.gremlin.query.GremlinTemplate;
-import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.service.TraversalService;
+import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
-import com.peploleum.insight.service.util.InsightUtil;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
@@ -19,10 +18,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by GFOLGOAS on 01/04/2019.
@@ -106,6 +103,31 @@ public class TraversalServiceImpl implements TraversalService {
     public List<NodeDTO> getNeighborsMock(String id) {
         final List<NodeDTO> neighbors = generateNeighbors();
         return neighbors;
+    }
+
+    @Override
+    public GraphStructureNodeDTO getGraph(NodeDTO node, int levelOrder) {
+        GraphStructureNodeDTO graphRoot = new GraphStructureNodeDTO();
+        graphRoot.setNodeId(node.getIdMongo());
+        graphRoot.setRelations(this.getGraphElementNeighbors(node, 0, levelOrder));
+        return graphRoot;
+    }
+
+    private List<GraphStructureNodeDTO> getGraphElementNeighbors(NodeDTO parentNode, int currentDepthLevel, int maxDepthLevel) {
+        Map<String, NodeDTO> neighbors = this.getNeighbors(parentNode).stream().collect(Collectors.toMap(NodeDTO::getIdMongo, n -> n, (key1, key2) -> key1));
+        List<GraphStructureNodeDTO> childNodes = neighbors.values().stream().map(n -> {
+            final GraphStructureNodeDTO el = new GraphStructureNodeDTO();
+            el.setNodeId(n.getIdMongo());
+            return el;
+        }).collect(Collectors.toList());
+        currentDepthLevel = currentDepthLevel + 1;
+        if (currentDepthLevel <= maxDepthLevel) {
+            for (GraphStructureNodeDTO childNode : childNodes) {
+                List<GraphStructureNodeDTO> graphElementNeighbors = this.getGraphElementNeighbors(neighbors.get(childNode.getNodeId()), currentDepthLevel, maxDepthLevel);
+                childNode.setRelations(graphElementNeighbors);
+            }
+        }
+        return childNodes;
     }
 
     private NodeDTO internalGetNode(String gremlinQuery) {

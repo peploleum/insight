@@ -223,7 +223,7 @@ public class Biographics extends InsightEntity implements Serializable {
             ", biographicsAge=" + getBiographicsAge() +
             ", biographicsGender='" + getBiographicsGender() + "'" +
             ", biographicsImage='" + getBiographicsImage() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            // ", geometry='" + getGeometry() != null ? getGeometry().toString() : "null" + "'" +
             ", biographicsImageContentType='" + getBiographicsImageContentType() + "'" +
             ", biographicsCoordinates='" + getBiographicsCoordinates() + "'" +
             ", biographicsSymbol='" + getBiographicsSymbol() + "'" +

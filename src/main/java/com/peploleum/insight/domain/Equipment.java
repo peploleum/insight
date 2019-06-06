@@ -207,7 +207,7 @@ public class Equipment extends InsightEntity implements Serializable {
             ", equipmentCoordinates='" + getEquipmentCoordinates() + "'" +
             ", equipmentSymbol='" + getEquipmentSymbol() + "'" +
             ", equipmentImage='" + getEquipmentImage() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            // ", geometry='" + getGeometry().toString() + "'" +
             ", equipmentImageContentType='" + getEquipmentImageContentType() + "'" +
             ", externalId='" + getExternalId() + "'" +
             "}";

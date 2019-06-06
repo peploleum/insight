@@ -3,6 +3,7 @@ import { MapService } from '../map.service';
 import { Subscription } from 'rxjs/index';
 import { MapState } from '../../shared/util/map-utils';
 import { updateUniqueElementArray } from '../../shared/util/insight-util';
+import { SideMediatorService } from '../../side/side-mediator.service';
 
 @Component({
     selector: 'ins-content-filter',
@@ -13,7 +14,7 @@ export class ContentFilterComponent implements OnInit {
     mapStates: MapState;
     mapStatesSubs: Subscription;
 
-    constructor(private _ms: MapService) {}
+    constructor(private _ms: MapService, private _sms: SideMediatorService) {}
 
     ngOnInit() {
         this.mapStatesSubs = this._ms.mapStates.subscribe(state => {
@@ -49,5 +50,10 @@ export class ContentFilterComponent implements OnInit {
                 break;
         }
         this._ms.mapStates.next(currentState);
+        this.sendAction('RELOAD_SOURCE_FEATURE');
+    }
+
+    sendAction(action: string): void {
+        this._sms._onNewActionClicked.next(action);
     }
 }

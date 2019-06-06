@@ -5,7 +5,7 @@ import { GenericModel } from '../shared/model/generic.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { IRawData } from '../shared/model/raw-data.model';
 import { assertGenericType, convertRawDataDateFromClient, convertRawDataDateFromServer } from '../shared/util/insight-util';
-import { map } from 'rxjs/internal/operators';
+import { catchError, map, mergeMap } from 'rxjs/internal/operators';
 import { createRequestOption } from '../shared/util/request-util';
 import { RawDataService } from '../entities/raw-data/raw-data.service';
 import { BiographicsService } from '../entities/biographics/biographics.service';
@@ -13,6 +13,7 @@ import { EventService } from '../entities/event/event.service';
 import { OrganisationService } from '../entities/organisation/organisation.service';
 import { EquipmentService } from '../entities/equipment/equipment.service';
 import { LocationService } from '../entities/location/location.service';
+import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 type EntityResponseType = HttpResponse<GenericModel>;
 type EntitiesResponseType = HttpResponse<GenericModel[]>;
@@ -21,7 +22,8 @@ type EntitiesResponseType = HttpResponse<GenericModel[]>;
     providedIn: 'root'
 })
 export class QuickViewService {
-    public resourceUrl = SERVER_API_URL + 'api';
+    public _qvResourceUrl = SERVER_API_URL + 'api';
+    private _graphResourceUrl = SERVER_API_URL + 'api/graph/';
 
     constructor(
         protected http: HttpClient,
@@ -34,7 +36,7 @@ export class QuickViewService {
     ) {}
 
     find(id: string): Observable<EntityResponseType> {
-        return this.http.get<GenericModel>(`${this.resourceUrl}/entity/${id}`, { observe: 'response' }).pipe(
+        return this.http.get<GenericModel>(`${this._qvResourceUrl}/entity/${id}`, { observe: 'response' }).pipe(
             map((res: EntityResponseType) => {
                 if (assertGenericType('RawData', res.body)) {
                     convertRawDataDateFromServer(res.body);
@@ -45,7 +47,7 @@ export class QuickViewService {
     }
 
     findMultiple(ids: string[]): Observable<EntitiesResponseType> {
-        return this.http.post<GenericModel[]>(`${this.resourceUrl}/entities`, ids, { observe: 'response' }).pipe(
+        return this.http.post<GenericModel[]>(`${this._qvResourceUrl}/entities`, ids, { observe: 'response' }).pipe(
             map((res: EntitiesResponseType) => {
                 (<GenericModel[]>res.body).forEach(model => {
                     if (assertGenericType('RawData', model)) {
@@ -90,11 +92,43 @@ export class QuickViewService {
     saveAnnotatedEntity(entityPos: any, rawDataToUpdate: IRawData): Observable<HttpResponse<IRawData>> {
         const options = createRequestOption(entityPos);
         const copy = convertRawDataDateFromClient(rawDataToUpdate);
-        return this.http.put<IRawData>(`${this.resourceUrl}/updateAnnotation`, copy, { params: options, observe: 'response' }).pipe(
-            map((res: HttpResponse<IRawData>) => {
-                convertRawDataDateFromServer(res.body);
-                return res;
+        return this.http
+            .put<IRawData>(`${this._qvResourceUrl}/updateAnnotation`, copy, {
+                params: options,
+                observe: 'response'
             })
-        );
+            .pipe(
+                map((res: HttpResponse<IRawData>) => {
+                    convertRawDataDateFromServer(res.body);
+                    return res;
+                })
+            );
+    }
+
+    getGraphForEntity(externalId: string, lvlOrder: number): Observable<HttpResponse<IGraphStructureNodeDTO>> {
+        const options = createRequestOption({ levelOrder: lvlOrder });
+        const url = 'traversal/getGraph/';
+        return this.http.get<IGraphStructureNodeDTO>(`${this._graphResourceUrl}` + url + `${externalId}`, {
+            params: options,
+            observe: 'response'
+        });
+    }
+
+    /**
+     * Une requête par niveau de graph, voir à évoluer vers des forkjoins pour des graphs de grande taille
+     * */
+    resolveGraph(graph: IGraphStructureNodeDTO): Observable<HttpResponse<GenericModel[]>> {
+        const rootId: string = graph.nodeId;
+        const firstLevelIds: string[] = graph.relations.map(node => node.nodeId);
+        const secondLevelIds: string[] = graph.relations
+            .filter(node => node.relations && node.relations.length > 0)
+            .map(node => node.relations)
+            .reduce((x, y) => x.concat(y), [])
+            .map(node => node.nodeId);
+
+        const firstLevelRequest: Observable<EntitiesResponseType> = this.findMultiple(firstLevelIds.concat([rootId]));
+        return secondLevelIds.length === 0
+            ? firstLevelRequest
+            : firstLevelRequest.pipe(mergeMap(res => this.findMultiple(secondLevelIds).pipe(catchError(error => throwError(error)))));
     }
 }

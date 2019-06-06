@@ -1,6 +1,7 @@
 package com.peploleum.insight.web.rest;
 
 import com.peploleum.insight.service.TraversalService;
+import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,17 @@ public class TraversalResource {
             .body(neighbors);
     }
 
-    @PostMapping("/traversal")
-    public ResponseEntity<List<NodeDTO>> getNeighbors(@RequestBody List<String> ids) throws URISyntaxException {
+    @GetMapping("/traversal/getGraph/{id}")
+    public ResponseEntity<GraphStructureNodeDTO> getGraph(@PathVariable String id, @RequestParam int levelOrder) throws URISyntaxException {
+        final NodeDTO sourceNode = this.traversalService.getByJanusId(id);
+        log.debug("REST request to get graph for : {}", sourceNode);
+        final GraphStructureNodeDTO graph = this.traversalService.getGraph(sourceNode, levelOrder);
+        return ResponseEntity.created(new URI("/api/traversal/getGraph/"))
+            .body(graph);
+    }
+
+    @PostMapping("/traversal/multiple")
+    public ResponseEntity<List<NodeDTO>> getNeighborsForIds(@RequestBody List<String> ids) throws URISyntaxException {
         log.debug("REST request to get neighbors for " + ids.size() + " ids");
         Set<NodeDTO> setNeighbors = new HashSet<>();
         for (String id : ids) {

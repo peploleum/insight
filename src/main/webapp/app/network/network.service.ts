@@ -7,7 +7,14 @@ import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
 import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
-import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
+import {
+    EdgeDTO,
+    GraphDataCollection,
+    IGraphStructureNodeDTO,
+    IGraphyNodeDTO,
+    IGraphyRelationDTO,
+    NodeDTO
+} from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';

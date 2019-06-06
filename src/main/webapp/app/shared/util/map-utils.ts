@@ -15,7 +15,7 @@ import LineString from 'ol/geom/linestring';
 import Point from 'ol/geom/point';
 import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
-import { ENTITY_TYPE_LIST, getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
+import { getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -25,7 +25,7 @@ export class MapState {
     AUTO_REFRESH: boolean;
     SEARCH_GEOREF: boolean;
     // Défini les entities affichables sur la carte
-    FILTER_ENTITIES: string[] = ENTITY_TYPE_LIST;
+    FILTER_ENTITIES: string[];
     DISPLAY_RELATION = true; // Display RawData Relations
 
     constructor(

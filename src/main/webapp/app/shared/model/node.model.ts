@@ -87,3 +87,12 @@ export class GraphDataSet {
         this.edges = edges;
     }
 }
+
+export interface IGraphStructureNodeDTO {
+    nodeId?: string;
+    relations?: IGraphStructureNodeDTO[];
+}
+
+export class GraphStructureNodeDTO implements IGraphStructureNodeDTO {
+    constructor(public nodeId?: string, public relations?: IGraphStructureNodeDTO[]) {}
+}

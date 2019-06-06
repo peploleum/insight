@@ -1,5 +1,6 @@
 package com.peploleum.insight.service;
 
+import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface TraversalService {
      * @return the neighbors
      */
     public List<NodeDTO> getNeighborsMock(final String id);
+
+    public GraphStructureNodeDTO getGraph(final NodeDTO node, final int levelOrder);
 }

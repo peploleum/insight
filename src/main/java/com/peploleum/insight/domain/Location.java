@@ -188,7 +188,7 @@ public class Location extends InsightEntity implements Serializable {
             ", locationName='" + getLocationName() + "'" +
             ", locationType='" + getLocationType() + "'" +
             ", locationCoordinates='" + getLocationCoordinates() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            // ", geometry='" + getGeometry().toString() + "'" +
             ", locationImage='" + getLocationImage() + "'" +
             ", locationImageContentType='" + getLocationImageContentType() + "'" +
             ", locationSymbol='" + getLocationSymbol() + "'" +

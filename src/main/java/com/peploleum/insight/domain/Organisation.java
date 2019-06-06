@@ -205,7 +205,7 @@ public class Organisation extends InsightEntity implements Serializable {
             ", organisationDescrption='" + getOrganisationDescrption() + "'" +
             ", organisationSize='" + getOrganisationSize() + "'" +
             ", organisationCoordinates='" + getOrganisationCoordinates() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            // ", geometry='" + getGeometry().toString() + "'" +
             ", organisationImage='" + getOrganisationImage() + "'" +
             ", organisationImageContentType='" + getOrganisationImageContentType() + "'" +
             ", organisationSymbol='" + getOrganisationSymbol() + "'" +

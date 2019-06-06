@@ -3,41 +3,52 @@ import { ActivatedRouteSnapshot, Resolve, RouterModule, RouterStateSnapshot, Rou
 import { MapComponent } from './map.component';
 import { QuickViewService } from '../side/quick-view.service';
 import { GenericModel } from '../shared/model/generic.model';
-import { Observable, of } from 'rxjs/index';
-import { concatMap, filter, map, switchMap } from 'rxjs/internal/operators';
-import { NetworkService } from '../network/network.service';
+import { Observable, of, throwError } from 'rxjs/index';
+import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
 import { HttpResponse } from '@angular/common/http';
-import { GraphDataCollection } from '../shared/model/node.model';
+import { MapService } from './map.service';
+import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 @Injectable({ providedIn: 'root' })
-export class MapResolve implements Resolve<GenericModel> {
-    constructor(private _qvs: QuickViewService, private _ns: NetworkService) {}
+export class MapResolveId implements Resolve<GenericModel[]> {
+    constructor(private _qvs: QuickViewService) {}
 
     /**
-     * Si getNeighbors == true
-     * 1) get l'entité quelques soit son type
-     * 2) get les nodeDTO des neighbors de l'entité par son externalId
-     * 3) get les entités des neighbors quelques soit leur type
-     * => Renvoie un array de GenericModel
+     * => Renvoie le GenericModel de l'entité ou null
      * */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<GenericModel[]> {
         const id = route.params['id'] ? route.params['id'] : null;
-        const getNeighbors: boolean = !!route.url.find(i => i.path === 'neighbors');
-        if (getNeighbors) {
-            return this._qvs.find(id).pipe(
-                filter((res: HttpResponse<GenericModel>) => res.ok),
-                map((res: HttpResponse<GenericModel>) => (res.body['externalId'] ? [res.body] : [])),
-                concatMap((dto: GenericModel[]) =>
-                    this._ns.getGraphData(dto[0]['externalId']).pipe(
-                        map((data: GraphDataCollection) => data.nodes.map(node => node.mongoId)),
-                        switchMap((ids: string[]) => this._qvs.findMultiple(ids).pipe(map((res: HttpResponse<GenericModel[]>) => res.body)))
-                    )
-                )
-            );
-        } else if (id) {
+        if (id) {
             return this._qvs.find(id).pipe(
                 filter((res: HttpResponse<GenericModel>) => res.ok),
                 map((res: HttpResponse<GenericModel>) => [res.body])
+            );
+        } else {
+            return of(null);
+        }
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class MapResolveGraph implements Resolve<IGraphStructureNodeDTO> {
+    constructor(private _qvs: QuickViewService, private _ms: MapService) {}
+
+    /**
+     * => Renvoie un le schéma correspondant à l'entité
+     * */
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IGraphStructureNodeDTO> {
+        const id = route.params['id'] ? route.params['id'] : null;
+        if (id) {
+            return this._qvs.find(id).pipe(
+                filter((res: HttpResponse<GenericModel>) => res.ok),
+                map((res: HttpResponse<GenericModel>) => (res.body['externalId'] ? [res.body] : [])),
+                switchMap((dto: GenericModel[]) => {
+                    const order: number = this._ms.mapStates.getValue().DISPLAY_RELATION ? 2 : 1;
+                    return this._qvs
+                        .getGraphForEntity(dto[0]['externalId'], order)
+                        .pipe(map((res: HttpResponse<IGraphStructureNodeDTO>) => res.body));
+                }),
+                catchError(error => throwError(error))
             );
         } else {
             return of(null);
@@ -57,7 +68,7 @@ const routes: Routes = [
         path: 'map/:id',
         component: MapComponent,
         resolve: {
-            inputData: MapResolve
+            inputData: MapResolveId
         },
         data: {
             pageTitle: 'map.title'
@@ -67,7 +78,7 @@ const routes: Routes = [
         path: 'map/neighbors/:id',
         component: MapComponent,
         resolve: {
-            inputData: MapResolve
+            inputSchema: MapResolveGraph
         },
         data: {
             pageTitle: 'map.title'

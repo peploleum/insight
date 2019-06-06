@@ -54,14 +54,17 @@ import {
     setClusterRadius,
     ZoomToFeatureRequest
 } from '../shared/util/map-utils';
-import { Subscription } from 'rxjs/index';
-import { filter, pairwise, startWith } from 'rxjs/internal/operators';
+import { forkJoin, Observable, Subscription } from 'rxjs/index';
+import { map, pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
 import { GenericModel } from '../shared/model/generic.model';
 import { ActivatedRoute } from '@angular/router';
 import { MapOverlayComponent } from './map-overlay.component';
+import { MapSchema } from '../shared/model/map.model';
+import { QuickViewService } from '../side/quick-view.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'jhi-map',
@@ -93,7 +96,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     popupInteract: EventEmitter<string> = new EventEmitter();
 
     featureSourceSubs: Subscription;
-    searchSourceSubs: Subscription;
     geoMarkerSourceSubs: Subscription;
     outsideFeatureSelectorSubs: Subscription;
     layerSubs: Subscription;
@@ -104,6 +106,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     mapStatesSubs: Subscription;
     newDataReceivedSubs: Subscription;
     newEventThreadSearchValueSubs: Subscription;
+    mapSchemaSubs: Subscription;
 
     @HostListener('window:resize')
     onResize() {
@@ -117,7 +120,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         private _sms: SideMediatorService,
         private _activatedRoute: ActivatedRoute,
         private _resolver: ComponentFactoryResolver,
-        private _vcr: ViewContainerRef
+        private _vcr: ViewContainerRef,
+        private _qvs: QuickViewService
     ) {
         this.clusterSource = new Cluster({
             distance: 40,
@@ -209,18 +213,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this._sms._sideAction.next(sideActions);
             });
-        this.featureSourceSubs = this._ms.featureSource
-            .pipe(
-                filter((features: Feature[]) => {
-                    return features.filter(feat => this.getMapStates().FILTER_ENTITIES.indexOf(feat.get('objectType')) !== -1);
-                })
-            )
-            .subscribe((features: Feature[]) => {
-                this.featureSource.addFeatures(features);
-            });
-        this.searchSourceSubs = this._ms.searchSource.subscribe((features: Feature[]) => {
-            this.searchSource.addFeatures(features);
+        /*.pipe(
+         map((features: Feature[]) => {
+         return features.filter(f => this.getMapStates().FILTER_ENTITIES.indexOf(f.get('objectType')) !== -1)
+         .filter(f => {
+         console.log(f.get('relationOrder'));
+         return this.getMapStates().DISPLAY_RELATION ? true : (!f.get('relationOrder') || f.get('relationOrder') !== 2);
+         });
+         })
+         )*/
+        this.featureSourceSubs = this._ms.featureSource.subscribe((features: Feature[]) => {
+            this.featureSource.addFeatures(features);
         });
+
+        this.featureSource.on('addfeature', () => {
+            console.log('added');
+            const nbre = this.featureSource.getFeatures().length;
+            console.log(nbre);
+        });
+
         this.newDataReceivedSubs = this._sms._onNewDataReceived.subscribe((data: any[]) => {
             this._ms.getFeaturesFromGeneric(<GenericModel[]>data, 'MAIN');
         });
@@ -263,12 +274,34 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 feat.set('pinned', markerIds.indexOf(featId) !== -1);
             });
         });
+        this.mapSchemaSubs = this._ms.mapSchema.subscribe((content: MapSchema) => {
+            if (content) {
+                const resolvers: Observable<GenericModel[]>[] = [];
+                content.hierarchicContent.forEach(schema => {
+                    resolvers.push(this._qvs.resolveGraph(schema).pipe(map((res: HttpResponse<GenericModel[]>) => res.body)));
+                });
+                if (resolvers.length > 0) {
+                    forkJoin(...resolvers)
+                        .pipe(
+                            map((data: GenericModel[][]) => {
+                                return data.reduce((x, y) => x.concat(y), []);
+                            })
+                        )
+                        .subscribe((entities: GenericModel[]) => {
+                            this._ms.getFeaturesFromGeneric(entities, 'MAIN');
+                        });
+                }
+            }
+        });
         this.initDessinTools();
 
-        this._activatedRoute.data.subscribe(({ inputData }) => {
-            if (inputData) {
-                const data: GenericModel[] = <GenericModel[]>inputData;
+        this._activatedRoute.data.subscribe(input => {
+            if (input.hasOwnProperty('inputData')) {
+                const data: GenericModel[] = <GenericModel[]>input['inputData'];
                 this._ms.getFeaturesFromGeneric(data, 'MAIN');
+            }
+            if (input.hasOwnProperty('inputSchema')) {
+                this._ms.mapSchema.next(new MapSchema([input['inputSchema']]));
             }
         });
     }
@@ -277,6 +310,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.featureSourceSubs) {
             this.featureSourceSubs.unsubscribe();
         }
+        if (this.mapSchemaSubs) {
+            this.mapSchemaSubs.unsubscribe();
+        }
+        this._ms.mapSchema.next(null);
         if (this.outsideFeatureSelectorSubs) {
             this.outsideFeatureSelectorSubs.unsubscribe();
         }
@@ -315,6 +352,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         filterFeat.forEach(feat => {
             source.removeFeature(feat);
         });
+    }
+
+    /**
+     * Clear la featureSource, puis renvoie l'ensemble des features dans la pipeline (pour filtrage etc)
+     * */
+    private reloadSourceFeature() {
+        const features: Feature[] = this.featureSource.getFeatures();
+        this.clearRawDataSource();
+        this._ms.featureSource.next(features);
     }
 
     private clearSearchFeatures() {
@@ -709,6 +755,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
             case 'CLEAR_SEARCH_FEATURE':
                 this.clearSearchFeatures();
+                break;
+            case 'RELOAD_SOURCE_FEATURE':
+                this.reloadSourceFeature();
+                emitNewState = false;
                 break;
             default:
                 break;

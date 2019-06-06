@@ -223,7 +223,7 @@ public class Event extends InsightEntity implements Serializable {
             ", eventType='" + getEventType() + "'" +
             ", eventDate='" + getEventDate() + "'" +
             ", eventCoordinates='" + getEventCoordinates() + "'" +
-            ", geometry='" + getGeometry().toString() + "'" +
+            // ", geometry='" + getGeometry().toString() + "'" +
             ", eventImage='" + getEventImage() + "'" +
             ", eventImageContentType='" + getEventImageContentType() + "'" +
             ", eventSymbol='" + getEventSymbol() + "'" +
