@@ -734,7 +734,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.clearFeatures(true);
                 break;
             case 'RELOAD_SOURCE_FEATURE':
-                // this.reloadSourceFeature();
                 this.modifyVisibility();
                 emitNewState = false;
                 break;
