@@ -26,7 +26,7 @@ export class MapState {
     SEARCH_GEOREF: boolean;
     // Défini les entities affichables sur la carte
     FILTER_ENTITIES: string[];
-    DISPLAY_RELATION = true; // Display RawData Relations
+    MAX_GRAPH_DEPTH: number;
 
     constructor(
         DISPLAY_LABEL: boolean,
@@ -36,7 +36,7 @@ export class MapState {
         AUTO_REFRESH: boolean,
         SEARCH_GEOREF: boolean,
         FILTER_ENTITIES: string[],
-        DISPLAY_RELATION: boolean
+        MAX_GRAPH_DEPTH: number
     ) {
         this.DISPLAY_LABEL = DISPLAY_LABEL;
         this.DISPLAY_CONTENT_ON_HOVER = DISPLAY_CONTENT_ON_HOVER;
@@ -45,7 +45,7 @@ export class MapState {
         this.AUTO_REFRESH = AUTO_REFRESH;
         this.SEARCH_GEOREF = SEARCH_GEOREF;
         this.FILTER_ENTITIES = FILTER_ENTITIES;
-        this.DISPLAY_RELATION = DISPLAY_RELATION;
+        this.MAX_GRAPH_DEPTH = MAX_GRAPH_DEPTH;
     }
 }
 
@@ -351,6 +351,9 @@ export const setClusterRadius = (features: Feature[], resolution: number): numbe
  * Fonction de style de base selon la geometry de la feature
  * */
 export const insBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
+    if (feature && !feature.get('visible')) {
+        return null;
+    }
     switch (geometryType) {
         case 'Point':
             const objectType = feature ? feature.get('objectType') : '';
@@ -465,6 +468,9 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
 };
 
 export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
+    if (feature && !feature.get('visible')) {
+        return null;
+    }
     switch (geometryType) {
         case 'Point':
             const objectType = feature ? feature.get('objectType') : '';

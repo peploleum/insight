@@ -4,8 +4,13 @@ import { Observable, throwError } from 'rxjs/index';
 import { GenericModel } from '../shared/model/generic.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { IRawData } from '../shared/model/raw-data.model';
-import { assertGenericType, convertRawDataDateFromClient, convertRawDataDateFromServer } from '../shared/util/insight-util';
-import { catchError, map, mergeMap } from 'rxjs/internal/operators';
+import {
+    assertGenericType,
+    convertRawDataDateFromClient,
+    convertRawDataDateFromServer,
+    removeDuplicate
+} from '../shared/util/insight-util';
+import { map } from 'rxjs/internal/operators';
 import { createRequestOption } from '../shared/util/request-util';
 import { RawDataService } from '../entities/raw-data/raw-data.service';
 import { BiographicsService } from '../entities/biographics/biographics.service';
@@ -125,10 +130,7 @@ export class QuickViewService {
             .map(node => node.relations)
             .reduce((x, y) => x.concat(y), [])
             .map(node => node.nodeId);
-
-        const firstLevelRequest: Observable<EntitiesResponseType> = this.findMultiple(firstLevelIds.concat([rootId]));
-        return secondLevelIds.length === 0
-            ? firstLevelRequest
-            : firstLevelRequest.pipe(mergeMap(res => this.findMultiple(secondLevelIds).pipe(catchError(error => throwError(error)))));
+        const ids: string[] = removeDuplicate([rootId].concat(firstLevelIds).concat(secondLevelIds));
+        return this.findMultiple(ids);
     }
 }

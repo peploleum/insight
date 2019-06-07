@@ -54,8 +54,8 @@ import {
     setClusterRadius,
     ZoomToFeatureRequest
 } from '../shared/util/map-utils';
-import { forkJoin, Observable, Subscription } from 'rxjs/index';
-import { map, pairwise, startWith } from 'rxjs/internal/operators';
+import { Subscription } from 'rxjs/index';
+import { map, pairwise, startWith, switchMap } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
@@ -65,6 +65,7 @@ import { MapOverlayComponent } from './map-overlay.component';
 import { MapSchema } from '../shared/model/map.model';
 import { QuickViewService } from '../side/quick-view.service';
 import { HttpResponse } from '@angular/common/http';
+import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 @Component({
     selector: 'jhi-map',
@@ -213,23 +214,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this._sms._sideAction.next(sideActions);
             });
-        /*.pipe(
-         map((features: Feature[]) => {
-         return features.filter(f => this.getMapStates().FILTER_ENTITIES.indexOf(f.get('objectType')) !== -1)
-         .filter(f => {
-         console.log(f.get('relationOrder'));
-         return this.getMapStates().DISPLAY_RELATION ? true : (!f.get('relationOrder') || f.get('relationOrder') !== 2);
-         });
-         })
-         )*/
+
         this.featureSourceSubs = this._ms.featureSource.subscribe((features: Feature[]) => {
             this.featureSource.addFeatures(features);
-        });
-
-        this.featureSource.on('addfeature', () => {
-            console.log('added');
-            const nbre = this.featureSource.getFeatures().length;
-            console.log(nbre);
         });
 
         this.newDataReceivedSubs = this._sms._onNewDataReceived.subscribe((data: any[]) => {
@@ -276,21 +263,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.mapSchemaSubs = this._ms.mapSchema.subscribe((content: MapSchema) => {
             if (content) {
-                const resolvers: Observable<GenericModel[]>[] = [];
-                content.hierarchicContent.forEach(schema => {
-                    resolvers.push(this._qvs.resolveGraph(schema).pipe(map((res: HttpResponse<GenericModel[]>) => res.body)));
-                });
-                if (resolvers.length > 0) {
-                    forkJoin(...resolvers)
-                        .pipe(
-                            map((data: GenericModel[][]) => {
-                                return data.reduce((x, y) => x.concat(y), []);
-                            })
-                        )
-                        .subscribe((entities: GenericModel[]) => {
-                            this._ms.getFeaturesFromGeneric(entities, 'MAIN');
-                        });
-                }
+                this._qvs
+                    .resolveGraph(content.hierarchicContent)
+                    .pipe(map((res: HttpResponse<GenericModel[]>) => res.body))
+                    .subscribe((entities: GenericModel[]) => {
+                        this.clearFeatures(false);
+                        this._ms.getFeaturesFromGeneric(entities, 'MAIN');
+                    });
             }
         });
         this.initDessinTools();
@@ -301,7 +280,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._ms.getFeaturesFromGeneric(data, 'MAIN');
             }
             if (input.hasOwnProperty('inputSchema')) {
-                this._ms.mapSchema.next(new MapSchema([input['inputSchema']]));
+                this._ms.mapSchema.next(new MapSchema(input['inputSchema']));
             }
         });
     }
@@ -354,21 +333,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    /**
-     * Clear la featureSource, puis renvoie l'ensemble des features dans la pipeline (pour filtrage etc)
-     * */
-    private reloadSourceFeature() {
-        const features: Feature[] = this.featureSource.getFeatures();
-        this.clearRawDataSource();
-        this._ms.featureSource.next(features);
+    private modifyVisibility() {
+        this.featureSource.getFeatures().forEach(feat => {
+            const isVisible: boolean = this.getMapStates().FILTER_ENTITIES.indexOf(feat.get('objectType')) !== -1;
+            feat.set('visible', isVisible);
+        });
     }
 
-    private clearSearchFeatures() {
+    private clearFeatures(clearSearch: boolean) {
         const features = this.featureSource.getFeatures();
         const selectedFeat = [];
         const removeFeat = [];
         for (let i = 0; i < features.length; i++) {
-            if (features[i].get('SEARCH')) {
+            if (features[i].get('SEARCH') === clearSearch) {
                 removeFeat.push(features[i]);
             } else if (features[i].get('selected')) {
                 selectedFeat.push(features[i]);
@@ -754,10 +731,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 mapState.AUTO_REFRESH = !mapState.AUTO_REFRESH;
                 break;
             case 'CLEAR_SEARCH_FEATURE':
-                this.clearSearchFeatures();
+                this.clearFeatures(true);
                 break;
             case 'RELOAD_SOURCE_FEATURE':
-                this.reloadSourceFeature();
+                // this.reloadSourceFeature();
+                this.modifyVisibility();
                 emitNewState = false;
                 break;
             default:

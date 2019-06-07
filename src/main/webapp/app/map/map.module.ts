@@ -11,7 +11,7 @@ import { QuickStatsComponent } from './side/quick-stats.component';
 import { LayerControlComponent } from './side/layer-control.component';
 import { MapSearchComponent } from './side/map-search.component';
 import { MapOverlayComponent } from './map-overlay.component';
-import { ContentFilterComponent } from './side/content-filter.component';
+import { SchemaInfoComponent } from './side/schema-info.component';
 
 @NgModule({
     imports: [CommonModule, MapRoutingModule, InsightSharedModule, ReactiveFormsModule, ColorPickerModule],
@@ -22,9 +22,9 @@ import { ContentFilterComponent } from './side/content-filter.component';
         LayerControlComponent,
         MapSearchComponent,
         MapOverlayComponent,
-        ContentFilterComponent
+        SchemaInfoComponent
     ],
     entryComponents: [MapOverlayComponent],
-    exports: [DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent, ContentFilterComponent]
+    exports: [DessinComponent, QuickStatsComponent, LayerControlComponent, MapSearchComponent, SchemaInfoComponent]
 })
 export class MapModule {}

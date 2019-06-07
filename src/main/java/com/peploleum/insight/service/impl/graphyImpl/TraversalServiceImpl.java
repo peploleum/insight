@@ -109,7 +109,7 @@ public class TraversalServiceImpl implements TraversalService {
     public GraphStructureNodeDTO getGraph(NodeDTO node, int levelOrder) {
         GraphStructureNodeDTO graphRoot = new GraphStructureNodeDTO();
         graphRoot.setNodeId(node.getIdMongo());
-        graphRoot.setRelations(this.getGraphElementNeighbors(node, 0, levelOrder));
+        graphRoot.setRelations(this.getGraphElementNeighbors(node, 1, levelOrder));
         return graphRoot;
     }
 

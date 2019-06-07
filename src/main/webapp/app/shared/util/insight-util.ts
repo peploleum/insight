@@ -3,7 +3,6 @@
  */
 /* tslint:disable:no-bitwise */
 import { IRawData, RawData } from '../model/raw-data.model';
-import { HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
 import { Biographics } from '../model/biographics.model';
 import { Equipment } from '../model/equipment.model';
@@ -122,6 +121,12 @@ export class DragParameter {
         this.event = event;
     }
 }
+
+export const removeDuplicate = (list: any[]): any[] => {
+    const temp = {};
+    list.forEach(i => (temp[i] = 0));
+    return Object.keys(temp);
+};
 
 export const BASE64URI = (base64Content: string, fileType?: string): string => {
     return `data:image/${fileType || 'png'};base64,${base64Content}`;

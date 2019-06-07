@@ -23,11 +23,12 @@ import {
 } from '../shared/util/insight-util';
 import { createRequestOption } from '../shared/util/request-util';
 import { GenericModel } from '../shared/model/generic.model';
+import { QuickViewService } from '../side/quick-view.service';
+import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
     public resourceUrlMap = SERVER_API_URL + 'api/map';
-    private resourceUrlGraph = SERVER_API_URL + 'api/graph/';
 
     featureSource: Subject<Feature[]> = new Subject();
     mapSchema: BehaviorSubject<MapSchema> = new BehaviorSubject(null);
@@ -35,7 +36,7 @@ export class MapService {
     geoMarkerSource: Subject<Feature[]> = new Subject();
     pinnedGeoMarker: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
-    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false, true, ENTITY_TYPE_LIST, false));
+    mapStates: BehaviorSubject<MapState> = new BehaviorSubject(new MapState(true, true, '', false, false, true, ENTITY_TYPE_LIST, 1));
     dessinStates: BehaviorSubject<FigureStyle> = new BehaviorSubject(
         new FigureStyle('Circle', 2, 1, 'rgb(250,5,5)', 'rgba(232,215,43,0.37)')
     );
@@ -78,6 +79,7 @@ export class MapService {
             feature.set('objectType', dto.objectType);
             feature.set('label', dto.label);
             feature.set('externalId', dto.externalId);
+            feature.set('visible', true);
             return feature;
         }
         return null;
@@ -107,7 +109,7 @@ export class MapService {
         return featGeometry;
     }
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private _qvs: QuickViewService) {}
 
     /**
      * Transforme les GenericModel et les envoie dans featureSource
@@ -137,8 +139,8 @@ export class MapService {
                 .map(item => MapService.getGeoJsonFromDto(item))
                 .filter(dto => dto !== null)
                 .map((f: Feature) => {
-                    // f.set('relationOrder', this.mapSchema.getValue().getEntityLevel(f.getId()));
-                    f.set('relationOrder', 1);
+                    f.set('SEARCH', false);
+                    f.set('relationOrder', this.mapSchema.getValue().getEntityLevel(f.getId()));
                     return f;
                 })
         );

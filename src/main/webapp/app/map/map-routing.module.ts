@@ -43,7 +43,7 @@ export class MapResolveGraph implements Resolve<IGraphStructureNodeDTO> {
                 filter((res: HttpResponse<GenericModel>) => res.ok),
                 map((res: HttpResponse<GenericModel>) => (res.body['externalId'] ? [res.body] : [])),
                 switchMap((dto: GenericModel[]) => {
-                    const order: number = this._ms.mapStates.getValue().DISPLAY_RELATION ? 2 : 1;
+                    const order: number = this._ms.mapStates.getValue().MAX_GRAPH_DEPTH;
                     return this._qvs
                         .getGraphForEntity(dto[0]['externalId'], order)
                         .pipe(map((res: HttpResponse<IGraphStructureNodeDTO>) => res.body));

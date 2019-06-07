@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContentFilterComponent } from './content-filter.component';
+import { SchemaInfoComponent } from './schema-info.component';
 
-describe('ContentFilterComponent', () => {
-    let component: ContentFilterComponent;
-    let fixture: ComponentFixture<ContentFilterComponent>;
+describe('SchemaInfoComponent', () => {
+    let component: SchemaInfoComponent;
+    let fixture: ComponentFixture<SchemaInfoComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ContentFilterComponent]
+            declarations: [SchemaInfoComponent]
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ContentFilterComponent);
+        fixture = TestBed.createComponent(SchemaInfoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

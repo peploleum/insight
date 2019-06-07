@@ -1,0 +1,82 @@
+<div class="h-100 w-100 side-container">
+    <div class="side-title">
+        <h4>
+            <fa-icon [icon]="'sitemap'"></fa-icon>
+            <b> Network Information</b></h4>
+    </div>
+    <div class="side-main side-element">
+        <!--<div class="tools" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <span title="Biographics" (click)="modifyState('BIOGRAPHICS')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('Biographics') !== -1)}"><fa-icon
+                [icon]="'user'"></fa-icon></span>
+            <span title="Event" (click)="modifyState('EVENT')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('Event') !== -1)}"><fa-icon
+                [icon]="'calendar-alt'"></fa-icon></span>
+            <span title="Location" (click)="modifyState('LOCATION')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('Location') !== -1)}"><fa-icon
+                [icon]="'map-marker-alt'"></fa-icon></span>
+            <span title="Equipment" (click)="modifyState('EQUIPMENT')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('Equipment') !== -1)}"><fa-icon
+                [icon]="'toolbox'"></fa-icon></span>
+            <span title="Organisation" (click)="modifyState('ORGANISATION')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('Organisation') !== -1)}"><fa-icon
+                [icon]="'users'"></fa-icon></span>
+            <span title="RawData" (click)="modifyState('RAWDATA')"
+                  [ngClass]="{'selected': (mapStates.FILTER_ENTITIES.indexOf('RawData') !== -1)}"><fa-icon
+                [icon]="'database'"></fa-icon></span>
+        </div>-->
+
+        <div class="side-inline-form" style="flex: 0 1 5%; min-height: 2.5rem;">
+            <div class="side-input-container">
+                <ins-insight-search [targetEntity]="['Biographics']" [textFields]="['biographicsName']"
+                                    [imageField]="'biographicsImage'"
+                                    (selectionEmitter)="onEntitySelected($event)"></ins-insight-search>
+            </div>
+        </div>
+
+        <div *ngIf="schemaEntityRoot" class="event-thread-container" style="flex: 1 1 auto;">
+
+            <div class="card event-thread-card">
+                <div class="card-img-top event-thread-header"
+                     *ngIf="schemaEntityRoot['biographicsImage'];  else noPhoto">
+                    <img style="max-height: 12rem;"
+                         [src]="getBase64(schemaEntityRoot['biographicsImage'])"
+                         alt="Aucune photo associée">
+                </div>
+                <ng-template #noPhoto>
+                    <span class="card-img-top"
+                          style="display: flex;justify-content: center; align-items: center; padding: 2rem; font-size: 2rem;">
+                        <fa-icon [icon]="'image'"></fa-icon></span>
+                </ng-template>
+                <div class="card-body">
+                    <h5 class="card-title">{{schemaEntityRoot['biographicsName']}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{schemaEntityRoot['biographicsFirstname']}}</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Profondeur maximale du réseau: {{mapStates.MAX_GRAPH_DEPTH}}
+                        <span *ngIf="mapStates.MAX_GRAPH_DEPTH == 1" class="single-action-button"
+                              (click)="modifyState('MAX_GRAPH_DEPTH')"><fa-icon
+                            [icon]="'plus'"></fa-icon></span>
+                        <span *ngIf="mapStates.MAX_GRAPH_DEPTH == 2" class="single-action-button"
+                              (click)="modifyState('MAX_GRAPH_DEPTH')"><fa-icon
+                            [icon]="'minus'"></fa-icon></span>
+                    </li>
+                    <li class="list-group-item">Nombre d'entités du réseau:
+                        {{mapSchema.schemaDescriptor.numberEntities}}
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link"
+                       [routerLink]="['/',{outlets: { primary: ['network', schemaEntityRoot['id']], side: ['ins-network-side-panel'] }}]">
+                        <fa-icon [icon]="'sitemap'"></fa-icon>
+                        Ouvrir en Réseau
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>

@@ -322,6 +322,23 @@ Custom network css
 }
 
 /* ==========================================================================
+Custom button css class
+========================================================================== */
+
+.single-action-button {
+    padding: 0.3rem 1.5rem;
+    cursor: pointer;
+    border-right: 1px solid rgba(65, 75, 88, 0.2);
+    border-left: 1px solid rgba(65, 75, 88, 0.2);
+    border-radius: 1rem;
+}
+
+.single-action-button:hover {
+    background-color: $popover-button-background-color-hover;
+    color: $a-color-hover;
+}
+
+/* ==========================================================================
 Custom card css
 ========================================================================== */
 

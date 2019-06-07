@@ -25,12 +25,4 @@ public class GraphStructureNodeDTO implements Serializable {
     public void setRelations(List<GraphStructureNodeDTO> relations) {
         this.relations = relations;
     }
-
-    @Override
-    public String toString() {
-        return "GraphStructureNodeDTO{" +
-            "nodeId=" + getNodeId() +
-            "relationIds= " + getRelations().size() + " relations" +
-            "}";
-    }
 }

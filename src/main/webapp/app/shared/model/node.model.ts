@@ -96,3 +96,19 @@ export interface IGraphStructureNodeDTO {
 export class GraphStructureNodeDTO implements IGraphStructureNodeDTO {
     constructor(public nodeId?: string, public relations?: IGraphStructureNodeDTO[]) {}
 }
+
+export interface IMapSchemaDescriptor {
+    graphMaxDepth?: number;
+    numberEntities?: number;
+    numberEntitiesPerClass?: {};
+    numberEntitiesLocalised?: number;
+}
+
+export class MapSchemaDescriptor implements IMapSchemaDescriptor {
+    constructor(
+        public graphMaxDepth?: number,
+        public numberEntities?: number,
+        public numberEntitiesPerClass?: {},
+        public numberEntitiesLocalised?: number
+    ) {}
+}
