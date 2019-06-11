@@ -3,27 +3,27 @@
 
     <ng-container *ngIf="!isClosed" [ngSwitch]="target">
         <ng-template [ngSwitchCase]="'map'">
+            <span (click)="changeSideElement('SCHEMA_INFO')"
+            [ngClass]="{'isDisplayed' : _sideElement === 'SCHEMA_INFO'}"><fa-icon
+                [icon]="'sitemap'"></fa-icon></span>
+            <span (click)="changeSideElement('QUICK_STATS')"
+            [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_STATS'}"><fa-icon
+                [icon]="'chart-bar'"></fa-icon></span>
             <span (click)="changeSideElement('EVENT_THREAD')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'EVENT_THREAD'}"><fa-icon
                 [icon]="'wifi'"></fa-icon></span>
-            <span (click)="changeSideElement('SCHEMA_INFO')"
-                  [ngClass]="{'isDisplayed' : _sideElement === 'SCHEMA_INFO'}"><fa-icon
-                [icon]="'sitemap'"></fa-icon></span>
-            <span (click)="changeSideElement('DESSIN')"
-                  [ngClass]="{'isDisplayed' : _sideElement === 'DESSIN'}"><fa-icon
-                [icon]="'pencil-alt'"></fa-icon></span>
-            <span (click)="changeSideElement('QUICK_STATS')"
-                  [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_STATS'}"><fa-icon
-                [icon]="'chart-bar'"></fa-icon></span>
-            <span (click)="changeSideElement('LAYER_CONTROL')"
-                  [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
-                [icon]="'globe'"></fa-icon></span>
             <span (click)="changeSideElement('MAP_SEARCH')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'MAP_SEARCH'}"><fa-icon
                 [icon]="'search'"></fa-icon></span>
             <span (click)="changeSideElement('QUICK_VIEW')"
                   [ngClass]="{'isDisplayed' : _sideElement === 'QUICK_VIEW'}"><fa-icon
                 [icon]="'book-reader'"></fa-icon></span>
+            <span (click)="changeSideElement('DESSIN')"
+            [ngClass]="{'isDisplayed' : _sideElement === 'DESSIN'}"><fa-icon
+                [icon]="'pencil-alt'"></fa-icon></span>
+            <span (click)="changeSideElement('LAYER_CONTROL')"
+                  [ngClass]="{'isDisplayed' : _sideElement === 'LAYER_CONTROL'}"><fa-icon
+                [icon]="'globe'"></fa-icon></span>
         </ng-template>
 
         <ng-template [ngSwitchCase]="'network'">

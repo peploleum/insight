@@ -42,6 +42,10 @@
                        [routerLink]="['/',{outlets: { primary: ['network', rawData.id], side: ['ins-network-side-panel'] }}]">
                         <fa-icon [icon]="'sitemap'"></fa-icon>
                     </a>
+                    <a class="card-link" (click)="sendToMap([rawData])"
+                       [ngClass]="(!rawData['rawDataCoordinates']) ? 'inactive-link' : 'active-link'">
+                        <fa-icon [icon]="'globe'"></fa-icon>
+                    </a>
                     <a class="card-link"
                        [routerLink]="['/',{outlets: { primary: ['raw-data', rawData.id, 'view'], side: ['ins-entities-side-panel']}}]">
                         <fa-icon [icon]="getSourceTypeIcon(rawData.rawDataSourceType)"></fa-icon>

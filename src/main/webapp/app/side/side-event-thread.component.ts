@@ -13,6 +13,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { BASE64URI, getDataTypeIcon, getSourceTypeIcon, ToolbarButtonParameters } from '../shared/util/insight-util';
 import { SideMediatorService } from './side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
+import { ProfileService } from '../layouts/profiles/profile.service';
 
 @Component({
     selector: 'ins-side-event-thread',
@@ -48,13 +49,23 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
     canRefresh = false;
     isDestroyed = false; // isDestroyed nécessaire pour arrêter l'interval
 
-    constructor(protected rawDataService: RawDataService, protected jhiAlertService: JhiAlertService, protected sms: SideMediatorService) {
+    applicationName: string;
+
+    constructor(
+        protected rawDataService: RawDataService,
+        protected jhiAlertService: JhiAlertService,
+        protected sms: SideMediatorService,
+        private _ps: ProfileService
+    ) {
         this.itemsPerPage = 20;
         this.predicate = 'rawDataCreationDate';
         this.page = 1;
     }
 
     ngOnInit() {
+        this._ps.getProfileInfo().then(profileInfo => {
+            this.applicationName = profileInfo.reachEnabled ? 'Reach' : profileInfo.geniusEnabled ? 'Genius' : 'Insight';
+        });
         this.searchForm.valueChanges
             .pipe(
                 debounceTime(500),
@@ -166,7 +177,9 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
                             // si le premier élément est différent (voir fonction filter précédente)
                             this.clear();
                         }
-                        this.sms._onNewDataReceived.next(res.body);
+                        if (this.applicationName !== 'Reach') {
+                            this.sendToMap(res.body);
+                        }
                     }
                 })
             )
@@ -174,6 +187,10 @@ export class SideEventThreadComponent implements OnInit, OnDestroy, AfterViewIni
                 (res: HttpResponse<IRawData[]>) => this.paginateRawData(res.body),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+    }
+
+    sendToMap(entities: IRawData[]) {
+        this.sms._onNewDataReceived.next(entities);
     }
 
     loadPage(page: number) {

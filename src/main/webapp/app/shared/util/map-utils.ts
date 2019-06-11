@@ -16,6 +16,8 @@ import Point from 'ol/geom/point';
 import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
 import { getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
+import { olx } from 'openlayers';
+import style = olx.style;
 
 export class MapState {
     DISPLAY_LABEL: boolean;
@@ -182,56 +184,60 @@ export class MapOverlayGenericMapper {
     }
 }
 
+export const isValidCoordinate = (coord: number[]): boolean => {
+    return coord && coord.length === 2 && (coord[0] !== -99 && coord[0] !== 99) && (coord[1] !== -99 && coord[1] !== 99);
+};
+
 /**
  * Fonction de style principale, maxFeatureCount est utile au calcul de la color des clusters,
  * Si gestion de la selection hors d'une selectInteraction => utiliser la property selected sur les features
  * */
 export const insStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
-    let style: Style[] = [];
+    let stl: Style[] = [];
     const features: Feature[] = feature.get('features');
     const isCluster: boolean = features.length > 1;
     const selected: boolean = isCluster ? !!features.find(f => f.get('selected')) : features[0].get('selected');
     if (isCluster) {
-        style = selected ? insSelectedClusterStyleFunction(feature, maxFeatureCount) : insClusterStyleFunction(feature, maxFeatureCount);
+        stl = selected ? insSelectedClusterStyleFunction(feature, maxFeatureCount) : insClusterStyleFunction(feature, maxFeatureCount);
     } else {
         const originalFeature = features[0];
-        style.push(
-            selected
+        stl.push(
+            ...(selected
                 ? insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
-                : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
+                : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature))
         );
     }
-    return style;
+    return stl;
 };
 
 /**
  * Fonction de style de sélection, maxFeatureCount est utile au calcul de la color des clusters
  * */
 export const insSelectedStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
-    let style: Style[] = [];
+    let stl: Style[] = [];
     const isCluster: boolean = feature.get('features').length > 1;
     if (isCluster) {
-        style = insSelectedClusterStyleFunction(feature, maxFeatureCount);
+        stl = insSelectedClusterStyleFunction(feature, maxFeatureCount);
     } else {
         const originalFeature = feature.get('features')[0];
-        style.push(insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
+        stl.push(...insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
     }
-    return style;
+    return stl;
 };
 
 /**
  * Fonction de style on hover, maxFeatureCount est utile au calcul de la color des clusters
  * */
 export const insHoveredStyleFunction = (feature: Feature, resolution: number, maxFeatureCount: number): Style[] => {
-    let style: Style[] = [];
+    let stl: Style[] = [];
     const isCluster: boolean = feature.get('features').length > 1;
     if (isCluster) {
-        style = expandClusterStyleFunction(feature, resolution);
+        stl = expandClusterStyleFunction(feature, resolution);
     } else {
         const originalFeature = feature.get('features')[0];
-        style.push(insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
+        stl.push(...insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
     }
-    return style;
+    return stl;
 };
 
 /**
@@ -253,7 +259,7 @@ export const insSetTextStyleFunction = (feature: Feature, styles: Style[]): Styl
  * */
 export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
     const clusterSize = feature.get('features').length;
-    const style = new Style({
+    const stl = new Style({
         image: new Circle({
             radius: feature.get('radius'),
             fill: new Fill({
@@ -275,7 +281,7 @@ export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: numbe
             })
         })
     });
-    return [style];
+    return [stl];
 };
 
 /**
@@ -283,7 +289,8 @@ export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: numbe
  * */
 export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
     const clusterSize = feature.get('features').length;
-    const style = new Style({
+    const styles: Style[] = [];
+    const baseStyle = new Style({
         image: new Circle({
             radius: feature.get('radius'),
             fill: new Fill({
@@ -305,7 +312,14 @@ export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCoun
             })
         })
     });
-    return [style];
+
+    (<Feature[]>feature.get('features')).forEach(f => {
+        if (f.get('selected') && f.get('relation_position')) {
+            styles.push(...getRelationConnectionLines(f));
+        }
+    });
+
+    return styles.concat(baseStyle);
 };
 
 /**
@@ -350,16 +364,18 @@ export const setClusterRadius = (features: Feature[], resolution: number): numbe
 /**
  * Fonction de style de base selon la geometry de la feature
  * */
-export const insBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
+export const insBaseStyleFunction = (geometryType: string, feature?: Feature): Style[] => {
     if (feature && !feature.get('visible')) {
         return null;
     }
+    const is_selected_relation = feature ? feature.get('selected_relation') && !feature.get('selected') : false;
     switch (geometryType) {
         case 'Point':
+            const styles = [];
             const objectType = feature ? feature.get('objectType') : '';
             const relationOrder: number = feature ? feature.get('relationOrder') : 0;
             const src: string = relationOrder === 2 ? getMapSecondOrderRelationImageIconUrl(objectType) : getMapImageIconUrl(objectType);
-            return new Style({
+            const baseStyle = new Style({
                 image:
                     src === null
                         ? new Circle({
@@ -384,98 +400,126 @@ export const insBaseStyleFunction = (geometryType: string, feature?: Feature): S
                     })
                 })
             });
+            if (is_selected_relation) {
+                const relationStyle = new Style({
+                    image: new Circle({
+                        radius: 14,
+                        fill: new Fill({
+                            color: 'rgba(255, 51, 51, 0.1)'
+                        }),
+                        stroke: new Stroke({ color: 'rgba(255, 51, 51, 0.5)', width: 5 })
+                    })
+                });
+                styles.push(relationStyle);
+            }
+            return styles.concat(baseStyle);
             break;
         case 'LineString':
-            return new Style({
-                stroke: new Stroke({
-                    color: [255, 153, 0, 0.8],
-                    width: 1
-                })
-            });
-            break;
-        case 'MultiLineString':
-            return new Style({
-                stroke: new Stroke({
-                    color: [255, 153, 0, 0.8],
-                    width: 1
-                })
-            });
-            break;
-        case 'MultiPoint':
-            return new Style({
-                image: new Circle({
-                    radius: 14,
-                    fill: new Fill({
-                        color: 'rgba(230, 240, 255, 1)'
-                    }),
-                    stroke: new Stroke({ color: '#ffc600', width: 3 })
-                })
-            });
-            break;
-        case 'MultiPolygon':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'yellow',
-                    width: 1
-                }),
-                fill: new Fill({
-                    color: 'rgba(255, 255, 0, 0.1)'
-                })
-            });
-            break;
-        case 'Polygon':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'blue',
-                    lineDash: [4],
-                    width: 3
-                }),
-                fill: new Fill({
-                    color: 'rgba(0, 0, 255, 0.1)'
-                })
-            });
-            break;
-        case 'GeometryCollection':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'magenta',
-                    width: 2
-                }),
-                fill: new Fill({
-                    color: 'magenta'
-                }),
-                image: new Circle({
-                    radius: 10,
-                    fill: null,
+            return [
+                new Style({
                     stroke: new Stroke({
-                        color: 'magenta'
+                        color: [255, 153, 0, 0.8],
+                        width: 1
                     })
                 })
-            });
+            ];
+            break;
+        case 'MultiLineString':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: [255, 153, 0, 0.8],
+                        width: 1
+                    })
+                })
+            ];
+            break;
+        case 'MultiPoint':
+            return [
+                new Style({
+                    image: new Circle({
+                        radius: 14,
+                        fill: new Fill({
+                            color: 'rgba(230, 240, 255, 1)'
+                        }),
+                        stroke: new Stroke({ color: '#ffc600', width: 3 })
+                    })
+                })
+            ];
+            break;
+        case 'MultiPolygon':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'yellow',
+                        width: 1
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(255, 255, 0, 0.1)'
+                    })
+                })
+            ];
+            break;
+        case 'Polygon':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'blue',
+                        lineDash: [4],
+                        width: 3
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            ];
+            break;
+        case 'GeometryCollection':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'magenta',
+                        width: 2
+                    }),
+                    fill: new Fill({
+                        color: 'magenta'
+                    }),
+                    image: new Circle({
+                        radius: 10,
+                        fill: null,
+                        stroke: new Stroke({
+                            color: 'magenta'
+                        })
+                    })
+                })
+            ];
             break;
         default:
-            return new Style({
-                stroke: new Stroke({
-                    color: 'red',
-                    width: 2
-                }),
-                fill: new Fill({
-                    color: 'rgba(255,0,0,0.2)'
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'red',
+                        width: 2
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(255,0,0,0.2)'
+                    })
                 })
-            });
+            ];
             break;
     }
 };
 
-export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Feature): Style => {
+export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Feature): Style[] => {
     if (feature && !feature.get('visible')) {
         return null;
     }
     switch (geometryType) {
         case 'Point':
+            const styles: Style[] = [];
             const objectType = feature ? feature.get('objectType') : '';
             const src: string = getSelectedImageIconUrl(objectType);
-            return new Style({
+            const baseStyle = new Style({
                 image:
                     src === null
                         ? new Circle({
@@ -500,87 +544,126 @@ export const insSelectedBaseStyleFunction = (geometryType: string, feature?: Fea
                     })
                 })
             });
+
+            if (feature && feature.get('relation_position')) {
+                styles.push(...getRelationConnectionLines(feature));
+            }
+            return styles.concat(baseStyle);
             break;
         case 'LineString':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'green',
-                    width: 1
-                })
-            });
-            break;
-        case 'MultiLineString':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'green',
-                    width: 1
-                })
-            });
-            break;
-        case 'MultiPoint':
-            return new Style({
-                image: new Circle({
-                    radius: 14,
-                    fill: new Fill({
-                        color: 'rgba(230, 240, 255, 1)'
-                    }),
-                    stroke: new Stroke({ color: '#ffc600', width: 3 })
-                })
-            });
-            break;
-        case 'MultiPolygon':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'yellow',
-                    width: 1
-                }),
-                fill: new Fill({
-                    color: 'rgba(255, 255, 0, 0.1)'
-                })
-            });
-            break;
-        case 'Polygon':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'blue',
-                    lineDash: [4],
-                    width: 3
-                }),
-                fill: new Fill({
-                    color: 'rgba(0, 0, 255, 0.1)'
-                })
-            });
-            break;
-        case 'GeometryCollection':
-            return new Style({
-                stroke: new Stroke({
-                    color: 'magenta',
-                    width: 2
-                }),
-                fill: new Fill({
-                    color: 'magenta'
-                }),
-                image: new Circle({
-                    radius: 10,
-                    fill: null,
+            return [
+                new Style({
                     stroke: new Stroke({
-                        color: 'magenta'
+                        color: 'green',
+                        width: 1
                     })
                 })
-            });
+            ];
+            break;
+        case 'MultiLineString':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'green',
+                        width: 1
+                    })
+                })
+            ];
+            break;
+        case 'MultiPoint':
+            return [
+                new Style({
+                    image: new Circle({
+                        radius: 14,
+                        fill: new Fill({
+                            color: 'rgba(230, 240, 255, 1)'
+                        }),
+                        stroke: new Stroke({ color: '#ffc600', width: 3 })
+                    })
+                })
+            ];
+            break;
+        case 'MultiPolygon':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'yellow',
+                        width: 1
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(255, 255, 0, 0.1)'
+                    })
+                })
+            ];
+            break;
+        case 'Polygon':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'blue',
+                        lineDash: [4],
+                        width: 3
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(0, 0, 255, 0.1)'
+                    })
+                })
+            ];
+            break;
+        case 'GeometryCollection':
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'magenta',
+                        width: 2
+                    }),
+                    fill: new Fill({
+                        color: 'magenta'
+                    }),
+                    image: new Circle({
+                        radius: 10,
+                        fill: null,
+                        stroke: new Stroke({
+                            color: 'magenta'
+                        })
+                    })
+                })
+            ];
             break;
         default:
-            return new Style({
-                stroke: new Stroke({
-                    color: 'red',
-                    width: 2
-                }),
-                fill: new Fill({
-                    color: 'rgba(255,0,0,0.2)'
+            return [
+                new Style({
+                    stroke: new Stroke({
+                        color: 'red',
+                        width: 2
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(255,0,0,0.2)'
+                    })
                 })
-            });
+            ];
             break;
     }
+};
+
+export const getRelationConnectionLines = (feature: Feature): Style[] => {
+    if (!feature.get('relation_position')) {
+        return [];
+    }
+    const styles = [];
+    const positions: [number, number][] = feature.get('relation_position');
+    const baseCoord = (<Point>feature.getGeometry()).getCoordinates();
+    positions.forEach(coord => {
+        const lineStyle = new Style({
+            stroke: new Stroke({
+                color: 'rgba(255, 51, 51, 0.3)',
+                width: 3
+            })
+        });
+        lineStyle.setGeometry(new LineString([baseCoord, coord]));
+        styles.push(lineStyle);
+    });
+    return styles;
 };
 
 /**
@@ -609,13 +692,13 @@ export const expandClusterStyleFunction = (feature: Feature, resolution: number)
             originalClusterCoord[1] + vectors[i].y * resolution
         ];
 
-        const style = originalFeature.get('selected')
+        const stls: Style[] = originalFeature.get('selected')
             ? insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
             : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature);
-        style.setGeometry(new Point(newCoord));
-        styles.push(style);
+        stls.forEach(s => s.setGeometry(new Point(newCoord)));
+        styles.push(...stls);
 
-        const lineStyle = insBaseStyleFunction('LineString');
+        const lineStyle = insBaseStyleFunction('LineString')[0];
         lineStyle.setGeometry(new LineString([originalClusterCoord, newCoord]));
         styles.push(lineStyle);
     }

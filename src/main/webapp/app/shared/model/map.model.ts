@@ -46,7 +46,7 @@ export class MapSchema {
     updateFlattenContent(hierarchicContent: IGraphStructureNodeDTO, flattenContent = {}): {} {
         flattenContent[hierarchicContent.nodeId] = hierarchicContent.relations
             ? hierarchicContent.relations.map(relation => relation.nodeId)
-            : [];
+            : flattenContent[hierarchicContent.nodeId] || [];
         if (hierarchicContent.relations) {
             hierarchicContent.relations.forEach(node => {
                 this.updateFlattenContent(node, flattenContent);

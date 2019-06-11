@@ -13,7 +13,7 @@ import Point from 'ol/geom/point';
 import Geometry from 'ol/geom/geometry';
 import proj from 'ol/proj';
 import { RawData } from '../shared/model/raw-data.model';
-import { FigureStyle, MapLayer, MapState, OlMapProperties, ZoomToFeatureRequest } from '../shared/util/map-utils';
+import { FigureStyle, isValidCoordinate, MapLayer, MapState, OlMapProperties, ZoomToFeatureRequest } from '../shared/util/map-utils';
 import {
     ENTITY_TYPE_LIST,
     getGenericCoordinatesProperty,
@@ -24,7 +24,6 @@ import {
 import { createRequestOption } from '../shared/util/request-util';
 import { GenericModel } from '../shared/model/generic.model';
 import { QuickViewService } from '../side/quick-view.service';
-import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -70,9 +69,8 @@ export class MapService {
     }
 
     static getGeoJsonFromDto(dto: IMapDataDTO): Feature {
-        if (dto.coordinate || dto.geometry) {
-            const featGeom: Geometry =
-                this.getFeatureGeometry(dto.geometry) || new Point(proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]));
+        const featGeom: Geometry = MapService.getGeometryFromDto(dto);
+        if (featGeom !== null) {
             const feature: Feature = new Feature(featGeom);
             feature.setId(dto.id);
             feature.set('description', dto.description);
@@ -83,6 +81,18 @@ export class MapService {
             return feature;
         }
         return null;
+    }
+
+    static getGeometryFromDto(dto: IMapDataDTO): Geometry {
+        if (!dto.coordinate && !dto.geometry) {
+            return null;
+        }
+        return (
+            this.getFeatureGeometry(dto.geometry) ||
+            (isValidCoordinate([dto.coordinate[1], dto.coordinate[0]])
+                ? new Point(proj.fromLonLat([dto.coordinate[1], dto.coordinate[0]]))
+                : null)
+        );
     }
 
     /**
@@ -96,6 +106,9 @@ export class MapService {
         let featGeometry: Geometry;
         switch (geometry.type) {
             case 'point':
+                if (!isValidCoordinate([geometry.geometries[0].coordinates[0], geometry.geometries[0].coordinates[1]])) {
+                    return null;
+                }
                 correctCoord = proj.fromLonLat([geometry.geometries[0].coordinates[0], geometry.geometries[0].coordinates[1]]);
                 featGeometry = new Point(correctCoord);
                 break;
@@ -140,7 +153,9 @@ export class MapService {
                 .filter(dto => dto !== null)
                 .map((f: Feature) => {
                     f.set('SEARCH', false);
-                    f.set('relationOrder', this.mapSchema.getValue().getEntityLevel(f.getId()));
+                    if (this.mapSchema.getValue() !== null) {
+                        f.set('relationOrder', this.mapSchema.getValue().getEntityLevel(f.getId()));
+                    }
                     return f;
                 })
         );

@@ -22,6 +22,7 @@ import TileLayer from 'ol/layer/tile';
 import OSM from 'ol/source/osm';
 import BingMaps from 'ol/source/bingmaps';
 import control from 'ol/control';
+import Control from 'ol/control/control';
 import Feature from 'ol/feature';
 import SelectInteration from 'ol/interaction/select';
 import DrawInteraction from 'ol/interaction/draw';
@@ -55,7 +56,7 @@ import {
     ZoomToFeatureRequest
 } from '../shared/util/map-utils';
 import { Subscription } from 'rxjs/index';
-import { map, pairwise, startWith, switchMap } from 'rxjs/internal/operators';
+import { map, pairwise, startWith } from 'rxjs/internal/operators';
 import { ToolbarButtonParameters, UUID } from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { EventThreadParameters, SideAction, SideParameters, ToolbarState } from '../shared/util/side.util';
@@ -65,7 +66,6 @@ import { MapOverlayComponent } from './map-overlay.component';
 import { MapSchema } from '../shared/model/map.model';
 import { QuickViewService } from '../side/quick-view.service';
 import { HttpResponse } from '@angular/common/http';
-import { IGraphStructureNodeDTO } from '../shared/model/node.model';
 
 @Component({
     selector: 'jhi-map',
@@ -92,6 +92,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectedIds: any[] = [];
 
+    customControl: Control;
     popup: Overlay;
     popupContent: ComponentRef<MapOverlayComponent>;
     popupInteract: EventEmitter<string> = new EventEmitter();
@@ -412,9 +413,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     ) {
                         coord = (<Point>feats[0].get('features')[0].getGeometry()).getCoordinates();
                     }
-                    this.displayPopup(coord);
+                    // this.displayPopup(coord);
+                    this.displayControl();
                 } else {
-                    this.closePopup();
+                    // this.closePopup();
+                    this.closeControl();
                 }
             }
             event.preventDefault();
@@ -428,7 +431,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private onNewFeaturesSelected(features: Feature[]) {
         this.selectedIds.forEach(id => {
-            this.featureSource.getFeatureById(id).set('selected', false);
+            const f = this.featureSource.getFeatureById(id);
+            f.set('selected', false);
+            this.setSelectedRelation(f, false);
         });
         this.selectedIds =
             features && features.length > 0
@@ -444,11 +449,36 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             features.forEach((feat: Feature) => {
                 feat.set('selected', true);
                 if (feat.get('features')) {
-                    (<Feature[]>feat.get('features')).forEach(f => f.set('selected', true));
+                    (<Feature[]>feat.get('features')).forEach(f => {
+                        f.set('selected', true);
+                        this.setSelectedRelation(f, true);
+                    });
                 }
             });
         }
         this._sms._selectedData.next(this.selectedIds);
+    }
+
+    private setSelectedRelation(feature: Feature, doSelect: boolean) {
+        if (this._ms.mapSchema.getValue() === null) {
+            return;
+        }
+        const relCoord: [number, number][] = [];
+        const relations: (string | number)[] = this._ms.mapSchema.getValue().flattenContent[feature.getId()];
+        relations.forEach(idRel => {
+            const f = this.featureSource.getFeatureById(idRel);
+            if (f !== null) {
+                f.set('selected_relation', doSelect);
+                if (doSelect && f.getGeometry().getType() === 'Point') {
+                    relCoord.push((<Point>f.getGeometry()).getCoordinates());
+                }
+            }
+        });
+        if (doSelect) {
+            feature.set('relation_position', relCoord);
+        } else {
+            feature.unset('relation_position');
+        }
     }
 
     private initMapLayerListener() {
@@ -670,7 +700,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 return [iconStyle];
             }
         }
-        return insBaseStyleFunction(feature.getGeometry().getType());
+        return insBaseStyleFunction(feature.getGeometry().getType())[0];
     }
 
     getIconStyle(feature: Feature, selected?: boolean, scale?: number): Style {
@@ -786,5 +816,37 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.popupContent = null;
         }
         this.popup = null;
+    }
+
+    displayControl() {
+        this.closeControl();
+        const factory: ComponentFactory<MapOverlayComponent> = this._resolver.resolveComponentFactory(MapOverlayComponent);
+
+        const injector = Injector.create({
+            providers: [
+                {
+                    provide: 'popupInteract',
+                    useValue: this.popupInteract
+                },
+                {
+                    provide: 'idList',
+                    useValue: this.selectedIds
+                }
+            ]
+        });
+        this.popupContent = this._vcr.createComponent(factory, 0, injector);
+        this.customControl = new Control({ element: this.popupContent.location.nativeElement });
+        this._map.addControl(this.customControl);
+    }
+
+    closeControl() {
+        if (this.customControl) {
+            this._map.removeControl(this.customControl);
+        }
+        if (this.popupContent) {
+            this.popupContent.destroy();
+            this.popupContent = null;
+        }
+        this.customControl = null;
     }
 }
