@@ -712,6 +712,9 @@ SidePannel custom CSS
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
 
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-right: none;
+
     padding: 1.5rem 0.6rem;
 
     display: flex;
@@ -729,8 +732,8 @@ SidePannel custom CSS
 }
 
 .isDisplayed {
-    border: 2px solid #003e80;
-    border-right: none;
+    border: 2px solid #003e80 !important;
+    border-right: none !important;
 }
 
 .side-container {

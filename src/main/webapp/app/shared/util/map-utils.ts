@@ -17,6 +17,7 @@ import { GenericModel } from '../model/generic.model';
 import { Moment } from 'moment';
 import { getGenericImageProperty, getGenericNameProperty, SYMBOL_URLS } from './insight-util';
 import { olx } from 'openlayers';
+import Sphere from 'ol/sphere';
 import style = olx.style;
 
 export class MapState {
@@ -185,7 +186,16 @@ export class MapOverlayGenericMapper {
 }
 
 export const isValidCoordinate = (coord: number[]): boolean => {
-    return coord && coord.length === 2 && (coord[0] !== -99 && coord[0] !== 99) && (coord[1] !== -99 && coord[1] !== 99);
+    return coord && coord.length === 2 && Math.abs(coord[0]) !== 99 && Math.abs(coord[1]) !== 99;
+};
+
+/**
+ * Input coordinates must be in 'EPSG:4326' projection
+ * */
+export const getLengthBetweenCoords = (coord1: [number, number], coord2: [number, number]): number => {
+    const wgs84Sphere: Sphere = new Sphere(6378137);
+    const length = wgs84Sphere.haversineDistance(coord1, coord2);
+    return length || 0;
 };
 
 /**
@@ -198,7 +208,9 @@ export const insStyleFunction = (feature: Feature, resolution: number, maxFeatur
     const isCluster: boolean = features.length > 1;
     const selected: boolean = isCluster ? !!features.find(f => f.get('selected')) : features[0].get('selected');
     if (isCluster) {
-        stl = selected ? insSelectedClusterStyleFunction(feature, maxFeatureCount) : insClusterStyleFunction(feature, maxFeatureCount);
+        stl = selected
+            ? insSelectedClusterStyleFunction(feature, maxFeatureCount, resolution)
+            : insClusterStyleFunction(feature, maxFeatureCount);
     } else {
         const originalFeature = features[0];
         stl.push(
@@ -217,7 +229,7 @@ export const insSelectedStyleFunction = (feature: Feature, resolution: number, m
     let stl: Style[] = [];
     const isCluster: boolean = feature.get('features').length > 1;
     if (isCluster) {
-        stl = insSelectedClusterStyleFunction(feature, maxFeatureCount);
+        stl = insSelectedClusterStyleFunction(feature, maxFeatureCount, resolution);
     } else {
         const originalFeature = feature.get('features')[0];
         stl.push(...insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature));
@@ -287,7 +299,7 @@ export const insClusterStyleFunction = (feature: Feature, maxFeatureCount: numbe
 /**
  * Fonction de style des clusters selected
  * */
-export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCount: number): Style[] => {
+export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCount: number, resolution: number): Style[] => {
     const clusterSize = feature.get('features').length;
     const styles: Style[] = [];
     const baseStyle = new Style({
@@ -318,8 +330,7 @@ export const insSelectedClusterStyleFunction = (feature: Feature, maxFeatureCoun
             styles.push(...getRelationConnectionLines(f));
         }
     });
-
-    return styles.concat(baseStyle);
+    return styles.concat(expandClusterStyleFunction(feature, resolution));
 };
 
 /**
@@ -685,6 +696,7 @@ export const expandClusterStyleFunction = (feature: Feature, resolution: number)
     const originalClusterCoord: [number, number] = (<Point>feature.getGeometry()).getCoordinates();
     const originalFeatures = feature.get('features');
     const vectors = expandedClusterTranslationVectors(originalFeatures.length, 40);
+    const styleGeomPos: {} = {};
     for (let i = originalFeatures.length - 1; i >= 0; --i) {
         const originalFeature: Feature = originalFeatures[i];
         const newCoord: [number, number] = [
@@ -695,14 +707,19 @@ export const expandClusterStyleFunction = (feature: Feature, resolution: number)
         const stls: Style[] = originalFeature.get('selected')
             ? insSelectedBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature)
             : insBaseStyleFunction(originalFeature.getGeometry().getType(), originalFeature);
-        stls.forEach(s => s.setGeometry(new Point(newCoord)));
+        stls.forEach(s => {
+            const point: Point = new Point(newCoord);
+            point.set('feature_id', originalFeature.getId());
+            s.setGeometry(point);
+            styleGeomPos[originalFeature.getId()] = newCoord;
+        });
         styles.push(...stls);
 
         const lineStyle = insBaseStyleFunction('LineString')[0];
         lineStyle.setGeometry(new LineString([originalClusterCoord, newCoord]));
         styles.push(lineStyle);
     }
-
+    feature.set('spread_position', styleGeomPos);
     return styles;
 };
 

@@ -43,14 +43,18 @@ export class MapSchema {
         }
     }
 
-    updateFlattenContent(hierarchicContent: IGraphStructureNodeDTO, flattenContent = {}): {} {
+    updateFlattenContent(hierarchicContent: IGraphStructureNodeDTO, flattenContent = {}, parentNodeId?: string): {} {
         flattenContent[hierarchicContent.nodeId] = hierarchicContent.relations
             ? hierarchicContent.relations.map(relation => relation.nodeId)
             : flattenContent[hierarchicContent.nodeId] || [];
         if (hierarchicContent.relations) {
             hierarchicContent.relations.forEach(node => {
-                this.updateFlattenContent(node, flattenContent);
+                this.updateFlattenContent(node, flattenContent, hierarchicContent.nodeId);
             });
+        }
+        // Si pas de relation, ajouter l'id du parent node
+        if (flattenContent[hierarchicContent.nodeId].length === 0 && parentNodeId) {
+            flattenContent[hierarchicContent.nodeId] = [parentNodeId];
         }
         return flattenContent;
     }

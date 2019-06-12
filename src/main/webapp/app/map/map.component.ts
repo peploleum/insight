@@ -36,6 +36,7 @@ import MapBrowserEvent from 'ol/mapbrowserevent';
 import Condition from 'ol/events/condition';
 import Overlay from 'ol/overlay';
 import Point from 'ol/geom/point';
+import Geometry from 'ol/geom/geometry';
 import Stroke from 'ol/style/stroke';
 import Circle from 'ol/style/circle';
 import Icon from 'ol/style/icon';
@@ -44,6 +45,7 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import {
     FigureStyle,
+    getLengthBetweenCoords,
     getMapImageIconUrl,
     getSelectedImageIconUrl,
     insBaseStyleFunction,
@@ -162,7 +164,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 return Condition.pointerMove(evt) && Condition.noModifierKeys(evt);
             },
             filter: (feature: Feature, layer: VectorLayer) => {
-                return feature.get('features') && feature.get('features').length > 1;
+                return feature.get('features') && feature.get('features').length > 1 && !feature.get('selected');
             },
             style: (feature: Feature, resolution: number) => {
                 return insHoveredStyleFunction(feature, resolution, this._ms.mapProperties.maxClusterCount || 1);
@@ -402,7 +404,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!this.getMapStates().DESSIN_ENABLED) {
                 const feat: any = this._map.getFeaturesAtPixel(event.pixel);
                 const feats: Feature[] = feat ? (Array.isArray(feat) ? feat : [feat]) : [];
-                this.onNewFeaturesSelected(feats);
+                this.onNewFeaturesSelected(feats, event.coordinate);
                 if (feats[0]) {
                     let coord: [number, number] = event.coordinate;
                     if (
@@ -413,10 +415,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     ) {
                         coord = (<Point>feats[0].get('features')[0].getGeometry()).getCoordinates();
                     }
-                    // this.displayPopup(coord);
                     this.displayControl();
                 } else {
-                    // this.closePopup();
                     this.closeControl();
                 }
             }
@@ -429,33 +429,64 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    private onNewFeaturesSelected(features: Feature[]) {
+    private onNewFeaturesSelected(features: Feature[], selectCoord?: [number, number]) {
         this.selectedIds.forEach(id => {
             const f = this.featureSource.getFeatureById(id);
             f.set('selected', false);
             this.setSelectedRelation(f, false);
         });
+
+        if (features) {
+            features.forEach((feat: Feature) => {
+                feat.set('selected', true);
+                if (feat.get('features') && feat.get('features').length > 0) {
+                    let selectedFeature: Feature = (<Feature[]>feat.get('features'))[0];
+                    if (feat.get('features').length > 1) {
+                        let selectedFeatureId;
+                        if (selectCoord && Array.isArray(feat.getStyle())) {
+                            // Solution 1: Cas fonctionnel si la fonction de style est appliqué via setStyle sur la clusterFeature
+                            const clusterStyles: Style[] = <Style[]>feat.getStyle();
+                            clusterStyles
+                                .map(style => <Geometry>style.getGeometry())
+                                .filter(geom => geom.getType() === 'Point')
+                                .forEach(point => {
+                                    if (point.get('feature_id') && point.intersectsCoordinate(selectCoord)) {
+                                        selectedFeatureId = point.get('feature_id');
+                                    }
+                                });
+                        } else if (feat.get('spread_position')) {
+                            // Solution 2: Utiliser les coordonnées calculées lors de la fonction de style et trouver
+                            // le point le plus proche du click event
+                            const spreadCoord = feat.get('spread_position');
+                            selectedFeatureId = Object.keys(spreadCoord).reduce((id1, id2) => {
+                                const le1 = getLengthBetweenCoords(selectCoord, spreadCoord[id1]);
+                                const le2 = getLengthBetweenCoords(selectCoord, spreadCoord[id2]);
+                                return le1 < le2 ? id1 : id2;
+                            });
+                        }
+                        if (selectedFeatureId) {
+                            const f: Feature = (<Feature[]>feat.get('features')).find(ft => ft.getId() === selectedFeatureId);
+                            selectedFeature = f || selectedFeature;
+                        }
+                    }
+                    selectedFeature.set('selected', true);
+                    this.setSelectedRelation(selectedFeature, true);
+                }
+            });
+        }
+
         this.selectedIds =
             features && features.length > 0
                 ? features
                       .map(feat => {
-                          return feat.get('features') ? (<Feature[]>feat.get('features')).map(f => f.getId()) : [feat.getId()];
+                          return feat.get('features')
+                              ? (<Feature[]>feat.get('features')).filter(f => f.get('selected')).map(f => f.getId())
+                              : [feat.getId()];
                       })
                       .reduce((x, y) => {
                           return x.concat(y);
                       }, [])
                 : [];
-        if (features) {
-            features.forEach((feat: Feature) => {
-                feat.set('selected', true);
-                if (feat.get('features')) {
-                    (<Feature[]>feat.get('features')).forEach(f => {
-                        f.set('selected', true);
-                        this.setSelectedRelation(f, true);
-                    });
-                }
-            });
-        }
         this._sms._selectedData.next(this.selectedIds);
     }
 
