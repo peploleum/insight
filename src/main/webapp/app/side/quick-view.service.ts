@@ -120,7 +120,7 @@ export class QuickViewService {
     }
 
     /**
-     * Une requête par niveau de graph, voir à évoluer vers des forkjoins pour des graphs de grande taille
+     * Une requête de 12 avec tous les idents, voir à évoluer vers des forkjoins pour des graphs de grande taille
      * */
     resolveGraph(graph: IGraphStructureNodeDTO): Observable<HttpResponse<GenericModel[]>> {
         const rootId: string = graph.nodeId;

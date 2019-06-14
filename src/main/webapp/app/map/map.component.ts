@@ -45,7 +45,7 @@ import Fill from 'ol/style/fill';
 import Text from 'ol/style/text';
 import {
     FigureStyle,
-    getLengthBetweenCoords,
+    getAbsoluteCoordinateDistance,
     getMapImageIconUrl,
     getSelectedImageIconUrl,
     insBaseStyleFunction,
@@ -270,7 +270,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                     .resolveGraph(content.hierarchicContent)
                     .pipe(map((res: HttpResponse<GenericModel[]>) => res.body))
                     .subscribe((entities: GenericModel[]) => {
-                        this.clearFeatures(false);
+                        this.clearFeatures(false); // Clear les features marquées 'MAIN'
                         this._ms.getFeaturesFromGeneric(entities, 'MAIN');
                     });
             }
@@ -369,7 +369,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             }),
             view: new View({
                 center: [0, 0],
-                zoom: 2,
+                zoom: 3,
                 minZoom: 2,
                 maxZoom: 20,
                 extent: [-15723249.59231732, -5106184.58202049, 16485479.638377108, 11546080.652074866]
@@ -458,9 +458,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                             // Solution 2: Utiliser les coordonnées calculées lors de la fonction de style et trouver
                             // le point le plus proche du click event
                             const spreadCoord = feat.get('spread_position');
+                            console.log(spreadCoord);
                             selectedFeatureId = Object.keys(spreadCoord).reduce((id1, id2) => {
-                                const le1 = getLengthBetweenCoords(selectCoord, spreadCoord[id1]);
-                                const le2 = getLengthBetweenCoords(selectCoord, spreadCoord[id2]);
+                                const le1 = getAbsoluteCoordinateDistance(selectCoord, spreadCoord[id1]);
+                                const le2 = getAbsoluteCoordinateDistance(selectCoord, spreadCoord[id2]);
                                 return le1 < le2 ? id1 : id2;
                             });
                         }
@@ -496,15 +497,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         const relCoord: [number, number][] = [];
         const relations: (string | number)[] = this._ms.mapSchema.getValue().flattenContent[feature.getId()];
-        relations.forEach(idRel => {
-            const f = this.featureSource.getFeatureById(idRel);
-            if (f !== null) {
-                f.set('selected_relation', doSelect);
-                if (doSelect && f.getGeometry().getType() === 'Point') {
-                    relCoord.push((<Point>f.getGeometry()).getCoordinates());
+        if (relations) {
+            relations.forEach(idRel => {
+                const f = this.featureSource.getFeatureById(idRel);
+                if (f !== null) {
+                    f.set('selected_relation', doSelect);
+                    if (doSelect && f.getGeometry().getType() === 'Point') {
+                        relCoord.push((<Point>f.getGeometry()).getCoordinates());
+                    }
                 }
-            }
-        });
+            });
+        }
         if (doSelect) {
             feature.set('relation_position', relCoord);
         } else {

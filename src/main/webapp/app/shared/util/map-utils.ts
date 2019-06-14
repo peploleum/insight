@@ -199,6 +199,16 @@ export const getLengthBetweenCoords = (coord1: [number, number], coord2: [number
 };
 
 /**
+ * Renvoi la somme des différences entre X,Y
+ * */
+export const getAbsoluteCoordinateDistance = (coord1: [number, number], coord2: [number, number]): number => {
+    if (!coord1 || !coord2) {
+        return 0;
+    }
+    return Math.abs(coord1[0] - coord2[0]) + Math.abs(coord1[1] - coord2[1]);
+};
+
+/**
  * Fonction de style principale, maxFeatureCount est utile au calcul de la color des clusters,
  * Si gestion de la selection hors d'une selectInteraction => utiliser la property selected sur les features
  * */

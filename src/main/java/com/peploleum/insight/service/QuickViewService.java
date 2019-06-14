@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,18 +63,18 @@ public class QuickViewService {
         Class[] classArray = {RawData.class, Event.class, Biographics.class, Equipment.class, Location.class, Organisation.class};
         List<Class> classCollection = Arrays.asList(classArray);
         List<InsightEntity> result = new ArrayList<>();
-        for (String id : ids) {
-            collectionLoop:
-            for (Class coll : classCollection) {
-                AggregationResults<InsightEntity> aggr = this.mongoOperations.aggregate(
-                    Aggregation.newAggregation(Aggregation.match(Criteria.where("_id").is(id))), coll, InsightEntity.class);
-                if (!CollectionUtils.isEmpty(aggr.getMappedResults())) {
-                    result.add(aggr.getMappedResults().get(0));
-                    break collectionLoop;
+
+        for (Class coll : classCollection) {
+            AggregationResults<InsightEntity> aggr = this.mongoOperations.aggregate(
+                Aggregation.newAggregation(Aggregation.match(Criteria.where("_id").in(ids))), coll, InsightEntity.class);
+            if (!CollectionUtils.isEmpty(aggr.getMappedResults())) {
+                result.addAll(aggr.getMappedResults());
+                if (result.size() == ids.size()) {
+                    break;
                 }
             }
-
         }
+
         return result;
     }
 

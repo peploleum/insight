@@ -107,10 +107,55 @@ public class TraversalServiceImpl implements TraversalService {
 
     @Override
     public GraphStructureNodeDTO getGraph(NodeDTO node, int levelOrder) {
+
+       /* final List<NodeDTO> nodeList = new ArrayList<>();
+        final StringBuilder sb = new StringBuilder();
+        sb.append(".group().by().by(outE().group().by().by(outE().dedup().fold()).dedup().fold())");
+        final ResultSet neighborResultSet = this.template.getGremlinClient().submit("g.V(" + node.getId() + ")" + sb.toString());
+
+        neighborResultSet.stream().forEach(result -> {
+            final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
+            final NodeDTO neighbor = new NodeDTO();
+
+            final String graphId = resultObject.get("id").toString();
+            final String idMongo = smartOpenProperties(resultObject, "idMongo");
+            final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
+            final String symbole = smartOpenProperties(resultObject, "symbole");
+            final String name = smartOpenProperties(resultObject, "name");
+
+            neighbor.setType(type);
+            neighbor.setId(graphId);
+            neighbor.setIdMongo(idMongo);
+            neighbor.setSymbole(symbole);
+            neighbor.setLabel(name);
+
+            nodeList.add(neighbor);
+        });
+
+        return null;*/
+
         GraphStructureNodeDTO graphRoot = new GraphStructureNodeDTO();
         graphRoot.setNodeId(node.getIdMongo());
         graphRoot.setRelations(this.getGraphElementNeighbors(node, 1, levelOrder));
         return graphRoot;
+    }
+
+    private NodeDTO extractNodeDto(final LinkedHashMap resultObject) {
+        final NodeDTO node = new NodeDTO();
+
+        final String graphId = resultObject.get("id").toString();
+        final String idMongo = smartOpenProperties(resultObject, "idMongo");
+        final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
+        final String symbole = smartOpenProperties(resultObject, "symbole");
+        final String name = smartOpenProperties(resultObject, "name");
+
+        node.setType(type);
+        node.setId(graphId);
+        node.setIdMongo(idMongo);
+        node.setSymbole(symbole);
+        node.setLabel(name);
+
+        return node;
     }
 
     private List<GraphStructureNodeDTO> getGraphElementNeighbors(NodeDTO parentNode, int currentDepthLevel, int maxDepthLevel) {
