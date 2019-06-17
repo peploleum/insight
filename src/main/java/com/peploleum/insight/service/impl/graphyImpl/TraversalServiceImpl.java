@@ -51,7 +51,8 @@ public class TraversalServiceImpl implements TraversalService {
         final List<NodeDTO> nodeList = new ArrayList<>();
         final String id = node.getId();
         this.log.info("searching by GraphId: " + id + " and traversing outgoing edges to get neighbors");
-        final String neighborSuffix = ".outE().limit(50).inV().toList()";
+        // final String neighborSuffix = ".outE().limit(50).inV().toList()";
+        final String neighborSuffix = ".outE().inV().toList()";
         final ResultSet neighborResultSet = this.template.getGremlinClient().submit("g.V(" + id + ")" + neighborSuffix);
         this.log.info("Parsing neighbors");
         neighborResultSet.stream().forEach(result -> {
