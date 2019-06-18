@@ -73,6 +73,10 @@ export class NetworkContentComponent extends SideInterface implements OnInit, Af
         return toKebabCase(str);
     }
 
+    trackByFn(index, data: DataContentInfo): string {
+        return data.idMongo;
+    }
+
     sendAction(action: string) {
         this._sms._onNewActionClicked.next(action);
     }

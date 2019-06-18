@@ -4,10 +4,15 @@ import { NetworkService } from './network.service';
 import { Subscription } from 'rxjs/index';
 import { ActivatedRoute } from '@angular/router';
 import { EdgeDTO, GraphDataCollection, GraphDataSet, IGraphyNodeDTO, NodeDTO } from 'app/shared/model/node.model';
-import { IRawData } from 'app/shared/model/raw-data.model';
 import { filter, map } from 'rxjs/operators';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { ContextElement, DragParameter, FileReaderEventTarget, getGenericSymbolProperty } from '../shared/util/insight-util';
+import {
+    ContextElement,
+    DragParameter,
+    FileReaderEventTarget,
+    getGenericSymbolProperty,
+    updateUniqueElementArray
+} from '../shared/util/insight-util';
 import { SideMediatorService } from '../side/side-mediator.service';
 import { addNodes, DataContentInfo, NetworkState } from '../shared/util/network.util';
 import { ToolbarState } from '../shared/util/side.util';
@@ -24,6 +29,8 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     @ViewChild('network', { read: ElementRef }) _networkRef: ElementRef;
     network: Network;
     networkData: GraphDataSet;
+
+    networkState: NetworkState;
 
     graphDataSubscription: Subscription;
     actionClickedSubs: Subscription;
@@ -58,6 +65,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             const ctxDataSet = <GraphDataSet>dataCtx.value;
             this.networkData.nodes.add(ctxDataSet.nodes.get());
             this.networkData.edges.add(ctxDataSet.edges.get());
+            this.clusterNodes();
         }
 
         this.activatedRoute.data.subscribe(({ originNode }) => {
@@ -76,7 +84,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                                     rawData.id,
                                     rawData.idMongo,
                                     '',
-                                    rawData.symbole
+                                    rawData.symbole,
+                                    this._ns.isHidden(rawData.type).hidden,
+                                    this._ns.isHidden(rawData.type).physics
                                 );
                             })
                         )
@@ -88,11 +98,19 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 }
             }
             if (DEBUG_INFO_ENABLED) {
-                this.getMockData();
+                // this.getMockData();
             }
         });
 
         this.networkStateSubs = this._ns.networkState.subscribe(state => {
+            if (this.networkState) {
+                let reloadFiltering = !!this.networkState.ENTITIES_FILTER.find(entity => state.ENTITIES_FILTER.indexOf(entity) === -1);
+                reloadFiltering = reloadFiltering || this.networkState.ENTITIES_FILTER.length !== state.ENTITIES_FILTER.length;
+                if (reloadFiltering) {
+                    this.updateGraphNodeFiltering();
+                }
+            }
+            this.networkState = Object.assign({}, state);
             const updatedEventThreadToolbar = this._ns.getUpdatedEventThreadToolbar();
             this._sms.updateToolbarState(new ToolbarState('EVENT_THREAD', updatedEventThreadToolbar));
         });
@@ -163,7 +181,7 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
         return {
             hierarchical: {
                 enabled: !this.getState().LAYOUT_FREE,
-                levelSeparation: 100,
+                levelSeparation: 130,
                 direction: this.getState().LAYOUT_DIR,
                 sortMethod: this.getState().SORT_METHOD
             }
@@ -178,21 +196,34 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     initNetworkEventListener() {
-        this.network.on('hoverNode', properties => {});
-        this.network.on('blurNode', properties => {});
         this.network.on('selectNode', properties => {
+            const selectedNodeIds: IdType[] = [];
+            const selectedEdgeIds: IdType[] = properties.edges.filter(id => !/^cluster/.test(id));
+            const selectedClusterIds: IdType[] = [];
+            (<IdType[]>properties.nodes).forEach((id: IdType) => {
+                if (this.network.isCluster(id)) {
+                    selectedClusterIds.push(id);
+                } else {
+                    selectedNodeIds.push(id);
+                }
+            });
             if (this.getState().ADD_NEIGHBOURS) {
-                this.getNodesNeighbours(properties.nodes);
+                this.getNodesNeighbours(selectedNodeIds);
             }
-            if (!this.getState().CLUSTER_NODES) {
-                const clusteredIds: IdType[] = (<IdType[]>properties.nodes).filter((id: IdType) => this.network.isCluster(id));
-                clusteredIds.forEach(id => this.network.openCluster(id));
+            if (this.getState().CLUSTER_NODES) {
+                selectedClusterIds.forEach(id => this.network.openCluster(id));
             }
-            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(properties.nodes));
-            this.emitNeighborsOnSelection(properties.nodes, properties.edges);
+            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(selectedNodeIds));
+            this.emitNeighborsOnSelection(selectedNodeIds, selectedEdgeIds);
         });
         this.network.on('deselectNode', properties => {
-            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(properties.nodes));
+            const unselectedNodeIds: IdType[] = [];
+            (<IdType[]>properties.nodes).forEach((id: IdType) => {
+                if (!this.network.isCluster(id)) {
+                    unselectedNodeIds.push(id);
+                }
+            });
+            this._sms._selectedData.next(this.getMongoIdsFromNodeIds(unselectedNodeIds));
         });
         this.networkData.nodes.on('add', (event, properties) => {
             this.updateDataContent();
@@ -218,6 +249,9 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     emitNeighborsOnSelection(nodeIds: IdType[], edgeIds: IdType[]) {
+        if (!edgeIds || edgeIds.length === 0) {
+            return;
+        }
         const edgeArray: Edge[] = this.networkData.edges.get(edgeIds);
         const unduplicatedNodeArrayIds = {};
         edgeArray.forEach(edge => {
@@ -251,12 +285,27 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     addNodes(nodes: Node[], edges: Edge[]) {
         this.network.storePositions();
         addNodes(this.networkData, nodes, edges);
+        this.clusterNodes();
     }
 
     removeNodes(idNodes: IdType[], idEdges: IdType[]) {
         this.network.storePositions();
         this.networkData.nodes.remove(idNodes);
         this.networkData.edges.remove(idEdges);
+    }
+
+    updateGraphNodeFiltering() {
+        const updateNodeList: { id: IdType; hidden: boolean; physics: boolean }[] = [];
+        this.networkData.nodes.forEach(node => {
+            const hiddenStatus = this._ns.isHidden(node['objectType']).hidden;
+            const physicsStatus = this._ns.isHidden(node['objectType']).physics;
+            if (node.hidden !== hiddenStatus && node.physics !== physicsStatus) {
+                updateNodeList.push({ id: node.id, hidden: hiddenStatus, physics: physicsStatus });
+            }
+        });
+        this.networkData.nodes.update(updateNodeList);
+        this.network.redraw();
+        this.clusterNodes();
     }
 
     updateDataContent() {
@@ -276,7 +325,16 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
             const graphyDatas: IGraphyNodeDTO[] = JSON.parse(jsonString);
             const data = new GraphDataCollection([], []);
             data.nodes = graphyDatas.map((item: IGraphyNodeDTO) =>
-                NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole)
+                NetworkService.getNodeDto(
+                    item.label,
+                    item.type,
+                    item.id,
+                    item.idMongo,
+                    '',
+                    item.symbole,
+                    this._ns.isHidden(item.type).hidden,
+                    this._ns.isHidden(item.type).physics
+                )
             );
             data.edges = graphyDatas
                 .map(item => NetworkService.getEdgeCollection(item.id, item.to))
@@ -287,23 +345,44 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
     }
 
     clusterNodes() {
+        if (!this._ns.networkState.getValue().CLUSTER_NODES || this.networkData.nodes.length < 50) {
+            return;
+        }
         const clusterOption = {
+            joinCondition: (nodeOptions: any) => {
+                if (nodeOptions && nodeOptions['objectType'] && !nodeOptions['hidden']) {
+                    return nodeOptions['objectType'] === 'RawData' ? true : nodeOptions['amountOfConnections'] > 10;
+                }
+                return false;
+            },
+            processProperties: (clusterOptions: any, childNodesOptions: any[]) => {
+                clusterOptions['label'] = `${childNodesOptions ? childNodesOptions.length : 1}`;
+                return clusterOptions;
+            },
             clusterNodeProperties: {
-                label: 'Cluster',
                 borderWidth: 3,
                 shape: 'circle',
-                size: 30,
+                size: 50,
                 color: {
-                    background: 'red'
+                    background: 'rgba(255, 0, 0, 0.7)',
+                    border: 'rgba(0, 102, 255, 0.7)'
+                },
+                shadow: {
+                    enabled: true,
+                    color: 'rgba(0, 102, 255, 0.9)',
+                    size: 10,
+                    x: 5,
+                    y: 5
                 },
                 font: {
+                    color: 'white',
                     bold: {
                         size: 18
                     }
                 }
             }
         };
-        this.network.clusterByHubsize(3, clusterOption);
+        this.network.cluster(clusterOption);
     }
 
     onImageDropped(params: DragParameter) {
@@ -396,6 +475,24 @@ export class NetworkComponent implements OnInit, AfterViewInit, AfterContentInit
                 break;
             case 'AUTO_REFRESH':
                 networkState.AUTO_REFRESH = !networkState.AUTO_REFRESH;
+                break;
+            case 'ADD_BIOGRAPHICS':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'Biographics');
+                break;
+            case 'ADD_EVENT':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'Event');
+                break;
+            case 'ADD_LOCATION':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'Location');
+                break;
+            case 'ADD_EQUIPMENT':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'Equipment');
+                break;
+            case 'ADD_ORGANISATION':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'Organisation');
+                break;
+            case 'ADD_RAWDATA':
+                networkState.ENTITIES_FILTER = updateUniqueElementArray(networkState.ENTITIES_FILTER, 'RawData');
                 break;
             default:
                 break;

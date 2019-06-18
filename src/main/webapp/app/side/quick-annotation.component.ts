@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SideMediatorService } from './side-mediator.service';
 import { Subscription } from 'rxjs/index';
 import { IRawData } from '../shared/model/raw-data.model';
@@ -13,7 +13,7 @@ import { ENTITY_TYPE_LIST } from '../shared/util/insight-util';
     templateUrl: './quick-annotation.component.html',
     styles: []
 })
-export class QuickAnnotationComponent implements OnInit {
+export class QuickAnnotationComponent implements OnInit, OnDestroy {
     entity: IRawData;
     selected_data_ids: string[] = [];
     selectedDataSubs: Subscription;
@@ -41,6 +41,12 @@ export class QuickAnnotationComponent implements OnInit {
                 this.entity = null;
             }
         });
+    }
+
+    ngOnDestroy() {
+        if (this.selectedDataSubs) {
+            this.selectedDataSubs.unsubscribe();
+        }
     }
 
     getEntity(id: string) {

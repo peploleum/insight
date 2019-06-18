@@ -80,7 +80,8 @@ export class NeighborViewComponent implements OnInit, OnDestroy, AfterViewInit {
             hierarchical: {
                 enabled: true,
                 levelSeparation: 100,
-                direction: 'UD'
+                direction: 'UD',
+                sortMethod: 'directed'
             }
         };
     }

@@ -108,8 +108,9 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
         return {
             hierarchical: {
                 enabled: true,
-                levelSeparation: 100,
-                direction: 'UD'
+                levelSeparation: 130,
+                direction: 'UD',
+                sortMethod: 'directed'
             }
         };
     }
@@ -120,7 +121,7 @@ export class CardNetworkComponent implements OnInit, OnDestroy, AfterViewInit, O
     }
 
     getNodesNeighbours(idOrigin: IdType) {
-        this._ns.getGraphData(idOrigin).subscribe(
+        this._ns.getGraphData(idOrigin, false).subscribe(
             (data: GraphDataCollection) => {
                 this.addNodes(data.nodes, data.edges);
                 const mongoIds: string[] = this.networkData.nodes.map(node => (<NodeDTO>node).mongoId);

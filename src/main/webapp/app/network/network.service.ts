@@ -7,14 +7,7 @@ import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
 import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import { IdType } from 'vis';
 import { catchError, filter, map, switchMap } from 'rxjs/internal/operators';
-import {
-    EdgeDTO,
-    GraphDataCollection,
-    IGraphStructureNodeDTO,
-    IGraphyNodeDTO,
-    IGraphyRelationDTO,
-    NodeDTO
-} from 'app/shared/model/node.model';
+import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO, NodeDTO } from 'app/shared/model/node.model';
 import { RawDataService } from 'app/entities/raw-data';
 import { IRawData, RawData } from 'app/shared/model/raw-data.model';
 import { DataContentInfo, NetworkState } from '../shared/util/network.util';
@@ -30,7 +23,8 @@ export class NetworkService {
         LAYOUT_DIR: 'UD',
         LAYOUT_FREE: false,
         PHYSICS_ENABLED: false,
-        SORT_METHOD: 'hubsize',
+        ENTITIES_FILTER: ['Biographics', 'Equipment', 'Event', 'Location', 'Organisation'],
+        SORT_METHOD: 'directed',
         ADD_NEIGHBOURS: false,
         CLUSTER_NODES: false,
         AUTO_REFRESH: false,
@@ -48,7 +42,9 @@ export class NetworkService {
         id?: IdType,
         mongoId?: string,
         title?: string,
-        imageUrl?: string
+        imageUrl?: string,
+        hidden = false,
+        physics = true
     ): NodeDTO {
         const image: string = imageUrl ? imageUrl : NetworkService.getNodeImageUrl(objectType);
         const color = {
@@ -57,7 +53,7 @@ export class NetworkService {
         const font = {
             color: '#0056b3'
         };
-        return new NodeDTO(label, id, mongoId, objectType, title, image, color, 3, font);
+        return new NodeDTO(label, id, mongoId, objectType, title, image, color, 3, font, hidden, physics);
     }
 
     public static getEdgeCollection(idOrigin: IdType, relations: IGraphyRelationDTO[]): EdgeDTO[] {
@@ -68,8 +64,8 @@ export class NetworkService {
         return nodes.map(node => NetworkService.getEdgeDto(idOrigin, node.id));
     }
 
-    public static getEdgeDto(from: IdType, to: IdType): EdgeDTO {
-        return new EdgeDTO(from, to);
+    public static getEdgeDto(from: IdType, to: IdType, hidden = false, physics = true): EdgeDTO {
+        return new EdgeDTO(from, to, hidden, physics);
     }
 
     static getNodeColor(objectType: string): string {
@@ -125,6 +121,13 @@ export class NetworkService {
         );
     }
 
+    isHidden(nodeType: string): { hidden; physics } {
+        return {
+            hidden: this.networkState.getValue().ENTITIES_FILTER.indexOf(nodeType) === -1,
+            physics: this.networkState.getValue().ENTITIES_FILTER.indexOf(nodeType) !== -1
+        };
+    }
+
     updateData(dataId: string, symbole: string): Observable<GenericModel> {
         return this._qvs.find(dataId).pipe(
             switchMap((res1: HttpResponse<GenericModel>) => {
@@ -152,7 +155,7 @@ export class NetworkService {
         );
     }
 
-    getGraphData(janusIdOrigin: IdType): Observable<GraphDataCollection> {
+    getGraphData(janusIdOrigin: IdType, applyFilter = true): Observable<GraphDataCollection> {
         const headers = new HttpHeaders();
         const url = 'traversal/';
         return this.http.get(`${this._resourceUrl}` + url + `${janusIdOrigin}`, { headers, observe: 'response' }).pipe(
@@ -171,9 +174,22 @@ export class NetworkService {
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body;
                 const data = new GraphDataCollection([], []);
-                data.nodes = body.map((item: IGraphyNodeDTO) =>
-                    NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole)
-                );
+                data.nodes = body.map((item: IGraphyNodeDTO) => {
+                    if (applyFilter) {
+                        return NetworkService.getNodeDto(
+                            item.label,
+                            item.type,
+                            item.id,
+                            item.idMongo,
+                            '',
+                            item.symbole,
+                            this.isHidden(item.type).hidden,
+                            this.isHidden(item.type).physics
+                        );
+                    } else {
+                        return NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole);
+                    }
+                });
                 /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
                  *  lorsque les relations seront ajoutées au IGraphyNodeDTO depuis le serveur */
                 data.edges = NetworkService.getDirectNeighboursEdgeCollection(janusIdOrigin, data.nodes);

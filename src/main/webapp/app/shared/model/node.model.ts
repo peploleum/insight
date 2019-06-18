@@ -57,7 +57,9 @@ export class NodeDTO implements Node {
         public image?: string,
         public color?: any,
         public borderWidth?: number,
-        public font?: any
+        public font?: any,
+        public hidden?: boolean,
+        public physics?: boolean
     ) {
         this.mongoId = mongoId;
         this.objectType = objectType;
@@ -65,7 +67,7 @@ export class NodeDTO implements Node {
 }
 
 export class EdgeDTO implements Edge {
-    constructor(public from: IdType, public to: IdType) {}
+    constructor(public from: IdType, public to: IdType, public hidden?: boolean, public physics?: boolean) {}
 }
 
 export class GraphDataCollection {
