@@ -40,6 +40,7 @@ public class DatabaseConfiguration {
 
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener() {
+
         return new ValidatingMongoEventListener(validator());
     }
 

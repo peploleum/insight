@@ -9,6 +9,7 @@ import com.peploleum.insight.repository.search.RawDataSearchRepository;
 import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.RawDataService;
 import com.peploleum.insight.service.dto.RawDataDTO;
+import com.peploleum.insight.service.dto.ScoreDTO;
 import com.peploleum.insight.service.mapper.RawDataMapper;
 import com.peploleum.insight.service.util.InsightUtil;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -73,10 +74,17 @@ public class RawDataServiceImpl implements RawDataService {
 
         RawData rawData = rawDataMapper.toEntity(rawDataDTO);
         rawData.setEntityType(InsightEntityType.RawData);
+
         rawData = rawDataRepository.save(rawData);
 
         if (rawData.getExternalId() == null || rawData.getExternalId().isEmpty()) {
-            Long externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
+            Long externalId;
+            if(rawDataDTO.getScoreDTO() == null) {
+                externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
+            } else {
+                rawDataDTO.getScoreDTO().setPoints(27);
+                externalId = this.insightGraphEntityRepository.saveWithProperties(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataType(), rawData.getRawDataSymbol(), InsightEntityType.RawData, rawDataDTO.getScoreDTO());
+            }
             rawData.setExternalId(String.valueOf(externalId));
             rawData = rawDataRepository.save(rawData);
         } else {

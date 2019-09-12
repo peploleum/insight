@@ -5,6 +5,7 @@ import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.repository.graphy.InsightGraphEntityRepository;
 import com.peploleum.insight.service.InsightGraphEntityService;
 import com.peploleum.insight.service.dto.CriteriaDTO;
+import com.peploleum.insight.service.dto.ScoreDTO;
 import com.peploleum.insight.service.util.InsightUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,33 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         List<InsightGraphEntity> insightGraphEntities = insightGraphEntityRepository.findAllInOutVerticesByCriteria(id, criteria);
         log.info(insightGraphEntities.toString());
         return insightGraphEntities;
+    }
+
+    @Override
+    public Long saveWithProperties(String name, String idMongo, String rawdatatype, String symbole, InsightEntityType type, ScoreDTO scoreDTO) {
+        log.debug("Request to save InsightGraphEntity with properties");
+
+        InsightGraphEntity entity = new InsightGraphEntity();
+        if (entity.getProperties() == null)
+            entity.setProperties(new HashMap<>());
+        entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
+        entity.getProperties().put("rawDataType", rawdatatype);
+        entity.getProperties().put("symbole", symbole);
+        entity.getProperties().put("points", String.valueOf(scoreDTO.getPoints()));
+        String chaineMotClefs = "";
+        for (String motclef : scoreDTO.getListMotClefs()) {
+            chaineMotClefs = chaineMotClefs + motclef + " ";
+            entity.getProperties().put("motclef", chaineMotClefs);
+        }
+        entity.getProperties().put("imageHit", String.valueOf(scoreDTO.getImageHit()));
+        entity.getProperties().put("frequence", String.valueOf(scoreDTO.getFrequence()));
+        entity.setIdMongo(idMongo);
+        entity.setName(name);
+        entity.setEntityType(type);
+        entity = this.insightGraphEntityRepository.saveWithProperties(entity); //saveWithProperties
+
+        this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());
+        return entity.getGraphId();
     }
 
     @Override

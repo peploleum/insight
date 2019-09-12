@@ -3,6 +3,7 @@ package com.peploleum.insight.service;
 import com.peploleum.insight.domain.enumeration.InsightEntityType;
 import com.peploleum.insight.domain.graphy.InsightGraphEntity;
 import com.peploleum.insight.service.dto.CriteriaDTO;
+import com.peploleum.insight.service.dto.ScoreDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 /**
  * Created by GFOLGOAS on 01/04/2019.
  */
+
 public interface InsightGraphEntityService {
 
     /**
@@ -44,6 +46,8 @@ public interface InsightGraphEntityService {
     List<InsightGraphEntity> findByCriteria(CriteriaDTO criteria);
 
     List<InsightGraphEntity> findAllInOutVerticesByCriteria(Long id, CriteriaDTO criteria);
+
+    Long saveWithProperties(String name, String idMongo, String rawdatatype, String symbole, InsightEntityType type, ScoreDTO scoreDTO);
 
     /**
      * Delete the entity by id.

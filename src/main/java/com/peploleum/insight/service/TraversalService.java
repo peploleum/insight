@@ -17,6 +17,10 @@ public interface TraversalService {
      */
     public List<NodeDTO> getNeighbors(final NodeDTO node);
 
+    public List<NodeDTO> getAllUnlinkedVertices(final String relationName);
+
+    public List<NodeDTO> getNeighborsByProperty(final NodeDTO node);
+
     public NodeDTO getByMongoId(final String mongoId);
 
     public NodeDTO getByJanusId(final String id);

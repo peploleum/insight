@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by GFOLGOAS on 01/04/2019.
  */
+
 public class CriteriaDTO implements Serializable {
     private String label;
     private String property;

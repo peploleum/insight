@@ -46,6 +46,8 @@ public class RawDataDTO implements Serializable {
 
     private String externalId;
 
+    private ScoreDTO scoreDTO;
+
     public String getId() {
         return id;
     }
@@ -180,6 +182,14 @@ public class RawDataDTO implements Serializable {
 
     public void setGeometry(GeometryCollection geometry) {
         this.geometry = geometry;
+    }
+
+    public ScoreDTO getScoreDTO() {
+        return scoreDTO;
+    }
+
+    public void setScoreDTO(ScoreDTO scoreDTO) {
+        this.scoreDTO = scoreDTO;
     }
 
     @Override

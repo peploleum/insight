@@ -1,0 +1,117 @@
+version: '3'
+services:
+    #BROKER
+    zookeeper:
+        image: wurstmeister/zookeeper:latest
+        container_name: zookeeper
+        ports:
+        - 2181:2181
+        networks:
+        - insight
+    kafka:
+        image: wurstmeister/kafka:latest
+        container_name: kafka
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: 192.168.0.132
+            KAFKA_ADVERTISED_PORT: 8092
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_CREATE_TOPICS: "topic:1:1,topicrss:1:1,topicjson:1:1,topiccyber:1:1"
+        ports:
+        - 8092:9092
+        networks:
+        - insight
+    #ELK
+    elasticsearch:
+        container_name: elasticsearch
+        build:
+            context: ./elk/elasticsearch/
+            args:
+                ELK_VERSION: 6.4.2
+#        volumes:
+#        - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+#        - ./elk/elasticsearch/data:/usr/share/elasticsearch/data
+        ports:
+        - "9200:9200"
+        - "9300:9300"
+        environment:
+            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+        networks:
+        - insight
+    kibana:
+        container_name: kibana
+        build:
+            context: ./elk/kibana/
+            args:
+                ELK_VERSION: 6.4.2
+        volumes:
+        - ./elk/kibana/config/:/usr/share/kibana/config:ro
+        ports:
+        - "5601:5601"
+        networks:
+        - insight
+        depends_on:
+        - elasticsearch
+    #GRAPH DB
+    cassandra:
+        container_name: cassandra
+        image: cassandra:latest
+        #command: /bin /bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh cassandra -f"
+        #environment :
+        # - "HEAP_NEWSIZE:4096M"
+        # - "MAX_HEAP_SIZE:4096M"
+        environment:
+            JAVA_OPTS: -Xms256m -Xmx2048m
+        expose:
+        - 7000
+        - 7001
+        - 7199
+        - 9042
+        - 9160
+        volumes:
+        - ./graph/cassandra/data:/var/lib/cassandra
+        - ./graph/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml
+        command: bash -c 'if [ -z "$$(ls -A /var/lib/cassandra/)" ] ; then sleep 0; fi && /docker-entrypoint.sh cassandra -f'
+        # Cassandra ulimt recommended settings
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        networks:
+        - insight
+    janusgraph:
+        image: janusgraph:0.2.2-hadoop2
+        build:
+            dockerfile: Dockerfile
+            args:
+                version: 0.2.2
+                hadoop: hadoop2
+            context: graph/janus
+        container_name: janusgraph
+        #command: ["tail", "-f", "/dev/null"]
+        ports:
+        - "8182:8182"
+        - "9160:9160"
+        - "9042:9042"
+        expose:
+        - 9042
+        - 9160
+        command: bash -c '/app/init.sh && ./bin/gremlin-server.sh ./conf/gremlin-server/gremlin-server-configuration.yaml'
+        volumes:
+        - ./graph/janus/init.sh:/app/init.sh
+        - ./graph/janus/conf/gremlin-server/gremlin-server-configuration.yaml:/app/janusgraph-0.2.2-hadoop2/conf/gremlin-server/gremlin-server-configuration.yaml
+        - ./graph/janus/conf/gremlin-server/scripts/startup.groovy:/app/janusgraph-0.2.2-hadoop2/scripts/startup.groovy
+        - ./graph/janus/conf/janusgraph.properties:/app/janusgraph-0.2.2-hadoop2/conf/janusgraph.properties
+        networks:
+        - insight
+    #insight
+    insight-mongodb:
+        image: mongo:4.0.2
+        volumes:
+        - ./mongodb/data:/data/db/
+        ports:
+        - "27017:27017"
+        networks:
+        - insight
+networks:
+    insight:
+        driver: bridge

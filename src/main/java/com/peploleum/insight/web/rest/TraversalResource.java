@@ -110,4 +110,25 @@ public class TraversalResource {
         return ResponseEntity.created(new URI("/api/graph/traversal/mock/properties"))
             .body(properties);
     }
+
+    @GetMapping("/traversal/vertices/{id}")
+    public ResponseEntity<List<NodeDTO>> getAllUnlinkedVertices(@PathVariable String id) throws URISyntaxException {
+        log.info("REST request to get properties for : {}", id);
+        Set<NodeDTO> setUnlinkedVertices = new HashSet<>();
+        setUnlinkedVertices.addAll(this.traversalService.getAllUnlinkedVertices(id));
+        return ResponseEntity.created(new URI("/api/traversal/vertices/{id}"))
+            .body(setUnlinkedVertices.stream().collect(Collectors.toList()));
+    }
+
+    @GetMapping("/traversal/biographics/{id}/{prop}")
+    public ResponseEntity<List<NodeDTO>>getNeighborsByProperty(@PathVariable String id, @PathVariable String prop) throws URISyntaxException {
+        final NodeDTO sourceNode = new NodeDTO();
+        sourceNode.setId(id);
+        sourceNode.setLabel("source");
+        sourceNode.setType("source");
+        log.debug("REST request to get the rawdataURLs link to this biographics : {}", sourceNode);
+        final List<NodeDTO> neighbors = this.traversalService.getNeighborsByProperty(sourceNode);
+        return ResponseEntity.created(new URI("/api/traversal/biographics/{id}"))
+            .body(neighbors);
+    }
 }

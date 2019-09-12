@@ -124,4 +124,38 @@ public class InsightGraphEntityRepositoryImpl implements InsightGraphEntityCusto
         }));
         return graphEntity;
     }
+
+    @Override
+    public InsightGraphEntity saveWithProperties(InsightGraphEntity entity) {
+        String propertiesString = "";
+        for (Map.Entry<String, String> props : entity.getProperties().entrySet()) {
+            if(props.getKey().equals("motclef")){
+                List<String> myList = new ArrayList<String>(Arrays.asList(props.getValue().split(" ")));
+                String stringListMotsClefs = "'"+String.join("\', \'",  myList)+"'";
+                propertiesString = propertiesString + ".property('"+props.getKey()+"', ["+stringListMotsClefs+"] as String[])";
+
+            } else if(props.getKey().equals("symbole")) {
+
+                if (props.getValue() != null) {
+                    propertiesString = propertiesString + ".property('"+props.getKey()+"', '"+props.getValue()+"')";
+                }
+            } else {
+                propertiesString = propertiesString + ".property('"+props.getKey()+"', '"+props.getValue()+"')";
+            }
+        }
+
+        final ResultSet resultSet = this.template.getGremlinClient().submit(
+            "g.addV(\'"+entity.getClass().getSimpleName()+"\')" +
+            ".property('entityType', '\""+entity.getEntityType()+"\"')" +
+            ".property('name', '"+entity.getName()+"')" +
+            ".property('idMongo', '"+entity.getIdMongo()+"')" +
+            ".property('_classname', '"+entity.getClass().getName()+"')" +
+            propertiesString);
+        resultSet.stream().forEach(result -> {
+            final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
+            final String graphId = resultObject.get("id").toString();
+            entity.setGraphId(Long.valueOf(graphId));
+        });
+        return entity;
+    }
 }

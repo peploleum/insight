@@ -14,4 +14,7 @@ public interface InsightGraphEntityCustomRepository {
     public InsightGraphEntity findOne(Long id);
 
     List<InsightGraphEntity> findAllInOutVerticesByCriteria(Long id, CriteriaDTO criteria);
+
+
+    InsightGraphEntity saveWithProperties(InsightGraphEntity entity);
 }

@@ -107,6 +107,43 @@ public class TraversalServiceImpl implements TraversalService {
     }
 
     @Override
+    public List<NodeDTO> getNeighborsByProperty(NodeDTO node) {
+        final List<NodeDTO> nodeList = new ArrayList<>();
+        final String id = node.getId();
+        this.log.info("searching by GraphId: " + id + " and traversing outgoing edges to get neighbors");
+        // final String neighborSuffix = ".outE().limit(50).inV().toList()";
+        final String neighborSuffix = ".outE().inV().toList()";
+        final ResultSet neighborResultSet = this.template.getGremlinClient().submit("g.V(" + id + ")" + neighborSuffix);
+        this.log.info("Parsing neighbors");
+        neighborResultSet.stream().forEach(result -> {
+            this.log.info("------------");
+            final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
+            resultObject.keySet().stream().forEach((key -> {
+                this.log.info(key + " - " + resultObject.get(key).toString());
+            }));
+            final NodeDTO neighbor = new NodeDTO();
+
+            final String graphId = resultObject.get("id").toString();
+            final String idMongo = smartOpenProperties(resultObject, "idMongo");
+            final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
+            final String symbole = smartOpenProperties(resultObject, "symbole");
+            final String name = smartOpenProperties(resultObject, "name");
+
+            neighbor.setType(type);
+            neighbor.setId(graphId);
+            neighbor.setIdMongo(idMongo);
+            neighbor.setSymbole(symbole);
+            neighbor.setLabel(name);
+
+            nodeList.add(neighbor);
+            this.log.info("adding node: " + neighbor.toString());
+        });
+        return nodeList;
+    }
+
+
+
+    @Override
     public GraphStructureNodeDTO getGraph(NodeDTO node, int levelOrder) {
 
        /* final List<NodeDTO> nodeList = new ArrayList<>();
@@ -225,6 +262,39 @@ public class TraversalServiceImpl implements TraversalService {
             }
         }
         return null;
+    }
+
+    public List<NodeDTO> getAllUnlinkedVertices(String relationName) {
+        this.log.info("Searching unlinked: " + relationName + " vertices");
+        final List<NodeDTO> nodeList = new ArrayList<>();
+        final ResultSet unlinkedVerticesSet = this.template.getGremlinClient().submit("g.V().not(inE())");
+        this.log.info("Parsing vertices");
+        unlinkedVerticesSet.stream().forEach(result -> {
+            this.log.info("-------------");
+            final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
+            resultObject.keySet().stream().forEach((key -> {
+                this.log.info(key + " - " + resultObject.get(key).toString());
+            }));
+            final NodeDTO neighbor = new NodeDTO();
+
+            final String graphId = resultObject.get("id").toString();
+            final String idMongo = smartOpenProperties(resultObject, "idMongo");
+            final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
+            final String symbole = smartOpenProperties(resultObject, "symbole");
+            final String name = smartOpenProperties(resultObject, "name");
+
+            neighbor.setType(type);
+            neighbor.setId(graphId);
+            neighbor.setIdMongo(idMongo);
+            neighbor.setSymbole(symbole);
+            neighbor.setLabel(name);
+            if (type.equals("rawdata")){
+                nodeList.add(neighbor);
+            }
+
+            this.log.info("adding node: " + neighbor.toString());
+        });
+        return nodeList;
     }
 
     public static List<NodeDTO> generateNeighbors() {
