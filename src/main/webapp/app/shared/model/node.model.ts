@@ -26,7 +26,8 @@ export class GraphyNodeDTO implements IGraphyNodeDTO {
         public title?: string,
         to?: IGraphyRelationDTO[],
         public symbole?: string
-    ) {}
+    ) //public properties?: List
+    {}
 }
 
 /**

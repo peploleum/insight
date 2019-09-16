@@ -14,7 +14,7 @@ import { BiographicsService } from '../entities/biographics/biographics.service'
 import { IRawData } from '../shared/model/raw-data.model';
 import { addNodes } from '../shared/util/network.util';
 import { Edge, IdType } from 'vis';
-import { GraphDataCollection } from '../shared/model/node.model';
+import { GraphDataCollection, NodeDTO } from '../shared/model/node.model';
 import { catchError } from 'rxjs/internal/operators';
 
 @Component({
@@ -198,19 +198,20 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     generateTESSCO(data: IBiographics[]) {
         for (let i = 0; i < data.length; i++) {
             var externalId = data[i].externalId;
-            this.analyticsService
-                .search({
-                    page: this.page - 1,
-                    query: this.currentSearch,
-                    size: this.itemsPerPage,
-                    sort: this.sort()
-                })
-                .subscribe(
-                    (res: HttpResponse<IBiographics[]>) => this.paginateBiographics(res.body, res.headers),
-
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
+            console.log('externalId des bio : ' + externalId);
+            this.analyticsService.getGraphData(externalId).subscribe(
+                (data: GraphDataCollection) => {
+                    this.addNodes(data.nodes, data.edges);
+                },
+                error => {
+                    console.log('[NETWORK] Error lors de la récupération des voisins.');
+                }
+            );
         }
+    }
+
+    addNodes(nodes: NodeDTO[], edges: Edge[]) {
+        console.log(nodes);
     }
 
     protected onError(errorMessage: string) {
