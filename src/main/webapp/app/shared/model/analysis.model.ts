@@ -12,8 +12,9 @@ export class AnalysisState {
 }
 
 export interface IScoreDTO {
+    //TODO AJOUTER EXTERNAL_ID
     scorePoints?: string;
-    scoreListMotClefs?: List<String>;
+    scoreListMotsClefs?: string[];
     scoreImageHit?: string;
     scoreFrequence?: string;
 }
@@ -21,7 +22,7 @@ export interface IScoreDTO {
 export class ScoreDTO implements IScoreDTO {
     constructor(
         public scorePoints?: string,
-        public scoreListMotClefs?: List<String>,
+        public scoreListMotsClefs?: string[],
         public scoreImageHit?: string,
         public scoreFrequence?: string
     ) {}

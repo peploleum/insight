@@ -16,6 +16,7 @@ import { addNodes } from '../shared/util/network.util';
 import { Edge, IdType } from 'vis';
 import { GraphDataCollection, NodeDTO } from '../shared/model/node.model';
 import { catchError } from 'rxjs/internal/operators';
+import { IScoreDTO, ScoreDTO } from '../shared/model/analysis.model';
 
 @Component({
     selector: 'ins-analytics',
@@ -25,7 +26,7 @@ import { catchError } from 'rxjs/internal/operators';
 export class AnalyticsComponent implements OnInit, OnDestroy {
     currentAccount: any;
     biographics: IBiographics[];
-    rawData: IRawData[];
+    score: IScoreDTO[];
     error: any;
     success: any;
     eventSubscriber: Subscription;
@@ -180,12 +181,12 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    protected paginateRawData(data: IRawData[], headers: HttpHeaders) {
-        this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.queryCount = this.totalItems;
-        this.rawData = data;
-    }
+    // protected paginateRawData(data: IRawData[], headers: HttpHeaders) {
+    //     this.links = this.parseLinks.parse(headers.get('link'));
+    //     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
+    //     this.queryCount = this.totalItems;
+    //     this.rawData = data;
+    // }
 
     protected paginateBiographics(data: IBiographics[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
@@ -200,8 +201,8 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             var externalId = data[i].externalId;
             console.log('externalId des bio : ' + externalId);
             this.analyticsService.getGraphData(externalId).subscribe(
-                (data: GraphDataCollection) => {
-                    this.addNodes(data.nodes, data.edges);
+                (data: ScoreDTO[]) => {
+                    this.addNodes(data);
                 },
                 error => {
                     console.log('[NETWORK] Error lors de la récupération des voisins.');
@@ -210,8 +211,10 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         }
     }
 
-    addNodes(nodes: NodeDTO[], edges: Edge[]) {
-        console.log(nodes);
+    addNodes(score: ScoreDTO[]) {
+        console.log('ScoreDTO ->');
+        console.log(score);
+        this.score = score;
     }
 
     protected onError(errorMessage: string) {

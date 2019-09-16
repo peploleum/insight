@@ -84,11 +84,11 @@
     </div>
 
 
-    <div class="d-inline-block table-responsive col-md-6" *ngIf="rawData">
+    <div class="d-inline-block table-responsive col-md-6" *ngIf="score">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-                <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="scorepoint"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="rawDataName"><span jhiTranslate="insightApp.rawData.rawDataName">Raw Data Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="rawDataType"><span jhiTranslate="insightApp.rawData.rawDataType">Raw Data Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="rawDataSubType"><span jhiTranslate="insightApp.rawData.rawDataSubType">Raw Data Sub Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>

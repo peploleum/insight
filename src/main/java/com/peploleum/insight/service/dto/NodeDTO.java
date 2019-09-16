@@ -1,5 +1,7 @@
 package com.peploleum.insight.service.dto;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -11,9 +13,18 @@ public class NodeDTO {
     private String label;
     private String type;
     private String symbole;
+    private HashMap<String, Object> properties;
 
     public String getId() {
         return id;
+    }
+
+    public HashMap<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(HashMap<String, Object> properties) {
+        this.properties = properties;
     }
 
     public void setId(String id) {

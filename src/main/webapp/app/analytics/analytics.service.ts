@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { DEBUG_INFO_ENABLED, SERVER_API_URL } from 'app/app.constants';
+import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IBiographics } from 'app/shared/model/biographics.model';
-import { IRawData, RawData } from '../shared/model/raw-data.model';
+import { RawData } from '../shared/model/raw-data.model';
 import { IdType } from 'vis';
-import { EdgeDTO, GraphDataCollection, IGraphyNodeDTO, IGraphyRelationDTO } from '../shared/model/node.model';
+import { IGraphyNodeDTO } from '../shared/model/node.model';
 import { NetworkService } from '../network/network.service';
-import { catchError, map } from 'rxjs/internal/operators';
+import { map } from 'rxjs/internal/operators';
 import { ScoreDTO } from '../shared/model/analysis.model';
-import List = Mocha.reporters.List;
+//import List = java.util.List;
 
 type EntityResponseType = HttpResponse<IBiographics>;
 type EntityArrayResponseType = HttpResponse<IBiographics[]>;
@@ -71,7 +71,8 @@ export class AnalyticsService {
     //         });
     //
     // }
-    getGraphData(janusIdOrigin: IdType, applyFilter = true): Observable<GraphDataCollection> {
+
+    getGraphData(janusIdOrigin: IdType, applyFilter = true): Observable<ScoreDTO[]> {
         const headers = new HttpHeaders();
         const url = 'traversal/';
         console.log('url de recherche : ' + `${this._resourceUrl}` + url + `${janusIdOrigin}`);
@@ -79,22 +80,19 @@ export class AnalyticsService {
             map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                 const body: IGraphyNodeDTO[] = res.body; // vrai noeud avec les props
                 console.log(body);
-                const data = new GraphDataCollection([], []); //TODO remplacer par scoreDTO !!
-                //const data: IRawData[] = body.map((item: IGraphyNodeDTO) => {
-                data.nodes = body.map((item: IGraphyNodeDTO) => {
-                    //mets les props dans le model, les props peuvent ne pas exister.
-                    if (applyFilter) {
+
+                let data: ScoreDTO[]; //TODO remplacer par scoreDTO !!
+
+                data = body.map((item: IGraphyNodeDTO) => {
+                    if (item.type.toString() === 'RawData') {
                         return AnalyticsService.getScoreDTO(
-                            item.points,
-                            item.listMotClefs,
-                            item.imageHit,
-                            item.frequence
-                            // this.isHidden(item.type).hidden,
-                            // this.isHidden(item.type).physics
+                            item.properties.points as string,
+                            item.properties.listMotsClefs as string[],
+                            item.properties.imageHit as string,
+                            item.properties.frequence as string
                         );
                     } else {
-                        return NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole);
-                        return AnalyticsService.getScoreDTO();
+                        return null;
                     }
                 });
                 /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
@@ -104,6 +102,40 @@ export class AnalyticsService {
             })
         );
     }
+
+    // item.properties.points,
+    // item.properties.listMotsClefs,
+    // item.properties.imageHit,
+    // item.properties.frequence
+
+    // getGraphData(janusIdOrigin: IdType, applyFilter = true): Observable<GraphDataCollection> {
+    //     const headers = new HttpHeaders();
+    //     const url = 'traversal/';
+    //     return this.http.get(`${this._resourceUrl}` + url + `${janusIdOrigin}`, { headers, observe: 'response' }).pipe(
+    //         map((res: HttpResponse<IGraphyNodeDTO[]>) => {
+    //             const body: IGraphyNodeDTO[] = res.body;
+    //             const data = new GraphDataCollection([], []);
+    //             data.nodes = body.map((item: IGraphyNodeDTO) => {
+    //                 if (applyFilter) {
+    //                     return NetworkService.getNodeDto(
+    //                         item.label,
+    //                         item.type,
+    //                         item.id,
+    //                         item.idMongo,
+    //                         '',
+    //                         item.symbole,
+    //                     );
+    //                 } else {
+    //                     return NetworkService.getNodeDto(item.label, item.type, item.id, item.idMongo, '', item.symbole);
+    //                 }
+    //             });
+    //             /** Ajoute directement au voisin du Node Origin pour le moment (utiliser getEdgeCollection
+    //              *  lorsque les relations seront ajoutées au IGraphyNodeDTO depuis le serveur */
+    //             data.edges = NetworkService.getDirectNeighboursEdgeCollection(janusIdOrigin, data.nodes);
+    //             return data;
+    //         })
+    //     );
+    // }
 
     public static getRawDataDTO(
         label: string,
@@ -127,10 +159,10 @@ export class AnalyticsService {
 
     public static getScoreDTO(
         scorePoints?: string,
-        scoreListMotClefs?: List<String>,
+        scoreListMotsClefs?: string[],
         scoreImageHit?: string,
         scoreFrequence?: string
     ): ScoreDTO {
-        return new ScoreDTO();
+        return new ScoreDTO(scorePoints, scoreListMotsClefs, scoreImageHit, scoreFrequence);
     }
 }

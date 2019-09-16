@@ -1,4 +1,6 @@
 import { DataSet, Edge, IdType, Node } from 'vis';
+import { Map } from 'openlayers';
+
 export interface IGraphyNodeDTO {
     id?: string;
     idMongo?: string;
@@ -7,6 +9,7 @@ export interface IGraphyNodeDTO {
     title?: string;
     to?: IGraphyRelationDTO[];
     symbole?: string;
+    properties?: Record<string, string | string[]>;
 }
 
 /**
@@ -25,9 +28,9 @@ export class GraphyNodeDTO implements IGraphyNodeDTO {
         public type?: string,
         public title?: string,
         to?: IGraphyRelationDTO[],
-        public symbole?: string
-    ) //public properties?: List
-    {}
+        public symbole?: string,
+        public properties?: Record<string, string | string[]>
+    ) {}
 }
 
 /**

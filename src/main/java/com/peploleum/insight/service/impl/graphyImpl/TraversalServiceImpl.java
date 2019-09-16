@@ -68,12 +68,24 @@ public class TraversalServiceImpl implements TraversalService {
             final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
             final String symbole = smartOpenProperties(resultObject, "symbole");
             final String name = smartOpenProperties(resultObject, "name");
-
+            if(type.equals("RawData")) {
+                final ArrayList<String> listMotsClefs = getMapMotClef(resultObject);
+                final String imageHit = smartOpenProperties(resultObject, "imageHit");
+                final String frequence = smartOpenProperties(resultObject, "frequence");
+                final String points = smartOpenProperties(resultObject, "points");
+                HashMap<String, Object> properties = new HashMap<>();
+                properties.put("imageHit", imageHit);
+                properties.put("frequence", frequence);
+                properties.put("points", points);
+                properties.put("listMotsClefs", listMotsClefs);
+                neighbor.setProperties(properties);
+            }
             neighbor.setType(type);
             neighbor.setId(graphId);
             neighbor.setIdMongo(idMongo);
             neighbor.setSymbole(symbole);
             neighbor.setLabel(name);
+
 
             nodeList.add(neighbor);
             this.log.info("adding node: " + neighbor.toString());
@@ -108,37 +120,7 @@ public class TraversalServiceImpl implements TraversalService {
 
     @Override
     public List<NodeDTO> getNeighborsByProperty(NodeDTO node) {
-        final List<NodeDTO> nodeList = new ArrayList<>();
-        final String id = node.getId();
-        this.log.info("searching by GraphId: " + id + " and traversing outgoing edges to get neighbors");
-        // final String neighborSuffix = ".outE().limit(50).inV().toList()";
-        final String neighborSuffix = ".outE().inV().toList()";
-        final ResultSet neighborResultSet = this.template.getGremlinClient().submit("g.V(" + id + ")" + neighborSuffix);
-        this.log.info("Parsing neighbors");
-        neighborResultSet.stream().forEach(result -> {
-            this.log.info("------------");
-            final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
-            resultObject.keySet().stream().forEach((key -> {
-                this.log.info(key + " - " + resultObject.get(key).toString());
-            }));
-            final NodeDTO neighbor = new NodeDTO();
-
-            final String graphId = resultObject.get("id").toString();
-            final String idMongo = smartOpenProperties(resultObject, "idMongo");
-            final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
-            final String symbole = smartOpenProperties(resultObject, "symbole");
-            final String name = smartOpenProperties(resultObject, "name");
-
-            neighbor.setType(type);
-            neighbor.setId(graphId);
-            neighbor.setIdMongo(idMongo);
-            neighbor.setSymbole(symbole);
-            neighbor.setLabel(name);
-
-            nodeList.add(neighbor);
-            this.log.info("adding node: " + neighbor.toString());
-        });
-        return nodeList;
+        return null;
     }
 
 
@@ -256,8 +238,22 @@ public class TraversalServiceImpl implements TraversalService {
             if (prop != null) {
                 final LinkedHashMap propertyList = (LinkedHashMap) ((ArrayList) prop).get(0);
                 if (propertyList != null) {
-                    final String value = propertyList.get("value").toString();
-                    return value;
+                    return propertyList.get("value").toString();
+                }
+            }
+        }
+        return null;
+    }
+
+    private ArrayList<String> getMapMotClef(LinkedHashMap object){
+
+        final LinkedHashMap properties = (LinkedHashMap) object.get("properties");
+        if (properties != null) {
+            final Object linkedHashMapMotsclefs = properties.get("motclef");
+            if (linkedHashMapMotsclefs != null) {
+                final LinkedHashMap propertyList = (LinkedHashMap) ((ArrayList) linkedHashMapMotsclefs).get(0);
+                if (propertyList != null) {
+                    return (ArrayList<String>) propertyList.get("value");
                 }
             }
         }
