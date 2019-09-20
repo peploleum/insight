@@ -10,7 +10,7 @@ import { IdType } from 'vis';
 import { IGraphyNodeDTO } from '../shared/model/node.model';
 import { NetworkService } from '../network/network.service';
 import { map } from 'rxjs/internal/operators';
-import { ScoreDTO } from '../shared/model/analysis.model';
+import { DictionaryDTO, ScoreDTO } from '../shared/model/analytics.model';
 
 type EntityResponseType = HttpResponse<IBiographics>;
 type EntityArrayResponseType = HttpResponse<IBiographics[]>;
@@ -20,6 +20,7 @@ export class AnalyticsService {
     public resourceUrl = SERVER_API_URL + 'api/biographics';
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/biographics';
     private _resourceUrl = SERVER_API_URL + 'api/graph/';
+    private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
 
     constructor(protected http: HttpClient) {}
 
@@ -53,6 +54,16 @@ export class AnalyticsService {
         const options = createRequestOption(req);
         return this.http.get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
         // effectue un get sur this.resourceSearchUrl avec des arguments
+    }
+
+    postFile(fileToUpload: File): Observable<EntityResponseType> {
+        const headers = new HttpHeaders();
+
+        let dico = new DictionaryDTO();
+        fileToUpload;
+
+        console.log(fileToUpload);
+        return this.http.post(this._ressourceDictionaryUrl, dico, { headers: headers, observe: 'response' });
     }
 
     public static getScoreDTO(

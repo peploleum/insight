@@ -28,3 +28,30 @@ export class ScoreDTO implements IScoreDTO {
         public scoreFrequence?: string
     ) {}
 }
+
+export interface IDictionaryDTO {
+    id?: string;
+    themeDTOList?: ThemeDTO[];
+}
+
+export class DictionaryDTO implements IDictionaryDTO {
+    constructor(public id?: string, public themeDTOList?: ThemeDTO[]) {}
+}
+
+export interface IThemeDTO {
+    name?: string;
+    motclefDTOList?: MotclefDTO[];
+}
+
+export class ThemeDTO implements IThemeDTO {
+    constructor(public name?: string, public motclefDTOList?: MotclefDTO[]) {}
+}
+
+export interface IMotclefDTO {
+    clef?: string;
+    pond?: string;
+}
+
+export class MotclefDTO implements IMotclefDTO {
+    constructor(public clef?: string, public pond?: string) {}
+}

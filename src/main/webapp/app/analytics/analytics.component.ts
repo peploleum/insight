@@ -16,7 +16,7 @@ import { addNodes } from '../shared/util/network.util';
 import { Edge, IdType } from 'vis';
 import { GraphDataCollection, NodeDTO } from '../shared/model/node.model';
 import { catchError } from 'rxjs/internal/operators';
-import { IScoreDTO, ScoreDTO } from '../shared/model/analysis.model';
+import { IScoreDTO, ScoreDTO } from '../shared/model/analytics.model';
 
 @Component({
     selector: 'ins-analytics',
@@ -40,6 +40,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    fileToUpload: File = null;
 
     constructor(
         protected biographicsService: BiographicsService,
@@ -91,6 +92,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<IBiographics[]>) => this.paginateBiographics(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+
         // récup liste des bios une fois remplie, pour chaque bio -> requete rawdata-url
 
         // this.analyticsService.getGraphData()
@@ -101,6 +103,24 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             this.previousPage = page;
             this.transition();
         }
+    }
+
+    handleFileInput(files: FileList) {
+        this.fileToUpload = files.item(0); // récupère qu'un fichier
+        console.log(this.fileToUpload);
+        this.uploadFileToActivity();
+    }
+
+    uploadFileToActivity() {
+        this.analyticsService.postFile(this.fileToUpload).subscribe(
+            data => {
+                console.log('bonjour');
+                console.log(data);
+            },
+            error => {
+                console.log(error);
+            }
+        );
     }
 
     transition() {

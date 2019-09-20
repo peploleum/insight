@@ -113,7 +113,7 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         entity.setIdMongo(idMongo);
         entity.setName(name);
         entity.setEntityType(type);
-        entity = this.insightGraphEntityRepository.saveWithProperties(entity); //saveWithProperties
+        entity = this.insightGraphEntityRepository.saveWithProperties(entity);
 
         this.log.info("Vertex " + type.toString() + " saved: " + entity.getGraphId());
         return entity.getGraphId();

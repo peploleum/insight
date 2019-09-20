@@ -5,7 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EntityMappingInfo, IKibanaDashboardGenerationParameters, KibanaDashboardReference } from 'app/dashboard/kibana-object.model';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
-import { AnalysisState } from '../shared/model/analysis.model';
+import { AnalysisState } from '../shared/model/analytics.model';
 import { Subscription } from 'rxjs/index';
 
 @Component({

@@ -9,7 +9,7 @@ import {
     KibanaDashboardReference
 } from './kibana-object.model';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AnalysisState } from '../shared/model/analysis.model';
+import { AnalysisState } from '../shared/model/analytics.model';
 
 type EntityResponseType = HttpResponse<KibanaDashboardReference[]>;
 

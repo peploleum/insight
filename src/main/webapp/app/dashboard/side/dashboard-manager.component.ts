@@ -3,7 +3,7 @@ import { EntityMappingInfo, IEntityMappingInfo, KibanaDashboardReference } from 
 import { JhiAlertService } from 'ng-jhipster';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { HttpResponse } from '@angular/common/http';
-import { AnalysisState } from '../../shared/model/analysis.model';
+import { AnalysisState } from '../../shared/model/analytics.model';
 import { Subscription } from 'rxjs/index';
 import { UUID } from '../../shared/util/insight-util';
 
