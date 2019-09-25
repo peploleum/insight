@@ -1,1 +1,15 @@
-{ "theme": { "name": "terrorisme", "motclef": [{ "clef": "allah akbar", "pond": "100" }] } }
+{
+    "theme": {
+        "name": "terrorisme",
+        "motclef": [
+            {
+                "clef": "allah akbar",
+                "pond": "100"
+            },
+            {
+                "clef": "allah akbar2",
+                "pond": "100"
+            }
+        ]
+    }
+}

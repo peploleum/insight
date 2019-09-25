@@ -3,6 +3,8 @@ package com.peploleum.insight.service;
 import com.peploleum.insight.domain.dictionary.Dictionary;
 import com.peploleum.insight.service.dto.DictionaryDTO;
 import com.peploleum.insight.service.dto.ThemeDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +15,6 @@ import java.util.Optional;
 public interface DictionaryService {
 
     void delete(String id);
-
-    List<Dictionary> findAll();
 
     /**
      * Save a dictionary.
@@ -31,7 +31,9 @@ public interface DictionaryService {
      */
     Optional<DictionaryDTO> findOne(String id);
 
-    Optional<String> findThemeNamePerMotclef(String motclef);
+    Page<DictionaryDTO> findAll(Pageable pageable);
+
+    Optional<String> findThemeNamePerMotclef(String motclef); // TODO findThemeNameByMotclef!
 
     Optional<String> findPonderation(String motclef);
 }

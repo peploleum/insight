@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
@@ -21,6 +21,7 @@ export class AnalyticsService {
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/biographics';
     private _resourceUrl = SERVER_API_URL + 'api/graph/';
     private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
+    JSONFileSelected: Subject<File> = new Subject();
 
     constructor(protected http: HttpClient) {}
 
@@ -58,11 +59,11 @@ export class AnalyticsService {
 
     postFile(fileToUpload: File): Observable<EntityResponseType> {
         const headers = new HttpHeaders();
-
+        const formData: FormData = new FormData();
+        formData.append('fileKey', fileToUpload, fileToUpload.name);
         let dico = new DictionaryDTO();
-        fileToUpload;
 
-        console.log(fileToUpload);
+        console.log(formData);
         return this.http.post(this._ressourceDictionaryUrl, dico, { headers: headers, observe: 'response' });
     }
 

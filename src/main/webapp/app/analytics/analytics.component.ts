@@ -105,8 +105,9 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         }
     }
 
+    // récupère que le 1er fichier
     handleFileInput(files: FileList) {
-        this.fileToUpload = files.item(0); // récupère qu'un fichier
+        this.fileToUpload = files.item(0);
         console.log(this.fileToUpload);
         this.uploadFileToActivity();
     }

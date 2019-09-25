@@ -3,21 +3,22 @@ package com.peploleum.insight.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.peploleum.insight.service.DictionaryService;
 import com.peploleum.insight.service.dto.DictionaryDTO;
-import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
-import com.peploleum.insight.web.rest.util.HeaderUtil;
+import com.peploleum.insight.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import java.util.List;
+
 
 /**
  * REST controller for managing Dictionary.
@@ -62,13 +63,28 @@ public class DictionaryResource {
             .body(dictionaryService.save(dictionaryDTO));
     }
 
-
     /**
-     * GET  /dictionary : get all the dictionary.
+     * GET  /dictionary : get all the dictionaries.
      *
      * @return the ResponseEntity with status 200 (OK) and the dictionary in body
      */
-    @GetMapping("/dictionary")
+    @GetMapping("/dictionaries")
+    @Timed
+    public ResponseEntity<List<DictionaryDTO>> getAllDictionaries(Pageable pageable) {
+        log.debug("REST request to get the dictionary");
+        Page<DictionaryDTO> page = dictionaryService.findAll(pageable);
+        //return ResponseUtil.wrapOrNotFound(dictionaryDTO);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/dictionaries");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * GET  /dictionary : get one dictionary.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the dictionary in body
+     */
+    @GetMapping("/dictionary/{id}")
     @Timed
     public ResponseEntity<DictionaryDTO> getDictionary(String id) {
         log.debug("REST request to get the dictionary");

@@ -6,9 +6,12 @@ import com.peploleum.insight.domain.dictionary.Theme;
 import com.peploleum.insight.repository.DictionaryRepository;
 import com.peploleum.insight.service.DictionaryService;
 import com.peploleum.insight.service.dto.DictionaryDTO;
+import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.service.mapper.DictionaryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -51,17 +54,19 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
 
+
     @Override
     public void delete(String id) {
         dictionaryRepository.deleteById(id);
     }
 
-
     @Override
-    public List<Dictionary> findAll() {
-        log.debug("Request to get all Dictionaries");
-        return dictionaryRepository.findAll();
+    public Page<DictionaryDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all RawData");
+        return dictionaryRepository.findAll(pageable)
+            .map(dictionaryMapper::toDto);
     }
+
 
 //    @Override
 //    public ThemeDTO findTheme(String name) {
