@@ -1,80 +1,62 @@
 <div>
-    <h2 >
-        <span>Analytics</span>
-        <!--<button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-raw-data" [routerLink]="['/raw-data/new']">-->
-            <!--<fa-icon [icon]="'plus'"></fa-icon>-->
-            <!--<span class="hidden-sm-down"  jhiTranslate="insightApp.rawData.home.createLabel">-->
-            <!--Create new Raw Data-->
-            <!--</span>-->
-        <!--</button>-->
-    </h2>
-</div>
+    <h2><span>Analytics</span></h2>
     <ins-alert></ins-alert>
     <div class="row">
         <div class="col-xs-6">
-            <form name="searchForm" class="form-inline">
-                <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'insightApp.rawData.home.search' | translate }}">
-                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
-                        <fa-icon [icon]="'search'"></fa-icon>
-                    </button>
-                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
-                        <fa-icon [icon]="'trash-alt'"></fa-icon>
-                    </button>
-                </div>
-            </form>
+            <ins-insight-search [targetEntity]="['Biographics']" [textFields]="['biographicsName']"
+                                [imageField]="'biographicsImage'"
+                                (selectionEmitter)="onDataSelected($event)"
+                                (resultEmitter)="onResultQueryReceived($event)"></ins-insight-search>
         </div>
     </div>
-    <br/>
 
-    <div class="d-inline-block table-responsive col-md-4" *ngIf="biographics">
+    <div class="d-inline-block table-responsive col-md-4" *ngIf="biographicsScores">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-                <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="biographicsFirstname"><span jhiTranslate="insightApp.biographics.biographicsFirstname">Candidate FirstName</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="biographicsName"><span jhiTranslate="insightApp.biographics.biographicsName">Candidate Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="biographicsAge"><span jhiTranslate="insightApp.biographics.biographicsAge">Candidate Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="biographicsGender"><span jhiTranslate="insightApp.biographics.biographicsGender">Candidate Gender</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="biographicsImage"><span jhiTranslate="insightApp.biographics.biographicsImage">Candidate Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <tr>
+                <th jhiSortBy="id"><span
+                    jhiTranslate="global.field.id">ID</span>
+                </th>
+                <th jhiSortBy="biographicsFirstname"><span
+                    jhiTranslate="insightApp.biographics.biographicsFirstname">Candidate FirstName</span>
+                </th>
+                <th jhiSortBy="biographicsName"><span
+                    jhiTranslate="insightApp.biographics.biographicsName">Candidate Name</span>
+                </th>
+                <th jhiSortBy="biographicsAge"><span
+                    jhiTranslate="insightApp.biographics.biographicsAge">Candidate Age</span>
+                </th>
+                <th jhiSortBy="biographicsGender"><span
+                    jhiTranslate="insightApp.biographics.biographicsGender">Candidate Gender</span>
+                </th>
+                <th><span>Terrorisme</span></th>
+                <th><span>Espionnage</span></th>
+                <th><span>Sabotage</span></th>
+                <th><span>Subversion</span></th>
+                <th><span>Crime organisé</span></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let biographics of biographics ;trackBy: trackId">
-                <td><a [routerLink]="['/biographics', biographics.id, 'view' ]">{{biographics.id}}</a></td>
-                <td>{{biographics.biographicsFirstname}}</td>
-                <td>{{biographics.biographicsName}}</td>
-                <td>{{biographics.biographicsAge}}</td>
-                <td jhiTranslate="{{'insightApp.Gender.' + biographics.biographicsGender}}">{{biographics.biographicsGender}}</td>
-                <td>
-                    <a *ngIf="biographics.biographicsImage" (click)="openFile(biographics.biographicsImageContentType, biographics.biographicsImage)">
-                        <img [src]="'data:' + biographics.biographicsImageContentType + ';base64,' + biographics.biographicsImage" style="max-height: 30px;" alt="biographics image"/>
-                    </a>
-                    <span *ngIf="biographics.biographicsImage">{{biographics.biographicsImageContentType}}, {{byteSize(biographics.biographicsImage)}}</span>
-                </td>
+            <tr *ngFor="let bio of biographicsScores;">
+                <td><a [routerLink]="['/biographics', bio.biographic.id, 'view' ]">{{bio.biographic.id}}</a></td>
+                <td>{{bio.biographic.biographicsFirstname}}</td>
+                <td>{{bio.biographic.biographicsName}}</td>
+                <td>{{bio.biographic.biographicsAge}}</td>
+                <td>{{bio.biographic.biographicsGender}}</td>
+                <td><span><fa-icon [icon]="hasHitOnTheme(bio.hits, 'TER')?'check':'minus'"></fa-icon></span></td>
+                <td><span><fa-icon [icon]="hasHitOnTheme(bio.hits, 'ESP')?'check':'minus'"></fa-icon></span></td>
+                <td><span><fa-icon [icon]="hasHitOnTheme(bio.hits, 'SAB')?'check':'minus'"></fa-icon></span></td>
+                <td><span><fa-icon [icon]="hasHitOnTheme(bio.hits, 'SUB')?'check':'minus'"></fa-icon></span></td>
+                <td><span><fa-icon [icon]="hasHitOnTheme(bio.hits, 'CRO')?'check':'minus'"></fa-icon></span></td>
 
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['/biographics', biographics.id, 'view' ]"
+                                [routerLink]="['/biographics', bio.biographic.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/biographics', biographics.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'biographics/'+ biographics.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
                     </div>
                 </td>
@@ -84,82 +66,10 @@
     </div>
 
 
-    <div class="d-inline-block table-responsive col-md-6" *ngIf="score">
-        <table class="table table-striped">
-            <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-                <th jhiSortBy="scorepoint"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="rawDataName"><span jhiTranslate="insightApp.rawData.rawDataName">Raw Data Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="rawDataType"><span jhiTranslate="insightApp.rawData.rawDataType">Raw Data Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <th jhiSortBy="rawDataSubType"><span jhiTranslate="insightApp.rawData.rawDataSubType">Raw Data Sub Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <!--<th jhiSortBy="rawDataSourceName"><span jhiTranslate="insightApp.rawData.rawDataSourceName">Raw Data Source Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <!--<th jhiSortBy="rawDataSourceUri"><span jhiTranslate="insightApp.rawData.rawDataSourceUri">Raw Data Source Uri</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <!--<th jhiSortBy="rawDataSourceType"><span jhiTranslate="insightApp.rawData.rawDataSourceType">Raw Data Source Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <th jhiSortBy="rawDataContent"><span jhiTranslate="insightApp.rawData.rawDataContent">Raw Data Content</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <!--<th jhiSortBy="rawDataCreationDate"><span jhiTranslate="insightApp.rawData.rawDataCreationDate">Raw Data Creation Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <!--<th jhiSortBy="rawDataExtractedDate"><span jhiTranslate="insightApp.rawData.rawDataExtractedDate">Raw Data Extracted Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <!--<th jhiSortBy="rawDataSymbol"><span jhiTranslate="insightApp.rawData.rawDataSymbol">Raw Data Symbol</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <th jhiSortBy="rawDataData"><span jhiTranslate="insightApp.rawData.rawDataData">Raw Data Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-                <!--<th jhiSortBy="rawDataCoordinates"><span jhiTranslate="insightApp.rawData.rawDataCoordinates">Raw Data Coordinates</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <!--<th jhiSortBy="rawDataAnnotations"><span jhiTranslate="insightApp.rawData.rawDataAnnotations">Raw Data Annotations</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
-                <th jhiSortBy="externalId"><span jhiTranslate="insightApp.rawData.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let rawData of rawData ;trackBy: trackId">
-                <td><a [routerLink]="['/raw-data', rawData.id, 'view' ]">{{rawData.id}}</a></td>
-                <td>{{rawData.rawDataName}}</td>
-                <td>{{rawData.rawDataType}}</td>
-                <td>{{rawData.rawDataSubType}}</td>
-                <td>{{rawData.rawDataSourceName}}</td>
-                <td>{{rawData.rawDataSourceUri}}</td>
-                <td>{{rawData.rawDataSourceType}}</td>
-                <td>{{rawData.rawDataContent}}</td>
-                <td>{{rawData.rawDataCreationDate | date:'medium'}}</td>
-                <td>{{rawData.rawDataExtractedDate | date:'medium'}}</td>
-                <td>{{rawData.rawDataSymbol}}</td>
-                <td>
-                    <a *ngIf="rawData.rawDataData" (click)="openFile(rawData.rawDataDataContentType, rawData.rawDataData)" jhiTranslate="entity.action.open">open</a>
-                    <span *ngIf="rawData.rawDataData">{{rawData.rawDataDataContentType}}, {{byteSize(rawData.rawDataData)}}</span>
-                </td>
-                <td>{{rawData.rawDataCoordinates}}</td>
-                <td>{{rawData.rawDataAnnotations}}</td>
-                <td>{{rawData.externalId}}</td>
-                <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                [routerLink]="['/profile', rawData.id, 'view' ]"
-                                class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/profile', rawData.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'profile/'+ rawData.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="form-group">
+        <label for="file">Choose File</label>
+        <input type="file"
+               id="file"
+               (change)="handleFileInput($event.target.files)">
     </div>
-<div class="form-group">
-    <label for="file">Choose File</label>
-    <input type="file"
-           id="file"
-           (change)="handleFileInput($event.target.files)">
-    <input type="submit" value="Submit">
 </div>
-

@@ -5,7 +5,7 @@ import { JhiDataUtils } from 'ng-jhipster';
 import { IRawData } from 'app/shared/model/raw-data.model';
 
 @Component({
-    selector: 'reach-analitics-detail',
+    selector: 'ins-analytics-detail',
     templateUrl: './analytics-detail.component.html'
 })
 export class AnalyticsDetailComponent implements OnInit {
@@ -26,6 +26,7 @@ export class AnalyticsDetailComponent implements OnInit {
     openFile(contentType, field) {
         return this.dataUtils.openFile(contentType, field);
     }
+
     previousState() {
         window.history.back();
     }

@@ -1,8 +1,5 @@
-import { Moment } from 'moment';
-import List = Mocha.reporters.List;
-/**
- * Created by gFolgoas on 07/02/2019.
- */
+import { IBiographics } from 'app/shared/model/biographics.model';
+
 export class AnalysisState {
     isEditing: boolean;
 
@@ -11,10 +8,23 @@ export class AnalysisState {
     }
 }
 
+export type Theme = 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
+
+export interface IHitDTO {
+    theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
+    motsClefs: string[];
+}
+
+export interface BiographicsScoreDTO {
+    biographic?: IBiographics;
+    hits?: IHitDTO[];
+    scores?: IScoreDTO[];
+}
+
 export interface IScoreDTO {
     idBio?: string;
     scorePoints?: string;
-    scoreListMotsClefs?: string[];
+    scoreListMotsClefs?: { theme: Theme; motClef: string }[];
     scoreImageHit?: string;
     scoreFrequence?: string;
 }
@@ -23,7 +33,7 @@ export class ScoreDTO implements IScoreDTO {
     constructor(
         public idBio?: string,
         public scorePoints?: string,
-        public scoreListMotsClefs?: string[],
+        public scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         public scoreImageHit?: string,
         public scoreFrequence?: string
     ) {}

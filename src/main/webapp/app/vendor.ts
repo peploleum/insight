@@ -85,6 +85,7 @@ import {
     faUserPlus,
     faUsers,
     faUserSecret,
+    faUserTag,
     faWifi,
     faWindowMaximize,
     faWindowMinimize,
@@ -185,5 +186,6 @@ library.add(faToolbox);
 library.add(faUsers);
 library.add(faDatabase);
 library.add(faFilter);
+library.add(faUserTag);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

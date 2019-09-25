@@ -1,22 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
+import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 
 import { IBiographics } from 'app/shared/model/biographics.model';
-import { AccountService } from 'app/core';
-
-import { ITEMS_PER_PAGE } from 'app/shared';
 import { AnalyticsService } from './analytics.service';
-
-import { BiographicsService } from '../entities/biographics/biographics.service';
-import { IRawData } from '../shared/model/raw-data.model';
-import { addNodes } from '../shared/util/network.util';
-import { Edge, IdType } from 'vis';
-import { GraphDataCollection, NodeDTO } from '../shared/model/node.model';
-import { catchError } from 'rxjs/internal/operators';
-import { IScoreDTO, ScoreDTO } from '../shared/model/analytics.model';
+import { BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme } from '../shared/model/analytics.model';
+import { GenericModel } from 'app/shared/model/generic.model';
+import { BASE64URI } from 'app/shared/util/insight-util';
 
 @Component({
     selector: 'ins-analytics',
@@ -24,85 +14,71 @@ import { IScoreDTO, ScoreDTO } from '../shared/model/analytics.model';
     styles: [':host { width:100% }']
 })
 export class AnalyticsComponent implements OnInit, OnDestroy {
-    currentAccount: any;
+    biographicsScores: BiographicsScoreDTO[] = [];
     biographics: IBiographics[];
-    score: IScoreDTO[];
-    error: any;
-    success: any;
-    eventSubscriber: Subscription;
-    currentSearch: string;
-    routeData: any;
-    links: any;
-    totalItems: any;
-    queryCount: any;
-    itemsPerPage: any;
-    page: any;
-    predicate: any;
-    previousPage: any;
-    reverse: any;
+    selectedBiographic: IBiographics;
+
     fileToUpload: File = null;
 
     constructor(
-        protected biographicsService: BiographicsService,
         protected analyticsService: AnalyticsService,
-        protected parseLinks: JhiParseLinks,
         protected jhiAlertService: JhiAlertService,
-        protected accountService: AccountService,
         protected activatedRoute: ActivatedRoute,
         protected dataUtils: JhiDataUtils,
-        protected router: Router,
-        protected eventManager: JhiEventManager
-    ) {
-        this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe(data => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
-        });
-        this.currentSearch =
-            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
-                ? this.activatedRoute.snapshot.params['search']
-                : '';
+        protected router: Router
+    ) {}
+
+    ngOnInit() {}
+
+    ngOnDestroy() {}
+
+    onDataSelected(entity: GenericModel) {
+        this.selectedBiographic = entity as IBiographics;
     }
 
-    loadAll() {
-        if (this.currentSearch) {
-            this.analyticsService
-                .search({
-                    page: this.page - 1,
-                    query: this.currentSearch,
-                    size: this.itemsPerPage,
-                    sort: this.sort()
-                })
-                .subscribe(
-                    (res: HttpResponse<IBiographics[]>) => this.paginateBiographics(res.body, res.headers),
+    onResultQueryReceived(entities: GenericModel[]) {
+        this.biographics = entities as IBiographics[];
+        this.generateTESSCO(this.biographics);
+    }
 
-                    (res: HttpErrorResponse) => this.onError(res.message)
+    getBase64(content: string): string {
+        return BASE64URI(content);
+    }
+
+    generateTESSCO(bios: IBiographics[]) {
+        this.biographicsScores = [];
+        bios.forEach((b: IBiographics) => {
+            if (b.externalId) {
+                this.analyticsService.getScores(b.externalId).subscribe(
+                    (score: ScoreDTO[]) => {
+                        const hits = {};
+                        score.forEach(s => {
+                            s.scoreListMotsClefs.forEach((i: { theme: Theme; motClef: string }) => {
+                                if (hits.hasOwnProperty(i.theme)) {
+                                    (hits[i.theme] as string[]).push(i.motClef);
+                                } else {
+                                    hits[i.theme] = [i.motClef];
+                                }
+                            });
+                        });
+                        this.biographicsScores.push({
+                            biographic: b,
+                            hits: Object.keys(hits).map(k => {
+                                return { theme: k, motsClefs: hits[k] };
+                            }) as IHitDTO[],
+                            scores: score
+                        });
+                    },
+                    error => {
+                        console.log('[ANALYTICS] Error lors de la récupération des voisins.');
+                    }
                 );
-            return;
-        }
-        this.analyticsService
-            .query({
-                page: this.page - 1,
-                size: this.itemsPerPage,
-                sort: this.sort()
-            })
-            .subscribe(
-                (res: HttpResponse<IBiographics[]>) => this.paginateBiographics(res.body, res.headers),
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
-
-        // récup liste des bios une fois remplie, pour chaque bio -> requete rawdata-url
-
-        // this.analyticsService.getGraphData()
+            }
+        });
     }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
+    hasHitOnTheme(hits: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO'): boolean {
+        return !!hits.find(h => h.theme === theme);
     }
 
     // récupère que le 1er fichier
@@ -124,64 +100,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         );
     }
 
-    transition() {
-        this.router.navigate(['/biographics'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                search: this.currentSearch,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        });
-        this.loadAll();
-    }
-
-    clear() {
-        this.page = 0;
-        this.currentSearch = '';
-        this.router.navigate([
-            '/analytics',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
-    }
-
-    search(query) {
-        if (!query) {
-            return this.clear();
-        }
-        this.page = 0;
-        this.currentSearch = query;
-        this.router.navigate([
-            '/analytics',
-            {
-                search: this.currentSearch,
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
-    }
-
-    ngOnInit() {
-        this.loadAll();
-        this.accountService.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInAnalytics();
-    }
-
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    trackId(index: number, item: IBiographics) {
-        return item.id;
-    }
-
     byteSize(field) {
         return this.dataUtils.byteSize(field);
     }
@@ -190,75 +108,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         return this.dataUtils.openFile(contentType, field);
     }
 
-    registerChangeInAnalytics() {
-        this.eventSubscriber = this.eventManager.subscribe('analyticsListModification', response => this.loadAll());
-    }
-
-    sort() {
-        const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
-        if (this.predicate !== 'id') {
-            result.push('id');
-        }
-        return result;
-    }
-
-    // protected paginateRawData(data: IRawData[], headers: HttpHeaders) {
-    //     this.links = this.parseLinks.parse(headers.get('link'));
-    //     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-    //     this.queryCount = this.totalItems;
-    //     this.rawData = data;
-    // }
-
-    protected paginateBiographics(data: IBiographics[], headers: HttpHeaders) {
-        this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.queryCount = this.totalItems;
-        this.biographics = data;
-        this.generateTESSCO(data);
-    }
-
-    generateTESSCO(data: IBiographics[]) {
-        for (let i = 0; i < data.length; i++) {
-            var externalId = data[i].externalId;
-            console.log('externalId des bio : ' + externalId);
-            this.analyticsService.getGraphData(externalId).subscribe(
-                (data: ScoreDTO[]) => {
-                    this.addNodes(data);
-                },
-                error => {
-                    console.log('[NETWORK] Error lors de la récupération des voisins.');
-                }
-            );
-        }
-    }
-
-    addNodes(score: ScoreDTO[]) {
-        console.log('ScoreDTO ->');
-        console.log(score);
-        this.score = score;
-    }
-
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
-
-    // addNodes(nodes: Node[], edges: Edge[]) {
-    //     // this.network.storePositions();
-    //     // addNodes(this.networkData, nodes, edges);
-    //     // this.clusterNodes();
-    //     console.log("hello");
-    // }
-
-    // getNodesNeighbours(idOrigins: IdType[]) {
-    //     for (const i of idOrigins) {
-    //         this.analyticsService.getGraphData(i).subscribe(
-    //             (data: GraphDataCollection) => {
-    //                 this.addNodes(data.nodes, data.edges);
-    //             },
-    //             error => {
-    //                 console.log('[NETWORK] Error lors de la récupération des voisins.');
-    //             }
-    //         );
-    //     }
-    // }
 }
