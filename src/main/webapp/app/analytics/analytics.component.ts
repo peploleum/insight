@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {JhiAlertService, JhiDataUtils} from 'ng-jhipster';
 
-import { IBiographics } from 'app/shared/model/biographics.model';
-import { AnalyticsService } from './analytics.service';
-import { BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme } from '../shared/model/analytics.model';
-import { GenericModel } from 'app/shared/model/generic.model';
-import { BASE64URI } from 'app/shared/util/insight-util';
+import {IBiographics} from 'app/shared/model/biographics.model';
+import {AnalyticsService} from './analytics.service';
+import {BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme} from '../shared/model/analytics.model';
+import {GenericModel} from 'app/shared/model/generic.model';
+import {BASE64URI} from 'app/shared/util/insight-util';
+import {map} from 'rxjs/operators';
+import {HttpResponse} from '@angular/common/http';
+import {QuickViewService} from 'app/side/quick-view.service';
 
 @Component({
     selector: 'ins-analytics',
@@ -35,12 +38,16 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         protected jhiAlertService: JhiAlertService,
         protected activatedRoute: ActivatedRoute,
         protected dataUtils: JhiDataUtils,
-        protected router: Router
-    ) {}
+        protected router: Router,
+        private qv: QuickViewService
+    ) {
+    }
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     onDataSelected(entity: GenericModel) {
         this.selectedBiographic = entity as IBiographics;
@@ -48,16 +55,17 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
     onResultQueryReceived(entities: GenericModel[]) {
         this.biographics = entities as IBiographics[];
-        this.getScores(this.biographics);
+        this.getScores();
+        this.biographics.forEach(b => this.getBioImage(b.id));
     }
 
     getBase64(content: string): string {
         return BASE64URI(content);
     }
 
-    getScores(bios: IBiographics[]) {
+    getScores() {
         this.biographicsScores = [];
-        bios.forEach((b: IBiographics) => {
+        this.biographics.forEach((b: IBiographics) => {
             if (b.externalId) {
                 this.analyticsService.getScores(b.externalId).subscribe(
                     (score: ScoreDTO[]) => {
@@ -74,7 +82,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         this.biographicsScores.push({
                             biographic: b,
                             hits: Object.keys(hits).map(k => {
-                                return { theme: k, motsClefs: hits[k] };
+                                return {theme: k, motsClefs: hits[k]};
                             }) as IHitDTO[],
                             scores: score
                         });
@@ -87,7 +95,24 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             }
         });
     }
-    
+
+    getBioImage(bioIdMongo: string) {
+        this.qv
+            .find(bioIdMongo)
+            .pipe(
+                map((res: HttpResponse<GenericModel>) => res.body as IBiographics),
+                map((bio: IBiographics) => bio.biographicsImage)
+            )
+            .subscribe(image => {
+                if (image) {
+                    const bio = this.biographics.find(b => b.id === bioIdMongo);
+                    if (bio) {
+                        bio.biographicsImage = image;
+                    }
+                }
+            });
+    }
+
     handleFileInput(files: FileList) {
         this.fileToUpload = files.item(0);
         console.log(this.fileToUpload);

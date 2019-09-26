@@ -27,7 +27,7 @@ export class AnalyticsGridComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     getBase64(content: string): string {
-        return BASE64URI(content);
+        return BASE64URI(content, 'jpeg');
     }
 
     hasHitOnTheme(hits: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO'): boolean {

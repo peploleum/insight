@@ -1,4 +1,8 @@
 <div class="grid-container" *ngIf="biographicsScores">
     <div class="grid-cell" *ngFor="let bio of biographicsScores;">
+        <img *ngIf="bio.biographic.biographicsImage else noPhoto;" [src]="getBase64(bio.biographic.biographicsImage)"/>
     </div>
 </div>
+<ng-template #noPhoto>
+    <span>No Photo Available</span>
+</ng-template>
