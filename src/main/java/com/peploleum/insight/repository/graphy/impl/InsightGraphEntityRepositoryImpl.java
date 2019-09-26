@@ -127,20 +127,18 @@ public class InsightGraphEntityRepositoryImpl implements InsightGraphEntityCusto
 
     @Override
     public InsightGraphEntity saveWithProperties(InsightGraphEntity entity) {
-        String propertiesString = "";
+        StringBuilder propertiesString = new StringBuilder();
         for (Map.Entry<String, String> props : entity.getProperties().entrySet()) {
             if(props.getKey().equals("motclef")){
                 List<String> myList = new ArrayList<String>(Arrays.asList(props.getValue().split(" ")));
                 String stringListMotsClefs = "'"+String.join("\', \'",  myList)+"'";
-                propertiesString = propertiesString + ".property('"+props.getKey()+"', ["+stringListMotsClefs+"] as String[])";
-
+                propertiesString.append(".property('").append(props.getKey()).append("', [").append(stringListMotsClefs).append("] as String[])");
             } else if(props.getKey().equals("symbole")) {
-
                 if (props.getValue() != null) {
-                    propertiesString = propertiesString + ".property('"+props.getKey()+"', '"+props.getValue()+"')";
+                    propertiesString.append(".property('").append(props.getKey()).append("', '").append(props.getValue()).append("')");
                 }
             } else {
-                propertiesString = propertiesString + ".property('"+props.getKey()+"', '"+props.getValue()+"')";
+                propertiesString.append(".property('").append(props.getKey()).append("', '").append(props.getValue()).append("')");
             }
         }
 

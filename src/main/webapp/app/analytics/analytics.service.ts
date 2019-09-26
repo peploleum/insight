@@ -8,7 +8,6 @@ import { IBiographics } from 'app/shared/model/biographics.model';
 import { RawData } from '../shared/model/raw-data.model';
 import { IdType } from 'vis';
 import { IGraphyNodeDTO } from '../shared/model/node.model';
-import { NetworkService } from '../network/network.service';
 import { map } from 'rxjs/internal/operators';
 import { DictionaryDTO, ScoreDTO } from '../shared/model/analytics.model';
 
@@ -21,7 +20,6 @@ export class AnalyticsService {
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/biographics';
     private _resourceUrl = SERVER_API_URL + 'api/graph/';
     private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
-    JSONFileSelected: Subject<File> = new Subject();
 
     constructor(protected http: HttpClient) {}
 

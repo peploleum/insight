@@ -5,7 +5,7 @@ import java.util.List;
 public class ScoreDTO {
     private int points;
 
-    private List<String> listMotClefs;
+    private List<String> listThemeMotclefHit;
     private int imageHit;
     private int frequence;
 
@@ -17,12 +17,12 @@ public class ScoreDTO {
         this.points = points;
     }
 
-    public List<String> getListMotClefs() {
-        return listMotClefs;
+    public List<String> getlistThemeMotclefHit() {
+        return listThemeMotclefHit;
     }
 
-    public void setListMotClefs(List<String> listMotClefs) {
-        this.listMotClefs = listMotClefs;
+    public void setlistThemeMotclefHit(List<String> listMotClefs) {
+        this.listThemeMotclefHit = listMotClefs;
     }
 
     public int getImageHit() {

@@ -82,7 +82,6 @@ public class RawDataServiceImpl implements RawDataService {
             if(rawDataDTO.getScoreDTO() == null) {
                 externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
             } else {
-                rawDataDTO.getScoreDTO().setPoints(27);
                 externalId = this.insightGraphEntityRepository.saveWithProperties(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataType(), rawData.getRawDataSymbol(), InsightEntityType.RawData, rawDataDTO.getScoreDTO());
             }
             rawData.setExternalId(String.valueOf(externalId));
@@ -170,8 +169,7 @@ public class RawDataServiceImpl implements RawDataService {
     public Page<RawDataDTO> searchByCriteria(Query query, Pageable pageable) {
         query.with(pageable);
         final List<RawDataDTO> resultList = this.mongoTemplate.find(query, RawData.class).stream().map(rawDataMapper::toDto).collect(Collectors.toList());
-        final Page<RawDataDTO> page = PageableExecutionUtils.getPage(resultList, pageable, () -> resultList.size());
-        return page;
+        return PageableExecutionUtils.getPage(resultList, pageable, () -> resultList.size());
     }
 
     @Override

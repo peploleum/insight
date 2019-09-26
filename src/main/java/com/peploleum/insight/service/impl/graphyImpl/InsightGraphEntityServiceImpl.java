@@ -104,7 +104,7 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         entity.getProperties().put("symbole", symbole);
         entity.getProperties().put("points", String.valueOf(scoreDTO.getPoints()));
         String chaineMotClefs = "";
-        for (String motclef : scoreDTO.getListMotClefs()) {
+        for (String motclef : scoreDTO.getlistThemeMotclefHit()) {
             chaineMotClefs = chaineMotClefs + motclef + " ";
             entity.getProperties().put("motclef", chaineMotClefs);
         }
