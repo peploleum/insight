@@ -30,12 +30,7 @@ export class AnalyticsGridComponent implements OnInit, OnDestroy {
         return BASE64URI(content, 'jpeg');
     }
 
-    hasHitOnTheme(hits: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO'): boolean {
-        return !!hits.find(h => h.theme === theme);
-    }
-
-    getHitColor(h: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO') {
-        const hits = h.find(i => i.theme === theme);
+    getHitColor(hits: IHitDTO): string {
         if (!hits || hits.motsClefs.length === 0) {
             return this.alertThreshold[0];
         }

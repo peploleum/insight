@@ -1,6 +1,10 @@
 <div class="grid-container" *ngIf="biographicsScores">
     <div class="grid-cell" *ngFor="let bio of biographicsScores;">
         <img *ngIf="bio.biographic.biographicsImage else noPhoto;" [src]="getBase64(bio.biographic.biographicsImage)"/>
+        <div>
+            <span>{{bio.biographic.biographicsName}}</span>
+            <span *ngFor="let h of bio.hits;" [ngStyle]="{'color':getHitColor(h)}">{{h.theme}}</span>
+        </div>
     </div>
 </div>
 <ng-template #noPhoto>

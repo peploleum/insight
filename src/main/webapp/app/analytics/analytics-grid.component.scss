@@ -26,4 +26,23 @@
         max-height: 200px;
         object-fit: cover;
     }
+
+    > div {
+        z-index: 100;
+        margin-top: -170px;
+        margin-left: -200px;
+        width: 100%;
+        background-color: rgba(51, 102, 153, 0.4);
+        font-size: 0.9rem;
+        flex: none;
+
+        font-weight: bold;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        color: white;
+
+        > span {
+            padding: 0 0.2rem 0 0.2rem;
+        }
+    }
 }
