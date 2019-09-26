@@ -36,6 +36,7 @@ import {
     faDotCircle,
     faDrawPolygon,
     faExclamation,
+    faExclamationTriangle,
     faEye,
     faFileImport,
     faFilter,
@@ -74,8 +75,10 @@ import {
     faStreetView,
     faSync,
     faSyncAlt,
+    faTable,
     faTachometerAlt,
     faTasks,
+    faTh,
     faThList,
     faTimes,
     faToolbox,
@@ -187,5 +190,8 @@ library.add(faUsers);
 library.add(faDatabase);
 library.add(faFilter);
 library.add(faUserTag);
+library.add(faExclamationTriangle);
+library.add(faTh);
+library.add(faTable);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

@@ -11,14 +11,24 @@ import { BASE64URI } from 'app/shared/util/insight-util';
 @Component({
     selector: 'ins-analytics',
     templateUrl: './analytics.component.html',
-    styles: [':host { width:100% }']
+    styles: [':host { width:100% }'],
+    styleUrls: ['./analytics.component.scss']
 })
 export class AnalyticsComponent implements OnInit, OnDestroy {
     biographicsScores: BiographicsScoreDTO[] = [];
     biographics: IBiographics[];
     selectedBiographic: IBiographics;
 
+    gridView = false;
+
     fileToUpload: File = null;
+
+    alertThreshold = {
+        0: 'green',
+        1: 'yellow',
+        2: 'orange',
+        3: 'red'
+    };
 
     constructor(
         protected analyticsService: AnalyticsService,
@@ -38,14 +48,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
     onResultQueryReceived(entities: GenericModel[]) {
         this.biographics = entities as IBiographics[];
-        this.generateTESSCO(this.biographics);
+        this.getScores(this.biographics);
     }
 
     getBase64(content: string): string {
         return BASE64URI(content);
     }
 
-    generateTESSCO(bios: IBiographics[]) {
+    getScores(bios: IBiographics[]) {
         this.biographicsScores = [];
         bios.forEach((b: IBiographics) => {
             if (b.externalId) {
@@ -68,6 +78,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                             }) as IHitDTO[],
                             scores: score
                         });
+                        console.log(this.biographicsScores);
                     },
                     error => {
                         console.log('[ANALYTICS] Error lors de la récupération des voisins.');
@@ -76,12 +87,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             }
         });
     }
-
-    hasHitOnTheme(hits: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO'): boolean {
-        return !!hits.find(h => h.theme === theme);
-    }
-
-    // récupère que le 1er fichier
+    
     handleFileInput(files: FileList) {
         this.fileToUpload = files.item(0);
         console.log(this.fileToUpload);

@@ -1,0 +1,9 @@
+.score-cell {
+    text-align: center;
+}
+
+tr {
+    > th {
+        padding: 0.5rem 1rem 0.5rem 1rem !important;
+    }
+}

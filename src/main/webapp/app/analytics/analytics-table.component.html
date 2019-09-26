@@ -1,0 +1,57 @@
+<div class="table-responsive" *ngIf="biographicsScores">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th><span>ID</span>
+            </th>
+            <th><span>Prénom</span>
+            </th>
+            <th><span>Nom</span>
+            </th>
+            <th><span>Age</span>
+            </th>
+            <th><span>Terrorisme</span></th>
+            <th><span>Espionnage</span></th>
+            <th><span>Sabotage</span></th>
+            <th><span>Subversion</span></th>
+            <th><span>Crime organisé</span></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let bio of biographicsScores;">
+            <td><a [routerLink]="['/biographics', bio.biographic.id, 'view' ]">{{bio.biographic.id}}</a>
+            </td>
+            <td>{{bio.biographic.biographicsFirstname}}</td>
+            <td>{{bio.biographic.biographicsName}}</td>
+            <td>{{bio.biographic.biographicsAge}}</td>
+            <td class="score-cell"><span [ngStyle]="{'color':getHitColor(bio.hits, 'TER')}"><fa-icon
+                [icon]="hasHitOnTheme(bio.hits, 'TER')?'exclamation-triangle':'check'"></fa-icon></span>
+            </td>
+            <td class="score-cell"><span [ngStyle]="{'color':getHitColor(bio.hits, 'ESP')}"><fa-icon
+                [icon]="hasHitOnTheme(bio.hits, 'ESP')?'exclamation-triangle':'check'"></fa-icon></span>
+            </td>
+            <td class="score-cell"><span [ngStyle]="{'color':getHitColor(bio.hits, 'SAB')}"><fa-icon
+                [icon]="hasHitOnTheme(bio.hits, 'SAB')?'exclamation-triangle':'check'"></fa-icon></span>
+            </td>
+            <td class="score-cell"><span [ngStyle]="{'color':getHitColor(bio.hits, 'SUB')}"><fa-icon
+                [icon]="hasHitOnTheme(bio.hits, 'SUB')?'exclamation-triangle':'check'"></fa-icon></span>
+            </td>
+            <td class="score-cell"><span [ngStyle]="{'color':getHitColor(bio.hits, 'CRO')}"><fa-icon
+                [icon]="hasHitOnTheme(bio.hits, 'CRO')?'exclamation-triangle':'check'"></fa-icon></span>
+            </td>
+
+            <td class="text-right">
+                <div class="btn-group flex-btn-group-container">
+                    <button type="submit"
+                            [routerLink]="['/biographics', bio.biographic.id, 'view' ]"
+                            class="btn btn-info btn-sm">
+                        <fa-icon [icon]="'eye'"></fa-icon>
+                        <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -22,7 +22,9 @@ export interface BiographicsScoreDTO {
 }
 
 export interface IScoreDTO {
-    idBio?: string;
+    externalIdBio?: string;
+    externalIdRawData?: string;
+    mongoIdRawData?: string;
     scorePoints?: string;
     scoreListMotsClefs?: { theme: Theme; motClef: string }[];
     scoreImageHit?: string;
@@ -31,7 +33,9 @@ export interface IScoreDTO {
 
 export class ScoreDTO implements IScoreDTO {
     constructor(
-        public idBio?: string,
+        public externalIdBio?: string,
+        public externalIdRawData?: string,
+        public mongoIdRawData?: string,
         public scorePoints?: string,
         public scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         public scoreImageHit?: string,
