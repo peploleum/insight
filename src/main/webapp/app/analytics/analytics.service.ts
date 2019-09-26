@@ -78,10 +78,8 @@ export class AnalyticsService {
         const headers = new HttpHeaders();
         const formData: FormData = new FormData();
         formData.append('fileKey', fileToUpload, fileToUpload.name);
-        let dico = new DictionaryDTO();
-
-        console.log(formData);
-        return this.http.post(this._ressourceDictionaryUrl, dico, { headers: headers, observe: 'response' });
+        const dico = new DictionaryDTO();
+        return this.http.post(this._ressourceDictionaryUrl, dico, { headers, observe: 'response' });
     }
 
     getScores(janusIdOrigin: string): Observable<ScoreDTO[]> {
