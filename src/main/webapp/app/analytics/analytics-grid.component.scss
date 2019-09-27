@@ -27,13 +27,19 @@
         object-fit: cover;
     }
 
-    > div {
+    > span:first-child {
+        width: 100%;
+        max-height: 200px;
+        text-align: center;
+    }
+
+    > div:nth-child(2) {
         z-index: 100;
         margin-top: -170px;
         margin-left: -200px;
         width: 100%;
         background-color: rgba(51, 102, 153, 0.4);
-        font-size: 0.9rem;
+        font-size: 0.6rem;
         flex: none;
 
         font-weight: bold;
@@ -43,6 +49,10 @@
 
         > span {
             padding: 0 0.2rem 0 0.2rem;
+        }
+
+        > span:first-child {
+            font-size: 0.9rem;
         }
     }
 }

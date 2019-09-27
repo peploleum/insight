@@ -20,6 +20,13 @@ export class AnalyticsService {
     private _resourceUrl = SERVER_API_URL + 'api/graph/';
     private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
 
+    alertThreshold = {
+        0: 'green',
+        1: 'yellow',
+        2: 'orange',
+        3: 'red'
+    };
+
     public static getScoreDTO(
         externalIdBio?: string,
         externalIdRawData?: string,

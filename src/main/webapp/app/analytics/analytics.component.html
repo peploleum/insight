@@ -3,13 +3,13 @@
         <div class="col-md-11 analytics-parts analytics-header-container">
             <h2><span>Analytics</span></h2>
             <div>
-                <span [ngStyle]="{'color': alertThreshold[0]}"><fa-icon
+                <span [ngStyle]="{'color': getAlertThreshold()[0]}"><fa-icon
                     [icon]="'exclamation-triangle'"></fa-icon> = 0 </span>
-                <span [ngStyle]="{'color': alertThreshold[1]}"><fa-icon
+                <span [ngStyle]="{'color': getAlertThreshold()[1]}"><fa-icon
                     [icon]="'exclamation-triangle'"></fa-icon> = 1 </span>
-                <span [ngStyle]="{'color': alertThreshold[2]}"><fa-icon
+                <span [ngStyle]="{'color': getAlertThreshold()[2]}"><fa-icon
                     [icon]="'exclamation-triangle'"></fa-icon> > 1 </span>
-                <span [ngStyle]="{'color': alertThreshold[3]}"><fa-icon
+                <span [ngStyle]="{'color': getAlertThreshold()[3]}"><fa-icon
                     [icon]="'exclamation-triangle'"></fa-icon> > 3 </span>
             </div>
             <div class="btn-group flex-btn-group-container">

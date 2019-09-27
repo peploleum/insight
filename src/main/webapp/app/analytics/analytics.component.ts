@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {JhiAlertService, JhiDataUtils} from 'ng-jhipster';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 
-import {IBiographics} from 'app/shared/model/biographics.model';
-import {AnalyticsService} from './analytics.service';
-import {BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme} from '../shared/model/analytics.model';
-import {GenericModel} from 'app/shared/model/generic.model';
-import {BASE64URI} from 'app/shared/util/insight-util';
-import {map} from 'rxjs/operators';
-import {HttpResponse} from '@angular/common/http';
-import {QuickViewService} from 'app/side/quick-view.service';
+import { IBiographics } from 'app/shared/model/biographics.model';
+import { AnalyticsService } from './analytics.service';
+import { BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme } from '../shared/model/analytics.model';
+import { GenericModel } from 'app/shared/model/generic.model';
+import { BASE64URI } from 'app/shared/util/insight-util';
+import { map } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
+import { QuickViewService } from 'app/side/quick-view.service';
 
 @Component({
     selector: 'ins-analytics',
@@ -26,13 +26,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
     fileToUpload: File = null;
 
-    alertThreshold = {
-        0: 'green',
-        1: 'yellow',
-        2: 'orange',
-        3: 'red'
-    };
-
     constructor(
         protected analyticsService: AnalyticsService,
         protected jhiAlertService: JhiAlertService,
@@ -40,13 +33,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         protected dataUtils: JhiDataUtils,
         protected router: Router,
         private qv: QuickViewService
-    ) {
-    }
+    ) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
-    ngOnDestroy() {
+    ngOnDestroy() {}
+
+    getAlertThreshold() {
+        return this.analyticsService.alertThreshold;
     }
 
     onDataSelected(entity: GenericModel) {
@@ -82,7 +76,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         this.biographicsScores.push({
                             biographic: b,
                             hits: Object.keys(hits).map(k => {
-                                return {theme: k, motsClefs: hits[k]};
+                                return { theme: k, motsClefs: hits[k] };
                             }) as IHitDTO[],
                             scores: score
                         });

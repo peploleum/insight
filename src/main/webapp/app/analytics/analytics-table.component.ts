@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { JhiAlertService } from 'ng-jhipster';
 import { BiographicsScoreDTO, IHitDTO } from '../shared/model/analytics.model';
+import { AnalyticsService } from 'app/analytics/analytics.service';
 
 @Component({
     selector: 'ins-analytics-table',
@@ -12,14 +13,7 @@ export class AnalyticsTableComponent implements OnInit, OnDestroy {
     @Input()
     biographicsScores: BiographicsScoreDTO[] = [];
 
-    alertThreshold = {
-        0: 'green',
-        1: 'yellow',
-        2: 'orange',
-        3: 'red'
-    };
-
-    constructor(protected jhiAlertService: JhiAlertService) {}
+    constructor(protected jhiAlertService: JhiAlertService, private _as: AnalyticsService) {}
 
     ngOnInit() {}
 
@@ -32,10 +26,10 @@ export class AnalyticsTableComponent implements OnInit, OnDestroy {
     getHitColor(h: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO') {
         const hits = h.find(i => i.theme === theme);
         if (!hits || hits.motsClefs.length === 0) {
-            return this.alertThreshold[0];
+            return this._as.alertThreshold[0];
         }
         const nbr = hits.motsClefs.length;
-        return nbr > 1 ? (nbr > 3 ? this.alertThreshold[3] : this.alertThreshold[2]) : this.alertThreshold[1];
+        return nbr > 1 ? (nbr > 3 ? this._as.alertThreshold[3] : this._as.alertThreshold[2]) : this._as.alertThreshold[1];
     }
 
     protected onError(errorMessage: string) {
