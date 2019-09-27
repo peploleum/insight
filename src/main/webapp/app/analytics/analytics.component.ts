@@ -44,7 +44,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     }
 
     onDataSelected(entity: GenericModel) {
-        this.selectedBiographic = entity as IBiographics;
+        this.onResultQueryReceived([entity as IBiographics]);
     }
 
     onResultQueryReceived(entities: GenericModel[]) {

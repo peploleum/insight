@@ -2,7 +2,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th><span>ID</span>
+            <th><span>Date de Traitement</span>
             </th>
             <th><span>Prénom</span>
             </th>
@@ -20,8 +20,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let bio of biographicsScores;">
-            <td><a [routerLink]="['/biographics', bio.biographic.id, 'view' ]">{{bio.biographic.id}}</a>
-            </td>
+            <td>{{bio.biographic.id}}</td>
             <td>{{bio.biographic.biographicsFirstname}}</td>
             <td>{{bio.biographic.biographicsName}}</td>
             <td>{{bio.biographic.biographicsAge}}</td>
