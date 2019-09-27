@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { GenericModel } from '../shared/model/generic.model';
 import { BASE64URI } from '../shared/util/insight-util';
 import { QuickViewService } from '../side/quick-view.service';
-import { Observable } from 'rxjs/index';
 import { HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { AnalyticsService } from 'app/analytics/analytics.service';
+import { BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme } from 'app/shared/model/analytics.model';
+import { IBiographics } from 'app/shared/model/biographics.model';
 
 @Component({
     selector: 'ins-card',
@@ -17,9 +20,22 @@ export class CardComponent implements OnInit {
     entityAndNeighbors: GenericModel[];
     currentTab = 'info';
 
-    constructor(private _qv: QuickViewService) {}
+    biographicsScore: BiographicsScoreDTO;
+    analyticsMode = false;
 
-    ngOnInit() {}
+    constructor(private _qv: QuickViewService, private _ar: ActivatedRoute, private _as: AnalyticsService) {}
+
+    ngOnInit() {
+        this._ar.data.subscribe(({ biographics }) => {
+            if (biographics) {
+                this.onDataSelected(biographics);
+                this.analyticsMode = !!this._ar.snapshot.url.find((u: UrlSegment) => u.path === 'analytics');
+                if (this.analyticsMode) {
+                    this.getScores(this.entity as IBiographics);
+                }
+            }
+        });
+    }
 
     onDataSelected(entity: GenericModel) {
         this.entity = entity;
@@ -46,5 +62,32 @@ export class CardComponent implements OnInit {
                 this.entity['biographicsImage'] = entity['biographicsImage'];
                 this.entity['biographicsSymbol'] = entity['biographicsSymbol'];
             });
+    }
+
+    getScores(bio: IBiographics) {
+        this._as.getScores(bio.externalId).subscribe(
+            (score: ScoreDTO[]) => {
+                const hits = {};
+                score.forEach(s => {
+                    s.scoreListMotsClefs.forEach((i: { theme: Theme; motClef: string }) => {
+                        if (hits.hasOwnProperty(i.theme)) {
+                            (hits[i.theme] as string[]).push(i.motClef);
+                        } else {
+                            hits[i.theme] = [i.motClef];
+                        }
+                    });
+                });
+                this.biographicsScore = {
+                    biographic: bio,
+                    hits: Object.keys(hits).map(k => {
+                        return { theme: k, motsClefs: hits[k] };
+                    }) as IHitDTO[],
+                    scores: score
+                };
+            },
+            error => {
+                console.log('[ANALYTICS] Error lors de la récupération des voisins.');
+            }
+        );
     }
 }

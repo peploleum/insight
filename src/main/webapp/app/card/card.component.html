@@ -60,31 +60,41 @@
 
     </div>
 
-    <div class="card-side col-4">
-        <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
-             id="card-network-container">
-            <ins-card-network *ngIf="entity" [externalId]="entityExternalId"
-                              (nodeMongoIds)="setEntities($event)"></ins-card-network>
+    <ng-template [ngIf]="!analyticsMode">
+        <div class="card-side col-4">
+            <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
+                 id="card-network-container">
+                <ins-card-network *ngIf="entity" [externalId]="entityExternalId"
+                                  (nodeMongoIds)="setEntities($event)"></ins-card-network>
+            </div>
+            <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
+                 id="card-map-container">
+                <ins-card-map [source]="entityAndNeighbors"></ins-card-map>
+            </div>
         </div>
-        <div class="row h-50 justify-content-center align-items-center" style="max-height: 50%;"
-             id="card-map-container">
-            <ins-card-map [source]="entityAndNeighbors"></ins-card-map>
-        </div>
-    </div>
 
-    <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-network-container'"
-         [position]="'TOP-RIGHT'">
-        <a [routerLink]="['/',{outlets: { primary: ['network', entity['id']], side: ['ins-network-side-panel'] }}]"
-           title="Envoyer en réseau">
-            <fa-icon [icon]="'sitemap'"></fa-icon>
-        </a>
-    </div>
-    <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-map-container'"
-         [position]="'TOP-RIGHT'">
-        <a [routerLink]="['/',{outlets: { primary: ['map', 'neighbors', entity['id']], side: ['ins-map-side-panel']}}]"
-           title="Envoyer en cartographie">
-            <fa-icon [icon]="'globe'"></fa-icon>
-        </a>
-    </div>
+        <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-network-container'"
+             [position]="'TOP-RIGHT'">
+            <a [routerLink]="['/',{outlets: { primary: ['network', entity['id']], side: ['ins-network-side-panel'] }}]"
+               title="Envoyer en réseau">
+                <fa-icon [icon]="'sitemap'"></fa-icon>
+            </a>
+        </div>
+        <div *ngIf="entity" class="ins-popover" insOverlayPosition [idTargetElement]="'card-map-container'"
+             [position]="'TOP-RIGHT'">
+            <a [routerLink]="['/',{outlets: { primary: ['map', 'neighbors', entity['id']], side: ['ins-map-side-panel']}}]"
+               title="Envoyer en cartographie">
+                <fa-icon [icon]="'globe'"></fa-icon>
+            </a>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="analyticsMode">
+        <div class="card-side col-4">
+            <div class="row h-100 justify-content-center align-items-center" style="max-height: 100%;">
+                <ins-card-analytics *ngIf="biographicsScore" [biographicsScore]="biographicsScore"></ins-card-analytics>
+            </div>
+        </div>
+    </ng-template>
 
 </div>
