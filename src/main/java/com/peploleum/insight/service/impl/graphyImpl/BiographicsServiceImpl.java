@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -59,6 +60,7 @@ public class BiographicsServiceImpl implements BiographicsService {
 
         Biographics biographics = biographicsMapper.toEntity(biographicsDTO);
         biographics.setEntityType(InsightEntityType.Biographics);
+        biographics.setBiographicsCreationDate(Instant.now());
         biographics = biographicsRepository.save(biographics);
         if (biographics.getExternalId() == null || biographics.getExternalId().isEmpty()) {
             Long externalId = this.insightGraphEntityRepository.save(biographics.getBiographicsName(), biographics.getId(), biographics.getBiographicsSymbol(), InsightEntityType.Biographics);

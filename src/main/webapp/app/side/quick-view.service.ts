@@ -6,6 +6,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { IRawData } from '../shared/model/raw-data.model';
 import {
     assertGenericType,
+    convertEntitiesDateFromServer,
     convertRawDataDateFromClient,
     convertRawDataDateFromServer,
     removeDuplicate
@@ -46,6 +47,9 @@ export class QuickViewService {
                 if (assertGenericType('RawData', res.body)) {
                     convertRawDataDateFromServer(res.body);
                 }
+                if (assertGenericType('Biographics', res.body)) {
+                    convertEntitiesDateFromServer(res.body, ['biographicsCreationDate']);
+                }
                 return res;
             })
         );
@@ -57,6 +61,9 @@ export class QuickViewService {
                 (<GenericModel[]>res.body).forEach(model => {
                     if (assertGenericType('RawData', model)) {
                         convertRawDataDateFromServer(model);
+                    }
+                    if (assertGenericType('Biographics', model)) {
+                        convertEntitiesDateFromServer(model, ['biographicsCreationDate']);
                     }
                 });
                 return res;

@@ -4,12 +4,15 @@
 /* tslint:disable:no-bitwise */
 import { IRawData, RawData } from '../model/raw-data.model';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { Biographics } from '../model/biographics.model';
 import { Equipment } from '../model/equipment.model';
 import { Organisation } from '../model/organisation.model';
 import { Event } from '../model/event.model';
 import { Location } from '../model/location.model';
 import { GenericModel } from '../model/generic.model';
+import { HttpResponse } from '@angular/common/http';
+
 export const UUID = (): string => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = (Math.random() * 16) | 0,
@@ -17,6 +20,7 @@ export const UUID = (): string => {
         return v.toString(16);
     });
 };
+
 /* tslint:enable:no-bitwise */
 
 /**
@@ -102,14 +106,37 @@ export const convertRawDataDateFromServer = (rawData: IRawData): IRawData => {
     return rawData;
 };
 
-export const convertRawDataDateArrayFromServer = (rawDataList: IRawData[]): IRawData[] => {
-    if (rawDataList) {
-        rawDataList.forEach((rawData: IRawData) => {
-            rawData.rawDataCreationDate = rawData.rawDataCreationDate != null ? moment(rawData.rawDataCreationDate) : null;
-            rawData.rawDataExtractedDate = rawData.rawDataExtractedDate != null ? moment(rawData.rawDataExtractedDate) : null;
+export const convertEntitiesDateFromClient = (item: GenericModel, dateKeys: string[]): GenericModel => {
+    const source2 = dateKeys.reduce((acc, curr) => {
+        return (acc[curr] = item[curr] && (item[curr] as Moment).isValid() ? (item[curr] as Moment).toJSON() : null);
+    }, {});
+    return Object.assign({}, item, source2);
+};
+
+export const convertEntitiesDateFromServer = (item: GenericModel, dateKeys: string[]): GenericModel => {
+    if (item) {
+        dateKeys.forEach(k => (item[k] = item[k] ? moment(item[k]) : null));
+    }
+    return item;
+};
+
+export const convertResponseEntitiesDateFromServer = (item: HttpResponse<GenericModel>, dateKeys: string[]): HttpResponse<GenericModel> => {
+    if (item) {
+        dateKeys.forEach(k => (item.body[k] = item.body[k] ? moment(item.body[k]) : null));
+    }
+    return item;
+};
+
+export const convertResponseEntitiesDateArrayFromServer = (
+    item: HttpResponse<GenericModel[]>,
+    dateKeys: string[]
+): HttpResponse<GenericModel[]> => {
+    if (item) {
+        item.body.forEach(g => {
+            dateKeys.forEach(k => (g[k] = g[k] ? moment(g[k]) : null));
         });
     }
-    return rawDataList;
+    return item;
 };
 
 export class DragParameter {

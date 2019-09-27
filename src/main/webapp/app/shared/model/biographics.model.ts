@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export const enum Gender {
     MALE = 'MALE',
     FEMALE = 'FEMALE',
@@ -15,6 +17,7 @@ export interface IBiographics {
     biographicsCoordinates?: string;
     biographicsSymbol?: string;
     externalId?: string;
+    biographicsCreationDate?: Moment;
 }
 
 export class Biographics implements IBiographics {
@@ -28,6 +31,7 @@ export class Biographics implements IBiographics {
         public biographicsImage?: any,
         public biographicsCoordinates?: string,
         public biographicsSymbol?: string,
-        public externalId?: string
+        public externalId?: string,
+        public biographicsCreationDate?: Moment
     ) {}
 }

@@ -5,11 +5,14 @@ import com.peploleum.insight.domain.map.GeometryCollection;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -58,6 +61,11 @@ public class Biographics extends InsightEntity implements Serializable {
 
     @Field("external_id")
     private String externalId;
+
+    @Field("biographics_creation_date")
+    @Indexed(direction = IndexDirection.ASCENDING)
+    @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Date)
+    private Instant biographicsCreationDate;
 
     public GeometryCollection getGeometry() {
         return geometry;
@@ -192,6 +200,15 @@ public class Biographics extends InsightEntity implements Serializable {
     public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
+
+    public Instant getBiographicsCreationDate() {
+        return biographicsCreationDate;
+    }
+
+    public void setBiographicsCreationDate(Instant biographicsCreationDate) {
+        this.biographicsCreationDate = biographicsCreationDate;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

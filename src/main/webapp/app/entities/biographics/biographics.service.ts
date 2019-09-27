@@ -5,6 +5,12 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IBiographics } from 'app/shared/model/biographics.model';
+import {
+    convertResponseEntitiesDateArrayFromServer,
+    convertEntitiesDateFromClient,
+    convertResponseEntitiesDateFromServer
+} from 'app/shared/util/insight-util';
+import { map } from 'rxjs/operators';
 
 type EntityResponseType = HttpResponse<IBiographics>;
 type EntityArrayResponseType = HttpResponse<IBiographics[]>;
@@ -17,20 +23,30 @@ export class BiographicsService {
     constructor(protected http: HttpClient) {}
 
     create(biographics: IBiographics): Observable<EntityResponseType> {
-        return this.http.post<IBiographics>(this.resourceUrl, biographics, { observe: 'response' });
+        const copy = convertEntitiesDateFromClient(biographics, ['biographicsCreationDate']);
+        return this.http
+            .post<IBiographics>(this.resourceUrl, copy as IBiographics, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => convertResponseEntitiesDateFromServer(res, ['biographicsCreationDate'])));
     }
 
     update(biographics: IBiographics): Observable<EntityResponseType> {
-        return this.http.put<IBiographics>(this.resourceUrl, biographics, { observe: 'response' });
+        const copy = convertEntitiesDateFromClient(biographics, ['biographicsCreationDate']);
+        return this.http
+            .put<IBiographics>(this.resourceUrl, copy as IBiographics, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => convertResponseEntitiesDateFromServer(res, ['biographicsCreationDate'])));
     }
 
     find(id: string): Observable<EntityResponseType> {
-        return this.http.get<IBiographics>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+        return this.http
+            .get<IBiographics>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => convertResponseEntitiesDateFromServer(res, ['biographicsCreationDate'])));
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get<IBiographics[]>(this.resourceUrl, { params: options, observe: 'response' });
+        return this.http
+            .get<IBiographics[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => convertResponseEntitiesDateArrayFromServer(res, ['biographicsCreationDate'])));
     }
 
     delete(id: string): Observable<HttpResponse<any>> {
@@ -39,6 +55,8 @@ export class BiographicsService {
 
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
-        return this.http.get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+        return this.http
+            .get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => convertResponseEntitiesDateArrayFromServer(res, ['biographicsCreationDate'])));
     }
 }

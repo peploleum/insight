@@ -5,6 +5,7 @@ import com.peploleum.insight.domain.map.GeometryCollection;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -32,6 +33,8 @@ public class BiographicsDTO implements Serializable {
     private String biographicsSymbol;
 
     private String externalId;
+
+    private Instant biographicsCreationDate;
 
     public String getId() {
         return id;
@@ -119,6 +122,14 @@ public class BiographicsDTO implements Serializable {
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
+    }
+
+    public Instant getBiographicsCreationDate() {
+        return biographicsCreationDate;
+    }
+
+    public void setBiographicsCreationDate(Instant biographicsCreationDate) {
+        this.biographicsCreationDate = biographicsCreationDate;
     }
 
     @Override
