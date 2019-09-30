@@ -23,10 +23,12 @@
     </div>
     <div class="row justify-content-center pt-2 pb-3">
         <div class="col-md-11 analytics-parts analytics-search-container">
-            <ins-insight-search [targetEntity]="['Biographics']" [textFields]="['biographicsName']"
-                                [imageField]="'biographicsImage'"
-                                (selectionEmitter)="onDataSelected($event)"
-                                (resultEmitter)="onResultQueryReceived($event)"></ins-insight-search>
+            <!-- <ins-insight-search [targetEntity]="['Biographics']" [textFields]="['biographicsName']"
+                                 [imageField]="'biographicsImage'"
+                                 (selectionEmitter)="onDataSelected($event)"
+                                 (resultEmitter)="onResultQueryReceived($event)"></ins-insight-search>-->
+            <ins-insight-paginate-search [targetEntity]="'biographics'" [urlBase]="'/analytics'"
+                                         (resultEmitter)="onResultQueryReceived($event)"></ins-insight-paginate-search>
         </div>
     </div>
     <div class="row justify-content-center pt-2 pb-2">

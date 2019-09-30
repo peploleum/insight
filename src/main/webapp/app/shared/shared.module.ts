@@ -23,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InsightSearchSuggestionComponent } from './search/insight-search-suggestion.component';
 import { ResizeHelperDirective } from './util/resize-helper.directive';
 import { OverlayPositionDirective } from './util/overlay-position.directive';
+import { InsightPaginateSearchComponent } from 'app/shared/search/insight-paginate-search.component';
 
 @NgModule({
     imports: [InsightSharedLibsModule, InsightSharedCommonModule, RouterModule, ReactiveFormsModule],
@@ -48,7 +49,8 @@ import { OverlayPositionDirective } from './util/overlay-position.directive';
         InsightSearchSuggestionComponent,
         ObjectFilterNullPipe,
         ResizeHelperDirective,
-        OverlayPositionDirective
+        OverlayPositionDirective,
+        InsightPaginateSearchComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
     entryComponents: [JhiLoginModalComponent, HyperlinkPopoverComponent, InsightSearchSuggestionComponent],
@@ -75,7 +77,8 @@ import { OverlayPositionDirective } from './util/overlay-position.directive';
         InsightSearchSuggestionComponent,
         ObjectFilterNullPipe,
         ResizeHelperDirective,
-        OverlayPositionDirective
+        OverlayPositionDirective,
+        InsightPaginateSearchComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
