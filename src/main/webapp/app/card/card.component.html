@@ -92,7 +92,9 @@
     <ng-template [ngIf]="analyticsMode">
         <div class="card-side col-4">
             <div class="row h-100 justify-content-center align-items-center" style="max-height: 100%;">
-                <ins-card-analytics *ngIf="biographicsScore" [biographicsScore]="biographicsScore"></ins-card-analytics>
+                <ins-card-analytics *ngIf="biographicsScore; else bidou"
+                                    [biographicsScore]="biographicsScore"></ins-card-analytics>
+                <ng-template #bidou><span>tg</span></ng-template>
             </div>
         </div>
     </ng-template>
