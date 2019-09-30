@@ -2,7 +2,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th><span>Date de Traitement</span>
+            <th><span>Date de Création</span>
             </th>
             <th><span>Prénom</span>
             </th>
@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let bio of biographicsScores;">
-            <td>{{bio.biographic.id}}</td>
+            <td>{{bio.biographic.biographicsCreationDate | date:'medium'}}</td>
             <td>{{bio.biographic.biographicsFirstname}}</td>
             <td>{{bio.biographic.biographicsName}}</td>
             <td>{{bio.biographic.biographicsAge}}</td>

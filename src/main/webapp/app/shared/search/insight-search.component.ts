@@ -19,6 +19,9 @@ export class InsightSearchComponent implements OnInit, OnChanges {
     @Input()
     imageField?: string;
 
+    @Input()
+    disableSuggestion = false;
+
     // Function pouvant être définie depuis un composant parent (par ViewChild ou ViewChildren)
     extentProvider?: Function;
 
@@ -76,7 +79,7 @@ export class InsightSearchComponent implements OnInit, OnChanges {
             )
             .subscribe((entities: GenericModel[]) => {
                 this.suggestions = entities;
-                this.displaySuggestions(!(!entities || entities.length === 0));
+                this.displaySuggestions(!this.disableSuggestion && !(!entities || entities.length === 0));
             });
     }
 
