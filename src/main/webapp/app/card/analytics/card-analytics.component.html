@@ -4,30 +4,37 @@
     <div class="ins-card-content" *ngIf="currentTab">
 
         <div class="ins-card-nav">
-            <span *ngFor="let hits of biographicsScore['hits']" (click)="onChangeTab"
+            <span *ngFor="let hits of biographicsScore['hits']" (click)="onChangeTab(hits.theme)"
                   [ngClass]="{ 'nav-selected selected' : currentTab === hits.theme }">
                 {{hits.theme}}
             </span>
         </div>
 
-        <div class="ins-card-info" *ngIf="currentTab === 'TER'">
-            <!--<div *ngFor="let motclef of biographicsScore['hits'] ">-->
-                <!---->
-            <!--</div>-->
-            hihi
-        </div>
-        <!--<div *ngFor="let hits of biographicsScore['hits']">-->
-            <!--<div class="ins-card-info" *ngIf="currentTab === hits.theme">-->
-                <!--{{hits.theme}}-->
-            <!--</div>-->
+        <!--<div class="ins-card-info" *ngIf="currentTab === 'TER'">-->
+            <!--&lt;!&ndash;<div *ngFor="let motclef of biographicsScore['hits'] ">&ndash;&gt;-->
+                <!--&lt;!&ndash;&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--hihi-->
         <!--</div>-->
-        <div class="ins-card-info" *ngIf="currentTab === 'ESP'">
-            <!--<div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">-->
-            <!--<small class="text-muted">{{key}}</small>-->
-            <!--<p>{{entity[key] | stringTruncate:100}}</p>-->
-            <!--</div>-->
-            prout
+
+        <div *ngFor="let hits of biographicsScore['hits']">
+            <div class="ins-card-info" *ngIf="currentTab === hits.theme">
+                <div *ngFor="let motClefUrls of hits.motClefUrls">
+                    {{motClefUrls.motClef}}
+                    <div *ngFor="let url of motClefUrls.urls">
+                        {{url}}
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!--<div class="ins-card-info" *ngIf="currentTab === 'ESP'">-->
+            <!--&lt;!&ndash;<div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">&ndash;&gt;-->
+            <!--&lt;!&ndash;<small class="text-muted">{{key}}</small>&ndash;&gt;-->
+            <!--&lt;!&ndash;<p>{{entity[key] | stringTruncate:100}}</p>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--prout-->
+        <!--</div>-->
 
     </div>
 

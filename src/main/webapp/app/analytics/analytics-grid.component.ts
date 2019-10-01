@@ -25,10 +25,10 @@ export class AnalyticsGridComponent implements OnInit, OnDestroy {
     }
 
     getHitColor(hits: IHitDTO): string {
-        if (!hits || hits.motsClefs.length === 0) {
+        if (!hits || hits.motClefUrls.length === 0) {
             return this._as.alertThreshold[0];
         }
-        const nbr = hits.motsClefs.length;
+        const nbr = hits.motClefUrls.length;
         return nbr > 1 ? (nbr > 3 ? this._as.alertThreshold[3] : this._as.alertThreshold[2]) : this._as.alertThreshold[1];
     }
 

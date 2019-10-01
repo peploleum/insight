@@ -71,16 +71,27 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                         score.forEach(s => {
                             s.scoreListMotsClefs.forEach((i: { theme: Theme; motClef: string }) => {
                                 if (hits.hasOwnProperty(i.theme)) {
-                                    (hits[i.theme] as string[]).push(i.motClef);
+                                    if (!hits[i.theme][i.motClef]) {
+                                        hits[i.theme][i.motClef] = [s.rawDataUrl];
+                                    } else {
+                                        (hits[i.theme][i.motClef] as string[]).push(s.rawDataUrl);
+                                    }
                                 } else {
-                                    hits[i.theme] = [i.motClef];
+                                    hits[i.theme] = {};
+                                    hits[i.theme][i.motClef] = [s.rawDataUrl];
                                 }
                             });
                         });
+                        console.log(Object.keys(hits));
                         this.biographicsScores.push({
                             biographic: b,
-                            hits: Object.keys(hits).map(k => {
-                                return { theme: k, motsClefs: hits[k] };
+                            hits: Object.keys(hits).map(t => {
+                                return {
+                                    theme: t,
+                                    motClefUrls: Object.keys(hits[t]).map(mc => {
+                                        return { motClef: mc, urls: hits[t][mc] };
+                                    })
+                                };
                             }) as IHitDTO[],
                             scores: score
                         });

@@ -82,7 +82,7 @@ public class RawDataServiceImpl implements RawDataService {
             if(rawDataDTO.getScoreDTO() == null) {
                 externalId = this.insightGraphEntityRepository.save(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSymbol(), InsightEntityType.RawData);
             } else {
-                externalId = this.insightGraphEntityRepository.saveWithProperties(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataType(), rawData.getRawDataSymbol(), InsightEntityType.RawData, rawDataDTO.getScoreDTO());
+                externalId = this.insightGraphEntityRepository.saveWithProperties(rawData.getRawDataName(), rawData.getId(), rawData.getRawDataSubType(), rawData.getRawDataSourceUri(), rawData.getRawDataSymbol(), InsightEntityType.RawData, rawDataDTO.getScoreDTO());
             }
             rawData.setExternalId(String.valueOf(externalId));
             rawData = rawDataRepository.save(rawData);

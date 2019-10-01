@@ -12,7 +12,7 @@ export type Theme = 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
 
 export interface IHitDTO {
     theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
-    motsClefs: string[];
+    motClefUrls: { motClef: string; urls: string[] }[];
 }
 
 export interface BiographicsScoreDTO {
@@ -25,6 +25,7 @@ export interface IScoreDTO {
     externalIdBio?: string;
     externalIdRawData?: string;
     mongoIdRawData?: string;
+    rawDataUrl?: string;
     scorePoints?: string;
     scoreListMotsClefs?: { theme: Theme; motClef: string }[];
     scoreImageHit?: string;
@@ -36,6 +37,7 @@ export class ScoreDTO implements IScoreDTO {
         public externalIdBio?: string,
         public externalIdRawData?: string,
         public mongoIdRawData?: string,
+        public rawDataUrl?: string,
         public scorePoints?: string,
         public scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         public scoreImageHit?: string,

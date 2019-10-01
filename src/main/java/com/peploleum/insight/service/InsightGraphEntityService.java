@@ -47,7 +47,7 @@ public interface InsightGraphEntityService {
 
     List<InsightGraphEntity> findAllInOutVerticesByCriteria(Long id, CriteriaDTO criteria);
 
-    Long saveWithProperties(String name, String idMongo, String rawdatatype, String symbole, InsightEntityType type, ScoreDTO scoreDTO);
+    Long saveWithProperties(String name, String idMongo, String rawDataSubType, String rawdataUrl, String symbole, InsightEntityType type, ScoreDTO scoreDTO);
 
     /**
      * Delete the entity by id.

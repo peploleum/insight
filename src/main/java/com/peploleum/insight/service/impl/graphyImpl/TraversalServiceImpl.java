@@ -68,17 +68,22 @@ public class TraversalServiceImpl implements TraversalService {
             final String type = smartOpenProperties(resultObject, "entityType").replace("\"", "");
             final String symbole = smartOpenProperties(resultObject, "symbole");
             final String name = smartOpenProperties(resultObject, "name");
+            final String rawDataSubType = smartOpenProperties(resultObject, "rawDataSubType");
             if(type.equals("RawData")) {
-                final ArrayList<String> listMotsClefs = getMapMotClef(resultObject);
-                final String imageHit = smartOpenProperties(resultObject, "imageHit");
-                final String frequence = smartOpenProperties(resultObject, "frequence");
-                final String points = smartOpenProperties(resultObject, "points");
-                HashMap<String, Object> properties = new HashMap<>();
-                properties.put("imageHit", imageHit);
-                properties.put("frequence", frequence);
-                properties.put("points", points);
-                properties.put("listMotsClefs", listMotsClefs);
-                neighbor.setProperties(properties);
+                if(rawDataSubType != null && rawDataSubType.equals("url")) {
+                    final ArrayList<String> listMotsClefs = getMapMotClef(resultObject);
+                    final String imageHit = smartOpenProperties(resultObject, "imageHit");
+                    final String frequence = smartOpenProperties(resultObject, "frequence");
+                    final String points = smartOpenProperties(resultObject, "points");
+                    final String rawDataUrl = smartOpenProperties(resultObject, "rawDataUrl");
+                    HashMap<String, Object> properties = new HashMap<>();
+                    properties.put("imageHit", imageHit);
+                    properties.put("frequence", frequence);
+                    properties.put("points", points);
+                    properties.put("listMotsClefs", listMotsClefs);
+                    properties.put("rawDataUrl", rawDataUrl);
+                    neighbor.setProperties(properties);
+                }
             }
             neighbor.setType(type);
             neighbor.setId(graphId);

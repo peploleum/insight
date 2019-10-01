@@ -25,10 +25,10 @@ export class AnalyticsTableComponent implements OnInit, OnDestroy {
 
     getHitColor(h: IHitDTO[], theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO') {
         const hits = h.find(i => i.theme === theme);
-        if (!hits || hits.motsClefs.length === 0) {
+        if (!hits || hits.motClefUrls.length === 0) {
             return this._as.alertThreshold[0];
         }
-        const nbr = hits.motsClefs.length;
+        const nbr = hits.motClefUrls.length;
         return nbr > 1 ? (nbr > 3 ? this._as.alertThreshold[3] : this._as.alertThreshold[2]) : this._as.alertThreshold[1];
     }
 

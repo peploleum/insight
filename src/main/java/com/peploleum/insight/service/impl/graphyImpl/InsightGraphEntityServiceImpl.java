@@ -92,15 +92,17 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         return insightGraphEntities;
     }
 
+
     @Override
-    public Long saveWithProperties(String name, String idMongo, String rawdatatype, String symbole, InsightEntityType type, ScoreDTO scoreDTO) {
+    public Long saveWithProperties(String name, String idMongo, String rawDataSubType, String rawdataUrl, String symbole, InsightEntityType type, ScoreDTO scoreDTO) {
         log.debug("Request to save InsightGraphEntity with properties");
 
         InsightGraphEntity entity = new InsightGraphEntity();
         if (entity.getProperties() == null)
             entity.setProperties(new HashMap<>());
         entity.getProperties().put(InsightUtil.getEntityFieldNameFromType(type), name);
-        entity.getProperties().put("rawDataType", rawdatatype);
+        entity.getProperties().put("rawDataSubType", rawDataSubType);
+        entity.getProperties().put("rawDataUrl", rawdataUrl);
         entity.getProperties().put("symbole", symbole);
         entity.getProperties().put("points", String.valueOf(scoreDTO.getPoints()));
         String chaineMotClefs = "";

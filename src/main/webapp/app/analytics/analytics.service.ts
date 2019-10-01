@@ -31,6 +31,7 @@ export class AnalyticsService {
         externalIdBio?: string,
         externalIdRawData?: string,
         mongoIdRawData?: string,
+        rawDataUrl?: string,
         scorePoints?: string,
         scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         scoreImageHit?: string,
@@ -40,6 +41,7 @@ export class AnalyticsService {
             externalIdBio,
             externalIdRawData,
             mongoIdRawData,
+            rawDataUrl,
             scorePoints,
             scoreListMotsClefs,
             scoreImageHit,
@@ -104,7 +106,7 @@ export class AnalyticsService {
                         status: 200
                     });
                     return of(fakeResponse);
-                    // eturn of(FAKE_SCORE.map(s => s.externalIdBio = janusIdOrigin));
+                    // return of(FAKE_SCORE.map(s => s.externalIdBio = janusIdOrigin));
                 }),
                 map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                     const body: IGraphyNodeDTO[] = res.body; // vrai noeud avec les props
@@ -115,6 +117,7 @@ export class AnalyticsService {
                                     janusIdOrigin as string,
                                     item.id,
                                     item.idMongo,
+                                    item.properties.rawDataUrl as string,
                                     item.properties.points as string,
                                     (item.properties.listMotsClefs as string[]).map(str => {
                                         const parts = str.split('.');
