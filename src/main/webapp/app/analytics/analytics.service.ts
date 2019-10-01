@@ -7,7 +7,7 @@ import { IBiographics } from 'app/shared/model/biographics.model';
 import { RawData } from '../shared/model/raw-data.model';
 import { IGraphyNodeDTO } from '../shared/model/node.model';
 import { catchError, map } from 'rxjs/internal/operators';
-import { DictionaryDTO, ScoreDTO, Theme } from '../shared/model/analytics.model';
+import { Dictionary, ScoreDTO, Theme } from '../shared/model/analytics.model';
 import { NetworkService } from 'app/network/network.service';
 
 type EntityResponseType = HttpResponse<IBiographics>;
@@ -87,7 +87,7 @@ export class AnalyticsService {
         const headers = new HttpHeaders();
         const formData: FormData = new FormData();
         formData.append('fileKey', fileToUpload, fileToUpload.name);
-        const dico = new DictionaryDTO();
+        const dico = new Dictionary();
         return this.http.post(this._ressourceDictionaryUrl, dico, { headers, observe: 'response' });
     }
 

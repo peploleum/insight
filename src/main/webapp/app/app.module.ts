@@ -27,6 +27,7 @@ import { NetworkModule } from 'app/network/network.module';
 import { SideModule } from './side/side.module';
 import { registerLocaleData } from '@angular/common';
 import { CardModule } from './card/card.module';
+import { DictionaryModule } from 'app/dictionary/dictionary.module';
 
 /**
  * Si Locale ne fonctionne pas en AOT:
@@ -35,6 +36,7 @@ import { CardModule } from './card/card.module';
  * { name: '@angular/common/locales/fr', path: '${this.NPM_BASE}@angular/common/locales/fr.js' }
  * */
 registerLocaleData(localeFr, 'fr-FR');
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -58,7 +60,8 @@ registerLocaleData(localeFr, 'fr-FR');
         SideModule,
         SourcesModule,
         NetworkModule,
-        CardModule
+        CardModule,
+        DictionaryModule
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
     providers: [

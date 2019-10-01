@@ -1,6 +1,6 @@
-import { Component, EventEmitter, HostListener, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { GenericModel } from '../model/generic.model';
-import { Observable } from 'rxjs/index';
+import { Observable, Subscription } from 'rxjs/index';
 import { RawDataService } from 'app/entities/raw-data';
 import { BiographicsService } from 'app/entities/biographics';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { IBiographics } from 'app/shared/model/biographics.model';
     templateUrl: './insight-paginate-search.component.html',
     styleUrls: ['insight-search.scss']
 })
-export class InsightPaginateSearchComponent implements OnInit, OnChanges {
+export class InsightPaginateSearchComponent implements OnInit, OnDestroy {
     @Input()
     targetEntity: 'rawdata' | 'biographics';
     @Input()
@@ -31,6 +31,7 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
     };
     service: any;
     currentSearch: string;
+    routeSubs: Subscription;
 
     @Input()
     set queryParam(page: number) {
@@ -63,7 +64,7 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
                 this.service = this._inj.get<BiographicsService>(BiographicsService);
                 break;
         }
-        this.activatedRoute.params.subscribe(params => {
+        this.routeSubs = this.activatedRoute.params.subscribe(params => {
             if (params['query']) {
                 this._queryParam.query = params['query'];
                 this.currentSearch = this._queryParam.query;
@@ -78,7 +79,11 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges(changes: any) {}
+    ngOnDestroy(): void {
+        if (this.routeSubs) {
+            this.routeSubs.unsubscribe();
+        }
+    }
 
     search(): Observable<HttpResponse<GenericModel[]>> {
         if (!this._queryParam) {

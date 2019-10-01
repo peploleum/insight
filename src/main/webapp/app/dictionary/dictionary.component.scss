@@ -1,0 +1,30 @@
+.dictionary-container {
+    height: 100%;
+    width: 100vw;
+    padding: 1rem;
+}
+
+.dictionary-parts {
+    background-color: white !important;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.dictionary-header-container {
+    padding: 1rem 2rem 1rem 2rem !important;
+    display: flex;
+    align-items: center;
+
+    > h2 {
+        flex: 1 0 auto;
+    }
+
+    > div {
+        flex: 0 1 auto;
+        padding: 0 1rem 0 1rem;
+    }
+}
+
+.dictionary-element-container {
+    padding: 2rem !important;
+}

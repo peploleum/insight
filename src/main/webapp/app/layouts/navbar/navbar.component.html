@@ -24,15 +24,6 @@
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" [routerLink]="[{outlets: { primary: ['sources'], side: null }}]"
-                   (click)="collapseNavbar()">
-                    <span placement="bottom" ngbTooltip="Sources">
-                        <fa-icon [icon]="'plug'"></fa-icon>
-                    </span>
-                </a>
-            </li>
-            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" [routerLink]="[{outlets: { primary: ['card'], side: null }}]"
                    (click)="collapseNavbar()">
                     <span placement="bottom" ngbTooltip="Cards">
@@ -75,6 +66,15 @@
                    (click)="collapseNavbar()">
                     <span placement="bottom" ngbTooltip="Analytics">
                         <fa-icon [icon]="'user-tag'"></fa-icon>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" [routerLink]="[{outlets: { primary: ['dictionary'], side: null }}]"
+                   (click)="collapseNavbar()">
+                    <span placement="bottom" ngbTooltip="Sources">
+                        <fa-icon [icon]="'plug'"></fa-icon>
                     </span>
                 </a>
             </li>

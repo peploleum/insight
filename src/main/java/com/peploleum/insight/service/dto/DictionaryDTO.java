@@ -1,21 +1,21 @@
 package com.peploleum.insight.service.dto;
 
+import com.peploleum.insight.domain.dictionary.Theme;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class DictionaryDTO implements Serializable {
 
-
     private String id;
-    private List<ThemeDTO> themeDTOList;
+    private List<Theme> theme;
 
-
-    public List<ThemeDTO> getThemeDTOList() {
-        return themeDTOList;
+    public List<Theme> getTheme() {
+        return theme;
     }
 
-    public void setThemeDTOList(List<ThemeDTO> themeDTOList) {
-        this.themeDTOList = themeDTOList;
+    public void setTheme(List<Theme> theme) {
+        this.theme = theme;
     }
 
     public String getId() {

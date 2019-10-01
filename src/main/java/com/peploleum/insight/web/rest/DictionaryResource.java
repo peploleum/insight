@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.peploleum.insight.service.DictionaryService;
 import com.peploleum.insight.service.dto.DictionaryDTO;
 import com.peploleum.insight.web.rest.errors.BadRequestAlertException;
+import com.peploleum.insight.web.rest.util.HeaderUtil;
 import com.peploleum.insight.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -15,9 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -37,10 +39,6 @@ public class DictionaryResource {
         this.dictionaryService = dictionaryService;
     }
 
-//    public DictionaryResource(DictionaryService dictionaryService) {
-//        this.dictionaryService = dictionaryService;
-//    }
-
     /**
      * POST  /dictionary : Create a new dictionary.
      *
@@ -55,12 +53,10 @@ public class DictionaryResource {
         if (dictionaryDTO.getId() != null) {
             throw new BadRequestAlertException("A new dictionary cannot already have an ID", ENTITY_NAME, "idexists");
         }
-//        return ResponseEntity.created(new URI("/api/dictionary/" + result.getId()))
-//            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-//            .body(result);
-        return ResponseEntity.ok()
-            .headers(new HttpHeaders())
-            .body(dictionaryService.save(dictionaryDTO));
+        DictionaryDTO dictionary = this.dictionaryService.save(dictionaryDTO);
+        return ResponseEntity.created(new URI("/api/dictionary/" + dictionary.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, dictionary.getId()))
+            .body(dictionary);
     }
 
     /**
@@ -68,13 +64,11 @@ public class DictionaryResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the dictionary in body
      */
-    @GetMapping("/dictionaries")
+    @GetMapping("/dictionary")
     @Timed
     public ResponseEntity<List<DictionaryDTO>> getAllDictionaries(Pageable pageable) {
         log.debug("REST request to get the dictionary");
         Page<DictionaryDTO> page = dictionaryService.findAll(pageable);
-        //return ResponseUtil.wrapOrNotFound(dictionaryDTO);
-
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/dictionaries");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

@@ -45,22 +45,22 @@ export class ScoreDTO implements IScoreDTO {
     ) {}
 }
 
-export interface IDictionaryDTO {
+export interface IDictionary {
     id?: string;
-    themeDTOList?: ThemeDTO[];
+    theme?: ThemeDTO[];
 }
 
-export class DictionaryDTO implements IDictionaryDTO {
-    constructor(public id?: string, public themeDTOList?: ThemeDTO[]) {}
+export class Dictionary implements IDictionary {
+    constructor(public id?: string, public theme?: ThemeDTO[]) {}
 }
 
 export interface IThemeDTO {
     name?: string;
-    motclefDTOList?: MotclefDTO[];
+    motclef?: MotclefDTO[];
 }
 
 export class ThemeDTO implements IThemeDTO {
-    constructor(public name?: string, public motclefDTOList?: MotclefDTO[]) {}
+    constructor(public name?: string, public motclef?: MotclefDTO[]) {}
 }
 
 export interface IMotclefDTO {

@@ -6,7 +6,6 @@ import com.peploleum.insight.domain.dictionary.Theme;
 import com.peploleum.insight.repository.DictionaryRepository;
 import com.peploleum.insight.service.DictionaryService;
 import com.peploleum.insight.service.dto.DictionaryDTO;
-import com.peploleum.insight.service.dto.RawDataDTO;
 import com.peploleum.insight.service.mapper.DictionaryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +16,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Service Implementation for managing RawData.
+ * Service Implementation for managing Dictionary.
  */
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
@@ -40,7 +38,6 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public DictionaryDTO save(DictionaryDTO dictionaryDTO) {
         log.debug("Request to save Dictionary : {}", dictionaryDTO);
-
         Dictionary dictionary = dictionaryMapper.toEntity(dictionaryDTO);
         dictionary = dictionaryRepository.save(dictionary);
         return dictionaryMapper.toDto(dictionary);
@@ -54,7 +51,6 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
 
-
     @Override
     public void delete(String id) {
         dictionaryRepository.deleteById(id);
@@ -66,22 +62,6 @@ public class DictionaryServiceImpl implements DictionaryService {
         return dictionaryRepository.findAll(pageable)
             .map(dictionaryMapper::toDto);
     }
-
-
-//    @Override
-//    public ThemeDTO findTheme(String name) {
-//        log.debug("Request to get a Theme : {}", name);
-//
-//        for (Theme theme: dictionaryRepository.findAll().get(0).getTheme()){
-//            for (Motclef motclef : theme.getMotclef()){
-//                if
-//            }
-//            if(theme.getName().equals(name)){
-//                return theme
-//            }
-//        }
-//        return
-//    }
 
     @Override
     public Optional<String> findThemeNamePerMotclef(String motclef) {
@@ -98,12 +78,6 @@ public class DictionaryServiceImpl implements DictionaryService {
         return Optional.ofNullable(mongoTemplate.find(query, Motclef.class)
             .get(0).getPond());
     }
-
-
-//    @Override
-//    public List<ThemeDTO> searchThemeByCriteria(Query query) {
-//        return this.mongoTemplate.find(query, com.peploleum.insight.domain.dictionary.Dictionary.class).stream().map(dictionaryMapper::toDto).collect(Collectors.toList());
-//    }
 
 }
 

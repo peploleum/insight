@@ -23,7 +23,7 @@
     </div>
     <div class="row justify-content-center pt-2 pb-3">
         <div class="col-md-11 analytics-parts analytics-search-container">
-            <ins-insight-paginate-search #bidou [targetEntity]="'biographics'" [urlBase]="'/analytics'"
+            <ins-insight-paginate-search [targetEntity]="'biographics'" [urlBase]="'/analytics'"
                                          (resultEmitter)="onResultQueryReceived($event)"
                                          (resultParam)="onNewResultParam($event)"
                                          [queryParam]="page"></ins-insight-paginate-search>
