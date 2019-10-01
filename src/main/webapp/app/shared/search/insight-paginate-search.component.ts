@@ -1,5 +1,4 @@
 import { Component, EventEmitter, HostListener, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { GenericModel } from '../model/generic.model';
 import { Observable } from 'rxjs/index';
 import { RawDataService } from 'app/entities/raw-data';
@@ -22,17 +21,29 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
     @Output()
     resultEmitter: EventEmitter<any> = new EventEmitter();
     @Output()
-    resultParam: EventEmitter<{ totalItems: number }> = new EventEmitter();
+    resultParam: EventEmitter<{ totalItems: number; query: string; size: number; page: number }> = new EventEmitter();
 
-    @Input()
-    queryParam: { page: number; query: string; size: number } = { page: 0, query: '', size: 10 };
+    private _queryParam: { page: number; query: string; size: number; sort: string[] } = {
+        page: 0,
+        query: '*',
+        size: 10,
+        sort: this.sort()
+    };
     service: any;
     currentSearch: string;
-    searchForm: FormControl = new FormControl('');
+
+    @Input()
+    set queryParam(page: number) {
+        const needReloading = this._queryParam.page !== page - 1;
+        this._queryParam.page = page - 1;
+        if (needReloading) {
+            this.navigate();
+        }
+    }
 
     @HostListener('document:keydown.enter', ['$event'])
     onKeydownHandler(event: KeyboardEvent) {
-        this.queryParam.query = this.currentSearch;
+        this._queryParam.query = this.currentSearch;
         this.navigate();
     }
 
@@ -52,24 +63,29 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
                 this.service = this._inj.get<BiographicsService>(BiographicsService);
                 break;
         }
-        this.activatedRoute.data.subscribe(data => {
-            this.queryParam.page = data.pagingParams.page;
+        this.activatedRoute.params.subscribe(params => {
+            if (params['query']) {
+                this._queryParam.query = params['query'];
+                this.currentSearch = this._queryParam.query;
+            }
+            if (params['page']) {
+                this._queryParam.page = parseInt(params['page'], 10);
+            }
+            if (params['size']) {
+                this._queryParam.size = params['size'];
+            }
+            this.search();
         });
-        this.queryParam.query =
-            this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
-                ? this.activatedRoute.snapshot.params['search']
-                : '';
-        this.currentSearch = this.queryParam.query;
     }
 
     ngOnChanges(changes: any) {}
 
     search(): Observable<HttpResponse<GenericModel[]>> {
-        if (!this.queryParam) {
+        if (!this._queryParam) {
             return;
         }
         return this.service
-            .query(this.queryParam)
+            .search(this._queryParam)
             .subscribe(
                 (res: HttpResponse<IBiographics[]>) => this.paginate(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
@@ -77,17 +93,31 @@ export class InsightPaginateSearchComponent implements OnInit, OnChanges {
     }
 
     navigate() {
-        if (!this.queryParam) {
+        if (!this._queryParam) {
             return;
         }
-        this.router.navigate([`${this.urlBase}`, this.queryParam]);
-        this.search();
+        this.router.navigate([`${this.urlBase}`, this._queryParam]);
     }
 
     protected paginate(data: GenericModel[], headers: HttpHeaders) {
         const totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.resultParam.emit({ totalItems });
+        this.resultParam.emit({
+            totalItems,
+            query: this._queryParam.query,
+            size: this._queryParam.size,
+            page: this._queryParam.page
+        });
         this.resultEmitter.emit(data);
+    }
+
+    protected sort(): string[] {
+        const predicate = 'id';
+        const reverse = false;
+        const result = [predicate + ',' + (reverse ? 'asc' : 'desc')];
+        if (predicate !== 'id') {
+            result.push('id');
+        }
+        return result;
     }
 
     protected onError(errorMessage: string) {

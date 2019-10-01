@@ -20,11 +20,10 @@ import { QuickViewService } from 'app/side/quick-view.service';
 export class AnalyticsComponent implements OnInit, OnDestroy {
     biographicsScores: BiographicsScoreDTO[] = [];
     biographics: IBiographics[];
-    selectedBiographic: IBiographics;
 
     gridView = false;
-
-    fileToUpload: File = null;
+    page = 1;
+    resultParam: { totalItems: number; query: string; size: number; page: number };
 
     constructor(
         protected analyticsService: AnalyticsService,
@@ -39,12 +38,17 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {}
 
-    getAlertThreshold() {
-        return this.analyticsService.alertThreshold;
+    onNewResultParam(param) {
+        this.resultParam = param;
+        this.page = this.resultParam.page + 1;
     }
 
-    onDataSelected(entity: GenericModel) {
-        this.onResultQueryReceived([entity as IBiographics]);
+    loadPage(p: number) {
+        this.page = p;
+    }
+
+    getAlertThreshold() {
+        return this.analyticsService.alertThreshold;
     }
 
     onResultQueryReceived(entities: GenericModel[]) {
@@ -105,32 +109,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-    }
-
-    handleFileInput(files: FileList) {
-        this.fileToUpload = files.item(0);
-        console.log(this.fileToUpload);
-        this.uploadFileToActivity();
-    }
-
-    uploadFileToActivity() {
-        this.analyticsService.postFile(this.fileToUpload).subscribe(
-            data => {
-                console.log('bonjour');
-                console.log(data);
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    }
-
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
-    }
-
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
     }
 
     protected onError(errorMessage: string) {
