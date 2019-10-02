@@ -3,6 +3,26 @@
 
     <div class="ins-card-content" *ngIf="currentTab">
 
+        <div class="row_card_analytics">
+            <div class="col_card_analytics">
+                <div class="tabs_card_analytics">
+                    <div *ngFor="let hits of biographicsScore['hits']">
+                        <div class="ins-card-info" *ngIf="currentTab === hits.theme">
+                            <div class="tab" *ngFor="let motClefUrls of hits.motClefUrls">
+                                    <input class="input_card_analytics" type="checkbox" id="{{motClefUrls.motClef}}">
+                                    <label class="tab-label" for="{{motClefUrls.motClef}}">{{motClefUrls.motClef}}</label>
+                                    <div class="tab-content">
+                                        {{url}}
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
         <div class="ins-card-nav">
             <span *ngFor="let hits of biographicsScore['hits']" (click)="onChangeTab(hits.theme)"
                   [ngClass]="{ 'nav-selected selected' : currentTab === hits.theme }">
@@ -27,6 +47,8 @@
                 </div>
             </div>
         </div>
+
+
 
         <!--<div class="ins-card-info" *ngIf="currentTab === 'ESP'">-->
             <!--&lt;!&ndash;<div *ngFor="let key of (entity|objectFilterNullPipe:['biographicsName','biographicsFirstname'])">&ndash;&gt;-->
