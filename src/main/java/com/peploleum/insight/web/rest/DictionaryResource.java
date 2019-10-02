@@ -91,12 +91,12 @@ public class DictionaryResource {
      *
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/dictionary")
+    @DeleteMapping("/dictionary/{id}")
     @Timed
-    public ResponseEntity<Void> deleteDictionary(String id) {
+    public ResponseEntity<Void> deleteDictionary(@PathVariable String id) {
         log.debug("REST request to delete a dictionary");
         dictionaryService.delete(id);
-        return ResponseEntity.ok().headers(new HttpHeaders()).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
     }
 
 

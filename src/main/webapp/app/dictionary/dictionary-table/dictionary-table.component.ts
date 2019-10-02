@@ -1,25 +1,31 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IDictionary } from 'app/shared/model/analytics.model';
+import { IDictionaryContainer } from 'app/dictionary/dictionary.utils';
 
 @Component({
     selector: 'ins-dictionary-table',
     templateUrl: './dictionary-table.component.html',
-    styles: []
+    styleUrls: ['dictionary-editor.component.scss']
 })
 export class DictionaryTableComponent implements OnInit {
     @Input()
-    dictionaries: IDictionary[];
-    @Input()
-    selectedDictionary: IDictionary;
-
+    dictionaries: IDictionaryContainer[];
     @Output()
-    selectionEmitter: EventEmitter<IDictionary> = new EventEmitter();
+    actionEmitter: EventEmitter<{ action: 'DELETE' | 'SAVE'; dico: IDictionaryContainer }> = new EventEmitter();
 
     constructor() {}
 
     ngOnInit() {}
 
-    onClick(dico: IDictionary) {
-        this.selectionEmitter.emit(dico);
+    onClick(dico: IDictionaryContainer) {
+        this.dictionaries.forEach(d => (d.selected = false));
+        dico.selected = true;
+    }
+
+    deleteDictionary(dico: IDictionaryContainer) {
+        this.actionEmitter.emit({ dico, action: 'DELETE' });
+    }
+
+    saveDictionary(dico: IDictionaryContainer) {
+        this.actionEmitter.emit({ dico, action: 'SAVE' });
     }
 }

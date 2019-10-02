@@ -2,14 +2,19 @@
     <div class="row justify-content-center pt-3 pb-2">
         <div class="col-md-11 dictionary-parts dictionary-header-container">
             <h2><span>Dictionary</span></h2>
+            <div>
+                <label class="col-form-label-sm" for="file-input">Importer un dictionnaire</label>
+                <input type="file" (change)="onFileInputChange($event)"
+                       class="form-control-file form-control-sm" id="file-input" title="Importer un fichier JSON"/>
+            </div>
+
         </div>
     </div>
     <div class="row justify-content-center pt-2 pb-2">
         <div class="col-md-11 dictionary-parts dictionary-element-container">
             <ins-dictionary-table [dictionaries]="dictionaries"
-                                  [selectedDictionary]="selectedDictionary"
-                                  (selectionEmitter)="onDictionarySelected($event)"></ins-dictionary-table>
-            <ins-dictionary-editor [selectedDictionary]="selectedDictionary"></ins-dictionary-editor>
+                                  (actionEmitter)="onAction($event)"></ins-dictionary-table>
+            <ins-dictionary-editor [selectedDictionary]="getSelectedDictionary()"></ins-dictionary-editor>
         </div>
     </div>
 </div>

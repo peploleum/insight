@@ -1,5 +1,5 @@
 <div class="theme-tab-container" *ngIf="selectedDictionary">
-    <div *ngFor="let theme of selectedDictionary.theme" (click)="onClick(theme)"
+    <div *ngFor="let theme of selectedDictionary.dictionary.theme" (click)="onClick(theme)"
          [ngClass]="{'selected': theme === selectedTheme}">
         <span>{{theme.name}}</span>
     </div>

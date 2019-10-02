@@ -54,6 +54,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void delete(String id) {
+        log.debug("Request to delete Dictionary : {}", id);
         dictionaryRepository.deleteById(id);
     }
 

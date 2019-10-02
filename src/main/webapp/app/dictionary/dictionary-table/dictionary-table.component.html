@@ -6,13 +6,25 @@
             </th>
             <th><span>Name</span>
             </th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let dico of dictionaries;" (click)="onClick(dico)"
-            [ngClass]="{'selected': dico === selectedDictionary}">
-            <td>{{dico.id}}</td>
-            <td>{{dico.name}}</td>
+            [ngClass]="{'selected': dico.selected}" [ngStyle]="{'font-style':dico.modified ? 'italic': 'normal'}">
+            <td>{{dico.dictionary.id || 'no ID specified'}}</td>
+            <td>{{dico.dictionary.name}}</td>
+            <td class="text-right d-flex justify-content-end">
+                <button type="submit" class="btn btn-info btn-sm save-btn mr-1" [disabled]="!dico.modified"
+                        (click)="saveDictionary(dico)">
+                    <fa-icon [icon]="'save'"></fa-icon>
+                    <span class="d-none d-md-inline">Save</span>
+                </button>
+                <button type="submit" class="btn btn-warning btn-sm" (click)="deleteDictionary(dico)">
+                    <fa-icon [icon]="'times'"></fa-icon>
+                    <span class="d-none d-md-inline">Delete</span>
+                </button>
+            </td>
         </tr>
         </tbody>
     </table>

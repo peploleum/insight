@@ -1,10 +1,8 @@
 package com.peploleum.insight.service.mapper;
 
-import com.peploleum.insight.domain.*;
-import com.peploleum.insight.domain.enumeration.InsightEntityType;
+import com.peploleum.insight.domain.Biographics;
 import com.peploleum.insight.service.dto.BiographicsDTO;
-
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 
 /**
  * Mapper for the entity Biographics and its DTO BiographicsDTO.

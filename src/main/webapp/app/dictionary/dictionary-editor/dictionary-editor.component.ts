@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IDictionary, ThemeDTO } from 'app/shared/model/analytics.model';
+import { ThemeDTO } from 'app/shared/model/analytics.model';
+import { IDictionaryContainer } from 'app/dictionary/dictionary.utils';
 
 @Component({
     selector: 'ins-dictionary-editor',
@@ -7,7 +8,7 @@ import { IDictionary, ThemeDTO } from 'app/shared/model/analytics.model';
     styleUrls: ['dictionary-editor.component.scss']
 })
 export class DictionaryEditorComponent implements OnInit {
-    private _selectedDictionary: IDictionary;
+    private _selectedDictionary: IDictionaryContainer;
     selectedTheme: ThemeDTO;
 
     constructor() {}
@@ -15,14 +16,17 @@ export class DictionaryEditorComponent implements OnInit {
     ngOnInit() {}
 
     @Input()
-    set selectedDictionary(value: IDictionary) {
-        this._selectedDictionary = value;
-        if (this._selectedDictionary && this._selectedDictionary.theme.length) {
-            this.selectedTheme = this._selectedDictionary.theme[0];
+    set selectedDictionary(value: IDictionaryContainer) {
+        if (value && value.dictionary) {
+            this._selectedDictionary = value;
+            this.selectedTheme = null;
+            if (this._selectedDictionary.dictionary.theme) {
+                this.selectedTheme = this._selectedDictionary.dictionary.theme[0];
+            }
         }
     }
 
-    get selectedDictionary(): IDictionary {
+    get selectedDictionary(): IDictionaryContainer {
         return this._selectedDictionary;
     }
 
