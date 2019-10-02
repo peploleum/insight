@@ -9,7 +9,7 @@ import { BiographicsScoreDTO, Theme } from 'app/shared/model/analytics.model';
 export class CardAnalyticsComponent implements OnInit {
     @Input()
     biographicsScore: BiographicsScoreDTO;
-    currentTab: Theme = 'ESP';
+    currentTab: Theme = 'TER';
 
     constructor() {}
 

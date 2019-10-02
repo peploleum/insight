@@ -367,6 +367,7 @@ Custom card css
         border: 1px solid rgba(0, 0, 0, 0.125);
         margin-bottom: -1px;
         padding: 0.3rem;
+        height: 100%;
     }
 }
 
@@ -518,23 +519,24 @@ $clouds: #ecf0f1;
 // Layout
 .row_card_analytics {
     display: flex;
+    max-height: 40em;
     .col_card_analytics {
         flex: 1;
         &:last-child {
-            margin-left: 1em;
         }
     }
 }
 /* Accordion styles */
 .tabs_card_analytics {
     border-radius: 8px;
-    overflow: hidden;
     box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
+    height: 100%;
+    overflow: auto;
 }
 .tab {
     width: 100%;
     color: white;
-    overflow: hidden;
+    overflow: auto;
     &-label {
         display: flex;
         justify-content: space-between;
@@ -551,26 +553,39 @@ $clouds: #ecf0f1;
             width: 1em;
             height: 1em;
             text-align: center;
-            transition: all 0.35s;
+            // transition: 0.35s;
         }
     }
     &-content {
+        overflow: auto;
         max-height: 0;
         padding: 0 1em;
         color: $midnight;
         background: white;
-        transition: all 0.35s;
+        // transition: 0.35s;
     }
     &-close {
         display: flex;
         justify-content: flex-end;
-        padding: 1em;
         font-size: 0.75em;
         background: $midnight;
         cursor: pointer;
         &:hover {
             background: darken($midnight, 10%);
         }
+    }
+}
+
+.container-url-list {
+    max-height: 100%;
+}
+
+.ins-card-info_card_analytics {
+    flex: 1 1 auto;
+    > div {
+        word-break: break-all;
+        margin-bottom: -1px;
+        background-color: #fff;
     }
 }
 
