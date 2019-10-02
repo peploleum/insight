@@ -5,12 +5,11 @@
         </div>
     </div>
     <div class="row justify-content-center pt-2 pb-2">
-        <div class="col-md-6 dictionary-parts dictionary-element-container">
-            <ins-dictionary-table></ins-dictionary-table>
-        </div>
-        <div class="col-md-6 dictionary-parts dictionary-element-container">
-            <ins-dictionary-editor></ins-dictionary-editor>
+        <div class="col-md-11 dictionary-parts dictionary-element-container">
+            <ins-dictionary-table [dictionaries]="dictionaries"
+                                  [selectedDictionary]="selectedDictionary"
+                                  (selectionEmitter)="onDictionarySelected($event)"></ins-dictionary-table>
+            <ins-dictionary-editor [selectedDictionary]="selectedDictionary"></ins-dictionary-editor>
         </div>
     </div>
-
 </div>

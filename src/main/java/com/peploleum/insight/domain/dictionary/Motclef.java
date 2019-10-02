@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Motclef implements Serializable {
 
     private String clef;
-    private String pond;
+    private Integer pond;
 
     public String getClef() {
         return clef;
@@ -15,12 +15,11 @@ public class Motclef implements Serializable {
         this.clef = clef;
     }
 
-    public String getPond() {
+    public Integer getPond() {
         return pond;
     }
 
-    public void setPond(String pond) {
+    public void setPond(Integer pond) {
         this.pond = pond;
     }
-
 }

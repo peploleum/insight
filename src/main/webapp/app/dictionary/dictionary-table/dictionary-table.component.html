@@ -1,3 +1,19 @@
-<p>
-  dictionary-table works!
-</p>
+<div class="table-responsive" *ngIf="dictionaries">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th><span>Id</span>
+            </th>
+            <th><span>Name</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let dico of dictionaries;" (click)="onClick(dico)"
+            [ngClass]="{'selected': dico === selectedDictionary}">
+            <td>{{dico.id}}</td>
+            <td>{{dico.name}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

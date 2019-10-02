@@ -1,3 +1,22 @@
-<p>
-  dictionary-editor works!
-</p>
+<div class="theme-tab-container" *ngIf="selectedDictionary">
+    <div *ngFor="let theme of selectedDictionary.theme" (click)="onClick(theme)"
+         [ngClass]="{'selected': theme === selectedTheme}">
+        <span>{{theme.name}}</span>
+    </div>
+</div>
+<table class="table table-striped" *ngIf="selectedTheme">
+    <thead>
+    <tr>
+        <th><span>Mot</span>
+        </th>
+        <th><span>Pondération</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let mot of selectedTheme.motclef;">
+        <td>{{mot.clef}}</td>
+        <td>{{mot.pond}}</td>
+    </tr>
+    </tbody>
+</table>

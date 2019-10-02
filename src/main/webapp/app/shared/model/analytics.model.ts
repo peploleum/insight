@@ -47,27 +47,28 @@ export class ScoreDTO implements IScoreDTO {
 
 export interface IDictionary {
     id?: string;
+    name?: string;
     theme?: ThemeDTO[];
 }
 
 export class Dictionary implements IDictionary {
-    constructor(public id?: string, public theme?: ThemeDTO[]) {}
+    constructor(public id?: string, public name?: string, public theme?: ThemeDTO[]) {}
 }
 
 export interface IThemeDTO {
-    name?: string;
+    name?: Theme;
     motclef?: MotclefDTO[];
 }
 
 export class ThemeDTO implements IThemeDTO {
-    constructor(public name?: string, public motclef?: MotclefDTO[]) {}
+    constructor(public name?: Theme, public motclef?: MotclefDTO[]) {}
 }
 
 export interface IMotclefDTO {
     clef?: string;
-    pond?: string;
+    pond?: number;
 }
 
 export class MotclefDTO implements IMotclefDTO {
-    constructor(public clef?: string, public pond?: string) {}
+    constructor(public clef?: string, public pond?: number) {}
 }

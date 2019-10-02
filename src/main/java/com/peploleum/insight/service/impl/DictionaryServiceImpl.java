@@ -1,7 +1,6 @@
 package com.peploleum.insight.service.impl;
 
 import com.peploleum.insight.domain.dictionary.Dictionary;
-import com.peploleum.insight.domain.dictionary.Motclef;
 import com.peploleum.insight.domain.dictionary.Theme;
 import com.peploleum.insight.repository.DictionaryRepository;
 import com.peploleum.insight.service.DictionaryService;
@@ -30,9 +29,11 @@ public class DictionaryServiceImpl implements DictionaryService {
     private DictionaryRepository dictionaryRepository;
     private final MongoTemplate mongoTemplate;
 
-    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, MongoTemplate mongoTemplate) {
+    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, MongoTemplate mongoTemplate,
+                                 DictionaryMapper dictionaryMapper) {
         this.dictionaryRepository = dictionaryRepository;
         this.mongoTemplate = mongoTemplate;
+        this.dictionaryMapper = dictionaryMapper;
     }
 
     @Override
@@ -71,13 +72,17 @@ public class DictionaryServiceImpl implements DictionaryService {
             .get(0).getName());
     }
 
-    @Override
+    /*@Override
     public Optional<String> findPonderation(String motclef) {
         Query query = new Query();
         query.addCriteria(Criteria.where("clef").is(motclef));
         return Optional.ofNullable(mongoTemplate.find(query, Motclef.class)
             .get(0).getPond());
-    }
+    }*/
 
+    @Override
+    public Optional<String> findPonderation(String motclef) {
+        return Optional.empty();
+    }
 }
 

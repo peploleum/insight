@@ -8,6 +8,7 @@ import java.util.List;
 public class DictionaryDTO implements Serializable {
 
     private String id;
+    private String name;
     private List<Theme> theme;
 
     public List<Theme> getTheme() {
@@ -26,4 +27,11 @@ public class DictionaryDTO implements Serializable {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

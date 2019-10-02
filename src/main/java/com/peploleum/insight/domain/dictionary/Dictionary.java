@@ -12,6 +12,8 @@ public class Dictionary implements Serializable {
 
     @Id
     private String id;
+    @Field("name")
+    private String name;
     @Field("theme")
     private List<Theme> theme;
 
@@ -21,6 +23,14 @@ public class Dictionary implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Theme> getTheme() {

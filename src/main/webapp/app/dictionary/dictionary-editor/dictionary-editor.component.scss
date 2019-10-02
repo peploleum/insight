@@ -1,0 +1,12 @@
+.theme-tab-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    > div {
+        padding: 0.5rem;
+        flex: 1 0 auto;
+        text-align: center;
+    }
+}
