@@ -10,7 +10,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let dico of dictionaries;" (click)="onClick(dico)"
+        <tr *ngFor="let dico of dictionaries;" (click)="onClick(dico)" style="cursor: pointer;"
             [ngClass]="{'selected': dico.selected}" [ngStyle]="{'font-style':dico.modified ? 'italic': 'normal'}">
             <td>{{dico.dictionary.id || 'no ID specified'}}</td>
             <td>{{dico.dictionary.name}}</td>
