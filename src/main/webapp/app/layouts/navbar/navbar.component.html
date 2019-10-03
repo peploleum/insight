@@ -73,8 +73,17 @@
                 [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" [routerLink]="[{outlets: { primary: ['dictionary'], side: null }}]"
                    (click)="collapseNavbar()">
-                    <span placement="bottom" ngbTooltip="Sources">
+                    <span placement="bottom" ngbTooltip="Dictionary">
                         <fa-icon [icon]="'book-open'"></fa-icon>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" [routerLink]="[{outlets: { primary: ['pipeline'], side: null }}]"
+                   (click)="collapseNavbar()">
+                    <span placement="bottom" ngbTooltip="Pipeline">
+                        <fa-icon [icon]="'project-diagram'"></fa-icon>
                     </span>
                 </a>
             </li>

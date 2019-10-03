@@ -43,6 +43,12 @@ export class OverlayPositionDirective implements AfterViewInit {
                     this._renderer.setStyle(this._el.nativeElement, 'left', `${rect.left + 20}px`);
                     this._renderer.setStyle(this._el.nativeElement, 'top', `${rect.top + rect.height - 20}px`);
                     break;
+                case 'COVER-TARGET':
+                    this._renderer.setStyle(this._el.nativeElement, 'left', `${this.targetContainer.offsetLeft}px`);
+                    this._renderer.setStyle(this._el.nativeElement, 'top', `${this.targetContainer.offsetTop}px`);
+                    this._renderer.setStyle(this._el.nativeElement, 'height', `${rect.height}px`);
+                    this._renderer.setStyle(this._el.nativeElement, 'width', `${rect.width}px`);
+                    break;
                 default:
                     break;
             }
@@ -50,4 +56,4 @@ export class OverlayPositionDirective implements AfterViewInit {
     }
 }
 
-export type InsPositionType = 'TOP-LEFT' | 'TOP-RIGHT' | 'BOTTOM-RIGHT' | 'BOTTOM-LEFT';
+export type InsPositionType = 'TOP-LEFT' | 'TOP-RIGHT' | 'BOTTOM-RIGHT' | 'BOTTOM-LEFT' | 'COVER-TARGET';

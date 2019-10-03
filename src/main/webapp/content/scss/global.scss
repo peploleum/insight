@@ -516,16 +516,19 @@ $clouds: #ecf0f1;
     opacity: 0;
     z-index: -1;
 }
+
 // Layout
 .row_card_analytics {
     display: flex;
     max-height: 40em;
     .col_card_analytics {
         flex: 1;
+
         &:last-child {
         }
     }
 }
+
 /* Accordion styles */
 .tabs_card_analytics {
     border-radius: 8px;
@@ -533,6 +536,7 @@ $clouds: #ecf0f1;
     height: 100%;
     overflow: auto;
 }
+
 .tab {
     width: 100%;
     color: white;
@@ -548,6 +552,7 @@ $clouds: #ecf0f1;
         &:hover {
             background: darken($midnight, 10%);
         }
+
         &::after {
             content: '\276F';
             width: 1em;
@@ -556,6 +561,7 @@ $clouds: #ecf0f1;
             // transition: 0.35s;
         }
     }
+
     &-content {
         overflow: auto;
         max-height: 0;
@@ -564,12 +570,14 @@ $clouds: #ecf0f1;
         background: white;
         // transition: 0.35s;
     }
+
     &-close {
         display: flex;
         justify-content: flex-end;
         font-size: 0.75em;
         background: $midnight;
         cursor: pointer;
+
         &:hover {
             background: darken($midnight, 10%);
         }
@@ -593,10 +601,12 @@ $clouds: #ecf0f1;
 .input_card_analytics:checked {
     + .tab-label {
         background: darken($midnight, 10%);
+
         &::after {
             transform: rotate(90deg);
         }
     }
+
     ~ .tab-content {
         max-height: 100vh;
         padding: 1em;
@@ -1146,4 +1156,23 @@ Modal window custom CSS
 
 .modal-hidden {
     height: auto !important;
+}
+
+/* ==========================================================================
+Modal window custom CSS
+========================================================================== */
+.custom-drop-zone-container {
+    z-index: 1000;
+    position: absolute;
+}
+
+.custom-drop-zone {
+    background-color: rgba(0, 86, 179, 0.2) !important;
+    height: 100% !important;
+}
+
+.hide-drop-zone {
+    background-color: rgba(0, 86, 179, 0) !important;
+    height: 100% !important;
+    border: none !important;
 }

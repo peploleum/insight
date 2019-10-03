@@ -28,6 +28,7 @@ import { SideModule } from './side/side.module';
 import { registerLocaleData } from '@angular/common';
 import { CardModule } from './card/card.module';
 import { DictionaryModule } from 'app/dictionary/dictionary.module';
+import { PipelineModule } from 'app/pipeline/pipeline.module';
 
 /**
  * Si Locale ne fonctionne pas en AOT:
@@ -61,7 +62,8 @@ registerLocaleData(localeFr, 'fr-FR');
         SourcesModule,
         NetworkModule,
         CardModule,
-        DictionaryModule
+        DictionaryModule,
+        PipelineModule
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
     providers: [

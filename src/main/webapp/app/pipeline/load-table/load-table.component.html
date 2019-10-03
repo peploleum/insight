@@ -1,0 +1,20 @@
+<div class="load-table-container" id="load-table-container">
+    <div class="table-header">
+        <span>Index</span>
+        <span>Filename</span>
+    </div>
+    <div class="table-body">
+        <div class="table-row" *ngFor="let file of getLoadedFormFiles()|async; let i = index;" style="cursor: pointer;">
+            <span>{{i}}</span>
+            <span>{{file.fileName}}</span>
+        </div>
+    </div>
+</div>
+
+<file-drop class="custom-drop-zone-container" [dropZoneLabel]="displayDropZone ? 'Drop files here' : ''"
+           [dropZoneClassName]="displayDropZone ? 'custom-drop-zone' : 'hide-drop-zone'"
+           (onFileDrop)="dropped($event)"
+           (onFileOver)="onFileOver()" (onFileLeave)="onFileLeave()"
+           insOverlayPosition
+           [idTargetElement]="'load-table-container'"
+           [position]="'COVER-TARGET'"></file-drop>

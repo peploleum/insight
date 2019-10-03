@@ -61,6 +61,7 @@ import {
     faPlug,
     faPlus,
     faPlusSquare,
+    faProjectDiagram,
     faRoad,
     faRssSquare,
     faSave,
@@ -195,5 +196,6 @@ library.add(faExclamationTriangle);
 library.add(faTh);
 library.add(faTable);
 library.add(faBookOpen);
+library.add(faProjectDiagram);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
