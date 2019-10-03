@@ -18,6 +18,7 @@ import {
     faBell,
     faBook,
     faBookmark,
+    faBookOpen,
     faBookReader,
     faBullseye,
     faCalendarAlt,
@@ -193,5 +194,6 @@ library.add(faUserTag);
 library.add(faExclamationTriangle);
 library.add(faTh);
 library.add(faTable);
+library.add(faBookOpen);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
