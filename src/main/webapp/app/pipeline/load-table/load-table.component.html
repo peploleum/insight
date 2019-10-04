@@ -2,11 +2,13 @@
     <div class="table-header">
         <span>Index</span>
         <span>Filename</span>
+        <span></span>
     </div>
     <div class="table-body">
         <div class="table-row" *ngFor="let file of getLoadedFormFiles()|async; let i = index;" style="cursor: pointer;">
             <span>{{i}}</span>
             <span>{{file.fileName}}</span>
+            <span [ngStyle]="{'color': file.fileContent ? 'green':'grey'}"><fa-icon [icon]="'check'"></fa-icon></span>
         </div>
     </div>
 </div>

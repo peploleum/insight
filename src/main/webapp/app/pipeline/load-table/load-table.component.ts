@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ILoadedFormFile } from 'app/shared/model/pipeline.model';
 import { PipelineService } from 'app/pipeline/pipeline.service';
-import { FileSystemDirectoryEntry, FileSystemFileEntry, UploadEvent, UploadFile } from 'ngx-file-drop';
+import { FileSystemDirectoryEntry, FileSystemFileEntry, UploadEvent } from 'ngx-file-drop';
+import { UUID } from 'app/shared/util/insight-util';
 
 @Component({
     selector: 'ins-load-table',
@@ -25,21 +26,42 @@ export class LoadTableComponent implements OnInit {
     }
 
     dropped(event: UploadEvent) {
-        const files: UploadFile[] = event.files;
+        this.displayDropZone = false;
+        // const files: UploadFile[] = event.files;
         for (const droppedFile of event.files) {
-            // Is it a file?
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
                 fileEntry.file((file: File) => {
-                    // Here you can access the real file
                     console.log(droppedFile.relativePath, file);
+                    this.onFileLoaded(file);
                 });
             } else {
-                // It was a directory (empty directories are added, otherwise only files)
                 const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
                 console.log(droppedFile.relativePath, fileEntry);
+                fileEntry.createReader().readEntries((result: FileSystemFileEntry[]) => {
+                    result.forEach(value => {
+                        value.file((file: File) => {
+                            this.onFileLoaded(file);
+                        });
+                    });
+                });
             }
         }
+    }
+
+    onFileLoaded(file: File) {
+        const loadedFiles: ILoadedFormFile[] = this._ps.loadedFiles.getValue();
+        this._ps.loadedFiles.next(
+            loadedFiles.concat([
+                {
+                    id: UUID(),
+                    file,
+                    isSended: false,
+                    isRead: false,
+                    fileName: file.name
+                }
+            ])
+        );
     }
 
     onFileOver(event) {

@@ -1167,8 +1167,16 @@ Modal window custom CSS
 }
 
 .custom-drop-zone {
-    background-color: rgba(0, 86, 179, 0.2) !important;
+    background-color: rgba(0, 86, 179, 0.4) !important;
     height: 100% !important;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
 }
 
 .hide-drop-zone {

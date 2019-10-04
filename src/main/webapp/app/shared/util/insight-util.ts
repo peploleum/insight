@@ -30,6 +30,32 @@ export interface FileReaderEventTarget extends EventTarget {
     result: string;
 }
 
+/**
+ * Extract le contenu du file qui doit être sous la forme JSON
+ * Parse le JSON selon le type en paramètre
+ * */
+export const readFile = <T>(file: File, returnRawString = false): Promise<T | string> => {
+    const reader: FileReader = new FileReader();
+    let jsonString: string;
+    const response: Promise<T | string> = new Promise<T | string>((resolve, reject) => {
+        reader.onload = (event: ProgressEvent) => {
+            // jsonString = (<FileReaderEventTarget>event.target).result;
+            jsonString = (event.target as FileReaderEventTarget).result;
+            if (returnRawString) {
+                resolve(jsonString);
+            } else {
+                const result: T = JSON.parse(jsonString);
+                resolve(result);
+            }
+        };
+        reader.onerror = error => {
+            reject(`Failed to read fileContent`);
+        };
+    });
+    reader.readAsText(file);
+    return response;
+};
+
 export class ToolbarButtonParameters {
     action: string;
     icon: string;

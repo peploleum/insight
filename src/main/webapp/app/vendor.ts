@@ -57,6 +57,7 @@ import {
     faMapMarkerAlt,
     faMinus,
     faNetworkWired,
+    faPaperPlane,
     faPencilAlt,
     faPlug,
     faPlus,
@@ -197,5 +198,6 @@ library.add(faTh);
 library.add(faTable);
 library.add(faBookOpen);
 library.add(faProjectDiagram);
+library.add(faPaperPlane);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
