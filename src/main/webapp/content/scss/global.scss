@@ -558,7 +558,7 @@ $clouds: #ecf0f1;
             width: 1em;
             height: 1em;
             text-align: center;
-            // transition: 0.35s;
+            transition: 0.35s;
         }
     }
 
@@ -568,7 +568,7 @@ $clouds: #ecf0f1;
         padding: 0 1em;
         color: $midnight;
         background: white;
-        // transition: 0.35s;
+        transition: 0.35s;
     }
 
     &-close {
