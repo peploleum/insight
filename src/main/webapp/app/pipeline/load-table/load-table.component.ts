@@ -21,10 +21,6 @@ export class LoadTableComponent implements OnInit {
         return this._ps.loadedFiles;
     }
 
-    clearList() {
-        this._ps.loadedFiles.next([]);
-    }
-
     dropped(event: UploadEvent) {
         this.displayDropZone = false;
         // const files: UploadFile[] = event.files;

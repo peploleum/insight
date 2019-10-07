@@ -4,6 +4,7 @@ import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by GFOLGOAS on 01/04/2019.
@@ -25,6 +26,7 @@ public interface TraversalService {
 
     public NodeDTO getByJanusId(final String id);
 
+    public Map<String, Integer> countProperties(final String id, Map<String, String> propRequests);
 
     /**
      * Fetches the neighbors for a given node. Source vertex is chosen based on 'id' property and all outgoing edges are walked (limit 50)

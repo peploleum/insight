@@ -69,8 +69,8 @@ public class TraversalServiceImpl implements TraversalService {
             final String symbole = smartOpenProperties(resultObject, "symbole");
             final String name = smartOpenProperties(resultObject, "name");
             final String rawDataSubType = smartOpenProperties(resultObject, "rawDataSubType");
-            if(type.equals("RawData")) {
-                if(rawDataSubType != null && rawDataSubType.equals("url")) {
+            if (type.equals("RawData")) {
+                if (rawDataSubType != null && rawDataSubType.equals("url")) {
                     final ArrayList<String> listMotsClefs = getMapMotClef(resultObject);
                     final String imageHit = smartOpenProperties(resultObject, "imageHit");
                     final String frequence = smartOpenProperties(resultObject, "frequence");
@@ -128,7 +128,27 @@ public class TraversalServiceImpl implements TraversalService {
         return null;
     }
 
+    @Override
+    public Map<String, Integer> countProperties(String id, Map<String, String> propRequests) {
+        final Map<String, Integer> resultMap = new HashMap<>();
+        for (String prop : propRequests.keySet()) {
+            final Integer propCount = this.countProperty(id, propRequests.get(prop));
+            if (propCount != null) {
+                resultMap.put(prop, propCount);
+            }
+        }
+        return resultMap;
+    }
 
+    private Integer countProperty(String id, String request) {
+        final ResultSet resultSet = this.template.getGremlinClient().submit("g.V(" + id + ").out()" + request + ".count()");
+        final Result result = resultSet.one();
+        if (result == null) {
+            return null;
+        }
+        final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
+        return Integer.valueOf(resultObject.get("data").toString());
+    }
 
     @Override
     public GraphStructureNodeDTO getGraph(NodeDTO node, int levelOrder) {
@@ -250,7 +270,7 @@ public class TraversalServiceImpl implements TraversalService {
         return null;
     }
 
-    private ArrayList<String> getMapMotClef(LinkedHashMap object){
+    private ArrayList<String> getMapMotClef(LinkedHashMap object) {
 
         final LinkedHashMap properties = (LinkedHashMap) object.get("properties");
         if (properties != null) {
@@ -289,7 +309,7 @@ public class TraversalServiceImpl implements TraversalService {
             neighbor.setIdMongo(idMongo);
             neighbor.setSymbole(symbole);
             neighbor.setLabel(name);
-            if (type.equals("rawdata")){
+            if (type.equals("rawdata")) {
                 nodeList.add(neighbor);
             }
 

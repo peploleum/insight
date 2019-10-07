@@ -4,7 +4,7 @@ import { IDictionaryContainer } from 'app/dictionary/dictionary.utils';
 @Component({
     selector: 'ins-dictionary-table',
     templateUrl: './dictionary-table.component.html',
-    styleUrls: ['dictionary-editor.component.scss']
+    styleUrls: ['dictionary-table.component.scss']
 })
 export class DictionaryTableComponent implements OnInit {
     @Input()

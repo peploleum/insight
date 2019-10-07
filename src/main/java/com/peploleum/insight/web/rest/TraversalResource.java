@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -100,6 +98,17 @@ public class TraversalResource {
             .body(properties);
     }
 
+    @GetMapping("/traversal/status/{id}")
+    public ResponseEntity<Map<String, Integer>> getProcessStatusForId(@PathVariable String id) throws URISyntaxException {
+        log.info("REST request to get properties for : {}", id);
+        final Map<String, String> propRequests = new HashMap<>();
+        propRequests.put("rawDataSubType", ".has('rawDataSubType', 'url')");
+        propRequests.put("imageHit", ".has('imageHit', neq('0'))");
+        Map<String, Integer> status = this.traversalService.countProperties(id, propRequests);
+        return ResponseEntity.created(new URI("/api/graph/traversal/janus"))
+            .body(status);
+    }
+
     @GetMapping("/traversal/mock/properties/{id}")
     public ResponseEntity<NodeDTO> getPropertiesMock(@PathVariable String id) throws URISyntaxException {
         log.debug("REST request to get properties for : {}", id);
@@ -121,7 +130,7 @@ public class TraversalResource {
     }
 
     @GetMapping("/traversal/biographics/{id}/{prop}")
-    public ResponseEntity<List<NodeDTO>>getNeighborsByProperty(@PathVariable String id, @PathVariable String prop) throws URISyntaxException {
+    public ResponseEntity<List<NodeDTO>> getNeighborsByProperty(@PathVariable String id, @PathVariable String prop) throws URISyntaxException {
         final NodeDTO sourceNode = new NodeDTO();
         sourceNode.setId(id);
         sourceNode.setLabel("source");

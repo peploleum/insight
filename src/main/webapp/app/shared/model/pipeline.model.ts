@@ -11,5 +11,10 @@ export interface IProcessedFormFile {
     externalBioId: string;
     name?: string;
     surname?: string;
-    processStatus?: any;
+    processStatus?: IProcessStatus;
+}
+
+export interface IProcessStatus {
+    urlHitCount?: number;
+    imageHitCount?: number;
 }

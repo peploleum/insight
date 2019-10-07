@@ -1,3 +1,12 @@
-<p>
-  process-table works!
-</p>
+<div class="process-table-container">
+    <div class="table-header">
+        <span>Index</span>
+        <span>Id Bio</span>
+    </div>
+    <div class="table-body">
+        <div class="table-row" *ngFor="let file of getProcessedFiles()|async; let i = index;" style="cursor: pointer;">
+            <span>{{i}}</span>
+            <span>{{file.externalBioId}}</span>
+        </div>
+    </div>
+</div>
