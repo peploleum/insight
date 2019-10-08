@@ -2,11 +2,19 @@
     <div class="table-header">
         <span>Index</span>
         <span>Id Bio</span>
+        <span>Name</span>
+        <span>Surname</span>
+        <span class="process-number">URL Hit Count</span>
+        <span class="process-number">Image Hit Count</span>
     </div>
     <div class="table-body">
         <div class="table-row" *ngFor="let file of getProcessedFiles()|async; let i = index;" style="cursor: pointer;">
             <span>{{i}}</span>
             <span>{{file.externalBioId}}</span>
+            <span>{{file.name || 'No Name'}}</span>
+            <span>{{file.surname || 'No Surname'}}</span>
+            <span class="process-number">{{file.processStatus ? file.processStatus.urlHitCount : 0}}</span>
+            <span class="process-number">{{file.processStatus ? file.processStatus.imageHitCount : 0}}</span>
         </div>
     </div>
 </div>

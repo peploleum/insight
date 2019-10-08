@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class PipelineService {
     public resourceUrl = HOUSTON_API_URL + 'start_process94A';
-    public insightUrl = SERVER_API_URL + 'api/traversal';
+    public insightUrl = SERVER_API_URL + 'api/graph/traversal';
     public loadedFiles: BehaviorSubject<ILoadedFormFile[]> = new BehaviorSubject([]);
     public processedFiles: BehaviorSubject<IProcessedFormFile[]> = new BehaviorSubject([]);
 
@@ -28,9 +28,9 @@ export class PipelineService {
         return this.http.get<IDictionary>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    getProcessStatus(id: string): Observable<IProcessedFormFile> {
+    getProcessStatus(file: IProcessedFormFile): Observable<IProcessedFormFile> {
         return this.http
-            .get<IProcessedFormFile>(`${this.insightUrl}/status/${id}`, { observe: 'response' })
+            .post<IProcessedFormFile>(`${this.insightUrl}/status`, file, { observe: 'response' })
             .pipe(map((res: HttpResponse<IProcessedFormFile>) => res.body));
     }
 }

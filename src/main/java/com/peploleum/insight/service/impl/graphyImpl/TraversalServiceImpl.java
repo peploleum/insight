@@ -146,8 +146,10 @@ public class TraversalServiceImpl implements TraversalService {
         if (result == null) {
             return null;
         }
-        final LinkedHashMap resultObject = (LinkedHashMap) result.getObject();
-        return Integer.valueOf(resultObject.get("data").toString());
+        if (result.getObject() instanceof Integer) {
+            return (Integer) result.getObject();
+        }
+        return null;
     }
 
     @Override

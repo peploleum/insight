@@ -22,12 +22,17 @@
     }
 
     > span:not(:first-child) {
-        flex: 0 0 70%;
+        flex: 0 0 20%;
     }
 
     > span:first-child {
-        flex: 0 0 20%;
+        flex: 0 0 10%;
     }
+}
+
+.process-number {
+    flex: 0 0 15% !important;
+    text-align: center;
 }
 
 .table-body {
@@ -52,11 +57,11 @@
     }
 
     > span:not(:first-child) {
-        flex: 0 0 70%;
+        flex: 0 0 20%;
     }
 
     > span:first-child {
-        flex: 0 0 20%;
+        flex: 0 0 10%;
     }
 
     &:nth-child(odd) {
@@ -68,7 +73,7 @@
     }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1300px) {
     .table-header {
         flex-flow: column nowrap !important;
 

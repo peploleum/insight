@@ -5,6 +5,7 @@ import { ILoadedFormFile, IProcessedFormFile } from 'app/shared/model/pipeline.m
 import { readFile } from 'app/shared/util/insight-util';
 import { JhiAlertService } from 'ng-jhipster';
 import { startWith, switchMap } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'ins-pipeline',
@@ -36,6 +37,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                     );
                 });
         });
+        if (this.getProcessedFiles().length > 0) {
+            this.startProcessStatusRefresher();
+        }
     }
 
     ngOnDestroy(): void {
@@ -55,18 +59,26 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     startProcessStatusRefresher() {
+        if (this.processStatusSubs) {
+            return;
+        }
         this.processStatusSubs = interval(5000)
             .pipe(
                 startWith(),
                 switchMap(() => this.refresh())
             )
-            .subscribe((result: IProcessedFormFile[]) => {
-                this._ps.processedFiles.next(result);
-            });
+            .subscribe(
+                (result: IProcessedFormFile[]) => {
+                    this._ps.processedFiles.next(result);
+                },
+                error => {
+                    this.onError('Error while refreshing the pipeline status.');
+                }
+            );
     }
 
     refresh(): Observable<IProcessedFormFile[]> {
-        return zip(...this.getProcessedFiles().map(val => this._ps.getProcessStatus(val.externalBioId)));
+        return zip(...this.getProcessedFiles().map(val => this._ps.getProcessStatus(val)));
     }
 
     clearLoadedForms() {
@@ -75,19 +87,19 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     sendForm(file: ILoadedFormFile) {
         file.isSended = true;
-        this.getProcessedFiles().concat([{ externalBioId: '16392' }]);
-        this.startProcessStatusRefresher();
-        // this._ps.sendForm(file.fileContent).subscribe(
-        //     (res: HttpResponse<string>) => {
-        //         const externalBioId = res.body;
-        //         const processedFiles = this.getProcessedFiles().concat([{externalBioId}]);
-        //         this._ps.processedFiles.next(processedFiles);
-        //         this._ps.loadedFiles.next(this.getLoadedFiles().filter(f => f.id === file.id));
-        //     },
-        //     error => {
-        //         this.onError(`Failed to post file content: ${file.fileName}`);
-        //     }
-        // );
+        // this._ps.processedFiles.next(this.getProcessedFiles().concat([{externalBioId: '12336'}]));
+        // this.startProcessStatusRefresher();
+        this._ps.sendForm(file.fileContent).subscribe(
+            (res: HttpResponse<string>) => {
+                const externalBioId = res.body;
+                this._ps.processedFiles.next(this.getProcessedFiles().concat([{ externalBioId }]));
+                this._ps.loadedFiles.next(this.getLoadedFiles().filter(f => f.id === file.id));
+                this.startProcessStatusRefresher();
+            },
+            error => {
+                this.onError(`Failed to post file content: ${file.fileName}`);
+            }
+        );
     }
 
     getProcessedFiles(): IProcessedFormFile[] {

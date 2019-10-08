@@ -9,6 +9,7 @@ export interface ILoadedFormFile {
 
 export interface IProcessedFormFile {
     externalBioId: string;
+    mongoBioId?: string;
     name?: string;
     surname?: string;
     processStatus?: IProcessStatus;

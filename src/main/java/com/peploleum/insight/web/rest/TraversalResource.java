@@ -1,5 +1,8 @@
 package com.peploleum.insight.web.rest;
 
+import com.peploleum.insight.domain.Biographics;
+import com.peploleum.insight.domain.InsightEntity;
+import com.peploleum.insight.service.QuickViewService;
 import com.peploleum.insight.service.TraversalService;
 import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
@@ -26,9 +29,11 @@ import java.util.stream.Collectors;
 public class TraversalResource {
     private final Logger log = LoggerFactory.getLogger(TraversalResource.class);
     private final TraversalService traversalService;
+    private final QuickViewService quickViewService;
 
-    public TraversalResource(TraversalService traversalService) {
+    public TraversalResource(final TraversalService traversalService, final QuickViewService quickViewService) {
         this.traversalService = traversalService;
+        this.quickViewService = quickViewService;
     }
 
     @PostMapping("/traversal")
@@ -100,20 +105,34 @@ public class TraversalResource {
             .body(properties);
     }
 
-    @PostMapping("/traversal/status/{id}")
+    @PostMapping("/traversal/status")
     public ResponseEntity<PipelineInformationDTO> getProcessStatusForId(@RequestBody PipelineInformationDTO dto) throws URISyntaxException {
-        log.info("REST request to get properties for : {}", dto);
+        log.info("REST request to get properties for : {}", dto.getExternalBioId());
         final Map<String, String> propRequests = new HashMap<>();
         propRequests.put("rawDataSubType", ".has('rawDataSubType', 'url')");
         propRequests.put("imageHit", ".has('imageHit', neq('0'))");
         Map<String, Integer> map = this.traversalService.countProperties(dto.getExternalBioId(), propRequests);
 
+        if (dto.getMongoBioId() == null || dto.getMongoBioId().isEmpty()) {
+            NodeDTO node = this.traversalService.getByJanusId(dto.getExternalBioId());
+            dto.setMongoBioId(node.getIdMongo());
+            Optional<InsightEntity> entity = this.quickViewService.findEntityById(dto.getMongoBioId());
+            if (entity.isPresent() && entity.get() instanceof Biographics) {
+                dto.setName(((Biographics) entity.get()).getBiographicsName());
+                dto.setSurname(((Biographics) entity.get()).getBiographicsFirstname());
+            }
+        }
+
         final ProcessStatusDTO status = new ProcessStatusDTO();
         status.setUrlHitCount(map.get("rawDataSubType"));
         status.setImageHitCount(map.get("imageHit"));
+
         final PipelineInformationDTO result = new PipelineInformationDTO();
         result.setExternalBioId(dto.getExternalBioId());
         result.setProcessStatus(status);
+        result.setMongoBioId(dto.getMongoBioId());
+        result.setName(dto.getName());
+        result.setSurname(dto.getSurname());
 
         return ResponseEntity.created(new URI("/api/graph/traversal/status"))
             .body(result);

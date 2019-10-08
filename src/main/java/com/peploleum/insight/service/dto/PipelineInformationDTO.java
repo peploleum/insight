@@ -2,6 +2,7 @@ package com.peploleum.insight.service.dto;
 
 public class PipelineInformationDTO {
     private String externalBioId;
+    private String mongoBioId;
     private String name;
     private String surname;
     private ProcessStatusDTO processStatus;
@@ -12,6 +13,14 @@ public class PipelineInformationDTO {
 
     public void setExternalBioId(String externalBioId) {
         this.externalBioId = externalBioId;
+    }
+
+    public String getMongoBioId() {
+        return mongoBioId;
+    }
+
+    public void setMongoBioId(String mongoBioId) {
+        this.mongoBioId = mongoBioId;
     }
 
     public String getName() {
