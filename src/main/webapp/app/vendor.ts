@@ -38,6 +38,7 @@ import {
     faDrawPolygon,
     faExclamation,
     faExclamationTriangle,
+    faExternalLinkSquareAlt,
     faEye,
     faFileImport,
     faFilter,
@@ -199,5 +200,6 @@ library.add(faTable);
 library.add(faBookOpen);
 library.add(faProjectDiagram);
 library.add(faPaperPlane);
+library.add(faExternalLinkSquareAlt);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

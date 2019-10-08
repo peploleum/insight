@@ -6,6 +6,8 @@ import { readFile } from 'app/shared/util/insight-util';
 import { JhiAlertService } from 'ng-jhipster';
 import { startWith, switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
+import { DictionaryService } from 'app/dictionary/dictionary.service';
+import { IDictionary } from 'app/shared/model/analytics.model';
 
 @Component({
     selector: 'ins-pipeline',
@@ -16,9 +18,18 @@ export class PipelineComponent implements OnInit, OnDestroy {
     loadedFilesSubs: Subscription;
     processStatusSubs: Subscription;
 
-    constructor(private _ps: PipelineService, private _jas: JhiAlertService) {}
+    dictionaries: IDictionary[] = [];
+    selectedDictionaryId: string;
+
+    constructor(private _ps: PipelineService, private _ds: DictionaryService, private _jas: JhiAlertService) {}
 
     ngOnInit() {
+        this._ds.getAll().subscribe(res => {
+            this.dictionaries = res.body;
+            if (this.dictionaries && this.dictionaries.length > 0) {
+                this.selectedDictionaryId = this.dictionaries[0].id;
+            }
+        });
         this.loadedFilesSubs = this._ps.loadedFiles.subscribe((files: ILoadedFormFile[]) => {
             files
                 .filter(f => !f.fileContent && !f.isRead)
@@ -54,6 +65,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             .getValue()
             .filter(f => !f.isSended && f.fileContent)
             .forEach(f => {
+                f.fileContent['idDictionary'] = this.selectedDictionaryId;
                 this.sendForm(f);
             });
     }

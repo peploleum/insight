@@ -2,6 +2,13 @@
     <div class="row justify-content-center pt-3 pb-2" style="flex: 0 1 auto;">
         <div class="col-md-11 pipeline-parts pipeline-header-container">
             <h2><span>Pipeline Control Room</span></h2>
+            <div class="form-group-sm" *ngIf="dictionaries">
+                <select class="form-control" name="dictionaryId" [(ngModel)]="selectedDictionaryId"
+                        id="field_dictionaryr">
+                    <option *ngFor="let dico of dictionaries"
+                            value="{{dico.id}}">{{dico.name}}</option>
+                </select>
+            </div>
             <div class="btn-group flex-btn-group-container">
                 <button type="submit"
                         class="btn btn-info btn-sm mr-1" (click)="sendForms()">

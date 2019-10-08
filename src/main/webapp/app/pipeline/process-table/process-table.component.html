@@ -4,8 +4,8 @@
         <span>Id Bio</span>
         <span>Name</span>
         <span>Surname</span>
-        <span class="process-number">URL Hit Count</span>
-        <span class="process-number">Image Hit Count</span>
+        <span class="process-number" title="Url Hit Count"><fa-icon [icon]="'external-link-square-alt'"></fa-icon> Urls</span>
+        <span class="process-number" title="Image Hit Count"><fa-icon [icon]="'image'"></fa-icon> Images</span>
     </div>
     <div class="table-body">
         <div class="table-row" *ngFor="let file of getProcessedFiles()|async; let i = index;" style="cursor: pointer;">
