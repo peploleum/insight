@@ -3,6 +3,8 @@ package com.peploleum.insight.web.rest;
 import com.peploleum.insight.service.TraversalService;
 import com.peploleum.insight.service.dto.GraphStructureNodeDTO;
 import com.peploleum.insight.service.dto.NodeDTO;
+import com.peploleum.insight.service.dto.PipelineInformationDTO;
+import com.peploleum.insight.service.dto.ProcessStatusDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -98,15 +100,23 @@ public class TraversalResource {
             .body(properties);
     }
 
-    @GetMapping("/traversal/status/{id}")
-    public ResponseEntity<Map<String, Integer>> getProcessStatusForId(@PathVariable String id) throws URISyntaxException {
-        log.info("REST request to get properties for : {}", id);
+    @PostMapping("/traversal/status/{id}")
+    public ResponseEntity<PipelineInformationDTO> getProcessStatusForId(@RequestBody PipelineInformationDTO dto) throws URISyntaxException {
+        log.info("REST request to get properties for : {}", dto);
         final Map<String, String> propRequests = new HashMap<>();
         propRequests.put("rawDataSubType", ".has('rawDataSubType', 'url')");
         propRequests.put("imageHit", ".has('imageHit', neq('0'))");
-        Map<String, Integer> status = this.traversalService.countProperties(id, propRequests);
-        return ResponseEntity.created(new URI("/api/graph/traversal/janus"))
-            .body(status);
+        Map<String, Integer> map = this.traversalService.countProperties(dto.getExternalBioId(), propRequests);
+
+        final ProcessStatusDTO status = new ProcessStatusDTO();
+        status.setUrlHitCount(map.get("rawDataSubType"));
+        status.setImageHitCount(map.get("imageHit"));
+        final PipelineInformationDTO result = new PipelineInformationDTO();
+        result.setExternalBioId(dto.getExternalBioId());
+        result.setProcessStatus(status);
+
+        return ResponseEntity.created(new URI("/api/graph/traversal/status"))
+            .body(result);
     }
 
     @GetMapping("/traversal/mock/properties/{id}")

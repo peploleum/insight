@@ -80,7 +80,7 @@ public class DictionaryResource {
      */
     @GetMapping("/dictionary/{id}")
     @Timed
-    public ResponseEntity<DictionaryDTO> getDictionary(String id) {
+    public ResponseEntity<DictionaryDTO> getDictionary(@PathVariable String id) {
         log.debug("REST request to get the dictionary");
         Optional<DictionaryDTO> dictionaryDTO = dictionaryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(dictionaryDTO);
