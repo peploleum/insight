@@ -20,6 +20,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     dictionaries: IDictionary[] = [];
     selectedDictionaryId: string;
+    depthLevel = 1;
 
     constructor(private _ps: PipelineService, private _ds: DictionaryService, private _jas: JhiAlertService) {}
 
@@ -66,6 +67,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             .filter(f => !f.isSended && f.fileContent)
             .forEach(f => {
                 f.fileContent['idDictionary'] = this.selectedDictionaryId;
+                f.fileContent['depthLevel'] = this.depthLevel;
                 this.sendForm(f);
             });
     }
@@ -147,13 +149,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this._ps.loadedFiles.next([]);
     }
 
+    clearWatchList() {
+        if (this.processStatusSubs) {
+            this.processStatusSubs.unsubscribe();
+            this.processStatusSubs = null;
+        }
+        this._ps.processedFiles.next([]);
+    }
+
     sendForm(file: ILoadedFormFile) {
         file.isSended = true;
         this._ps.sendForm(file.fileContent).subscribe(
             (res: HttpResponse<string>) => {
                 const externalBioId = res.body;
                 this._ps.processedFiles.next(this.getProcessedFiles().concat([{ externalBioId }]));
-                this._ps.loadedFiles.next(this.getLoadedFiles().filter(f => f.id === file.id));
+                this._ps.loadedFiles.next(this.getLoadedFiles().filter(f => f.id !== file.id));
                 this.startProcessStatusRefresher();
             },
             error => {
