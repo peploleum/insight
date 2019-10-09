@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PipelineService } from 'app/pipeline/pipeline.service';
-import { interval, Observable, Subscription, zip } from 'rxjs';
+import { interval, Observable, of, Subscription, zip } from 'rxjs';
 import { ILoadedFormFile, IProcessedFormFile } from 'app/shared/model/pipeline.model';
 import { readFile } from 'app/shared/util/insight-util';
 import { JhiAlertService } from 'ng-jhipster';
@@ -77,10 +77,27 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.processStatusSubs = interval(5000)
             .pipe(
                 startWith(),
-                switchMap(() => this.refresh())
+                switchMap(() => this.fakeRefresh())
             )
             .subscribe(
                 (result: IProcessedFormFile[]) => {
+                    result.forEach(file => {
+                        const pff = this.getProcessedFiles().find(f => f.externalBioId === file.externalBioId);
+                        if (pff && pff.processStatus) {
+                            file.processStatus.urlHitCountDiff =
+                                pff.processStatus.urlHitCount !== file.processStatus.urlHitCount
+                                    ? 'changed'
+                                    : pff.processStatus.urlHitCountDiff === 'changed'
+                                    ? 'pause'
+                                    : 'stable';
+                            file.processStatus.imageHitCountDiff =
+                                pff.processStatus.imageHitCount !== file.processStatus.imageHitCount
+                                    ? 'changed'
+                                    : pff.processStatus.imageHitCountDiff === 'changed'
+                                    ? 'pause'
+                                    : 'stable';
+                        }
+                    });
                     this._ps.processedFiles.next(result);
                 },
                 error => {
@@ -93,14 +110,40 @@ export class PipelineComponent implements OnInit, OnDestroy {
         return zip(...this.getProcessedFiles().map(val => this._ps.getProcessStatus(val)));
     }
 
+    fakeRefresh(): Observable<IProcessedFormFile[]> {
+        return zip(
+            ...this.getProcessedFiles().map(val => {
+                const random1 = Math.random() >= 0.5;
+                const random2 = Math.random() >= 0.5;
+                const urlHitCount = val.processStatus ? (random1 ? val.processStatus.urlHitCount + 1 : val.processStatus.urlHitCount) : 0;
+                const imageHitCount = val.processStatus
+                    ? random2
+                        ? val.processStatus.imageHitCount + 1
+                        : val.processStatus.imageHitCount
+                    : 0;
+                const copy: IProcessedFormFile = {
+                    externalBioId: val.externalBioId,
+                    mongoBioId: val.mongoBioId,
+                    surname: 'bobby',
+                    name: 'brian',
+                    processStatus: {
+                        urlHitCount,
+                        imageHitCount,
+                        urlHitCountDiff: val.processStatus ? val.processStatus.urlHitCountDiff || 'stable' : 'stable',
+                        imageHitCountDiff: val.processStatus ? val.processStatus.imageHitCountDiff || 'stable' : 'stable'
+                    }
+                };
+                return of(copy);
+            })
+        );
+    }
+
     clearLoadedForms() {
         this._ps.loadedFiles.next([]);
     }
 
     sendForm(file: ILoadedFormFile) {
         file.isSended = true;
-        // this._ps.processedFiles.next(this.getProcessedFiles().concat([{externalBioId: '12336'}]));
-        // this.startProcessStatusRefresher();
         this._ps.sendForm(file.fileContent).subscribe(
             (res: HttpResponse<string>) => {
                 const externalBioId = res.body;

@@ -6,7 +6,8 @@ import { IProcessedFormFile } from 'app/shared/model/pipeline.model';
 @Component({
     selector: 'ins-process-table',
     templateUrl: './process-table.component.html',
-    styleUrls: ['process-table.component.scss']
+    styleUrls: ['process-table.component.scss'],
+    animations: []
 })
 export class ProcessTableComponent implements OnInit {
     constructor(private _ps: PipelineService) {}

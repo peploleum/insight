@@ -15,7 +15,14 @@ export interface IProcessedFormFile {
     processStatus?: IProcessStatus;
 }
 
-export interface IProcessStatus {
+export interface IProcessStatus extends IDifferentialProcessStatus {
     urlHitCount?: number;
     imageHitCount?: number;
 }
+
+export interface IDifferentialProcessStatus {
+    urlHitCountDiff?: DiffStatus;
+    imageHitCountDiff?: DiffStatus;
+}
+
+export type DiffStatus = 'changed' | 'pause' | 'stable';

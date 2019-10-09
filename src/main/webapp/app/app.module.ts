@@ -29,6 +29,7 @@ import { registerLocaleData } from '@angular/common';
 import { CardModule } from './card/card.module';
 import { DictionaryModule } from 'app/dictionary/dictionary.module';
 import { PipelineModule } from 'app/pipeline/pipeline.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /**
  * Si Locale ne fonctionne pas en AOT:
@@ -41,6 +42,7 @@ registerLocaleData(localeFr, 'fr-FR');
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         InsightAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
         NgJhipsterModule.forRoot({
