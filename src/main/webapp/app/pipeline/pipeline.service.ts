@@ -18,9 +18,9 @@ export class PipelineService {
 
     sendForm(formContent: string): Observable<HttpResponse<string>> {
         const headers: HttpHeaders = new HttpHeaders();
-        if (DEBUG_INFO_ENABLED) {
-            return this.fakeSendForm();
-        }
+        // if (DEBUG_INFO_ENABLED) {
+        //     return this.fakeSendForm();
+        // }
         return this.http.post<string>(this.resourceUrl, formContent, { headers, observe: 'response' });
     }
 

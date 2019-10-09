@@ -13,11 +13,11 @@
             <span>{{file.externalBioId}}</span>
             <span>{{file.name || 'No Name'}}</span>
             <span>{{file.surname || 'No Surname'}}</span>
-            <span class="process-number" insClassDiff
-                  [differentialStatus]="file.processStatus ? file.processStatus.urlHitCountDiff : 'stable'">
+            <span class="process-number"
+                  [@diffColor]="file.processStatus ? file.processStatus.urlHitCountDiff : 'stable'">
                 {{file.processStatus ? file.processStatus.urlHitCount : 0}}</span>
-            <span class="process-number" insClassDiff
-                  [differentialStatus]="file.processStatus ? file.processStatus.imageHitCountDiff : 'stable'">
+            <span class="process-number"
+                  [@diffColor]="file.processStatus ? file.processStatus.imageHitCountDiff : 'stable'">
                 {{file.processStatus ? file.processStatus.imageHitCount : 0}}</span>
         </div>
     </div>

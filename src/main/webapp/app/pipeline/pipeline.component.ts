@@ -77,7 +77,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.processStatusSubs = interval(5000)
             .pipe(
                 startWith(),
-                switchMap(() => this.fakeRefresh())
+                switchMap(() => {
+                    // if (DEBUG_INFO_ENABLED) {
+                    //     return this.fakeRefresh();
+                    // }
+                    return this.refresh();
+                })
             )
             .subscribe(
                 (result: IProcessedFormFile[]) => {
