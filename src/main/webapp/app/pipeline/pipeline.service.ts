@@ -24,6 +24,7 @@ export class PipelineService {
             return;
         }
         return this.http.post<string>(this.houstonResourceUrl, formContent, { headers, observe: 'response' });
+
     }
 
     getProcessStatus(file: IProcessedFormFile): Observable<IProcessedFormFile> {

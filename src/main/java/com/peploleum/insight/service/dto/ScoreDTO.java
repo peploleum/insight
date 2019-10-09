@@ -8,6 +8,8 @@ public class ScoreDTO {
     private List<String> listThemeMotclefHit;
     private int imageHit;
     private int frequence;
+    private int depthLevel;
+    private String idDictionary;
 
     public int getPoints() {
         return points;
@@ -39,5 +41,21 @@ public class ScoreDTO {
 
     public void setFrequence(int frequence) {
         this.frequence = frequence;
+    }
+
+    public int getDepthLevel() {
+        return depthLevel;
+    }
+
+    public void setDepthLevel(int depthLevel) {
+        this.depthLevel = depthLevel;
+    }
+
+    public String getIdDictionary() {
+        return idDictionary;
+    }
+
+    public void setIdDictionary(String idDictionary) {
+        this.idDictionary = idDictionary;
     }
 }

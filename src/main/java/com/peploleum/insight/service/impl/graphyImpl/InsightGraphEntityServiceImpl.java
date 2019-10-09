@@ -112,6 +112,8 @@ public class InsightGraphEntityServiceImpl implements InsightGraphEntityService 
         }
         entity.getProperties().put("imageHit", String.valueOf(scoreDTO.getImageHit()));
         entity.getProperties().put("frequence", String.valueOf(scoreDTO.getFrequence()));
+        entity.getProperties().put("depthLevel", String.valueOf(scoreDTO.getDepthLevel()));
+        entity.getProperties().put("idDictionary", String.valueOf(scoreDTO.getIdDictionary()));
         entity.setIdMongo(idMongo);
         entity.setName(name);
         entity.setEntityType(type);
