@@ -35,7 +35,9 @@ export class AnalyticsService {
         scorePoints?: string,
         scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         scoreImageHit?: string,
-        scoreFrequence?: string
+        scoreFrequence?: string,
+        depthLevel?: string,
+        idDictionary?: string
     ): ScoreDTO {
         return new ScoreDTO(
             externalIdBio,
@@ -45,7 +47,9 @@ export class AnalyticsService {
             scorePoints,
             scoreListMotsClefs,
             scoreImageHit,
-            scoreFrequence
+            scoreFrequence,
+            depthLevel,
+            idDictionary
         );
     }
 
@@ -93,6 +97,7 @@ export class AnalyticsService {
 
     getScores(janusIdOrigin: string): Observable<ScoreDTO[]> {
         const headers = new HttpHeaders();
+        console.log(`${this._resourceUrl}` + 'traversal/' + `${janusIdOrigin}`);
         return this.http
             .get(`${this._resourceUrl}` + 'traversal/' + `${janusIdOrigin}`, {
                 headers,
@@ -110,6 +115,7 @@ export class AnalyticsService {
                 }),
                 map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                     const body: IGraphyNodeDTO[] = res.body; // vrai noeud avec les props
+                    console.log('body :', res.body);
                     const data: ScoreDTO[] = body
                         .map((item: IGraphyNodeDTO) => {
                             if (item.type === 'RawData' && item.properties) {
@@ -121,10 +127,15 @@ export class AnalyticsService {
                                     item.properties.points as string,
                                     (item.properties.listMotsClefs as string[]).map(str => {
                                         const parts = str.split('.');
-                                        return { theme: parts[0] as Theme, motClef: parts[1] };
+                                        const theme = parts[0];
+                                        parts.shift();
+                                        const motclef = parts.toString().replace(new RegExp(',', 'g'), '.');
+                                        return { theme: theme as Theme, motClef: motclef };
                                     }),
                                     item.properties.imageHit as string,
-                                    item.properties.frequence as string
+                                    item.properties.frequence as string,
+                                    item.properties.depthLevel as string,
+                                    item.properties.idDictionary as string
                                 );
                             } else {
                                 return null;

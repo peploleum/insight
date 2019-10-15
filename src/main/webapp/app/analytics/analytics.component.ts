@@ -72,13 +72,13 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                             s.scoreListMotsClefs.forEach((i: { theme: Theme; motClef: string }) => {
                                 if (hits.hasOwnProperty(i.theme)) {
                                     if (!hits[i.theme][i.motClef]) {
-                                        hits[i.theme][i.motClef] = [s.rawDataUrl];
+                                        hits[i.theme][i.motClef] = [{ url: s.rawDataUrl, depth: s.depthLevel }];
                                     } else {
-                                        (hits[i.theme][i.motClef] as string[]).push(s.rawDataUrl);
+                                        hits[i.theme][i.motClef].push({ url: s.rawDataUrl, depth: s.depthLevel });
                                     }
                                 } else {
                                     hits[i.theme] = {};
-                                    hits[i.theme][i.motClef] = [s.rawDataUrl];
+                                    hits[i.theme][i.motClef] = [{ url: s.rawDataUrl, depth: s.depthLevel }];
                                 }
                             });
                         });
@@ -89,7 +89,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                                 return {
                                     theme: t,
                                     motClefUrls: Object.keys(hits[t]).map(mc => {
-                                        return { motClef: mc, urls: hits[t][mc] };
+                                        return { motClef: mc, listUrlDepth: hits[t][mc] };
                                     })
                                 };
                             }) as IHitDTO[],

@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class DictionaryService {
     public resourceUrl = SERVER_API_URL + 'api/dictionary';
+    private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
 
     constructor(protected http: HttpClient) {}
 
@@ -52,6 +53,17 @@ export class DictionaryService {
 
     delete(id: string): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    }
+
+    getName(id: string): Observable<string> {
+        const headers = new HttpHeaders();
+        return this.http.get<IDictionary>(`${this._ressourceDictionaryUrl}` + `${id}`, { headers, observe: 'response' }).pipe(
+            map((res: HttpResponse<IDictionary>) => {
+                const body: IDictionary = res.body; // vrai noeud avec les props
+                console.log('body :', res.body);
+                return body.name;
+            })
+        );
     }
 }
 

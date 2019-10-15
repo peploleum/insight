@@ -12,11 +12,13 @@ export type Theme = 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
 
 export interface IHitDTO {
     theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
-    motClefUrls: { motClef: string; urls: string[] }[];
+    motClefUrls: { motClef: string; listUrlDepth: { url: string; depth: string }[] }[];
 }
 
 export interface BiographicsScoreDTO {
     biographic?: IBiographics;
+    idDictionary?: string;
+    nameDictionary?: string;
     hits?: IHitDTO[];
     scores?: IScoreDTO[];
 }
@@ -30,6 +32,8 @@ export interface IScoreDTO {
     scoreListMotsClefs?: { theme: Theme; motClef: string }[];
     scoreImageHit?: string;
     scoreFrequence?: string;
+    depthLevel?: string;
+    idDictionary?: string;
 }
 
 export class ScoreDTO implements IScoreDTO {
@@ -41,7 +45,9 @@ export class ScoreDTO implements IScoreDTO {
         public scorePoints?: string,
         public scoreListMotsClefs?: { theme: Theme; motClef: string }[],
         public scoreImageHit?: string,
-        public scoreFrequence?: string
+        public scoreFrequence?: string,
+        public depthLevel?: string,
+        public idDictionary?: string
     ) {}
 }
 

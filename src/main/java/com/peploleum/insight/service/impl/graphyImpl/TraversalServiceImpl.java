@@ -76,12 +76,16 @@ public class TraversalServiceImpl implements TraversalService {
                     final String frequence = smartOpenProperties(resultObject, "frequence");
                     final String points = smartOpenProperties(resultObject, "points");
                     final String rawDataUrl = smartOpenProperties(resultObject, "rawDataUrl");
+                    final String depthLevel = smartOpenProperties(resultObject, "depthLevel");
+                    final String idDictionary = smartOpenProperties(resultObject, "idDictionary");
                     HashMap<String, Object> properties = new HashMap<>();
                     properties.put("imageHit", imageHit);
                     properties.put("frequence", frequence);
                     properties.put("points", points);
                     properties.put("listMotsClefs", listMotsClefs);
                     properties.put("rawDataUrl", rawDataUrl);
+                    properties.put("depthLevel", depthLevel);
+                    properties.put("idDictionary", idDictionary);
                     neighbor.setProperties(properties);
                 }
             }
