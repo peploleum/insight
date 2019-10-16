@@ -17,24 +17,6 @@ services:
             ES_JAVA_OPTS: "-Xmx256m -Xms256m"
         networks:
         - insight
-    logstash:
-        build:
-            context: ./elk/logstash/
-            args:
-                ELK_VERSION: 6.4.2
-        volumes:
-        - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-        - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro
-        - ./elk/logstash/in:/usr/share/logstash/in
-        ports:
-        - "5000:5000"
-        - "9600:9600"
-        environment:
-            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-        networks:
-        - insight
-        depends_on:
-        - elasticsearch
     kibana:
         container_name: kibana
         build:
