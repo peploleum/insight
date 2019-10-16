@@ -16,7 +16,7 @@
 <file-drop class="custom-drop-zone-container" [dropZoneLabel]="displayDropZone ? 'Drop files here' : ''"
            [dropZoneClassName]="displayDropZone ? 'custom-drop-zone' : 'hide-drop-zone'"
            (onFileDrop)="dropped($event)"
-           (onFileOver)="onFileOver()" (onFileLeave)="onFileLeave()"
+           (onFileOver)="onFileOver($event)" (onFileLeave)="onFileLeave($event)"
            insOverlayPosition
            [idTargetElement]="'load-table-container'"
            [position]="'COVER-TARGET'"></file-drop>
