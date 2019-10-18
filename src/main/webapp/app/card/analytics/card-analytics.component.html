@@ -16,7 +16,7 @@
             <div class="tab-content" *ngIf="motClefUrls.display">
                 <ng-container *ngFor="let listUrlDepth of motClefUrls.listUrlDepth">
                     <h6>Url : <a (click)="goToLink(listUrlDepth.url)">{{listUrlDepth.url}}</a> <br> Profondeur
-                        : {{listUrlDepth.depth}} </h6>
+                        : {{listUrlDepth.depth}} / Nombre de hits sur image: {{listUrlDepth.scoreImageHit || 0}} </h6>
                 </ng-container>
             </div>
         </div>

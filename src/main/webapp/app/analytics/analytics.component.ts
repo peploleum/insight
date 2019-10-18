@@ -72,13 +72,29 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                             s.scoreListMotsClefs.forEach((i: { theme: Theme; motClef: string }) => {
                                 if (hits.hasOwnProperty(i.theme)) {
                                     if (!hits[i.theme][i.motClef]) {
-                                        hits[i.theme][i.motClef] = [{ url: s.rawDataUrl, depth: s.depthLevel }];
+                                        hits[i.theme][i.motClef] = [
+                                            {
+                                                url: s.rawDataUrl,
+                                                depth: s.depthLevel,
+                                                scoreImageHit: s.scoreImageHit
+                                            }
+                                        ];
                                     } else {
-                                        hits[i.theme][i.motClef].push({ url: s.rawDataUrl, depth: s.depthLevel });
+                                        hits[i.theme][i.motClef].push({
+                                            url: s.rawDataUrl,
+                                            depth: s.depthLevel,
+                                            scoreImageHit: s.scoreImageHit
+                                        });
                                     }
                                 } else {
                                     hits[i.theme] = {};
-                                    hits[i.theme][i.motClef] = [{ url: s.rawDataUrl, depth: s.depthLevel }];
+                                    hits[i.theme][i.motClef] = [
+                                        {
+                                            url: s.rawDataUrl,
+                                            depth: s.depthLevel,
+                                            scoreImageHit: s.scoreImageHit
+                                        }
+                                    ];
                                 }
                             });
                         });

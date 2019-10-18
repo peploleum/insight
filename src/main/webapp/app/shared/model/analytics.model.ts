@@ -19,7 +19,7 @@ export interface IDisplayDecorator {
 
 export interface IMotClefUrls extends IDisplayDecorator {
     motClef: string;
-    listUrlDepth: { url: string; depth: string }[];
+    listUrlDepth: { url: string; depth: string; scoreImageHit?: string }[];
 }
 
 export interface IHitDTO {
