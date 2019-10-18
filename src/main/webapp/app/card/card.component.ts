@@ -8,6 +8,8 @@ import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { AnalyticsService } from 'app/analytics/analytics.service';
 import { BiographicsScoreDTO, IHitDTO, ScoreDTO, Theme } from 'app/shared/model/analytics.model';
 import { IBiographics } from 'app/shared/model/biographics.model';
+import { GraphDataCollection } from 'app/shared/model/node.model';
+import { NetworkService } from 'app/network/network.service';
 
 @Component({
     selector: 'ins-card',
@@ -23,7 +25,7 @@ export class CardComponent implements OnInit {
     biographicsScore: BiographicsScoreDTO;
     analyticsMode = false;
 
-    constructor(private _qv: QuickViewService, private _ar: ActivatedRoute, private _as: AnalyticsService) {}
+    constructor(private _qv: QuickViewService, private _ar: ActivatedRoute, private _as: AnalyticsService, private _ns: NetworkService) {}
 
     ngOnInit() {
         this._ar.data.subscribe(({ biographics }) => {
@@ -31,7 +33,20 @@ export class CardComponent implements OnInit {
                 this.onDataSelected(biographics);
                 this.analyticsMode = !!this._ar.snapshot.url.find((u: UrlSegment) => u.path === 'analytics');
                 if (this.analyticsMode) {
-                    this.getScores(this.entity as IBiographics);
+                    const bio: IBiographics = this.entity as IBiographics;
+                    this.getScores(bio);
+
+                    /**
+                     * Si en mode analytics, on récupère directement les voisins
+                     * */
+                    this._ns.getGraphData(bio.externalId, false).subscribe(
+                        (data: GraphDataCollection) => {
+                            this.setEntities(data.nodes.map(n => n.mongoId));
+                        },
+                        error => {
+                            console.log('[NETWORK] Error lors de la récupération des voisins.');
+                        }
+                    );
                 }
             }
         });

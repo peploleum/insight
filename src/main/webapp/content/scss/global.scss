@@ -512,6 +512,11 @@ Custom card analytics css
     height: -webkit-fill-available;
     display: flex;
     flex-direction: column;
+
+    > h4 {
+        color: steelblue;
+        font-weight: bolder;
+    }
 }
 
 .tab-container {
