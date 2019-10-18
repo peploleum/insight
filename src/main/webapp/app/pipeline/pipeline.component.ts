@@ -21,6 +21,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     dictionaries: IDictionary[] = [];
     selectedDictionaryId: string;
     depthLevel = 1;
+    numberUrl = 10;
 
     constructor(private _ps: PipelineService, private _ds: DictionaryService, private _jas: JhiAlertService) {}
 
@@ -68,6 +69,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             .forEach(f => {
                 f.fileContent['idDictionary'] = this.selectedDictionaryId;
                 f.fileContent['depthLevel'] = this.depthLevel;
+                f.fileContent['numberUrl'] = this.numberUrl;
                 this.sendForm(f);
             });
     }

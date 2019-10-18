@@ -3,6 +3,13 @@
         <div class="col-md-11 pipeline-parts pipeline-header-container">
             <h2><span>Pipeline Control Room</span></h2>
             <div class="form-group-sm">
+                <select class="form-control" name="numberUrl" [(ngModel)]="numberUrl"
+                        id="numberUrl">
+                    <option *ngFor="let level of [10,20,30]"
+                            value="{{level}}">Nombre URL: {{level}}</option>
+                </select>
+            </div>
+            <div class="form-group-sm">
                 <select class="form-control" name="depthLevel" [(ngModel)]="depthLevel"
                         id="field_depth">
                     <option *ngFor="let level of [1,2,3]"
