@@ -82,7 +82,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                                 }
                             });
                         });
-                        console.log(Object.keys(hits));
                         this.biographicsScores.push({
                             biographic: b,
                             hits: Object.keys(hits).map(t => {
@@ -95,7 +94,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
                             }) as IHitDTO[],
                             scores: score
                         });
-                        console.log(this.biographicsScores);
                     },
                     error => {
                         console.log('[ANALYTICS] Error lors de la récupération des voisins.');

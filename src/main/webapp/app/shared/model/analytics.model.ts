@@ -10,9 +10,21 @@ export class AnalysisState {
 
 export type Theme = 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
 
+/**
+ * Sert uniquement à afficher ou non un élément en HTML
+ * */
+export interface IDisplayDecorator {
+    display?: boolean;
+}
+
+export interface IMotClefUrls extends IDisplayDecorator {
+    motClef: string;
+    listUrlDepth: { url: string; depth: string }[];
+}
+
 export interface IHitDTO {
     theme: 'TER' | 'ESP' | 'SAB' | 'SUB' | 'CRO';
-    motClefUrls: { motClef: string; listUrlDepth: { url: string; depth: string }[] }[];
+    motClefUrls: IMotClefUrls[];
 }
 
 export interface BiographicsScoreDTO {

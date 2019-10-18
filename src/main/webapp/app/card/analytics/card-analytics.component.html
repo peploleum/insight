@@ -1,28 +1,24 @@
-
-<h4>Dictionnaire : {{biographicsScore['nameDictionary']}}</h4>
-<div class="ins-card-nav">
+<div class="card-analytics-container">
+    <h4>Dictionnaire : {{biographicsScore['nameDictionary']}}</h4>
+    <div class="ins-card-nav">
     <span *ngFor="let hits of biographicsScore['hits']" (click)="onChangeTab(hits.theme)"
           [ngClass]="{ 'nav-selected selected' : currentTab === hits.theme }">
         {{hits.theme}}
     </span>
-</div>
+    </div>
 
-<div class="row_card_analytics">
-    <div class="col_card_analytics">
-        <div class="tabs_card_analytics">
-            <div *ngFor="let hits of biographicsScore['hits']">
-                <div class="ins-card-info_card_analytics" *ngIf="currentTab === hits.theme">
-                    <div class="tab" *ngFor="let motClefUrls of hits.motClefUrls">
-                        <input class="input_card_analytics" type="checkbox" id="{{motClefUrls.motClef}}">
-                        <label class="tab-label" for="{{motClefUrls.motClef}}">{{motClefUrls.motClef}}</label>
-                        <div class="tab-content" *ngFor="let listUrlDepth of motClefUrls.listUrlDepth" >
-                            <h6>Url : <a (click)="goToLink(listUrlDepth.url)">{{listUrlDepth.url}}</a> <br> Profondeur : {{listUrlDepth.depth}} </h6>
-                        </div>
-                </div>
-                </div>
+    <div class="tab-container" *ngFor="let hits of biographicsScore['hits']|listFilterPipe:'theme':currentTab">
+        <div class="tab" *ngFor="let motClefUrls of hits.motClefUrls"
+             [ngStyle]="{'flex': motClefUrls.display ? '1' : '0'}">
+            <div class="tab-label" (click)="onLabelClick(motClefUrls, hits)">
+                <span>{{motClefUrls.motClef}}</span>
             </div>
-
+            <div class="tab-content" *ngIf="motClefUrls.display">
+                <ng-container *ngFor="let listUrlDepth of motClefUrls.listUrlDepth">
+                    <h6>Url : <a (click)="goToLink(listUrlDepth.url)">{{listUrlDepth.url}}</a> <br> Profondeur
+                        : {{listUrlDepth.depth}} </h6>
+                </ng-container>
+            </div>
         </div>
     </div>
 </div>
-

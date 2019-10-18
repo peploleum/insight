@@ -1,12 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BiographicsScoreDTO, IDictionary, ScoreDTO, Theme } from 'app/shared/model/analytics.model';
-import { IBiographics } from 'app/shared/model/biographics.model';
-import { SERVER_API_URL } from 'app/app.constants';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
-import { IGraphyNodeDTO } from 'app/shared/model/node.model';
-import { of } from 'rxjs';
-import { AnalyticsService, FAKE_SCORE } from 'app/analytics/analytics.service';
+import { BiographicsScoreDTO, IHitDTO, IMotClefUrls, Theme } from 'app/shared/model/analytics.model';
+import { HttpClient } from '@angular/common/http';
 import { DictionaryService } from 'app/dictionary/dictionary.service';
 
 @Component({
@@ -15,17 +9,15 @@ import { DictionaryService } from 'app/dictionary/dictionary.service';
     styles: []
 })
 export class CardAnalyticsComponent implements OnInit {
-    @Input()
-    biographicsScore: BiographicsScoreDTO;
+    private _biographicsScore: BiographicsScoreDTO;
     currentTab: Theme = 'TER';
 
     constructor(protected http: HttpClient, private _ds: DictionaryService) {}
 
     ngOnInit() {
-        console.log(this.biographicsScore);
-        this.biographicsScore.idDictionary = this.biographicsScore.scores[0].idDictionary;
-        this._ds.getName(this.biographicsScore.idDictionary).subscribe(res => {
-            this.biographicsScore.nameDictionary = res;
+        this._biographicsScore.idDictionary = this._biographicsScore.scores[0].idDictionary;
+        this._ds.getName(this._biographicsScore.idDictionary).subscribe(res => {
+            this._biographicsScore.nameDictionary = res;
         });
     }
 
@@ -35,5 +27,21 @@ export class CardAnalyticsComponent implements OnInit {
 
     goToLink(url: string) {
         window.open(url, '_blank');
+    }
+
+    @Input()
+    set biographicsScore(value: BiographicsScoreDTO) {
+        value.hits.forEach(h => {
+            h.motClefUrls.forEach(m => (m.display = false));
+        });
+        this._biographicsScore = value;
+    }
+
+    get biographicsScore(): BiographicsScoreDTO {
+        return this._biographicsScore;
+    }
+
+    onLabelClick(mcu: IMotClefUrls, hits: IHitDTO) {
+        hits.motClefUrls.forEach(m => (m.display = m === mcu ? !m.display : false));
     }
 }

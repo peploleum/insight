@@ -7,7 +7,7 @@ import { IBiographics } from 'app/shared/model/biographics.model';
 import { RawData } from '../shared/model/raw-data.model';
 import { IGraphyNodeDTO } from '../shared/model/node.model';
 import { catchError, map } from 'rxjs/internal/operators';
-import { Dictionary, ScoreDTO, Theme } from '../shared/model/analytics.model';
+import { ScoreDTO, Theme } from '../shared/model/analytics.model';
 import { NetworkService } from 'app/network/network.service';
 
 type EntityResponseType = HttpResponse<IBiographics>;
@@ -18,7 +18,6 @@ export class AnalyticsService {
     public resourceUrl = SERVER_API_URL + 'api/biographics';
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/biographics';
     private _resourceUrl = SERVER_API_URL + 'api/graph/';
-    private _ressourceDictionaryUrl = SERVER_API_URL + 'api/dictionary/';
 
     alertThreshold = {
         0: 'green',
@@ -81,23 +80,8 @@ export class AnalyticsService {
         return this.http.get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
 
-    getRawDataUrLCollection(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http.get<IBiographics[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
-        // effectue un get sur this.resourceSearchUrl avec des arguments
-    }
-
-    postFile(fileToUpload: File): Observable<EntityResponseType> {
-        const headers = new HttpHeaders();
-        const formData: FormData = new FormData();
-        formData.append('fileKey', fileToUpload, fileToUpload.name);
-        const dico = new Dictionary();
-        return this.http.post(this._ressourceDictionaryUrl, dico, { headers, observe: 'response' });
-    }
-
     getScores(janusIdOrigin: string): Observable<ScoreDTO[]> {
         const headers = new HttpHeaders();
-        console.log(`${this._resourceUrl}` + 'traversal/' + `${janusIdOrigin}`);
         return this.http
             .get(`${this._resourceUrl}` + 'traversal/' + `${janusIdOrigin}`, {
                 headers,
@@ -115,7 +99,6 @@ export class AnalyticsService {
                 }),
                 map((res: HttpResponse<IGraphyNodeDTO[]>) => {
                     const body: IGraphyNodeDTO[] = res.body; // vrai noeud avec les props
-                    console.log('body :', res.body);
                     const data: ScoreDTO[] = body
                         .map((item: IGraphyNodeDTO) => {
                             if (item.type === 'RawData' && item.properties) {
