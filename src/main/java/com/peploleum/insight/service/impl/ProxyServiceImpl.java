@@ -3,6 +3,7 @@ package com.peploleum.insight.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,21 +27,20 @@ public class ProxyServiceImpl {
     }
 
     public String postFormToHouston(final String form) throws RestClientException {
-        try {
+
             final RestTemplate rt = new RestTemplate();
             final HttpHeaders jsonHeaders = new HttpHeaders();
             jsonHeaders.add("Content-type", MediaType.APPLICATION_JSON_VALUE);
             HttpEntity<String> postVariableRegistryEntry = new HttpEntity<>(form, jsonHeaders);
 
             final StringBuilder sb = new StringBuilder(this.HOUSTON_API_URI);
+            this.log.info("##### HOUSTON_API_URI = '"  + sb.toString()+"'");
             sb.append("/start_process94A");
 
             final ResponseEntity<String> tResponseEntity = rt.postForEntity(sb.toString(), postVariableRegistryEntry, String.class);
 
             return tResponseEntity.getBody();
 
-        } catch (RestClientException e) {
-            throw e;
-        }
+
     }
 }
